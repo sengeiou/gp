@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:background="@null"
+    android:gravity="center_horizontal"
+    android:layout_height="match_parent">
+    <ImageView
+        android:layout_marginTop="@dimen/ubt_wifi_logo_margintop"
+        android:layout_width="wrap_content"
+        android:src="@drawable/img_wifi"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/ubt_edt_wifi_name"
+        style="@style/UBTSetWifiEditTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="UBT-Robot"
+        android:inputType="textPersonName"
+         />
+    <View
+        android:layout_width="match_parent"
+        android:background="@color/ubt_dilog_decore_color"
+        android:layout_height="@dimen/ubt_1px"/>
+    <EditText
+        android:id="@+id/ubt_edt_wifi_password"
+        style="@style/UBTSetWifiEditTheme"
+        android:layout_marginTop="@dimen/ubt_edt_wifi_psd_margintop"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ubtubtubt"
+        android:ems="10"
+        android:inputType="textPassword" />
+    <View
+        android:layout_width="match_parent"
+        android:background="@color/ubt_dilog_decore_color"
+        android:layout_height="@dimen/ubt_1px"/>
+    <Button
+        android:id="@+id/ubt_btn_connect_wifi"
+        android:layout_marginTop="@dimen/ubt_btn_start_margin_top"
+        style="@style/UBTButtonTheme.Cyan"
+        android:text="@string/ubt_connect"
+         />
+</LinearLayout>

@@ -1,0 +1,10 @@
+syntax = "proto3";
+option java_package = "com.ubtechinc.alpha";
+option java_outer_classname = "AvatarExit";
+
+message AvatarExitResponse {
+    int32 reasonCode = 1;
+    string reason = 2;
+}
+
+

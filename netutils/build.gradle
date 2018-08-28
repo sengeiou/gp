@@ -1,0 +1,119 @@
+apply plugin: 'com.google.protobuf'
+apply plugin: 'com.android.library'
+protobuf {
+    protoc {
+        // Download from repositories
+        artifact = rootProject.ext.plugin.protocArtifact
+    }
+    plugins {
+        javalite {
+            // The codegen for lite comes as a separate artifact
+            artifact = rootProject.ext.plugin.javaliteArtifact
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.plugins {
+                javalite {}
+            }
+        }
+    }
+}
+
+def getProps(String env) {
+    def Properties props = new Properties()
+    def proFile = file('filters/' + env + '/config.properties')
+    if (proFile.canRead()) {
+        props.load(new FileInputStream(proFile))
+    }
+    props
+}
+
+android {
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
+    packagingOptions {
+        packagingOptions {
+            exclude 'assets/xgwifi.xml'
+            exclude 'assets/soconfig.cfg'
+            exclude 'assets/jni.ini'
+            exclude 'com/qq/jce/wup/wup.properties'
+        }
+    }
+    publishNonDefault true
+    defaultConfig {
+        minSdkVersion rootProject.ext.android.minSdkVersion
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        versionCode 1
+        versionName "1.0.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            def props = getProps(rootProject.ext.app.serverEnviroment)
+            if (props != null) {
+                buildConfigField 'String', 'HOST', props['host']
+                buildConfigField 'String', 'IM_HOST', props['im_host']
+                buildConfigField 'String', 'USER_HOST', props['user_host']
+                buildConfigField 'String', 'XINGE_HOST', props['xinge_host']
+                buildConfigField 'String', 'UPDATE', props['update']
+                buildConfigField 'String', 'EQUIPMENTID_HOST', props['change_equipmentid_host']
+                buildConfigField 'String', 'IM_CHANNEL', props['im_channel']
+                printf('host=%s,im_host=%s ,user_host=%s,xinge_host=%s，im_channel=%s\n', props['host'], props['im_host'], props['user_host'], props['xinge_host'],props['im_channel'])
+                buildConfigField 'String', 'CREATION_HOST', props['creation_host']
+                printf('host=%s,im_host=%s ,user_host=%s,xinge_host=%s，im_channel=%s\n', props['host'], props['im_host'], props['user_host'], props['xinge_host'],props['im_channel'],props['creation_host'])
+            }
+        }
+        debug {
+            def props = getProps(rootProject.ext.app.serverEnviroment)
+            if (props != null) {
+                buildConfigField 'String', 'HOST', props['host']
+                buildConfigField 'String', 'IM_HOST', props['im_host']
+                buildConfigField 'String', 'USER_HOST', props['user_host']
+                buildConfigField 'String', 'XINGE_HOST', props['xinge_host']
+                buildConfigField 'String', 'UPDATE', props['update']
+                buildConfigField 'String', 'EQUIPMENTID_HOST', props['change_equipmentid_host']
+                buildConfigField 'String', 'IM_CHANNEL', props['im_channel']
+                printf('host=%s,im_host=%s ,user_host=%s,xinge_host=%s，im_channel=%s, update=%s\n', props['host'], props['im_host'], props['user_host'], props['xinge_host'],props['im_channel'],props['update'])
+                buildConfigField 'String', 'CREATION_HOST', props['creation_host']
+                printf('host=%s,im_host=%s ,user_host=%s,xinge_host=%s，im_channel=%s\n', props['host'], props['im_host'], props['user_host'], props['xinge_host'],props['im_channel'],props['creation_host'])
+            }
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+        ignoreWarnings true
+    }
+
+    useLibrary 'org.apache.http.legacy'
+    buildToolsVersion '27.0.3'
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile project(':utilcode')
+//    compile project(':servicesdk')
+    compile project(path: ':servicemodel')
+    provided rootProject.ext.deps.timber
+    //测试
+    testCompile rootProject.ext.deps.junit
+    testCompile rootProject.ext.deps.truth
+    testCompile rootProject.ext.deps.robolectric
+    //网络
+    compile rootProject.ext.deps.retrofit2
+    compile rootProject.ext.deps.retrofit_gson
+    compile rootProject.ext.deps.rx_retrofit
+    compile rootProject.ext.deps.rxAndroid
+    compile rootProject.ext.deps.okhttp
+    compile rootProject.ext.deps.logging_interceptor
+
+    compile rootProject.ext.deps.protobufLava
+    provided rootProject.ext.deps.supportAnnotations
+    compile rootProject.ext.deps.eventbus
+
+    compile 'com.tencent.ilivesdk:ilivesdk:1.6.3'
+    compile 'com.tencent.livesdk:livesdk:1.1.4'
+}

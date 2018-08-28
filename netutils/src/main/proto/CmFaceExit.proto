@@ -1,0 +1,9 @@
+syntax = "proto3";
+option java_package = "com.ubtechinc.alpha";
+message CmFaceExitRequest {
+
+}
+
+message CmFaceExitResponse {
+    int32 resultCode = 1;
+}

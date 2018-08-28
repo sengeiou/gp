@@ -1,0 +1,109 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <style name="AppTheme.NoToolbar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <!--彩色按钮基础样式-->
+    <style name="UBTButtonTheme" parent="Widget.AppCompat.Button">
+        <item name="android:layout_marginRight">@dimen/ubt_login_btn_margin</item>
+        <item name="android:layout_marginLeft">@dimen/ubt_login_btn_margin</item>
+        <item name="android:layout_width">@dimen/ubt_btn_width</item>
+        <item name="android:layout_height">@dimen/ubt_login_btn_height</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/ubt_white</item>
+        <item name="android:textSize">@dimen/ubt_btn_txt_size</item>
+    </style>
+    <!--青色按钮 样式-->
+    <style name="UBTButtonTheme.Cyan" parent="UBTButtonTheme">
+        <item name="android:background">@drawable/shape_ubt_btn_cyan_gb</item>
+    </style>
+    <!--紫色按钮 样式-->
+    <style name="UBTButtonTheme.Purple" parent="UBTButtonTheme">
+        <item name="android:background">@drawable/shape_ubt_btn_purple_gb</item>
+    </style>
+    <!--主页Tab RadioButton 样式-->
+    <style name="UBTTabButtonTheme" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:layout_width">@dimen/ubt_0dp</item>
+        <item name="android:layout_height">@dimen/ubt_tab_btn_height</item>
+        <item name="android:textSize">@dimen/ubt_tab_btn_txt_size</item>
+        <item name="android:gravity">center_horizontal|bottom</item>
+        <item name="android:layout_weight">1.0</item>
+        <item name="android:background">@null</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:button">@null</item>
+        <item name="android:textColor">@drawable/selector_ubt_tab_btn_txt</item>
+        <item name="android:paddingTop">@dimen/ubt_tab_btn_padding_top</item>
+    </style>
+    <!--加载等待对话框-->
+    <style name="UBTLoaddialogTheme" parent="android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item><!--边框-->
+        <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
+        <item name="android:windowIsTranslucent">false</item><!--半透明-->
+        <item name="android:windowNoTitle">true</item><!--无标题-->
+        <item name="android:windowBackground">@color/ubt_transparent</item><!--背景透明-->
+        <item name="android:backgroundDimEnabled">false</item><!--模糊-->
+    </style>
+    <!--页面居中提示文本样式-->
+    <style name="UBTTipsTxtTheme" >
+        <item name="android:textSize">@dimen/ubt_btn_txt_size</item>
+        <item name="android:textColor">@color/ubt_tips_txt_color</item>
+        <item name="android:background">@null</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="UBTSkipTxtTheme">
+        <item name="android:background">@null</item>
+        <item name="android:paddingEnd">@dimen/ubt_16dp</item>
+        <item name="android:paddingTop">@dimen/ubt_19dp</item>
+        <item name="android:paddingStart">@dimen/ubt_0dp</item>
+        <item name="android:paddingBottom">@dimen/ubt_0dp</item>
+        <item name="android:textColor">@color/ubt_tab_btn_txt_checked_color</item>
+        <item name="android:textSize">@dimen/ubt_skip_txt_size</item>
+    </style>
+    
+    <style name="UBTToolBarTitleTheme" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">@dimen/ubt_toolbar_title_txt_size</item>
+        <item name="android:textColor">@color/ubt_tips_txt_color</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <!--UBT 基础对话框的，提示语样式-->
+    <style name="UBTDialogTipsTheme" parent="TextAppearance.AppCompat.Title">
+        <item name="android:color">@color/ubt_tips_txt_color</item>
+        <item name="android:textSize">@dimen/ubt_dialog_tips_txt_size</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_marginLeft">@dimen/ubt_16dp</item>
+        <item name="android:layout_marginRight">@dimen/ubt_16dp</item>
+        <item name="android:layout_marginTop">@dimen/ubt_dialog_margintop</item>
+        <item name="android:layout_marginBottom">@dimen/ubt_dialog_marginbottom</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="UBTDialogBottonTheme" parent="Base.Widget.AppCompat.Button">
+        <item name="android:lines">1</item>
+        <item name="android:background">@null</item>
+        <item name="android:textColor">@color/ubt_tips_txt_color</item>
+        <item name="android:textSize">@dimen/ubt_dialog_tips_txt_size</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/ubt_dialog_margintop</item>
+    </style>
+    <style name="UBTSetWifiEditTheme" parent="Base.Widget.AppCompat.EditText">
+        <item name="android:layout_height">@dimen/ubt_edt_height</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">@null</item>
+        <item name="android:textSize">@dimen/ubt_set_wifi_edt_size</item>
+        <item name="android:textColor">@color/ubt_tips_txt_color</item>
+        <item name="android:layout_marginTop">@dimen/ubt_edt_wifi_name_margintop</item>
+        <item name="android:layout_marginStart">@dimen/ubt_edt_marginstart</item>
+        <item name="android:layout_marginEnd">@dimen/ubt_edt_marginstart</item>
+    </style>
+</resources>

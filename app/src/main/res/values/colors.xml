@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="ubt_main_bg_color">#F5F8FB</color>
+    <color name="ubt_white">#FFFFFF</color>
+    <!--主页Tab RadioButton 文字变化颜色-->
+    <color name="ubt_tab_btn_txt_color">#B4C0C7</color>
+    <color name="ubt_tab_btn_txt_checked_color">#29AAFF</color>
+    <!--透明-->
+    <color name="ubt_transparent">#0000</color>
+    <color name="ubt_tips_txt_color">#454B59</color>
+    <color name="ubt_mian_tab_decore_color">#1A000000</color>
+    <color name="ubt_dilog_decore_color">#CDCED2</color>
+    <color name="ubt_dialog_btn_txt_color">#FE4C4C</color>
+
+</resources>

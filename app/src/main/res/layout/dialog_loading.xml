@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_dialog_bg"
+    android:padding="@dimen/ubt_30dp"
+    android:gravity="center">
+    <com.ubtechinc.commlib.view.UbtProgressBar
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminateDrawable="@drawable/ic_loding2"
+        android:indeterminateOnly="true"
+        android:indeterminateBehavior="repeat"
+        />
+</LinearLayout>

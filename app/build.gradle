@@ -1,0 +1,104 @@
+apply plugin: 'com.android.application'
+// 打包时间
+def releaseTime() {
+    return new Date().format("yyMMddHH")
+}
+android {
+    compileSdkVersion COMPILE_SDK_VERSION
+
+    defaultConfig {
+        applicationId "com.ubtechinc.goldenpig"
+        minSdkVersion MIN_SDK_VERSION
+        targetSdkVersion  TARGET_SDK_VERSION
+        versionCode 1
+        versionName "1.0"
+
+    }
+    signingConfigs {
+        release {
+            storeFile file("../goldPig.jks")
+            storePassword 'goldpig2018'
+            keyAlias  'goldPig'
+            keyPassword 'goldpig2018'
+        }
+    }
+    buildTypes {
+        debug{
+            //微信APP_ID
+            buildConfigField "String", "APP_ID_WX", "\"wx0238743de057a634\""
+            //QQ APP_ID
+            buildConfigField "String", "APP_ID_QQ", "\"1106279915\""
+            //金猪productId
+            buildConfigField "String", "PRODUCT_ID" , "\"ffb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589\""
+            minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        release {
+            //微信APP_ID
+            buildConfigField "String", "APP_ID_WX", "\"wx0238743de057a634\""
+            //QQ APP_ID
+            buildConfigField "String", "APP_ID_QQ", "\"1106279915\""
+            //金猪productId
+            buildConfigField "String", "PRODUCT_ID" , "\"ffb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589\""
+            //是否优化zip
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources true
+            //启用代码混淆
+            minifyEnabled true
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    //优化打包流程
+    dexOptions {
+        javaMaxHeapSize "4g"
+        jumboMode = true
+        preDexLibraries = false
+        threadCount ="4"
+    }
+    android.applicationVariants.all {
+        variant -> variant.outputs.all {
+            if(variant.buildType.name.equals('release')) {
+                outputFileName = "goldenPig_${defaultConfig.versionName}_${releaseTime()}_release.apk"
+            }else {
+                outputFileName = "goldenPig_${defaultConfig.versionName}_${releaseTime()}_debug.apk"
+            }
+        }
+    }
+
+
+
+}
+
+repositories{
+    flatDir {
+        dirs 'libs'
+    }
+}
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation rootProject.ext.deps.appCompatV7
+    implementation rootProject.ext.deps.constraintlayout
+    implementation rootProject.ext.deps.recyclerView
+    implementation(name: 'tvsloginlib-ubt_goldenpig-release', ext: 'aar')
+    implementation rootProject.ext.deps.design
+    implementation rootProject.ext.deps.tencentOpenSDK
+    //testImplementation 'junit:junit:4.12'
+    /*androidTestImplementation 'com.android.support.test:runner:1.0.2'
+                        androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'*/
+    implementation project(path: ':commlib')
+    implementation project(path: ':tvlloginlib')
+    implementation rootProject.ext.deps.okhttp
+    implementation rootProject.ext.deps.gson
+    implementation rootProject.ext.deps.zxing
+    implementation rootProject.ext.deps.eventBus
+    implementation rootProject.ext.deps.glide
+    implementation rootProject.ext.deps.lifecycle
+    implementation rootProject.ext.deps.lifecycleExt
+    compile 'com.yanzhenjie:permission:1.1.0'
+    compile project(path: ':bluetoothlibrary')
+    compile project(path: ':utilcode')
+    compile project(path: ':netutils')
+}

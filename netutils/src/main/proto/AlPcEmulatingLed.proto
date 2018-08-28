@@ -1,0 +1,20 @@
+syntax = "proto3";
+option java_package = "com.ubtechinc.alpha";
+
+message AlPcEmulatingLedRequest {
+    int32  type  =1;
+    int32  leftLed =2;
+    int32  rightLed =3;
+    int32  bright =4;
+    int32  color =5;
+    int32   runTime =6;
+    int32   lightUpTime =7;
+    int32   lightDowmTime =8;
+}
+
+message AlPcEmulatingLedResponse {
+   int32   nPort  =1;
+   int32   nFileLen  =2;
+   string   strIp  =3;
+   string   strFileName  =4;
+}

@@ -1,0 +1,15 @@
+syntax = "proto3";
+option java_package = "com.ubtechinc.alpha";
+
+message AlPcTransferFileRequest {
+    string   strFilePath=1;
+    string   strFileName=2;
+    int32    nFileLen=3;
+    int32    nType=4;
+}
+
+message AlPcTransferFileResponse {
+   int32   nPort=1;
+   string   strIp=2;
+   string   strFileName=3;
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--UbtImageButton 自定义属性-->
+    <declare-styleable name="UbtImageButtonStyle">
+        <attr name="icon" format="reference"/>
+        <attr name="iconWidth" format="dimension"/>
+        <attr name="iconHeight" format="dimension"/>
+        <attr name="iconMargin" format="dimension"/>
+        <attr name="iconMarginTop" format="dimension"/>
+        <attr name="iconMarginLeft" format="dimension"/>
+        <attr name="iconMarginRight" format="dimension"/>
+        <attr name="iconMarginBottom" format="dimension"/>
+    </declare-styleable>
+</resources>

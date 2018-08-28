@@ -1,0 +1,11 @@
+syntax = "proto3";
+option java_package = "com.ubtechinc.alpha";
+option java_outer_classname = "AvatarUserChange";
+
+message UserChangeResponse {
+    repeated string allUsers = 1; //当前在线用户Id 列表
+    repeated string enterUserIds = 2; //进入的用户Id列表
+    repeated string leaveUserIds = 3; //退出的用户Id列表
+}
+
+

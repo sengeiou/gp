@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">金猪</string>
+    <string name="ubt_qq_login">QQ登录</string>
+    <string name="ubt_wechat_login">微信登录</string>
+    <string name="ubt_tab_little_pig">小猪</string>
+    <string name="ubt_tab_house">家居</string>
+    <string name="ubt_tab_person">个人</string>
+    <string name="ubt_wx_uninstalled">微信未安装</string>
+    <string name="ubt_wx_unspported">微信不支持</string>
+    <string name="ubt_login_failure">登录失败</string>
+    <string name="ubt_network_unconnect">网络不可用，请检测试手机网络</string>
+    <string name="ubt_net_error_tips">网络不给力，请稍后重试</string>
+    <string name="ubt_skip">跳过</string>
+    <string name="ubt_long_press_pig">请长按电源键，确认音箱已开机</string>
+    <string name="ubt_start_set_net">开始配网与绑定</string>
+    <string name="ubt_pig_match">音响配对</string>
+    <string name="ubt_search_pig">搜索音箱</string>
+    <string name="ubt_press_mute_btn_tips">在音箱开机时，长按静音键，至耳朵灯效亮起</string>
+    <string name="ubt_bluetooth_none">蓝牙模块不存在，不能使用</string>
+    <string name="ubt_want_open_bluetooth">小猪想要打开蓝牙</string>
+    <string name="ubt_cancel">取消</string>
+    <string name="ubt_allowed">允许</string>
+    <string name="ubt_connect">连接</string>
+</resources>

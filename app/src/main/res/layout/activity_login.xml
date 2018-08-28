@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/ubt_main_bg_color"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+   <ImageView
+        android:id="@+id/ubt_img_logo"
+        android:layout_marginTop="@dimen/ubt_logo_margintop"
+        android:layout_width="@dimen/ubt_logo_width"
+        android:layout_height="@dimen/ubt_logo_width"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_logo" />
+    <com.ubtechinc.commlib.view.UbtImageButton
+        android:id="@+id/ubt_btn_wechat_login"
+        style="@style/UBTButtonTheme.Purple"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/ubt_btn_margin_bottom"
+        app:icon="@drawable/ic_wechat"
+        app:iconMargin="@dimen/ubt_btn_icon_margin_start"
+        app:iconWidth="@dimen/ubt_btn_icon_szie"
+        app:iconHeight="@dimen/ubt_btn_icon_szie"
+        android:text="@string/ubt_wechat_login" />
+    <com.ubtechinc.commlib.view.UbtImageButton
+        android:id="@+id/ubt_btn_qq_login"
+        style="@style/UBTButtonTheme.Cyan"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/ubt_btn_wechat_login"
+        app:icon="@drawable/ic_qq"
+        app:iconMargin="@dimen/ubt_btn_icon_margin_start"
+        app:iconWidth="@dimen/ubt_btn_icon_szie"
+        app:iconHeight="@dimen/ubt_btn_icon_szie"
+        android:layout_marginBottom="@dimen/ubt_btn_blank_height"
+        android:text="@string/ubt_qq_login" />
+
+
+</RelativeLayout>

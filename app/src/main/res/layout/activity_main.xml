@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ubt_pg_layout_main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@null"
+    tools:context=".main.MainActivity">
+
+    <RadioGroup
+        android:id="@+id/ubt_pg_group_tab_btn"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ubt_tab_btn_height"
+        android:layout_alignParentBottom="true"
+        android:background="@color/ubt_white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <RadioButton
+            style="@style/UBTTabButtonTheme"
+            android:id="@+id/ubt_rbt_pig"
+            android:layout_weight="1"
+            android:button="@null"
+            android:checked="true"
+            android:drawableTop="@drawable/selector_ubt_tab_pig"
+            android:text="@string/ubt_tab_little_pig" />
+
+        <RadioButton
+            style="@style/UBTTabButtonTheme"
+            android:id="@+id/ubt_rbt_house"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/selector_ubt_tab_house"
+            android:text="@string/ubt_tab_house" />
+
+        <RadioButton
+            style="@style/UBTTabButtonTheme"
+            android:id="@+id/ubt_rbt_person"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/selector_ubt_tab_person"
+            android:text="@string/ubt_tab_person" />
+
+    </RadioGroup>
+    <View
+        android:id="@+id/ubt_tab_decoration"
+        android:background="@color/ubt_mian_tab_decore_color"
+        android:layout_width="match_parent"
+        android:layout_above="@id/ubt_pg_group_tab_btn"
+        android:layout_height="@dimen/ubt_1px"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/ubt_pg_main_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@null"
+        android:layout_above="@id/ubt_tab_decoration" />
+
+</RelativeLayout>

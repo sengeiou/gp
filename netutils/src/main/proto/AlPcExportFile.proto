@@ -1,0 +1,16 @@
+syntax = "proto3";
+option java_package = "com.ubtechinc.alpha";
+
+message AlPcExportFileRequest {
+    string  strFileName =1;;
+  }
+
+message AlPcExportFileResponse {
+    repeated AlPcExportFileInfo fileinfoList =1;
+}
+
+message AlPcExportFileInfo{
+
+    string   strFileName =1;
+    int32   nFileLen =2;
+}

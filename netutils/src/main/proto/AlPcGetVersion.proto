@@ -1,0 +1,12 @@
+syntax = "proto3";
+option java_package = "com.ubtechinc.alpha";
+message AlPcGetVersionRequest {
+
+    int32 nType = 1;
+
+}
+message AlPcGetVersionResponse {
+
+    string strVersion = 1;
+
+}

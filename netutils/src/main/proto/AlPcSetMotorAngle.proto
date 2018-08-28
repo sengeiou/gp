@@ -1,0 +1,10 @@
+syntax = "proto3";
+option java_package = "com.ubtechinc.alpha";
+message AlPcSetMotorAngleRequest {
+
+    int32 nMotorId = 1;
+    int32 nAngle = 2;
+	int32 nTime = 3;
+
+}
+

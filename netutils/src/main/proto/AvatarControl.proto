@@ -1,0 +1,44 @@
+syntax = "proto3";
+option java_package = "com.ubtechinc.alpha";
+option java_outer_classname = "AvatarControl";
+
+message ControlRequest {
+    CommandType type = 1; //指令类型
+    string nickName = 2; // 调用者的昵称
+    DIRECTION direction= 3; // 如果是头部指令走路指令传入方向
+    string actionName = 4;// 如果是动作传入动作名称
+}
+
+message ControlResponse{
+    Result result = 1;
+}
+
+enum CommandType {
+    HEADER = 0;// 头部指令
+    WALK = 1; //走路指令
+    ACTION = 2; // 动作指令
+    STAN_UP = 3; // 动作指令
+    TAKE_PIC = 4;//拍照
+    HEARTBEAT = 5;//心跳
+    EXIT = 6;//退出
+}
+
+enum DIRECTION {
+    UP = 0;// 上
+    DOWN = 1; //下
+    LEFT = 2; // 左
+    RIGHT = 3;//右
+    UP_LEFT = 4;//左上
+    UP_RIGHT = 5;//右上
+    DOWN_LEFT = 6;//左下
+    DOWN_RIGHT = 7;//右下
+    STOP = 8;//停止
+}
+
+enum Result {
+    SUCCESS = 0; //操作成功
+    FORBIDDEN = 1; //操作被拒绝，当前有用户在操作
+    NO_ALLOW =2; //机器人当前状态不允许操作
+    DO_NOTHING =3; //机器人已经处于这种当前状态无需再操作
+    UNKNOWN_ERROR = 4; //未知错误
+}
