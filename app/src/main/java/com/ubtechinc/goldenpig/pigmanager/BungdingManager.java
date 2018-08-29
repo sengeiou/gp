@@ -1,7 +1,6 @@
 package com.ubtechinc.goldenpig.pigmanager;
 
-import android.arch.lifecycle.LifecycleActivity;
-import android.arch.lifecycle.Observer;
+
 import android.bluetooth.BluetoothDevice;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -218,7 +217,7 @@ public class BungdingManager {
                         mBanddingListener.onFaild(Constants.ON_SERAIL_ERROR_CODE);
                     }
                 } else if(response.getResultCode() == 1005) {
-                    MyPigsLive.getInstance().getRobotUserId();
+                   // MyPigsLive.getInstance().getRobotUserId();
                     if(mBanddingListener != null){
                         mBanddingListener.onFaild(Constants.ALREADY_BADING);
                     }

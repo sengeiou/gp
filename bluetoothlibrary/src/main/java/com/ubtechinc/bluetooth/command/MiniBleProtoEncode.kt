@@ -3,7 +3,7 @@ package com.ubtechinc.bluetooth.command
 import com.ubtech.utilcode.utils.ConvertUtils
 import com.ubtech.utilcode.utils.LogUtils
 import com.ubtechinc.alpha.BleBindOrSwitchWifi
-import com.ubtechinc.protocollibrary.communite.ProtoBufferDispose
+import com.ubtechinc.protocollibrary.communite.ProtoBufferDisposer
 import com.ubtechinc.protocollibrary.protocol.CmdId
 import com.ubtechinc.protocollibrary.protocol.MiniBleProto
 import com.ubtechinc.protocollibrary.protocol.MiniMessage
@@ -24,7 +24,7 @@ class MiniBleProtoEncode : ICommandEncode {
 
     override fun encode(content: String?): Array<ByteArray> {
         val requestId = requestSerial.incrementAndGet()
-        val data = ProtoBufferDispose.buildAlphaMessage(CmdId.BL_BIND_OR_SWITCH_WIFI_REQUEST, CmdId.IM_VERSION, requestId, 0, BleBindOrSwitchWifi.BindOrSwitchWifiRequest.newBuilder().setData(content).build())
+        val data = ProtoBufferDisposer.buildAlphaMessage(CmdId.BL_BIND_OR_SWITCH_WIFI_REQUEST, CmdId.IM_VERSION, requestId, 0, BleBindOrSwitchWifi.BindOrSwitchWifiRequest.newBuilder().setData(content).build())
         var divideData =  MiniBleProto.devide(data)
         var encodeData = emptyArray<ByteArray>()
         for (data in divideData) {
@@ -62,14 +62,14 @@ class MiniBleProtoEncode : ICommandEncode {
                 return false
             }
 
-            val message = ProtoBufferDispose.parseMessage(msgRequest.dataContent)
+            val message = ProtoBufferDisposer.parseMessage(msgRequest.dataContent)
             val miniMessage = MiniMessage()
             miniMessage.responseSerial = message.header.responseSerial
             miniMessage.dataContent = message.bodyData.toByteArray()
             miniMessage.sendSerial = message.header.sendSerial
             miniMessage.commandId = message.header.commandId.toShort()
             if( miniMessage.commandId == CmdId.BL_BIND_OR_SWITCH_WIFI_RESPONSE) {
-                var  response = ProtoBufferDispose.unPackData(BleBindOrSwitchWifi.BindOrSwitchWifiResponse::class.java,  miniMessage.dataContent ) as BleBindOrSwitchWifi.BindOrSwitchWifiResponse?
+                var  response = ProtoBufferDisposer.unPackData(BleBindOrSwitchWifi.BindOrSwitchWifiResponse::class.java,  miniMessage.dataContent ) as BleBindOrSwitchWifi.BindOrSwitchWifiResponse?
                 data = response!!.data
                 return true
             }

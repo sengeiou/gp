@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+
 // 打包时间
 def releaseTime() {
     return new Date().format("yyMMddHH")
@@ -12,7 +13,7 @@ android {
         targetSdkVersion  TARGET_SDK_VERSION
         versionCode 1
         versionName "1.0"
-
+        multiDexEnabled true
     }
     signingConfigs {
         release {
@@ -96,7 +97,7 @@ dependencies {
     implementation rootProject.ext.deps.eventBus
     implementation rootProject.ext.deps.glide
     implementation rootProject.ext.deps.lifecycle
-    implementation rootProject.ext.deps.lifecycleExt
+    implementation rootProject.ext.deps.multidex
     compile 'com.yanzhenjie:permission:1.1.0'
     compile project(path: ':bluetoothlibrary')
     compile project(path: ':utilcode')

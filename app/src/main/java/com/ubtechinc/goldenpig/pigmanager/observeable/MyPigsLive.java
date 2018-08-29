@@ -1,6 +1,6 @@
 package com.ubtechinc.goldenpig.pigmanager.observeable;
 
-import android.arch.lifecycle.MediatorLiveData;
+
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
 import android.text.TextUtils;
@@ -28,7 +28,7 @@ import java.util.Map;
 
 public class MyPigsLive {
 
-    public static final String TAG = "MyRobotsLive";
+  /*  public static final String TAG = "MyRobotsLive";
 
     public static final String LAST_CONNECTED_ROBOT = "last_connected_robot";
 
@@ -221,10 +221,10 @@ public class MyPigsLive {
         currentRobotId.setValue(null);
     }
 
-    /**
+    *//**
      * 获取当前的机器人流水号
      * @return
-     */
+     *//*
     public String getRobotUserId() {
         PigInfo robotInfo = currentRobot.getValue();
         if (robotInfo != null) {
@@ -236,10 +236,10 @@ public class MyPigsLive {
         }
     }
 
-    /**
+    *//**
      * 获取当前的机器人序列号
      * @return
-     */
+     *//*
     public String getRobotEquipmentId() {
         PigInfo robotInfo = currentRobot.getValue();
         if (robotInfo != null) {
@@ -358,11 +358,11 @@ public class MyPigsLive {
         selectToRobotId.postValue(robotUserId);
     }
 
-    /**
+    *//**
      * 切换到该机器人并将该机器人的改为在线状态，给配网后调用，解决切换时机器人为改变状态无法连接的问题
      *
      * @param robotUserId
-     */
+     *//*
     public void setSelectToRobotIdOnline(String robotUserId) {
         PigInfo info = MyPigsLive.getInstance().getRobotById(robotUserId);
         if (info != null) {//切网成功直接将机器人的状态改为在线，以便自动连接该机器人
@@ -388,6 +388,6 @@ public class MyPigsLive {
         infos.remove(robotInfo);
         infos.add(0, robotInfo);
         robots.success(infos);
-    }
+    }*/
 
 }

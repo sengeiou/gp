@@ -3,8 +3,7 @@ package com.ubtechinc.alpha.im;
 import android.content.Context;
 import android.util.Log;
 
-import com.tencent.TIMLogLevel;
-import com.tencent.TIMManager;
+
 
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.notification.NotificationCenter;
@@ -71,12 +70,7 @@ public class TecentIMManager {
 
 
     private void initTIMSDK(){
-        LogUtils.d("initTIMSDK");
-        TIMManager.getInstance().setLogLevel(TIMLogLevel.WARN);
-        TIMManager.getInstance().init(context);
-        //禁止服务器自动代替上报已读
-        TIMManager.getInstance().disableAutoReport();
-        TIMManager.getInstance().disableRecentContact();
+
 
 
     }

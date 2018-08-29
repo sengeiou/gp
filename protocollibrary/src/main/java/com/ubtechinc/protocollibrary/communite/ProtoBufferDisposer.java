@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
  * version
  */
 
-public class ProtoBufferDispose {
+public class ProtoBufferDisposer {
     public static final String TAG = "ProtoBufferDispose";
 
     public static byte[] getPackMData(GeneratedMessageLite data) {
@@ -61,7 +61,7 @@ public class ProtoBufferDispose {
         CodeMaoMessage.Message.Builder messageBuilder = CodeMaoMessage.Message.newBuilder();
         messageBuilder.setHeader(builder.build());
         if (requestBody != null) {
-            ByteString body = ByteString.copyFrom(ProtoBufferDispose.getPackMData(requestBody));
+            ByteString body = ByteString.copyFrom(ProtoBufferDisposer.getPackMData(requestBody));
             messageBuilder.setBodyData(body);
         }
 

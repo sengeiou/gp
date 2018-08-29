@@ -114,6 +114,5 @@ dependencies {
     provided rootProject.ext.deps.supportAnnotations
     compile rootProject.ext.deps.eventbus
 
-    compile 'com.tencent.ilivesdk:ilivesdk:1.6.3'
-    compile 'com.tencent.livesdk:livesdk:1.1.4'
+
 }

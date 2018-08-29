@@ -70,7 +70,7 @@ public class IMsgHandleEngine {
                 return;
             }
 
-            CodeMaoMessage.Message message = ProtoBufferDispose.parseMessage(msgRequest.getDataContent());
+            CodeMaoMessage.Message message = ProtoBufferDisposer.parseMessage(msgRequest.getDataContent());
             MiniMessage miniMessage = new MiniMessage();
             miniMessage.setResponseSerial(message.getHeader().getResponseSerial());
             miniMessage.setDataContent(message.getBodyData().toByteArray());

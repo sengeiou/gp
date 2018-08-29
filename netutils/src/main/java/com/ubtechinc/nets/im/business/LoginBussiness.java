@@ -2,11 +2,6 @@ package com.ubtechinc.nets.im.business;
 import android.content.Context;
 import android.util.Log;
 
-import com.tencent.TIMCallBack;
-import com.tencent.TIMConnListener;
-import com.tencent.TIMManager;
-import com.tencent.TIMUser;
-import com.tencent.TIMUserStatusListener;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.MD5Utils;
 import com.ubtech.utilcode.utils.network.NetworkHelper;
@@ -68,50 +63,13 @@ public class LoginBussiness {
         init();
     }
 
-    TIMConnListener timConnListener = new TIMConnListener() {
-        @Override
-        public void onConnected() {
 
-            EventBus.getDefault().post(new IMStateChange(IMStateChange.STATE_CONNECTED));
-            LogUtils.d(TAG,"IM---onConnected");
-        }
 
-        @Override
-        public void onDisconnected(int i, String s) {
-            EventBus.getDefault().post(new IMStateChange(IMStateChange.STATE_DISCONNECTED));
-            LogUtils.d(TAG,"IM---onDisconnected--i="+i+", msg = "+s);
-        }
 
-        @Override
-        public void onWifiNeedAuth(String s) {
-
-            EventBus.getDefault().post(new IMStateChange(IMStateChange.STATE_WIFI_NEED_AUTH));
-            LogUtils.d(TAG,"IM---onWifiNeedAuth-- msg = "+s);
-        }
-
-    };
-
-    TIMUserStatusListener userStatusListener = new TIMUserStatusListener() {
-        @Override
-        public void onForceOffline() { //被踢下线
-
-            EventBus.getDefault().post(new IMStateChange(IMStateChange.STATE_FORCE_OFFLINE));
-            LogUtils.d(TAG,"IM--onForceOffline");
-        }
-
-        @Override
-        public void onUserSigExpired() {
-            LogUtils.d(TAG,"IM--onUserSigExpired---票据过期");
-            loginSucc = false;
-            queryUserInfo();
-            EventBus.getDefault().post(new IMStateChange(IMStateChange.STATE_USER_SIG_EXPIRED));
-        }
-    };
 
     private void init() {
 
-        TIMManager.getInstance().setConnectionListener(timConnListener);
-        TIMManager.getInstance().setUserStatusListener(userStatusListener);
+
         NetworkHelper.sharedHelper().addNetworkInductor(netWorkInductor = new NetworkHelper.NetworkInductor() {
 
             @Override
@@ -143,12 +101,7 @@ public class LoginBussiness {
         if (isLoginIM()) {
             return;
         }
-        TIMUser user = new TIMUser();
-        user.setAccountType(userInfo.accountType);
-        user.setAppIdAt3rd(userInfo.getAppidAt3rd());
-        user.setIdentifier(userInfo.getId());
-        //发起登录请求
-        TIMManager.getInstance().login(Integer.valueOf(userInfo.getAppidAt3rd()), user, userInfo.getUserSig(), mLoginCallBack);
+
     }
 
     public  boolean isLoginIM(){
@@ -198,9 +151,7 @@ public class LoginBussiness {
                         queryUserInfo();
                     } else {
                         LogUtils.e(TAG,"get---im/getInfo--onError--- hasTryCount " + hasTryCount);
-                        if(mLoginCallBack != null){
-                            mLoginCallBack.onError(0,"");
-                        }
+
                     }
                 } else {
                     LogUtils.e(TAG,"get---im/getInfo--onError--- no network");
@@ -236,30 +187,7 @@ public class LoginBussiness {
         Log.d(TAG,"fillUserInfo--userInfo = "+userInfo);
     }
 
-    private TIMCallBack mLoginCallBack =new TIMCallBack() {
-        @Override
-        public void onSuccess() {
 
-            LogUtils.d(TAG,"Login tencent IM success");
-
-            loginSucc = true;
-            //通过消息通信告知上层
-            IMLoginResultEvent event = new IMLoginResultEvent();
-            event.success = true;
-            NotificationCenter.defaultCenter().publish(event);
-        }
-
-        @Override
-        public void onError(int code, java.lang.String desc) {
-
-            LogUtils.e(TAG,"Login tencent IM failed. code: " + code +"" + " errmsg: " + desc);
-
-            IMLoginResultEvent event = new IMLoginResultEvent();
-            loginSucc = false;
-            event.success = false;
-            NotificationCenter.defaultCenter().publish(event);
-        }
-    };
 
     public void setUserId(String userId) {
         if (userInfo == null) {
@@ -269,16 +197,6 @@ public class LoginBussiness {
     }
 
     public void logout() {
-        TIMManager.getInstance().logout(new TIMCallBack() {
-            @Override
-            public void onError(int code, String desc) {
-                LogUtils.d(TAG,"logout--onError-- code : "+code+", desc = "+desc);
-            }
 
-            @Override
-            public void onSuccess() {
-                LogUtils.d(TAG,"logout---onSuccess");
-            }
-        });
     }
 }

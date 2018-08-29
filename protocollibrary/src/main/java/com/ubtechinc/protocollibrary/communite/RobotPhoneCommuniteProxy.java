@@ -47,7 +47,7 @@ public class RobotPhoneCommuniteProxy<T> {
         int requestId = requestSerial.incrementAndGet();
         requestCache.put(requestId, new RequestBean(cmdId, callback));
 
-        byte[] data = ProtoBufferDispose.buildAlphaMessage(cmdId, version,requestId , responseSerail, requestBody );
+        byte[] data = ProtoBufferDisposer.buildAlphaMessage(cmdId, version,requestId , responseSerail, requestBody );
 
         sendMsgEngine.sendMsg(requestId, peer, data, callback);
     }
@@ -56,7 +56,7 @@ public class RobotPhoneCommuniteProxy<T> {
         int requestId = requestSerial.incrementAndGet();
         requestCache.put(requestId, new RequestBean(cmdId, callback));
 
-        byte[] data = ProtoBufferDispose.buildAlphaMessage(cmdId, version,requestId , responseSerail, requestBody );
+        byte[] data = ProtoBufferDisposer.buildAlphaMessage(cmdId, version,requestId , responseSerail, requestBody );
 
         sendMsgEngine.sendHeartMsg(requestId, peer, data, callback);
     }
@@ -92,7 +92,7 @@ public class RobotPhoneCommuniteProxy<T> {
                             return;
                         }
                         Class < T >  entityClass  =  (Class < T > ) ((ParameterizedType) dataCallback.getClass().getGenericInterfaces()[0]).getActualTypeArguments()[ 0 ];
-                        GeneratedMessageLite generatedMessageLite = ProtoBufferDispose.unPackData(entityClass, response.getDataContent());
+                        GeneratedMessageLite generatedMessageLite = ProtoBufferDisposer.unPackData(entityClass, response.getDataContent());
                         if(generatedMessageLite != null) {
                             dataCallback.onSuccess((T)generatedMessageLite);
 
@@ -173,7 +173,7 @@ public class RobotPhoneCommuniteProxy<T> {
                             return;
                         }
                         Class < T >  entityClass  =  (Class < T > ) ((ParameterizedType) dataCallback.getClass().getGenericInterfaces()[0]).getActualTypeArguments()[ 0 ];
-                        GeneratedMessageLite generatedMessageLite = ProtoBufferDispose.unPackData(entityClass, response.getDataContent());
+                        GeneratedMessageLite generatedMessageLite = ProtoBufferDisposer.unPackData(entityClass, response.getDataContent());
                         if(generatedMessageLite != null) {
                             dataCallback.onSuccess((T)generatedMessageLite);
 
