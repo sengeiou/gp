@@ -32,6 +32,7 @@ android {
             //金猪productId
             buildConfigField "String", "PRODUCT_ID" , "\"ffb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589\""
             minifyEnabled false
+            shrinkResources false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -56,7 +57,6 @@ android {
     dexOptions {
         javaMaxHeapSize "4g"
         jumboMode = true
-        preDexLibraries = false
         threadCount ="4"
     }
     android.applicationVariants.all {
@@ -98,8 +98,10 @@ dependencies {
     implementation rootProject.ext.deps.glide
     implementation rootProject.ext.deps.lifecycle
     implementation rootProject.ext.deps.multidex
+
     compile 'com.yanzhenjie:permission:1.1.0'
     compile project(path: ':bluetoothlibrary')
     compile project(path: ':utilcode')
     compile project(path: ':netutils')
+    compile project(path: ':protocollibrary')
 }

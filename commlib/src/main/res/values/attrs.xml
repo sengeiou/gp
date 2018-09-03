@@ -11,4 +11,10 @@
         <attr name="iconMarginRight" format="dimension"/>
         <attr name="iconMarginBottom" format="dimension"/>
     </declare-styleable>
+    <declare-styleable name="UbtIconEditTextStyle">
+        <attr name="defaultIcon" format="reference"/>
+    </declare-styleable>
+    <declare-styleable name="UbtPsdEditTextStyle">
+        <attr name="psdIcon" format="reference"/>
+    </declare-styleable>
 </resources>

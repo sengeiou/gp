@@ -3,7 +3,7 @@ package com.ubtechinc.bluetooth.command
 import com.ubtech.utilcode.utils.ConvertUtils
 import com.ubtech.utilcode.utils.LogUtils
 import com.ubtechinc.alpha.BleBindOrSwitchWifi
-import com.ubtechinc.protocollibrary.communite.ProtoBufferDisposer
+import com.ubtechinc.protocollibrary.communit.ProtoBufferDisposer
 import com.ubtechinc.protocollibrary.protocol.CmdId
 import com.ubtechinc.protocollibrary.protocol.MiniBleProto
 import com.ubtechinc.protocollibrary.protocol.MiniMessage
@@ -24,7 +24,7 @@ class MiniBleProtoEncode : ICommandEncode {
 
     override fun encode(content: String?): Array<ByteArray> {
         val requestId = requestSerial.incrementAndGet()
-        val data = ProtoBufferDisposer.buildAlphaMessage(CmdId.BL_BIND_OR_SWITCH_WIFI_REQUEST, CmdId.IM_VERSION, requestId, 0, BleBindOrSwitchWifi.BindOrSwitchWifiRequest.newBuilder().setData(content).build())
+        val data =ProtoAgent.getData(requestId,content)
         var divideData =  MiniBleProto.devide(data)
         var encodeData = emptyArray<ByteArray>()
         for (data in divideData) {

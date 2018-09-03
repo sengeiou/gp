@@ -42,7 +42,7 @@ public final class HttpManager {
     public static final String UPDATE  = BASE_URL + "v1/upgrade-rest";
     public static final String CREATION_TAG = BASE_URL + "creation";
 
-
+    public static final String BUNDING_PIG=BASE_URL+"user-service-rest/v2";
     private static final String CACHE_DIR = "cache/http";
 
     private static HttpManager instance;

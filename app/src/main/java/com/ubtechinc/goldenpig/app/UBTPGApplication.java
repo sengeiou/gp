@@ -1,9 +1,12 @@
 package com.ubtechinc.goldenpig.app;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 
 import com.tencent.ai.tvs.LoginApplication;
 import com.ubtechinc.commlib.log.UbtLogger;
+import com.ubtechinc.protocollibrary.communit.ProtoBufferDisposer;
 
 /**
  * @des Ubt 金猪applicaption
@@ -15,10 +18,16 @@ public class UBTPGApplication extends LoginApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+
         instance = this;
         UbtLogger.init(getApplicationContext());
+        UbtLogger.i("", ProtoBufferDisposer.TAG);
     }
-
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
+    }
     @Override
     public void onLowMemory() {
         super.onLowMemory();

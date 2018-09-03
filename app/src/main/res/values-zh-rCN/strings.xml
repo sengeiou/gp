@@ -22,4 +22,9 @@
     <string name="ubt_cancel">取消</string>
     <string name="ubt_allowed">允许</string>
     <string name="ubt_connect">连接</string>
+    <string name="ubt_password">密码</string>
+    <string name="ubt_open_wifif_tips">获取wifi列表需要打开本机wifi开关</string>
+    <string name="ubt_enter">确认</string>
+    <string name="ubt_wifi_no_pwd_tips">确认此Wi-Fi无密码？</string>
+    <string name="ubt_set_pig_net">音响配网</string>
 </resources>

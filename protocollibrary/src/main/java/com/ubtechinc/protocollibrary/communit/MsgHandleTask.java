@@ -1,4 +1,4 @@
-package com.ubtechinc.protocollibrary.communite;
+package com.ubtechinc.protocollibrary.communit;
 
 
 /**

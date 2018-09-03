@@ -9,6 +9,8 @@ import com.ubtechinc.nets.ResponseListener;
 import com.ubtechinc.nets.http.HttpProxy;
 import com.ubtechinc.nets.http.ThrowableWrapper;
 
+import java.util.HashMap;
+
 /**
  * @author：wululin
  * @date：2017/10/30 10:08
@@ -20,13 +22,15 @@ import com.ubtechinc.nets.http.ThrowableWrapper;
 
 public class RegisterPigRepository {
     private static final String TAG = RegisterPigRepository.class.getSimpleName();
-    public void registerRobot(String userName, String userOnlyId, final RegisterRobotListener listener){
-        Log.d(TAG, " registerRobot userName : " + userName);
-        RegisterRobotModule.Request request = new RegisterRobotModule().new Request();
-        request.setUserName(userName);
-        request.setUserOnlyId(userOnlyId);
+    public void registerRobot(String token, String appid, final RegisterRobotListener listener){
 
-        HttpProxy.get().doPost(request, new ResponseListener<RegisterRobotModule.Response>() {
+        RegisterRobotModule.Request request = new RegisterRobotModule().new Request();
+
+
+        HashMap<String,String> hearder=new HashMap<>();
+        hearder.put("authorization",token);
+        hearder.put("X-UBT-AppId",appid);
+        HttpProxy.get().doPost(request, hearder,new ResponseListener<RegisterRobotModule.Response>() {
             @Override
             public void onError(ThrowableWrapper e) {
                 Log.d(TAG, " registerRobot onError : ");
@@ -43,8 +47,8 @@ public class RegisterPigRepository {
     }
 
     public interface RegisterRobotListener{
-        public void onSuccess(RegisterRobotModule.Response response);
+         void onSuccess(RegisterRobotModule.Response response);
 
-        public void onError();
+         void onError();
     }
 }

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 public class PigListAdapter extends RecyclerView.Adapter<PigListAdapter.PigHolder>{
     private ArrayList<UbtBluetoothDevice> mLeList;
     private OnPigListItemClickListener mItemClickListener;
+    private int clickedPos=-1;
     public PigListAdapter(ArrayList<UbtBluetoothDevice> leList){
         this.mLeList=leList;
     }
@@ -40,16 +41,36 @@ public class PigListAdapter extends RecyclerView.Adapter<PigListAdapter.PigHolde
 
     @Override
     public void onBindViewHolder(@NonNull final PigHolder holder, final int position) {
-        holder.pigNameTv.setText(mLeList.get(position).getDevice().getName());
-        holder.pigNameTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        final UbtBluetoothDevice device=mLeList==null?null:mLeList.get(position);
+        if (device!=null) {
+            holder.pigNameTv.setText(device.getDevice().getName());
+            if (clickedPos>=0&&clickedPos==position) {
                 holder.pigPressor.setVisibility(View.VISIBLE);
-                if (mItemClickListener!=null){
-                    mItemClickListener.onClick(position,mLeList.get(position));
-                }
+            }else {
+                holder.pigPressor.setVisibility(View.GONE);
             }
-        });
+            holder.pigNameTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (clickedPos<0||clickedPos==position){
+                        clickedPos=position;
+                        holder.pigPressor.setVisibility(View.VISIBLE);
+                    }else {
+                        holder.pigPressor.setVisibility(View.INVISIBLE);
+                    }
+
+                    if (mItemClickListener != null) {
+                        mItemClickListener.onClick(position, device);
+                    }
+                }
+            });
+        }
+        if (mLeList.size()-1==position){
+            holder.pigDivider.setVisibility(View.INVISIBLE);
+        }else {
+            holder.pigDivider.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -67,12 +88,13 @@ public class PigListAdapter extends RecyclerView.Adapter<PigListAdapter.PigHolde
 
     protected static  class PigHolder extends  RecyclerView.ViewHolder  {
         public TextView  pigNameTv;
-        public ImageView pigPressor;
+        public View pigPressor;
+        public View      pigDivider;
         public PigHolder(View itemView) {
             super(itemView);
             pigPressor=itemView.findViewById(R.id.ubt_img_pig_connecting);
             pigNameTv=(TextView)itemView.findViewById(R.id.ubt_tv_pig_name);
-
+            pigDivider=itemView.findViewById(R.id.ubt_pig_dialog_divider);
         }
 
     }

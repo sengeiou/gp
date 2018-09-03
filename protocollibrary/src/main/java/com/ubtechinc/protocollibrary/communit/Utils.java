@@ -1,6 +1,5 @@
-package com.ubtechinc.protocollibrary.communite;
+package com.ubtechinc.protocollibrary.communit;
 
-import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Array;
 import java.lang.reflect.GenericArrayType;

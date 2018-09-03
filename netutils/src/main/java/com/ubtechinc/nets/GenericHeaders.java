@@ -8,7 +8,7 @@ import com.ubtech.utilcode.utils.AppUtils;
 import com.ubtech.utilcode.utils.DeviceUtils;
 import com.ubtech.utilcode.utils.PhoneUtils;
 import com.ubtech.utilcode.utils.ScreenUtils;
-import com.ubtechinc.alpha.model.StaticValue;
+
 import com.ubtechinc.nets.http.HeaderInterceptor;
 import com.ubtechinc.nets.utils.JsonUtil;
 
@@ -24,6 +24,12 @@ import java.util.HashMap;
  */
 
 public final class GenericHeaders {
+
+    /**==============begin:ubtech 内置应用的包名====================**/
+    public static final String CHAT_PACKAGE_NAME = "com.ubtech.iflytekmix";
+    public static final String TRANSLATION_PACKAGE_NAME = "com.ubtechinc.alphatranslation";
+    public static final String SMARTCAMERA_PACKAGE_NAME = "om.ubtech.smartcamera";
+    /**==============end:ubtech 内置应用的包名====================**/
     private static final String COMMON_INFO = "common-info";
     private static final String DEVICE_INFO = "device-info";
 
@@ -69,9 +75,9 @@ public final class GenericHeaders {
 
     private static boolean isRobot(Context context) {
         final String appName = AppUtils.getAppPackageName(context);
-        return  StaticValue.CHAT_PACKAGE_NAME.equals(appName)
-                || StaticValue.TRANSLATION_PACKAGE_NAME.equals(appName)
-                || StaticValue.SMARTCAMERA_PACKAGE_NAME.equals(appName);
+        return  CHAT_PACKAGE_NAME.equals(appName)
+                || TRANSLATION_PACKAGE_NAME.equals(appName)
+                || SMARTCAMERA_PACKAGE_NAME.equals(appName);
     }
 
     public static HashMap<String ,String > getCommonHeaders(Context context){

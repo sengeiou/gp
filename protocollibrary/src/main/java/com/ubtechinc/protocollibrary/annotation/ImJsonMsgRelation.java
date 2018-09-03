@@ -2,8 +2,8 @@ package com.ubtechinc.protocollibrary.annotation;
 
 
 
-import com.ubtechinc.protocollibrary.communite.IMJsonMsgHandler;
-import com.ubtechinc.protocollibrary.communite.NullJsonHandler;
+import com.ubtechinc.protocollibrary.communit.IMJsonMsgHandler;
+import com.ubtechinc.protocollibrary.communit.NullJsonHandler;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

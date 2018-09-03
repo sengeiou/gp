@@ -8,11 +8,15 @@
     <!--主页Tab RadioButton 文字变化颜色-->
     <color name="ubt_tab_btn_txt_color">#B4C0C7</color>
     <color name="ubt_tab_btn_txt_checked_color">#29AAFF</color>
+    <color name="ubt_skip_txt_unenable_color">#FFB4C0C7</color>
     <!--透明-->
     <color name="ubt_transparent">#0000</color>
     <color name="ubt_tips_txt_color">#454B59</color>
     <color name="ubt_mian_tab_decore_color">#1A000000</color>
     <color name="ubt_dilog_decore_color">#CDCED2</color>
     <color name="ubt_dialog_btn_txt_color">#FE4C4C</color>
-
+    <color name="ubt_wifi_list_divider">#E2E2E2</color>
+    <!--自定义提示背景色-->
+    <color name="ubt_notify_tv_bg_color">#55FE4C4C </color>
+    <color name="ubt_global_bg_color">#FFF5F8FB</color>
 </resources>

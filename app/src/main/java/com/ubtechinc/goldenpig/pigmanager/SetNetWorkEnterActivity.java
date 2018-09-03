@@ -25,7 +25,7 @@ import com.ubtechinc.goldenpig.utils.ImageUtils;
 public class SetNetWorkEnterActivity extends BaseToolBarActivity implements View.OnClickListener{
     private ImageView mTipsImg;             //提示动画
     private View    mBtnStartSetNet;       //开始配网按钮
-    private View    mTvSkip;              //跳过按钮
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -3,19 +3,21 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    android:background="@null"
+    android:background="@color/ubt_global_bg_color"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <android.support.v7.widget.Toolbar
         android:id="@+id/ubt_toolbar"
+        android:background="@null"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ubt_toolbar_height">
         <TextView
             style="@style/UBTToolBarTitleTheme"
             android:id="@+id/ubt_tv_toolbar_title"
             android:foregroundGravity="center"
+            android:gravity="center"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
         <TextView
             style="@style/UBTSkipTxtTheme"
             android:id="@+id/ubt_tv_set_net_skip"
@@ -24,6 +26,7 @@
             android:visibility="gone"
             android:foregroundGravity="right"
             android:layout_gravity="right"
+            android:gravity="center_vertical"
             android:text="@string/ubt_skip" />
     </android.support.v7.widget.Toolbar>
     <FrameLayout

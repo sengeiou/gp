@@ -12,31 +12,39 @@
         android:src="@drawable/img_wifi"
         android:layout_height="wrap_content" />
 
-    <EditText
+    <com.ubtechinc.goldenpig.comm.view.UbtWifiListEditText
         android:id="@+id/ubt_edt_wifi_name"
         style="@style/UBTSetWifiEditTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:text="UBT-Robot"
         android:inputType="textPersonName"
          />
     <View
+        android:layout_marginStart="@dimen/ubt_edt_marginstart"
+        android:layout_marginEnd="@dimen/ubt_edt_marginstart"
         android:layout_width="match_parent"
         android:background="@color/ubt_dilog_decore_color"
         android:layout_height="@dimen/ubt_1px"/>
-    <EditText
+    <com.ubtechinc.commlib.view.UbtPasswordEditText
         android:id="@+id/ubt_edt_wifi_password"
         style="@style/UBTSetWifiEditTheme"
+        app:defaultIcon="@drawable/ic_see"
+        app:psdIcon="@drawable/ic_closeeyes"
         android:layout_marginTop="@dimen/ubt_edt_wifi_psd_margintop"
+        android:hint="@string/ubt_password"
+        android:lines="1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="ubtubtubt"
+        android:paddingEnd="10dp"
+        android:layout_height="44dp"
+        android:text="ubtubtubtsaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadaqwdddddddddddddddd"
         android:ems="10"
         android:inputType="textPassword" />
     <View
+        android:layout_marginStart="@dimen/ubt_edt_marginstart"
+        android:layout_marginEnd="@dimen/ubt_edt_marginstart"
         android:layout_width="match_parent"
         android:background="@color/ubt_dilog_decore_color"
+        android:layout_marginTop="@dimen/ubt_8dp"
         android:layout_height="@dimen/ubt_1px"/>
     <Button
         android:id="@+id/ubt_btn_connect_wifi"
@@ -44,4 +52,5 @@
         style="@style/UBTButtonTheme.Cyan"
         android:text="@string/ubt_connect"
          />
+
 </LinearLayout>

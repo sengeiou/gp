@@ -96,8 +96,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':utilcode')
 //    compile project(':servicesdk')
-    compile project(path: ':servicemodel')
-    provided rootProject.ext.deps.timber
+     provided rootProject.ext.deps.timber
     //测试
     testCompile rootProject.ext.deps.junit
     testCompile rootProject.ext.deps.truth

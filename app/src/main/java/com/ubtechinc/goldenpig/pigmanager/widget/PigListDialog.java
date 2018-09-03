@@ -41,6 +41,7 @@ public class PigListDialog extends BaseDialog {
     private ArrayList<UbtBluetoothDevice> mLeList;
     private RecyclerView mPigRycView;
     private PigListAdapter mPigAdapter;
+    private View mLoadingView;        ///加载loading
     public PigListDialog(@NonNull Context context) {
         super(context);
         inits();
@@ -75,7 +76,7 @@ public class PigListDialog extends BaseDialog {
         mBluetoothadapter=BluetoothAdapter.getDefaultAdapter();
 
         registerLeCallback();
-
+        mLoadingView=findViewById(R.id.ubt_loading);
         mPigRycView=(RecyclerView)findViewById(R.id.ubt_pig_list_ryv);
         mPigRycView.setLayoutManager(new LinearLayoutManager(getContext()));
         mPigAdapter=new PigListAdapter(mLeList);
@@ -89,11 +90,17 @@ public class PigListDialog extends BaseDialog {
             @Override
             public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
                 final boolean isHasDevice=isHasDevice(device);
-                if (!isHasDevice && !TextUtils.isEmpty(device.getName())/*&& device.getName().startsWith("pig_")*/){
+
+                if (!isHasDevice && !TextUtils.isEmpty(device.getName())&& device.getName().startsWith("Pig_")){
                     UbtBluetoothDevice ubtBluetoothDevice=new UbtBluetoothDevice();
                     ubtBluetoothDevice.setDevice(device);
                     mLeList.add(ubtBluetoothDevice);
                     mPigAdapter.notifyItemInserted(mLeList.size());
+                    mPigRycView.setVisibility(View.VISIBLE);
+                    if (mLoadingView!=null){
+                        mLoadingView.setVisibility(View.GONE);
+                    }
+
                 }
 
             }

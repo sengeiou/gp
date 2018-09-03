@@ -1,30 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:gravity="center_vertical"
     android:background="@null"
-    android:minHeight="@dimen/ubt_pig_list_item_height"
     android:layout_height="@dimen/ubt_pig_list_item_height">
 
     <TextView
-
         android:id="@+id/ubt_tv_pig_name"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ubt_pig_list_item_height"
+        android:layout_centerVertical="true"
+        android:background="@null"
         android:lines="1"
+        android:text="ffffffffff"
         android:textColor="@color/ubt_tips_txt_color"
         android:gravity="center_vertical"
         android:textSize="@dimen/ubt_pig_list_item_txt_size"
-        android:layout_weight="1"
-        android:text="TextViewdsad " />
+        android:layout_toStartOf="@id/ubt_img_pig_connecting"
+        android:layout_marginBottom="@dimen/ubt_1px"
+         />
 
-    <ImageView
-        android:visibility="gone"
-
+    <ProgressBar
+        android:visibility="invisible"
         android:id="@+id/ubt_img_pig_connecting"
         android:layout_width="@dimen/ubt_24dp"
         android:layout_height="@dimen/ubt_24dp"
-        android:layout_weight="0.1"
-        app:srcCompat="@drawable/ic_loding2" />
-</LinearLayout>
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:indeterminateBehavior="repeat"
+        android:indeterminateDrawable="@drawable/anim_ubt_loading" />
+    <View
+        android:id="@+id/ubt_pig_dialog_divider"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:background="@color/ubt_wifi_list_divider"
+        android:layout_height="@dimen/ubt_1px"/>
+</RelativeLayout>

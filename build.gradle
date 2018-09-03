@@ -2,7 +2,7 @@
 apply from:"config.gradle"
 apply plugin: 'kotlin'
 buildscript {
-    ext.kotlin_version =  '1.2.31'
+    ext.kotlin_version =  '1.2.50'
     repositories {
         google()
         jcenter {url 'https://maven.aliyun.com/repository/jcenter'}
@@ -17,6 +17,7 @@ buildscript {
         classpath 'com.google.protobuf:protobuf-gradle-plugin:0.8.2'
         classpath 'com.tencent.bugly:symtabfileuploader:latest.release'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'// 项目根目录build.gradle配置代码
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -45,6 +46,7 @@ allprojects {
 }*/
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
 }
 compileKotlin {
     kotlinOptions {

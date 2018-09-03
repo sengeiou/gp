@@ -1,8 +1,8 @@
 package com.ubtechinc.protocollibrary.annotation;
 
 
-import com.ubtechinc.protocollibrary.communite.IMsgHandler;
-import com.ubtechinc.protocollibrary.communite.NullHandler;
+import com.ubtechinc.protocollibrary.communit.IMsgHandler;
+import com.ubtechinc.protocollibrary.communit.NullHandler;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

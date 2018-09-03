@@ -265,7 +265,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         @Override
         public void connectSuccess() {
             super.connectSuccess();
-            toSetWifi();
+
         }
 
         @Override
@@ -273,4 +273,5 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
             super.connWifiSuccess();
         }
     };
+
 }

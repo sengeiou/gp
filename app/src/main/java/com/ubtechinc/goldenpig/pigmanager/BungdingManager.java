@@ -86,7 +86,7 @@ public class BungdingManager {
     BleConnectAbstract mBleConnectAbstract = new BleConnectAbstract(){
         @Override
         public void receiverDataFromRobot(String data) {
-            Log.i(TAG,"data=======" + data);
+
             try{
                 JSONObject rePlyJson = new JSONObject(data);
                 if (rePlyJson.has(Constants.DATA_COMMAND)) {
@@ -239,7 +239,7 @@ public class BungdingManager {
      * 获取clientId
      */
     private void getClientId(final String productId, final String dsn){
-        Log.i(TAG,"getClientId=====" + productId + ";;dsn====" + dsn);
+
         TVSManager.getInstance(mContext, BuildConfig.APP_ID_WX,BuildConfig.APP_ID_QQ).tvsAuth(productId, dsn, new TVSManager.TVSAuthListener() {
             @Override
             public void onSuccess(String clientId) {

@@ -2,8 +2,11 @@ package com.ubtechinc.goldenpig.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,7 +33,8 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
     private TextView tvTitle;
     private FrameLayout viewContent;
     private Toolbar toolbar;
-
+    private TextView mNotifyTv; ///动态提示
+    protected View    mTvSkip;              //跳过按钮
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +43,12 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
         //1、设置支出，并不显示项目的title文字
         toolbar = (Toolbar) findViewById(R.id.ubt_toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();//返回
+            }
+        });
         if (getSupportActionBar()!=null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
@@ -49,15 +59,36 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
         }
         //3、初始化操作（此方法必须放在最后执行位置）
         init(savedInstanceState);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();//返回
-            }
-        });
+
 
     }
-
+    protected void showNotify(String notifyTips){
+        if (mNotifyTv==null){
+            mNotifyTv=new TextView(this);
+            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+            lp.gravity = Gravity.TOP;
+            mNotifyTv.setBackgroundColor(ResourcesCompat.getColor(getResources(),R.color.ubt_notify_tv_bg_color,null));
+            mNotifyTv.setTextColor(ResourcesCompat.getColor(getResources(),R.color.ubt_dialog_btn_txt_color,null));
+            mNotifyTv.setLayoutParams(lp);
+            mNotifyTv.setGravity(Gravity.CENTER);
+        }
+        mNotifyTv.setText(notifyTips);
+        if (viewContent!=null){
+            viewContent.addView(mNotifyTv,0); //index是0，表示添加的child在linearlayout顶部，-1为底部
+        }
+    }
+    protected void setSkipEnable(boolean enable){
+        if (mTvSkip!=null){
+            mTvSkip.setEnabled(enable);
+        }
+    }
+    protected void hideNotify(){
+        if (mNotifyTv!=null &&viewContent!=null){
+            mNotifyTv.setVisibility(View.GONE);
+            viewContent.removeView(mNotifyTv);
+        }
+    }
     /**
      * 设置布局资源
      *
@@ -93,7 +124,11 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
      */
     protected void setTitleBack(boolean visible) {
         if (visible) {
-            toolbar.setNavigationIcon(R.drawable.dingdang_btn_back_holo_light);//设置返回按钮
+            //toolbar.setNavigationIcon(R.drawable.dingdang_btn_back_holo_light);//设置返回按钮
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                actionBar.setDisplayHomeAsUpEnabled(true);
+            }
         }
     }
     /**设置右侧按钮文字***/

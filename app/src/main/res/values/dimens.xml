@@ -37,12 +37,17 @@
     <dimen name="ubt_pig_list_item_height">58dp</dimen>
     <dimen name="ubt_pig_list_item_txt_size">16sp</dimen>
 
-    <!--设置FWIFI界面-->
+    <!--设置WIFI界面-->
     <dimen name="ubt_set_wifi_edt_size">15sp</dimen>
     <dimen name="ubt_edt_height">44dp</dimen>
     <dimen name="ubt_wifi_logo_margintop">56dp</dimen>
     <dimen name="ubt_edt_wifi_name_margintop">46dp</dimen>
     <dimen name="ubt_edt_wifi_psd_margintop">16dp</dimen>
     <dimen name="ubt_edt_marginstart">36dp</dimen>
-
+    <dimen name="ubt_8dp">8dp</dimen>
+    <dimen name="ubt_wifi_list_padding">15dp</dimen>
+    <dimen name="ubt_wifi_list_maxheight">120dp</dimen>
+    <dimen name="ubt_wifi_list_singal_height">12dp</dimen>
+    <dimen name="ubt_wifi_list_singal_width">15dp</dimen>
+    <dimen name="ubt_wifi_list_corners">8dp</dimen>
 </resources>
