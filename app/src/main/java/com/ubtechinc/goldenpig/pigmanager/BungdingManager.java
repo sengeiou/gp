@@ -1,6 +1,7 @@
 package com.ubtechinc.goldenpig.pigmanager;
 
 
+import android.arch.lifecycle.Observer;
 import android.bluetooth.BluetoothDevice;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -19,7 +20,9 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
 import com.ubtechinc.goldenpig.net.RegisterRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.bean.UbtScanResult;
+import com.ubtechinc.goldenpig.pigmanager.model.RobotAllAccountViewModel;
 import com.ubtechinc.goldenpig.pigmanager.observeable.MyPigsLive;
+import com.ubtechinc.goldenpig.pigmanager.observeable.RobotBindStateLive;
 import com.ubtechinc.goldenpig.pigmanager.register.RegisterPigRepository;
 import com.ubtechinc.tvlloginlib.TVSManager;
 
@@ -34,6 +37,10 @@ import static com.ubtechinc.bluetooth.Constants.ROBOT_BANGDING_SUCCESS;
 import static com.ubtechinc.bluetooth.Constants.ROBOT_CONNECT_SUCCESS;
 import static com.ubtechinc.bluetooth.Constants.ROBOT_REPLY_WIFI_IS_OK_TRANS;
 import static com.ubtechinc.bluetooth.Constants.WIFI_LIST_RESLUT_TRANS;
+import static com.ubtechinc.goldenpig.pigmanager.BungdingManager.BindState.HaventBind;
+import static com.ubtechinc.goldenpig.pigmanager.BungdingManager.BindState.MySelf;
+import static com.ubtechinc.goldenpig.pigmanager.BungdingManager.BindState.Networkerror;
+import static com.ubtechinc.goldenpig.pigmanager.BungdingManager.BindState.Others;
 
 
 /**
@@ -46,6 +53,9 @@ import static com.ubtechinc.bluetooth.Constants.WIFI_LIST_RESLUT_TRANS;
  */
 
 public class BungdingManager {
+    public enum BindState{
+        MySelf, Others, HaventBind, Networkerror
+    }
     private static final String TAG = BungdingManager.class.getSimpleName();
     private BanddingListener mBanddingListener;
     private RegisterPigRepository mRobotRepository;
@@ -55,14 +65,20 @@ public class BungdingManager {
     private ICommandProduce commandProduce;
     private String clientIdRecord;
     private RegisterRobotModule.Response response;
-
+    private String  mToken;
     public BungdingManager(BaseActivity context) {
         UbtBluetoothManager.getInstance().setBleConnectListener(mBleConnectAbstract);
         mRobotRepository = new RegisterPigRepository();
         commandProduce = new JsonCommandProduce();
         this.mContext = context;
     }
-
+    public BungdingManager(BaseActivity context,String token) {
+        UbtBluetoothManager.getInstance().setBleConnectListener(mBleConnectAbstract);
+        mRobotRepository = new RegisterPigRepository();
+        commandProduce = new JsonCommandProduce();
+        this.mContext = context;
+        this.mToken=token;
+    }
     public void setBangdingListener(BanddingListener listener) {
         if (listener != null) {
             UbtBluetoothManager.getInstance().setBleConnectListener(mBleConnectAbstract);
@@ -118,7 +134,6 @@ public class BungdingManager {
                         Log.d(TAG,"errorCode=====" + errorCode);
                         UbtBluetoothManager.getInstance().closeConnectBle();
                         if (mBanddingListener != null) {
-                            Log.d(TAG, "errorCode===111==" + errorCode);
                             mBanddingListener.onFaild(errorCode);
                         }
                     }else if(command == ROBOT_BANGDING_SUCCESS) {
@@ -139,14 +154,19 @@ public class BungdingManager {
                         }
                     }else if(command == ROBOT_CONNECT_SUCCESS){
                         int code = rePlyJson.getInt(Constants.CODE);
-                        if(code == Constants.CODE_0){
+                       /* final String productId = rePlyJson.getString(Constants.PRODUCTID);*/
+
+                        getClientId("",mSerialId);
+                        //String serailId = mCurrentDevices.getName().replace(Constants.ROBOT_TAG,"");
+                       // checkRobotBindState(serailId,mToken,"wx0238743de057a634");
+                        /*if(code == Constants.CODE_0){
                             sendWifiIsOkMsgToRobot();
                         }else {
                             UbtBluetoothManager.getInstance().closeConnectBle();
                             if(mBanddingListener != null){
                                 mBanddingListener.devicesConnectByOther();
                             }
-                        }
+                        }*/
                     }else if(command == ROBOT_REPLY_WIFI_IS_OK_TRANS){
                         Log.i(TAG,"isChangeWifi========" + UbtBluetoothManager.getInstance().isChangeWifi());
                         if(UbtBluetoothManager.getInstance().isChangeWifi()){
@@ -161,7 +181,7 @@ public class BungdingManager {
                                 mSid = rePlyJson.getString(Constants.SERISAL_NUMBER);
                             }
                             String serailId = mCurrentDevices.getName().replace(Constants.ROBOT_TAG,"");
-                            checkRobotBindState(serailId);
+                            checkRobotBindState(serailId,mToken,BuildConfig.APP_ID_WX);
                         }
 
                     }
@@ -239,8 +259,8 @@ public class BungdingManager {
      * 获取clientId
      */
     private void getClientId(final String productId, final String dsn){
-
-        TVSManager.getInstance(mContext, BuildConfig.APP_ID_WX,BuildConfig.APP_ID_QQ).tvsAuth(productId, dsn, new TVSManager.TVSAuthListener() {
+        mRobotRepository.registerRobot(mSerialId, AuthLive.getInstance().getUserId(), mResponseListener);
+       /* TVSManager.getInstance(mContext, BuildConfig.APP_ID_WX,BuildConfig.APP_ID_QQ).tvsAuth(BuildConfig.PRODUCT_ID, dsn, new TVSManager.TVSAuthListener() {
             @Override
             public void onSuccess(String clientId) {
                 Log.i(TAG,"onSuccess=======");
@@ -257,7 +277,7 @@ public class BungdingManager {
                     mBanddingListener.onFaild(Constants.GET_CLIENT_ID_ERROR_CODE);
                 }
             }
-        });
+        });*/
 
     }
 
@@ -295,9 +315,9 @@ public class BungdingManager {
         }
     }
 
-    private void checkRobotBindState(String serialId) {
-       /* RobotAllAccountViewModel mRobotAllAccountViewModel = new RobotAllAccountViewModel();
-        mRobotAllAccountViewModel.checkRobotBindState(serialId).observe(mContext, new Observer<RobotBindStateLive>() {
+    private void checkRobotBindState(String serialId,String token,String appId) {
+        RobotAllAccountViewModel mRobotAllAccountViewModel = new RobotAllAccountViewModel();
+        mRobotAllAccountViewModel.checkRobotBindState(serialId,token,appId).observe(mContext, new Observer<RobotBindStateLive>() {
             @Override
             public void onChanged(@Nullable RobotBindStateLive robotBindStateLive) {
 
@@ -317,15 +337,8 @@ public class BungdingManager {
                         break;
                     case MySelf:
                         UbtBluetoothManager.getInstance().closeConnectBle();
-                        NotifactionView notifactionView = new NotifactionView(mContext);
-                        notifactionView.setNotifactionText("你已绑定此机器人", R.drawable.ic_toast_succeed);
-                        String activityName = StoreActivityNamesBeforeBinding.getInstance().extractActivityName();
-                        if (!TextUtils.isEmpty(activityName)){
-                            StoreActivityNamesBeforeBinding.getInstance().back2ActivityAccordingNames(mContext, activityName);
-                            StoreActivityNamesBeforeBinding.clearInstance();
-                        }else {
-                            PageRouter.toMain(mContext);
-                        }
+
+
                         break;
                     case HaventBind:
                         if(mRobotWifiIsOk){
@@ -344,7 +357,7 @@ public class BungdingManager {
                         break;
                 }
             }
-        });*/
+        });
     }
 
     public interface BanddingListener{
@@ -356,6 +369,7 @@ public class BungdingManager {
         void bindByOthers(CheckBindRobotModule.User user);
         void robotNotWifi();
         void connectFailed();//不用关闭蓝牙
+        void hasWifi(String wifi); //小猪已经连接了的Wifi时，会掉名称
     }
 
     public interface GetWifiListListener{

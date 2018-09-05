@@ -10,11 +10,14 @@
         android:id="@+id/ubt_loading"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_margin="@dimen/ubt_30dp"
         android:layout_gravity="center"
         android:indeterminateBehavior="repeat"
         android:indeterminateDrawable="@drawable/anim_ubt_loading" />
     <android.support.v7.widget.RecyclerView
         android:visibility="gone"
+        android:layout_marginStart="@dimen/ubt_16dp"
+        android:layout_marginEnd="@dimen/ubt_16dp"
         android:id="@+id/ubt_pig_list_ryv"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -85,6 +85,7 @@ public class PigListDialog extends BaseDialog {
     public void setBluetoothItemClickListener(OnPigListItemClickListener listener){
         mPigAdapter.setItemClickListener(listener);
     }
+
     private void registerLeCallback(){
         mLecallback = new BluetoothAdapter.LeScanCallback() {
             @Override

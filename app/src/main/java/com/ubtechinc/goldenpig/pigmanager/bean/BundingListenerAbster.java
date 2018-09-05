@@ -54,4 +54,9 @@ public  class BundingListenerAbster implements BungdingManager.BanddingListener 
     public void connectFailed() {
 
     }
+
+    @Override
+    public void hasWifi(String wifi) {
+
+    }
 }

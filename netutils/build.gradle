@@ -93,25 +93,25 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile project(':utilcode')
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation project(':utilcode')
 //    compile project(':servicesdk')
-     provided rootProject.ext.deps.timber
+    compileOnly rootProject.ext.deps.timber
     //测试
-    testCompile rootProject.ext.deps.junit
-    testCompile rootProject.ext.deps.truth
-    testCompile rootProject.ext.deps.robolectric
+    testImplementation rootProject.ext.deps.junit
+    testImplementation rootProject.ext.deps.truth
+    testImplementation rootProject.ext.deps.robolectric
     //网络
-    compile rootProject.ext.deps.retrofit2
-    compile rootProject.ext.deps.retrofit_gson
-    compile rootProject.ext.deps.rx_retrofit
-    compile rootProject.ext.deps.rxAndroid
-    compile rootProject.ext.deps.okhttp
-    compile rootProject.ext.deps.logging_interceptor
+    implementation rootProject.ext.deps.retrofit2
+    implementation rootProject.ext.deps.retrofit_gson
+    implementation rootProject.ext.deps.rx_retrofit
+    implementation rootProject.ext.deps.rxAndroid
+    implementation rootProject.ext.deps.okhttp
+    implementation rootProject.ext.deps.logging_interceptor
 
-    compile rootProject.ext.deps.protobufLava
-    provided rootProject.ext.deps.supportAnnotations
-    compile rootProject.ext.deps.eventbus
+    implementation rootProject.ext.deps.protobufLava
+    compileOnly rootProject.ext.deps.supportAnnotations
+    implementation rootProject.ext.deps.eventbus
 
 
 }

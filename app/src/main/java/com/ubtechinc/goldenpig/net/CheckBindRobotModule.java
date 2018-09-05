@@ -18,7 +18,7 @@ import java.util.List;
 @Keep
 public class CheckBindRobotModule {
 
-    @Url("/alpha2-web/relation/getBindUsers")
+    @Url("/robot/common/queryRobotList")
     @Keep
     public static class Request {
         private String robotUserId;

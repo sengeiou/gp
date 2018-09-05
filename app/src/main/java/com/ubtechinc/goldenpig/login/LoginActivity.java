@@ -14,6 +14,8 @@ import com.ubtechinc.goldenpig.main.MainActivity;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
+import com.ubtechinc.goldenpig.pigmanager.SearchPigActivity;
+import com.ubtechinc.goldenpig.route.ActivityRoute;
 
 import java.lang.ref.WeakReference;
 
@@ -189,8 +191,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 if (msg.what == 1) {
                     ToastUtils.showShortToast(loginActivity,loginActivity.getString(R.string.ubt_net_error_tips));
                 }
-                loginActivity.startActivity(new Intent(loginActivity,MainActivity.class));
-                loginActivity.finish();
+                ActivityRoute.toAnotherActivity(loginActivity, SearchPigActivity.class,true);
             }
 
         }

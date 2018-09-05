@@ -4,6 +4,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
@@ -65,9 +66,12 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
     private PermissionLocationRequest mLocationRequest;
 
     private static final int MSG_WATH_DISCONNECT_SUCCESS = 0x001;
+
     private UbtBluetoothDevice mBluetoothDevice;
     private BungdingManager mBangdingManager;
     private String TAG="SearchPigActivity";
+    private PigListDialog pigListDialog;
+    private CountDownTimer mTimer;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +107,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
     @Override
     protected void onResume() {
         super.onResume();
+        closeEnterDialog();
     }
 
     @Override
@@ -117,6 +122,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
     protected void onDestroy() {
         super.onDestroy();
         closeEnterDialog();
+        cancelTimer();
     }
 
     @Override
@@ -129,7 +135,12 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
                 break;
         }
     }
-
+    private void cancelTimer(){
+        if (mTimer!=null){
+            mTimer.cancel();
+            mTimer=null;
+        }
+    }
     private void checkBlueTooth() {
         final byte state = BlueToothManager.getBluetoothState();
         switch (state) {
@@ -148,7 +159,27 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
                 break;
         }
     }
+    private void startTimer(){
+        if (mTimer == null) {
+            mTimer = new CountDownTimer((long) (60000), 60000) {
 
+                @Override
+                public void onTick(long millisUntilFinished) {
+
+                }
+
+                @Override
+                public void onFinish() {
+                     if (pigListDialog!=null&&pigListDialog.isShowing()){
+                         pigListDialog.dismiss();
+                         ToastUtils.showLongToast(SearchPigActivity.this,R.string.ubt_bunding_ping_timeout);
+                     }
+                     mTimer=null;
+                }
+            };
+            mTimer.start();
+        }
+    }
     private void openBlueTooth() {
         mEnterDialog = new UBTBaseDialog(this);
         mEnterDialog.setTips(getString(R.string.ubt_want_open_bluetooth));
@@ -162,6 +193,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
 
             @Override
             public void onRightButtonClick(View view) {
+
                 BlueToothManager.openBlueToothSetting(SearchPigActivity.this,BLUETOOTH_REQUESTCODE);
             }
 
@@ -210,11 +242,12 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         }
     }
     private void showPigListDialog(){
-        PigListDialog pigListDialog = new PigListDialog(this);
+        pigListDialog = new PigListDialog(this);
         pigListDialog.setBluetoothItemClickListener(new OnPigListItemClickListener() {
             @Override
             public void onClick(int pos, UbtBluetoothDevice device) {
                 connectBleDevice(device);
+                startTimer();
             }
         });
         pigListDialog.show();
@@ -234,6 +267,8 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
     }
 
     private void toSetWifi(){
+        closeEnterDialog();
+        cancelTimer();
         HashMap<String,UbtBluetoothDevice> value=new HashMap<>();
         value.put("dev",mBluetoothDevice);
         ActivityRoute.toAnotherActivity(SearchPigActivity.this,SetPingNetWorkActivity.class,value,false);
@@ -245,6 +280,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
                 case MSG_WATH_DISCONNECT_SUCCESS:
                     UbtBluetoothManager.getInstance().connectBluetooth(mBluetoothDevice);
                     break;
+                 
                 default:
                     break;
             }

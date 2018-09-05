@@ -20,7 +20,7 @@
 
 
     <application
-        android:name="android.support.multidex.MultiDexApplication"
+        android:name=".app.UBTPGApplication"
         android:exported="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -28,7 +28,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoToolbar">
-        <activity android:name=".pigmanager.SearchPigActivity"
+        <activity android:name=".login.LoginActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoToolbar"
@@ -43,11 +43,12 @@
         <activity android:name=".main.MainActivity"
             android:screenOrientation="portrait"
             />
-        <activity android:name=".login.LoginActivity" />
+        <activity android:name=".pigmanager.SearchPigActivity" />
         <activity android:name=".pigmanager.SetPingNetWorkActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
            />
+        <activity android:name=".pigmanager.SetNetWorkEnterActivity"/>
         <!--<activity android:name=".pigmanager.SetPingNetWorkActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"

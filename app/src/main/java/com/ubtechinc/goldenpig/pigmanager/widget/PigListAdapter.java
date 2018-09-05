@@ -54,15 +54,17 @@ public class PigListAdapter extends RecyclerView.Adapter<PigListAdapter.PigHolde
                 public void onClick(View v) {
 
                     if (clickedPos<0||clickedPos==position){
+                        if (mItemClickListener != null&&clickedPos<0) {
+                            mItemClickListener.onClick(position, device);
+                        }
                         clickedPos=position;
                         holder.pigPressor.setVisibility(View.VISIBLE);
+
                     }else {
                         holder.pigPressor.setVisibility(View.INVISIBLE);
                     }
 
-                    if (mItemClickListener != null) {
-                        mItemClickListener.onClick(position, device);
-                    }
+
                 }
             });
         }

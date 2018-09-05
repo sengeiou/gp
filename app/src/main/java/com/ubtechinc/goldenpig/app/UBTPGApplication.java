@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
+import com.facebook.stetho.Stetho;
 import com.tencent.ai.tvs.LoginApplication;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.protocollibrary.communit.ProtoBufferDisposer;
@@ -20,13 +21,14 @@ public class UBTPGApplication extends LoginApplication {
         super.onCreate();
 
         instance = this;
+        Stetho.initializeWithDefaults(this);
         UbtLogger.init(getApplicationContext());
         UbtLogger.i("", ProtoBufferDisposer.TAG);
     }
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        MultiDex.install(this);
+
     }
     @Override
     public void onLowMemory() {

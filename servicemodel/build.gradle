@@ -24,11 +24,11 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    provided rootProject.ext.deps.design
-    provided rootProject.ext.deps.supportV4
-    provided rootProject.ext.deps.appCompatV7
-    testCompile rootProject.ext.deps.junit
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    compileOnly rootProject.ext.deps.design
+    compileOnly rootProject.ext.deps.supportV4
+    compileOnly rootProject.ext.deps.appCompatV7
+    testImplementation rootProject.ext.deps.junit
 }
 
 task makeJar(type: Copy) {

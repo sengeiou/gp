@@ -25,12 +25,12 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    provided rootProject.ext.deps.design
-    provided rootProject.ext.deps.supportV4
-    provided rootProject.ext.deps.appCompatV7
-    testCompile rootProject.ext.deps.junit
-    testCompile rootProject.ext.deps.truth
-    testCompile rootProject.ext.deps.robolectric
+    compileOnly rootProject.ext.deps.design
+    compileOnly rootProject.ext.deps.supportV4
+    compileOnly rootProject.ext.deps.appCompatV7
+    testImplementation rootProject.ext.deps.junit
+    testImplementation rootProject.ext.deps.truth
+    testImplementation rootProject.ext.deps.robolectric
     implementation rootProject.ext.deps.guava
     implementation rootProject.ext.deps.gson
     implementation files('libs/fastjson-1.2.31.jar')
