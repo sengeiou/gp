@@ -42,7 +42,7 @@ public class HeaderInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         final Request request = chain.request();
         String newUrl = request.url().toString();
-        if (newUrl.startsWith(HttpManager.IM_TAG)) {
+        /*if (newUrl.startsWith(HttpManager.IM_TAG)) {
             newUrl = newUrl.replace(HttpManager.BASE_URL, IM_URL_HOST);
         } else if (newUrl.startsWith(HttpManager.SER_TAG)) {
             newUrl = newUrl.replace(HttpManager.BASE_URL + "alpha2-web/", URL_HOST);
@@ -56,7 +56,7 @@ public class HeaderInterceptor implements Interceptor {
             newUrl = newUrl.replace(HttpManager.BASE_URL, BuildConfig.CREATION_HOST);
         } else if (newUrl.startsWith(HttpManager.UPDATE)){
             newUrl = newUrl.replace(HttpManager.BASE_URL, BuildConfig.UPDATE);
-        }
+        }*/
         Request.Builder builder = request.newBuilder();
         builder.url(newUrl);
 

@@ -17,6 +17,9 @@ import com.ubtechinc.goldenpig.base.BaseFragment;
  * @changTime  :2018/8/17 18:00
  */
 public class PigFragment extends BaseFragment {
+    public PigFragment(){
+        super();
+    }
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {

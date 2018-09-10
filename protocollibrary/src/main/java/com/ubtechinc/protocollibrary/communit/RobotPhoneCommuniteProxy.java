@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
+
 /**
  * Created by Administrator on 2017/5/24.
  */
@@ -52,7 +53,7 @@ public class RobotPhoneCommuniteProxy<T> {
         sendMsgEngine.sendMsg(requestId, peer, data, callback);
     }
 
-    private synchronized void sendHeartBeat(short cmdId,byte version, int responseSerail, GeneratedMessageLite requestBody, String peer, Callback callback) {
+    private synchronized void sendHeartBeat(short cmdId, byte version, int responseSerail, GeneratedMessageLite requestBody, String peer, Callback callback) {
         int requestId = requestSerial.incrementAndGet();
         requestCache.put(requestId, new RequestBean(cmdId, callback));
 

@@ -39,7 +39,7 @@ public class AuthLive extends LiveData<AuthLive> {
     private UserInfo currentUser;
 
     private AuthState state;
-
+    private String loginToken;
     public void logining() {
         this.state = AuthState.LOGINING;
         if(isMainThread()){

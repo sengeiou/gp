@@ -3,8 +3,11 @@ package com.ubtechinc.goldenpig.login;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.BuildConfig;
+import com.ubtechinc.goldenpig.comm.entity.UserInfo;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
+import com.ubtechinc.goldenpig.login.repository.UBTAuthRepository;
 import com.ubtechinc.goldenpig.repository.TVSAuthRepository;
 import com.ubtechinc.tvlloginlib.entity.LoginInfo;
 
@@ -15,27 +18,48 @@ import com.ubtechinc.tvlloginlib.entity.LoginInfo;
  *@change        :
  *@changetime    :2018/8/21 11:14
 */
-public class LoginModel implements TVSAuthRepository.AuthCallBack{
+public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthRepository.UBTAuthCallBack{
+    private final String TAG="LoginModel";
     private TVSAuthRepository tvsAuthRepository;
     private AuthLive authLive ;
+    private UBTAuthRepository ubtAuthRepository;
     public LoginModel(){
         tvsAuthRepository = new TVSAuthRepository(BuildConfig.APP_ID_WX,BuildConfig.APP_ID_QQ);
+        ubtAuthRepository = new UBTAuthRepository();
         authLive = AuthLive.getInstance();
     }
 
     @Override
     public void onTVSLoginSuccess(LoginInfo userInfo) {
+        ubtAuthRepository.login(userInfo, this);
+
+    }
+
+
+    @Override
+    public void onSuccess(UserInfo userInfo) {
+        authLive.logined(userInfo);
 
     }
 
     @Override
     public void onError() {
+        UbtLogger.i(TAG,"onError");
+    }
+
+    @Override
+    public void onLogout() {
 
     }
 
     @Override
-    public void onCancel() {
+    public void onLogoutError() {
+        UbtLogger.i(TAG,"onLogoutError");
+    }
 
+    @Override
+    public void onCancel() {
+        UbtLogger.i(TAG,"cancel");
     }
     public boolean isWXInstall(){
         return tvsAuthRepository.isWXInstall();

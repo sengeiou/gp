@@ -108,6 +108,11 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
     protected void onResume() {
         super.onResume();
         closeEnterDialog();
+        if (isSearched){
+            mSearchBtn.setText("重新搜索");
+        }else {
+            mSearchBtn.setText("搜索音响");
+        }
     }
 
     @Override
@@ -171,8 +176,14 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
                 @Override
                 public void onFinish() {
                      if (pigListDialog!=null&&pigListDialog.isShowing()){
+                         if (pigListDialog.getBleCount()<1){
+                             showNotify("未搜到音箱，请确认已按照引导视频正确操作");
+                         }else if (isClicked){
+                             ToastUtils.showLongToast(SearchPigActivity.this,R.string.ubt_bunding_ping_timeout);
+                         }
+                         isClicked=false;
                          pigListDialog.dismiss();
-                         ToastUtils.showLongToast(SearchPigActivity.this,R.string.ubt_bunding_ping_timeout);
+
                      }
                      mTimer=null;
                 }
@@ -241,11 +252,13 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
             showPigListDialog();
         }
     }
+    private boolean isClicked;
     private void showPigListDialog(){
         pigListDialog = new PigListDialog(this);
         pigListDialog.setBluetoothItemClickListener(new OnPigListItemClickListener() {
             @Override
             public void onClick(int pos, UbtBluetoothDevice device) {
+                isClicked=true;
                 connectBleDevice(device);
                 startTimer();
             }
@@ -271,7 +284,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         cancelTimer();
         HashMap<String,UbtBluetoothDevice> value=new HashMap<>();
         value.put("dev",mBluetoothDevice);
-        ActivityRoute.toAnotherActivity(SearchPigActivity.this,SetPingNetWorkActivity.class,value,false);
+        ActivityRoute.toAnotherActivity(SearchPigActivity.this,SetPigNetWorkActivity.class,value,false);
     }
     private Handler mHandler = new Handler(){
         @Override
@@ -290,12 +303,21 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         @Override
         public void onFaild(int errorCode) {
             super.onFaild(errorCode);
+            switch (errorCode){
+                case 2041:
+                    if (pigListDialog!=null&&pigListDialog.isShowing()) {
+                        pigListDialog.dismiss();
+                        ToastUtils.showShortToast(SearchPigActivity.this, R.string.ubt_one_user_one_pig);
+                    }
+                    break;
+            }
+
         }
 
         @Override
         public void onSuccess(RegisterRobotModule.Response response) {
             super.onSuccess(response);
-            toSetWifi();
+
         }
 
         @Override
@@ -307,6 +329,19 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         @Override
         public void connWifiSuccess() {
             super.connWifiSuccess();
+        }
+
+        @Override
+        public void onMaster() {
+            super.onMaster();
+            toSetWifi();
+        }
+
+        @Override
+        public void onUnBind() {
+            super.onUnBind();
+            //toSetWifi();
+            ToastUtils.showShortToast(SearchPigActivity.this,"用户未绑定");
         }
     };
 

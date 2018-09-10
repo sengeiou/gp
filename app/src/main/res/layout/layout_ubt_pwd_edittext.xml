@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="wrap_content">
+
+    <com.ubtechinc.commlib.view.UbtClearableEditText
+        android:id="@+id/ubt_clearedt_wifi_pwd"
+        android:layout_width="match_parent"
+        android:ems="10"
+        android:lines="1"
+        android:drawablePadding="2dp"
+        app:defaultIcon="@drawable/ic_close"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:inputType="textPassword"
+        android:layout_toStartOf="@+id/ubt_btn_pwd_visual"
+         />
+
+    <ImageButton
+        android:id="@+id/ubt_btn_pwd_visual"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:padding="10dp"
+        android:button="@null"
+        android:background="@null"
+        android:src="@drawable/ic_closeeyes"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+         />
+</RelativeLayout>

@@ -21,6 +21,7 @@ import com.ubtechinc.bluetooth.UbtBluetoothDevice;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseDialog;
+import com.ubtechinc.goldenpig.comm.view.WrapContentLinearLayoutManager;
 
 import java.util.ArrayList;
 
@@ -78,7 +79,7 @@ public class PigListDialog extends BaseDialog {
         registerLeCallback();
         mLoadingView=findViewById(R.id.ubt_loading);
         mPigRycView=(RecyclerView)findViewById(R.id.ubt_pig_list_ryv);
-        mPigRycView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mPigRycView.setLayoutManager(new WrapContentLinearLayoutManager(getContext()));
         mPigAdapter=new PigListAdapter(mLeList);
         mPigRycView.setAdapter(mPigAdapter);
     }
@@ -142,5 +143,11 @@ public class PigListDialog extends BaseDialog {
             mBluetoothadapter.stopLeScan(mLecallback);
         }
     }
-
+    public int getBleCount(){
+        if (mLeList!=null){
+            return mLeList.size();
+        }else {
+            return 0;
+        }
+    }
 }

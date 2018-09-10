@@ -8,11 +8,12 @@
         android:layout_width="match_parent"
         android:ems="10"
         android:lines="1"
+        android:drawablePadding="2dp"
         app:defaultIcon="@drawable/ic_close"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toStartOf="@+id/ubt_btn_drop_wifilist"
-        android:text="UbtPasswordEditText" />
+          />
 
     <ImageButton
         android:id="@+id/ubt_btn_drop_wifilist"
@@ -24,5 +25,5 @@
         android:src="@drawable/ic_drop_down"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:text="Button" />
+         />
 </RelativeLayout>

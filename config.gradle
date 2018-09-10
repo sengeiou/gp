@@ -93,8 +93,8 @@ ext {
             constraintlayout:"com.android.support.constraint:constraint-layout:1.0.2",
             recyclerView:"com.android.support:recyclerview-v7:"+APPCOMPAT_VERSION,
             supportAnnotations: 'com.android.support:support-annotations:26.0.0',
-            //------------------------------腾讯支持包--------------------------------
-            tencentOpenSDK:"com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+",
+            //------------------------------腾讯支持包--不要用最新版本，腾讯给的支持包没有适配最新的wechatSdK------------------------------
+            tencentOpenSDK:"com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.1.0",
             //--------------------------OKhttp--------------------------------------
             okhttp:'com.squareup.okhttp3:okhttp:' + OKHTTP_VERSION,
             //------------------------GSON----------------------------------------------

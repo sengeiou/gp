@@ -27,5 +27,29 @@
     <string name="ubt_wifi_no_pwd_tips">确认此Wi-Fi无密码？</string>
     <string name="ubt_set_pig_net">音响配网</string>
     <string name="ubt_bunding_ping_timeout">绑定小猪超时，请稍后重试</string>
+    <string name="ubt_one_user_one_pig">一个账号已被绑定音箱</string>
+    <string name="ubt_set_net_success">配网成功</string>
+    <string name="ubt_connecting">连接中</string>
+    <string name="ubt_mina">我的</string>
+    <string name="ubt_pig">小猪</string>
+    <string name="ubt_unbund_pig">音箱未绑定，点击绑定</string>
+    <string name="ubt_my_pig">我的小猪</string>
+    <string name="ubt_send_voice">给自己的音箱发送语音留言</string>
+    <string name="ubt_add_pig">添加配对小猪</string>
+    <string name="ubt_skills_manual">技能手册</string>
+    <string name="ubt_more_funtions">了解更多功能</string>
+    <string name="ubt_recent_calls">最近通话</string>
+    <string name="ubt_null">无</string>
+    <string name="ubt_visitor_login">游客登录</string>
+    <string name="ubt_bunding_set_net">绑定与配网</string>
+    <string name="ubt_person_hotspot">个人热点</string>
+    <string name="ubt_device_manger">设备管理</string>
+    <string name="ubt_custom_answer">定制问答</string>
+    <string name="ubt_aclock">闹钟</string>
+    <string name="ubt_remind">日程提醒</string>
+    <string name="ubt_qq_music">QQ音乐</string>
+    <string name="ubt_help">帮助与反馈</string>
+    <string name="ubt_about">关于</string>
+    <string name="ubt_version_format">版本%1$s</string>
 
 </resources>

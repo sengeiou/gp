@@ -15,6 +15,7 @@ import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.SearchPigActivity;
+import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 
 import java.lang.ref.WeakReference;
@@ -123,7 +124,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mLoginModel = new LoginModel();
         if (mLoginModel.checkToken(this)) {
             handler.sendEmptyMessage(0);
-        }else  if (!NetworkHelper.sharedHelper().isNetworkAvailable()) {
+        }else if (!NetworkHelper.sharedHelper().isNetworkAvailable()) {
 
             mLoginModel.logoutTVS();
             return;
@@ -160,7 +161,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         break;
                     case LOGINED:
                         dismissLoadDialog();
-                        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                        ActivityRoute.toAnotherActivity(LoginActivity.this, SetNetWorkEnterActivity.class,true);
                         finish();
                         break;
                     case ERROR:
@@ -183,15 +184,21 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+
             if (mActivity!=null&&mActivity.get()!=null) {
                 final  LoginActivity loginActivity=mActivity.get();
                 if (null==loginActivity||loginActivity.isFinishing()){
                     return;
                 }
-                if (msg.what == 1) {
-                    ToastUtils.showShortToast(loginActivity,loginActivity.getString(R.string.ubt_net_error_tips));
+                switch (msg.what){
+                    case 0:
+                        ActivityRoute.toAnotherActivity(loginActivity, SetNetWorkEnterActivity.class,true);
+                        break;
+                    case 1:
+                        ToastUtils.showShortToast(loginActivity,loginActivity.getString(R.string.ubt_net_error_tips));
+                        break;
                 }
-                ActivityRoute.toAnotherActivity(loginActivity, SearchPigActivity.class,true);
+
             }
 
         }

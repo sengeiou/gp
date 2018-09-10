@@ -1,56 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:background="@null"
-    android:gravity="center_horizontal"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/ubt_layout_setnet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@null"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/ubt_wifi_logo_margintop"
+            android:src="@drawable/img_wifi" />
+
+        <com.ubtechinc.goldenpig.comm.view.UbtWifiListEditText
+            android:id="@+id/ubt_edt_wifi_name"
+            style="@style/UBTSetWifiEditTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPersonName" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/ubt_1px"
+            android:layout_marginEnd="@dimen/ubt_edt_marginstart"
+            android:layout_marginStart="@dimen/ubt_edt_marginstart"
+            android:background="@color/ubt_dilog_decore_color" />
+
+        <com.ubtechinc.goldenpig.comm.view.UbtPasswordEditText
+            android:id="@+id/ubt_edt_wifi_password"
+            style="@style/UBTSetWifiEditTheme"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginTop="@dimen/ubt_edt_wifi_psd_margintop"
+            android:ems="10"
+            android:hint="@string/ubt_password"
+            android:inputType="textPassword"
+            android:lines="1"
+            app:defaultIcon="@drawable/ic_see"
+            app:psdIcon="@drawable/ic_closeeyes" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/ubt_1px"
+            android:layout_marginEnd="@dimen/ubt_edt_marginstart"
+            android:layout_marginStart="@dimen/ubt_edt_marginstart"
+            android:layout_marginTop="@dimen/ubt_8dp"
+            android:background="@color/ubt_dilog_decore_color" />
+
+        <Button
+            android:id="@+id/ubt_btn_connect_wifi"
+            style="@style/UBTButtonTheme.Cyan"
+            android:layout_marginTop="@dimen/ubt_btn_start_margin_top"
+            android:text="@string/ubt_connect" />
+
+    </LinearLayout>
+
     <ImageView
-        android:layout_marginTop="@dimen/ubt_wifi_logo_margintop"
-        android:layout_width="wrap_content"
-        android:src="@drawable/img_wifi"
-        android:layout_height="wrap_content" />
+        android:visibility="gone"
+        android:id="@+id/ubt_img_success"
+        android:layout_width="146dp"
+        android:layout_height="146dp"
+        android:layout_centerInParent="true"
+        app:srcCompat="@drawable/ic_success" />
 
-    <com.ubtechinc.goldenpig.comm.view.UbtWifiListEditText
-        android:id="@+id/ubt_edt_wifi_name"
-        style="@style/UBTSetWifiEditTheme"
-        android:layout_width="match_parent"
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/ubt_tv_set_net_success"
+         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPersonName"
-         />
-    <View
-        android:layout_marginStart="@dimen/ubt_edt_marginstart"
-        android:layout_marginEnd="@dimen/ubt_edt_marginstart"
-        android:layout_width="match_parent"
-        android:background="@color/ubt_dilog_decore_color"
-        android:layout_height="@dimen/ubt_1px"/>
-    <com.ubtechinc.commlib.view.UbtPasswordEditText
-        android:id="@+id/ubt_edt_wifi_password"
-        style="@style/UBTSetWifiEditTheme"
-        app:defaultIcon="@drawable/ic_see"
-        app:psdIcon="@drawable/ic_closeeyes"
-        android:layout_marginTop="@dimen/ubt_edt_wifi_psd_margintop"
-        android:hint="@string/ubt_password"
-        android:lines="1"
-        android:layout_width="match_parent"
-        android:paddingEnd="10dp"
-        android:layout_height="44dp"
-        android:text="ubtubtubtsaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadaqwdddddddddddddddd"
-        android:ems="10"
-        android:inputType="textPassword" />
-    <View
-        android:layout_marginStart="@dimen/ubt_edt_marginstart"
-        android:layout_marginEnd="@dimen/ubt_edt_marginstart"
-        android:layout_width="match_parent"
-        android:background="@color/ubt_dilog_decore_color"
-        android:layout_marginTop="@dimen/ubt_8dp"
-        android:layout_height="@dimen/ubt_1px"/>
-    <Button
-        android:id="@+id/ubt_btn_connect_wifi"
-        android:layout_marginTop="@dimen/ubt_btn_start_margin_top"
-        style="@style/UBTButtonTheme.Cyan"
-        android:text="@string/ubt_connect"
-         />
+        android:layout_below="@+id/ubt_img_success"
+        android:layout_centerHorizontal="true"
+        android:textSize="15sp"
+        android:textColor="@color/ubt_tips_txt_color"
+        android:text="@string/ubt_set_net_success" />
 
-</LinearLayout>
+</RelativeLayout>

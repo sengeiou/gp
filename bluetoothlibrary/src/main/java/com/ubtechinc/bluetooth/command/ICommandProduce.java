@@ -43,4 +43,9 @@ public interface ICommandProduce {
      * 获取手机网络无效
      */
     String getNetworkNotAvailable();
+    /*
+    *获取小猪网络状态
+    * */
+    String getPigNetWorkState();
+
 }

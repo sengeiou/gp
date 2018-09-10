@@ -28,7 +28,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoToolbar">
-        <activity android:name=".login.LoginActivity"
+        <activity android:name=".main.MainActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoToolbar"
@@ -40,20 +40,26 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".main.MainActivity"
+         <activity android:name=".login.LoginActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTask"
             />
-        <activity android:name=".pigmanager.SearchPigActivity" />
-        <activity android:name=".pigmanager.SetPingNetWorkActivity"
+        <activity android:name=".pigmanager.SearchPigActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".pigmanager.SetPigNetWorkActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
            />
-        <activity android:name=".pigmanager.SetNetWorkEnterActivity"/>
-        <!--<activity android:name=".pigmanager.SetPingNetWorkActivity"
+        <activity android:name=".pigmanager.SetNetWorkEnterActivity"
             android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            />-->
-
+            android:screenOrientation="portrait"/>
+        <activity android:name=".about.UbtAboutActivtiy"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".feedback.FeedBackActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

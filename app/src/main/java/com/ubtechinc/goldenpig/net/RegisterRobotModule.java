@@ -15,13 +15,14 @@ import com.ubtechinc.nets.http.Url;
 @Keep
 public class RegisterRobotModule {
 
-    @Url("/robot/common/binding")
+    @Url("/user-service-rest/v2/robot/common/binding")
     @Keep
     public class Request {
 
         String userName;
-        String userOnlyId;
-
+        String userId;
+        String roleType="0";
+        String serialNumber="";
         public String getUserName() {
             return userName;
         }
@@ -30,12 +31,28 @@ public class RegisterRobotModule {
             this.userName = userName;
         }
 
-        public String getUserOnlyId() {
-            return userOnlyId;
+        public String getUserId() {
+            return userId;
         }
 
-        public void setUserOnlyId(String userOnlyId) {
-            this.userOnlyId = userOnlyId;
+        public void setUserId(String userOnlyId) {
+            this.userId = userOnlyId;
+        }
+
+        public String getRoleType() {
+            return roleType;
+        }
+
+        public void setRoleType(String roleType) {
+            this.roleType = roleType;
+        }
+
+        public String getSerialNumber() {
+            return serialNumber;
+        }
+
+        public void setSerialNumber(String serialNumber) {
+            this.serialNumber = serialNumber;
         }
     }
 

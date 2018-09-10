@@ -283,15 +283,15 @@ class UbtBluetoothConnector {
      * @param msg 消息
      */
     void sendMessage(String msg) {
-        if (connectState == UbtBluetoothConnector.ConnectState.DISCOVERED) {
+        //if (connectState == UbtBluetoothConnector.ConnectState.DISCOVERED) {
             Message message = Message.obtain();
             message.obj = msg;
             message.what = MSG_WRITE_REQUEST;
             lazySetupMessageHandler();
             mMessageHandler.sendMessage(message);
-        } else {
+        /*} else {
             Log.e(TAG, "Illegal State: 还未与机器人建立服务连接...");
-        }
+        }*/
     }
 
     void setBleConnectListener(BleConnectListener bleConnectListener) {

@@ -18,17 +18,26 @@ import java.util.List;
 @Keep
 public class CheckBindRobotModule {
 
-    @Url("/robot/common/queryRobotList")
+    @Url("/user-service-rest/v2/robot/common/queryMemberList")
     @Keep
     public static class Request {
-        private String robotUserId;
+        private String serialNumber;
+        private String isAdmin="1";
 
-        public String getRobotUserId() {
-            return robotUserId;
+        public void setSerialNumber(String serialNumber) {
+            this.serialNumber = serialNumber;
         }
 
-        public void setRobotUserId(String robotUserId) {
-            this.robotUserId = robotUserId;
+        public String getSerialNumber() {
+            return serialNumber;
+        }
+
+        public void setIsAdmin(String isAdmin) {
+            this.isAdmin = isAdmin;
+        }
+
+        public String getIsAdmin() {
+            return isAdmin;
         }
     }
 
@@ -60,15 +69,16 @@ public class CheckBindRobotModule {
     }
     @Keep
     public class User implements Serializable, Comparable<User>{
-        private String userImage;
+        private String iconPath;
 
         private String userName;
 
-        private String nickName;
+        private String nickname;
 
         private int userId;
+        private int roleType;
 
-        private int upUser;
+        private int isAdmin;
 
         private String relationDate;
 
@@ -81,26 +91,26 @@ public class CheckBindRobotModule {
         }
 
         public String getNickName() {
-            return nickName;
+            return nickname;
         }
 
         public void setNickName(String nickName) {
-            this.nickName = nickName;
+            this.nickname = nickName;
         }
-        public int getUpUser() {
-            return upUser;
+        public int getRoleType() {
+            return roleType;
         }
 
-        public void setUpUser(int upUser) {
-            this.upUser = upUser;
+        public void setRoleType(int roleType) {
+            this.roleType = roleType;
         }
 
         public String getUserImage() {
-            return userImage;
+            return iconPath;
         }
 
         public void setUserImage(String userImage) {
-            this.userImage = userImage;
+            this.iconPath = userImage;
         }
 
         public String getUserName() {
@@ -119,22 +129,30 @@ public class CheckBindRobotModule {
             this.userId = userId;
         }
 
+        public void setIsAdmin(int isAdmin) {
+            this.isAdmin = isAdmin;
+        }
+
+        public int getIsAdmin() {
+            return isAdmin;
+        }
+
         @Override
         public String toString() {
             return "User{" +
-                    "userImage='" + userImage + '\'' +
+                    "iconPath='" + iconPath + '\'' +
                     ", userName='" + userName + '\'' +
-                    ", nickName='" + nickName + '\'' +
+                    ", nickName='" + nickname + '\'' +
                     ", userId=" + userId +
-                    ", upUser=" + upUser +
+                    ", roleType=" + roleType +
                     '}';
         }
 
 
         @Override
         public int compareTo(@NonNull User user) {
-            int upUser = getUpUser();
-            int compareUpUser = user.getUpUser();
+            int upUser = getRoleType();
+            int compareUpUser = user.getRoleType();
             if (upUser == compareUpUser){
                 return 0;
             }else if (upUser > compareUpUser){

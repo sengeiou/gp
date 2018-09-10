@@ -17,4 +17,10 @@
     <declare-styleable name="UbtPsdEditTextStyle">
         <attr name="psdIcon" format="reference"/>
     </declare-styleable>
+    <declare-styleable name="UbtRightTxtButtonStyle">
+        <attr name="rightText" format="reference|string"/>
+        <attr name="rightTextColor" format="reference|color"/>
+        <attr name="rightTextPadding" format="reference|dimension"/>
+        <attr name="rightTextSize" format="dimension|reference"/>
+    </declare-styleable>
 </resources>

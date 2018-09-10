@@ -8,6 +8,7 @@ import com.facebook.stetho.Stetho;
 import com.tencent.ai.tvs.LoginApplication;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.protocollibrary.communit.ProtoBufferDisposer;
+import com.ubtechinc.protocollibrary.communit.Utils;
 
 /**
  * @des Ubt 金猪applicaption
@@ -19,7 +20,7 @@ public class UBTPGApplication extends LoginApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        com.ubtech.utilcode.utils.Utils.init(this);
         instance = this;
         Stetho.initializeWithDefaults(this);
         UbtLogger.init(getApplicationContext());

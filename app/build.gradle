@@ -6,7 +6,11 @@ def releaseTime() {
 }
 android {
     compileSdkVersion COMPILE_SDK_VERSION
-
+    compileOptions {
+        encoding "UTF-8"
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     defaultConfig {
         applicationId "com.ubtechinc.goldenpig"
         minSdkVersion MIN_SDK_VERSION
@@ -31,6 +35,11 @@ android {
             buildConfigField "String", "APP_ID_QQ", "\"1106279915\""
             //金猪productId
             buildConfigField "String", "PRODUCT_ID" , "\"ffb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589\""
+
+            //金猪APPID
+            buildConfigField "String", "APP_ID","\"100080014\""
+            //金猪APPKEY
+            buildConfigField "String", "APP_KEY","\"85650f0ffe314beda3b85a9ab626662d\""
             minifyEnabled false
             shrinkResources false
             signingConfig signingConfigs.release
@@ -43,6 +52,10 @@ android {
             buildConfigField "String", "APP_ID_QQ", "\"1106279915\""
             //金猪productId
             buildConfigField "String", "PRODUCT_ID" , "\"ffb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589\""
+            //金猪APPID
+            buildConfigField "String", "APP_ID","\"100080014\""
+            //金猪APPKEY
+            buildConfigField "String", "APP_KEY","\"85650f0ffe314beda3b85a9ab626662d\""
             //是否优化zip
             zipAlignEnabled true
             // 移除无用的resource文件
@@ -83,6 +96,7 @@ dependencies {
     implementation rootProject.ext.deps.appCompatV7
     implementation rootProject.ext.deps.constraintlayout
     implementation rootProject.ext.deps.recyclerView
+    implementation rootProject.ext.deps.cardviewV7
     implementation(name: 'tvsloginlib-ubt_goldenpig-release', ext: 'aar')
     implementation rootProject.ext.deps.design
     implementation rootProject.ext.deps.tencentOpenSDK

@@ -59,4 +59,19 @@ public  class BundingListenerAbster implements BungdingManager.BanddingListener 
     public void hasWifi(String wifi) {
 
     }
+
+    @Override
+    public void onMaster() {
+
+    }
+
+    @Override
+    public void onUnBind() {
+
+    }
+
+    @Override
+    public void onPigConnected(String wifiName) {
+
+    }
 }

@@ -61,6 +61,10 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
         LayoutInflater.from(context).inflate(R.layout.layout_ubt_wifi_list_edittext, this, true);
 
         mWifiNameEdt=(UbtClearableEditText)findViewById(R.id.ubt_clearedt_wifi_name);
+        mWifiNameEdt.setFocusable(true);
+        mWifiNameEdt.setFocusableInTouchMode(true);
+        mWifiNameEdt.requestFocus();
+
         mDropBtn=(ImageButton)findViewById(R.id.ubt_btn_drop_wifilist);
         mDropBtn.setOnClickListener(this);
     }
@@ -77,6 +81,7 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
         switch (v.getId()){
             case R.id.ubt_btn_drop_wifilist:
                 if (WifiControl.get(getContext().getApplicationContext()).isWifiConnect()) {
+                    mDropBtn.setImageResource(R.drawable.ic_takeup);
                     scanWifiInfo();
                     showWifiListPopWindow();
                 }else {
@@ -98,6 +103,12 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
             window.setOutsideTouchable(true);
             // 设置PopupWindow是否能响应点击事件
             window.setTouchable(true);
+            window.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                @Override
+                public void onDismiss() {
+                    mDropBtn.setImageResource(R.drawable.ic_drop_down);
+                }
+            });
             initWifiList(contentView);
         }
         // 显示PopupWindow，其中：
@@ -107,7 +118,7 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
     private void initWifiList(View contentView){
         if (mWifiRyc==null) {
             mWifiRyc = (RecyclerView) contentView.findViewById(R.id.ubt_wifi_list_ryc);
-            mWifiRyc.setLayoutManager(new LinearLayoutManager(getContext()));
+            mWifiRyc.setLayoutManager(new WrapContentLinearLayoutManager(getContext()));
             if (mWifiListAdapter == null) {
                 mWifiListAdapter = new UbtWifiListAdapter(getContext(),mWifiList);
                 mWifiListAdapter.setOnItemListener(new OnUbtWifiListItemClickListener() {
@@ -117,6 +128,7 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
                             mWifiNameEdt.setText(result.SSID.trim());
                             window.dismiss();
                         }
+
                     }
                 });
             }
@@ -145,6 +157,8 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
     public void addWifiLsit2List(List<ScanResult> results){
         if (mWifiList==null){
             mWifiList=new ArrayList<>();
+        }else {
+            mWifiList.clear();
         }
         mWifiList.addAll(results);
         if (mWifiListAdapter!=null){

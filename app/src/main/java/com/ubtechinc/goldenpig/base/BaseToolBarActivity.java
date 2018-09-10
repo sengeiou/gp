@@ -68,14 +68,25 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
             lp.gravity = Gravity.TOP;
+            mNotifyTv.setPadding(0,10,0,10);
             mNotifyTv.setBackgroundColor(ResourcesCompat.getColor(getResources(),R.color.ubt_notify_tv_bg_color,null));
             mNotifyTv.setTextColor(ResourcesCompat.getColor(getResources(),R.color.ubt_dialog_btn_txt_color,null));
             mNotifyTv.setLayoutParams(lp);
             mNotifyTv.setGravity(Gravity.CENTER);
         }
         mNotifyTv.setText(notifyTips);
-        if (viewContent!=null){
-            viewContent.addView(mNotifyTv,0); //index是0，表示添加的child在linearlayout顶部，-1为底部
+        mNotifyTv.setVisibility(View.VISIBLE);
+        if (viewContent!=null||mNotifyTv.getParent()==null){
+            try {
+                viewContent.removeView(mNotifyTv);
+            }catch (Exception e){
+
+            }
+            try {
+                viewContent.addView(mNotifyTv); //index是0，表示添加的child在linearlayout顶部，-1为底部
+            }catch (Exception e){
+
+            }
         }
     }
     protected void setSkipEnable(boolean enable){
@@ -86,7 +97,7 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
     protected void hideNotify(){
         if (mNotifyTv!=null &&viewContent!=null){
             mNotifyTv.setVisibility(View.GONE);
-            viewContent.removeView(mNotifyTv);
+
         }
     }
     /**

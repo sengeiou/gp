@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="19dp" />
+            <solid android:color="#32C6DEF0" />
+        </shape>
+    </item>
+    <item
+         android:left="@dimen/ubt_1px"
+          android:right="@dimen/ubt_1px"
+          android:bottom="@dimen/ubt_1px"
+        >
+        <shape android:shape="rectangle">
+            <corners android:radius="19dp" />
+            <solid android:color="#40C6DEF0" />
+        </shape>
+    </item>
+    <item
+         android:right="2dp"
+        android:bottom="2dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="19dp" />
+            <solid android:color="#54C6DEF0" />
+        </shape>
+    </item>
+    <item
+         android:right="3dp"
+        android:bottom="3dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="19dp" />
+            <solid android:color="#66C6DEF0" />
+        </shape>
+    </item>
+    <item
+         android:right="4dp"
+        android:bottom="4dp">
+        <shape android:shape="rectangle">
+            <corners android:radius="20dp" />
+            <solid android:color="@color/ubt_white" />
+        </shape>
+    </item>
+</layer-list>

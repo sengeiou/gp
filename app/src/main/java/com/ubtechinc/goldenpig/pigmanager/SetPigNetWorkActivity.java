@@ -3,31 +3,35 @@ package com.ubtechinc.goldenpig.pigmanager;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.wifi.ScanResult;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.text.TextUtilsCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.ubtechinc.bluetooth.UbtBluetoothManager;
 import com.ubtechinc.bluetooth.command.ICommandProduce;
 import com.ubtechinc.bluetooth.command.JsonCommandProduce;
 import com.ubtechinc.commlib.log.UbtLogger;
+import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.commlib.utils.WifiUtils;
-import com.ubtechinc.commlib.view.UbtPasswordEditText;
+import com.ubtechinc.goldenpig.comm.view.UbtPasswordEditText;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.view.UbtWifiListEditText;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
 import com.ubtechinc.goldenpig.main.MainActivity;
+import com.ubtechinc.goldenpig.net.RegisterRobotModule;
+import com.ubtechinc.goldenpig.pigmanager.bean.BundingListenerAbster;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 
-import java.util.List;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  *@auther        :hqt
@@ -37,7 +41,7 @@ import java.util.List;
  *@change        :
  *@changetime    :2018/8/27 14:32
 */
-public class SetPingNetWorkActivity extends BaseToolBarActivity implements View.OnClickListener{
+public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.OnClickListener{
     private Button mSendWifiInfoBtn;
     private UbtWifiListEditText mWifiNamEdt;
     private UbtPasswordEditText mWifiPwdEdt;
@@ -45,6 +49,7 @@ public class SetPingNetWorkActivity extends BaseToolBarActivity implements View.
     private boolean mHasPermission;
     private String mCap;
     private ICommandProduce commandProduce;
+    private BungdingManager bungdingManager;
     @Override
     protected int getConentView() {
         return R.layout.activity_set_pig_network;
@@ -61,10 +66,13 @@ public class SetPingNetWorkActivity extends BaseToolBarActivity implements View.
         mSendWifiInfoBtn=(Button)findViewById(R.id.ubt_btn_connect_wifi);
         mSendWifiInfoBtn.setOnClickListener(this);
         mWifiNamEdt=(UbtWifiListEditText)findViewById(R.id.ubt_edt_wifi_name);
-        mWifiPwdEdt=(UbtPasswordEditText)findViewById(R.id.ubt_edt_wifi_password);
+        mWifiPwdEdt=(UbtPasswordEditText) findViewById(R.id.ubt_edt_wifi_password);
         mTvSkip=findViewById(R.id.ubt_tv_set_net_skip);
         mTvSkip.setVisibility(View.VISIBLE);
         mTvSkip.setOnClickListener(this);
+        bungdingManager=new BungdingManager(this);
+        bungdingManager.setBangdingListener(mBandingListenerAbster);
+        checkPigWifi();
     }
 
     @Override
@@ -77,7 +85,7 @@ public class SetPingNetWorkActivity extends BaseToolBarActivity implements View.
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.ubt_btn_connect_wifi:
-                showNotify("小猪音响");
+
                 checkWifiInfo();
                 break;
             case R.id.ubt_tv_set_net_skip:
@@ -93,7 +101,6 @@ public class SetPingNetWorkActivity extends BaseToolBarActivity implements View.
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION
     };
-
 
 
     /**
@@ -137,10 +144,10 @@ public class SetPingNetWorkActivity extends BaseToolBarActivity implements View.
             //如果同意权限
             if (hasAllPermission) {
                 mHasPermission = true;
-                if(WifiUtils.isOpenWifi(SetPingNetWorkActivity.this) && mHasPermission){  //如果wifi开关是开 并且 已经获取权限
+                if(WifiUtils.isOpenWifi(SetPigNetWorkActivity.this) && mHasPermission){  //如果wifi开关是开 并且 已经获取权限
 
                 }else{
-                    //Toast.makeText(MainActivity.this,"WIFI处于关闭状态或权限获取失败",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SetPigNetWorkActivity.this,"WIFI处于关闭状态或权限获取失败", Toast.LENGTH_SHORT).show();
                 }
 
             } else {  //用户不同意权限
@@ -151,7 +158,12 @@ public class SetPingNetWorkActivity extends BaseToolBarActivity implements View.
     }
     /**向本体发送wifi信息*/
     private void checkWifiInfo(){
-        final String pwd=mWifiPwdEdt.getText().toString();
+        String wifiName=mWifiNamEdt.getText();
+        if (TextUtils.isEmpty(wifiName)){
+            ToastUtils.showShortToast(this,"请填写WIFI SSID");
+            return;
+        }
+        final String pwd=mWifiPwdEdt.getPwd();
         if (TextUtils.isEmpty(pwd)){
             UBTBaseDialog dialog=new UBTBaseDialog(this);
             dialog.setRightButtonTxt(getString(R.string.ubt_enter));
@@ -174,11 +186,105 @@ public class SetPingNetWorkActivity extends BaseToolBarActivity implements View.
         }
 
     }
+    private void checkPigWifi(){
+        String message = commandProduce.getPigNetWorkState();
+        UbtBluetoothManager.getInstance().sendMessageToBle(message);
+    }
     private void sendWifiInfo(){
+        mSendWifiInfoBtn.setText(R.string.ubt_connecting);
         final String wifiName=mWifiNamEdt.getText();
-        final String wifiPwd=mWifiPwdEdt.getText().toString();
+        final String wifiPwd=mWifiPwdEdt.getPwd();
         showLoadingDialog();
         String message = commandProduce.getWifiPasswdInfo(wifiName, wifiName, wifiPwd);
         UbtBluetoothManager.getInstance().sendMessageToBle(message);
+        showLoadingDialog();
     }
+    BundingListenerAbster mBandingListenerAbster = new BundingListenerAbster(){
+        @Override
+        public void onFaild(int errorCode) {
+            super.onFaild(errorCode);
+            if (errorCode!=2041) {
+                dismissLoadDialog();
+                mSendWifiInfoBtn.setText(R.string.ubt_connect);
+                showNotify("连接失败");
+            }
+        }
+
+        @Override
+        public void onSuccess(RegisterRobotModule.Response response) {
+            super.onSuccess(response);
+            dismissLoadDialog();
+        }
+
+        @Override
+        public void connectSuccess() {
+            super.connectSuccess();
+            dismissLoadDialog();
+        }
+
+        @Override
+        public void connWifiSuccess() {
+            super.connWifiSuccess();
+            mSendWifiInfoBtn.setText(R.string.ubt_connect);
+            dismissLoadDialog();
+            hideNotify();
+            findViewById(R.id.ubt_layout_setnet).setVisibility(View.GONE);
+            findViewById(R.id.ubt_img_success).setVisibility(View.VISIBLE);
+            findViewById(R.id.ubt_tv_set_net_success).setVisibility(View.VISIBLE);
+            mTvSkip.setEnabled(false);
+            mTvSkip.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ActivityRoute.toAnotherActivity(SetPigNetWorkActivity.this,MainActivity.class,true);
+                }
+            },2000);
+
+        }
+
+        @Override
+        public void onPigConnected(String wifiState){
+            super.onPigConnected(wifiState);
+            dismissLoadDialog();
+            //{"co":120,"wifi_info":"{\"l\":-29,\"s\":\"\\\"alpha-bigbox-5G\\\"\"}"}
+            UbtLogger.i("onPigConnected",wifiState);
+            if (!TextUtils.isEmpty(wifiState)) {
+                try {
+
+
+                    wifiState=wifiState.replace("\\","");
+                    wifiState=wifiState.replace("\"{","{");
+                    wifiState=wifiState.replace("}\"","}");
+                    wifiState=wifiState.replace("\"\"","\"");
+                    JSONObject jsonObject = new JSONObject(wifiState);
+                    if (jsonObject.has("wifi_info")) {
+                        jsonObject = jsonObject.getJSONObject("wifi_info");
+                    }
+                    if (jsonObject.has("s")){
+                        final String wifiName = jsonObject.getString("s");
+                        if (!TextUtils.isEmpty(wifiName)) {
+                            showNotify("音箱已连接“" + wifiName + "”无线网络");
+                        }
+                    }else {
+                        ///连接到有道网络是提示
+                        showNotify("音箱已连接移动网络");
+                    }
+                    /*if (jsonObject.getInt("co") == 120) {
+                        JSONObject subJson = jsonObject.getJSONObject("wifi_info");
+                        if (jsonObject.has("wifi_info")) {
+                            final String wifiName = subJson.getString("s");
+                            if (TextUtils.isEmpty(wifiName)) {
+                                /// 解析小猪网络json反馈
+                                showNotify("音箱已连接“" + wifiName + "”无线网络");
+                            }
+                        }
+                    } else {
+                        ///连接到有道网络是提示
+                        showNotify("音箱已连接移动网络");
+                    }*/
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    };
 }

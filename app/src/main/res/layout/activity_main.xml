@@ -36,7 +36,7 @@
 
         <RadioButton
             style="@style/UBTTabButtonTheme"
-            android:id="@+id/ubt_rbt_person"
+            android:id="@+id/ubt_rbt_me"
             android:layout_weight="1"
             android:button="@null"
             android:drawableTop="@drawable/selector_ubt_tab_person"
@@ -51,6 +51,7 @@
         android:layout_height="@dimen/ubt_1px"/>
 
     <android.support.v4.view.ViewPager
+
         android:id="@+id/ubt_pg_main_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

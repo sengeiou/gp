@@ -53,8 +53,15 @@ public class UbtWifiListAdapter extends RecyclerView.Adapter<UbtWifiListAdapter.
             }else {
                 holder.setDividerVisibility(true);
             }
-            holder.itemView.setOnClickListener(this);
-            currentScanResult=scanResult;
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener!=null){
+                        mListener.onClick(v,scanResult);
+                    }
+                }
+            });
+
         }
     }
 
@@ -108,6 +115,7 @@ public class UbtWifiListAdapter extends RecyclerView.Adapter<UbtWifiListAdapter.
     @Override
     public void onClick(View v) {
         if (mListener!=null){
+
             mListener.onClick(v,currentScanResult);
         }
     }

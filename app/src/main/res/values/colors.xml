@@ -19,4 +19,10 @@
     <!--自定义提示背景色-->
     <color name="ubt_notify_tv_bg_color">#55FE4C4C </color>
     <color name="ubt_global_bg_color">#FFF5F8FB</color>
+    <!--等待弹框背景色-->
+    <color name="ubt_loading_dialog_bg">#4D010101</color>
+    <color name="ubt_layout_bg_color">#365779</color>
+    <color name="ubt_version_color">#B4C0C7</color>
+    <!--卡片阴影颜色-->
+    <color name="ubt_card_bg_color">#C6DEF0</color>
 </resources>

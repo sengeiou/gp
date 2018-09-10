@@ -2,6 +2,7 @@ package com.ubtechinc.goldenpig.pigmanager.register;
 
 
 import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
+import com.ubtechinc.nets.CheckBindResponseListener;
 import com.ubtechinc.nets.ResponseListener;
 import com.ubtechinc.nets.http.HttpProxy;
 import com.ubtechinc.nets.http.ThrowableWrapper;
@@ -20,10 +21,10 @@ public class CheckRobotRepository {
 
     public void getRobotBindUsers(String searialNumber,final ICheckBindStateCallBack callback){
         CheckBindRobotModule.Request request = new CheckBindRobotModule.Request();
-        request.setRobotUserId(searialNumber);
+        request.setSerialNumber(searialNumber);
         HashMap<String,String> headers=new HashMap<>();
-        headers.put("authorization","");
-        headers.put("X-UBT-AppId","");
+
+
         HttpProxy.get().doGet(request, new ResponseListener<CheckBindRobotModule.Response>() {
             @Override
             public void onError(ThrowableWrapper e) {
@@ -38,11 +39,13 @@ public class CheckRobotRepository {
     }
     public void getRobotBindUsers(String searialNumber,String token,String appId,final ICheckBindStateCallBack callback){
         CheckBindRobotModule.Request request = new CheckBindRobotModule.Request();
-        request.setRobotUserId(searialNumber);
+        request.setSerialNumber(searialNumber);
         HashMap<String,String> headers=new HashMap<>();
         headers.put("authorization",token);
-        headers.put("X-UBT-AppId",appId);
-        HttpProxy.get().doGet(request, new ResponseListener<CheckBindRobotModule.Response>() {
+
+        
+        HttpProxy.get().doGet(request, headers,new CheckBindResponseListener<CheckBindRobotModule.Response>() {
+
             @Override
             public void onError(ThrowableWrapper e) {
                 callback.onError(e);
@@ -52,6 +55,11 @@ public class CheckRobotRepository {
             public void onSuccess(CheckBindRobotModule.Response response) {
                 callback.onSuccess(response);
             }
+
+            @Override
+            public void onSuccessWithJson(String json) {
+                callback.onSuccessWithJson(json);
+            }
         });
     }
 
@@ -59,5 +67,6 @@ public class CheckRobotRepository {
         public void onError(ThrowableWrapper e);
 
         public void onSuccess(CheckBindRobotModule.Response response);
+        void onSuccessWithJson(String jsonStr);
     }
 }

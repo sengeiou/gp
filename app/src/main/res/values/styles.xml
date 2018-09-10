@@ -106,4 +106,36 @@
         <item name="android:layout_marginStart">@dimen/ubt_edt_marginstart</item>
         <item name="android:layout_marginEnd">@dimen/ubt_edt_marginstart</item>
     </style>
+    <style name="UBTTabTitleTheme" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/ubt_white</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@null</item>
+    </style>
+    <!--  主页小猪，磁贴文字样式-->
+    <style name="UBTMainItemTxtTheme" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/ubt_white</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:lines">1</item>
+    </style>
+    <style name="UBTMainItemMinTxtTheme" parent="UBTMainItemTxtTheme">
+
+        <item name="android:textSize">13sp</item>
+    </style>
+    <!--me页按钮样式-->
+    <style name="UBTMeBtnTheme" parent="Widget.AppCompat.Button.Borderless">
+        <item name="android:gravity">center_vertical|start</item>
+        <item name="android:background">@drawable/selector_ubt_me_item</item>
+        <item name="android:drawableEnd">@drawable/ic_goto</item>
+        <item name="android:layout_height">@dimen/ubt_me_btn_height</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:drawablePadding">14dp</item>
+        <item name="android:paddingStart">@dimen/ubt_30dp</item>
+        <item name="android:paddingEnd">@dimen/ubt_30dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textColor">@color/ubt_tips_txt_color</item>
+    </style>
 </resources>

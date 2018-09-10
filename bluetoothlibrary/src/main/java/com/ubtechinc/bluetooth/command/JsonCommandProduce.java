@@ -61,4 +61,15 @@ public class JsonCommandProduce implements ICommandProduce{
         }
         return sendJsonObj.toString();
     }
+
+    @Override
+    public String getPigNetWorkState() {
+        JSONObject sendJsonObj = new JSONObject();
+        try {
+            sendJsonObj.put(Constants.DATA_COMMAND, Constants.PIG_NET_STATE);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return sendJsonObj.toString();
+    }
 }

@@ -33,7 +33,7 @@ import okhttp3.Interceptor;
 
 public final class HttpManager {
     //这个值在HeaderInterceptor内被替换掉
-    public static String BASE_URL = "http://10.10.1.43:8080/";
+    public static String BASE_URL = "http://10.10.20.71:8010";
     public static final String IM_TAG = BASE_URL + "im";
     public static final String SER_TAG = BASE_URL + "alpha2-web";
     public static final String USER_TAG = BASE_URL + "user-service-rest";
@@ -222,7 +222,15 @@ public final class HttpManager {
             if (listener == null) return;
             final String jsonStr = new String(rawBytes);
             LogUtils.d(TAG, "onSuccess json = " + jsonStr);
-            listener.onSuccess((T) JsonUtils.getObject(jsonStr, type));
+            if (jsonStr.startsWith("[")&&jsonStr.endsWith("]")){
+
+                if (listener instanceof CheckBindResponseListener) {
+                    ((CheckBindResponseListener)listener).onSuccessWithJson(jsonStr);
+                }
+            }else {
+                listener.onSuccess((T) JsonUtils.getObject(jsonStr, type));
+            }
+
         }
     }
 

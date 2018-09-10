@@ -22,20 +22,20 @@ import java.util.HashMap;
 
 public class RegisterPigRepository {
     private static final String TAG = RegisterPigRepository.class.getSimpleName();
-    public void registerRobot(String token, String appid, final RegisterRobotListener listener){
+    public void registerRobot(String token,String userId, String srialNumber,String appid, final RegisterRobotListener listener){
 
         RegisterRobotModule.Request request = new RegisterRobotModule().new Request();
-
-
+        request.setUserId(userId);
+        request.setSerialNumber(srialNumber);
         HashMap<String,String> hearder=new HashMap<>();
         hearder.put("authorization",token);
-        hearder.put("X-UBT-AppId",appid);
+        hearder.put("X-UBT-AppId","100080018");
         HttpProxy.get().doPost(request, hearder,new ResponseListener<RegisterRobotModule.Response>() {
             @Override
             public void onError(ThrowableWrapper e) {
                 Log.d(TAG, " registerRobot onError : ");
 
-                listener.onError();
+                listener.onError(e.getErrorBody());
             }
 
             @Override
@@ -49,6 +49,6 @@ public class RegisterPigRepository {
     public interface RegisterRobotListener{
          void onSuccess(RegisterRobotModule.Response response);
 
-         void onError();
+         void onError(String error);
     }
 }
