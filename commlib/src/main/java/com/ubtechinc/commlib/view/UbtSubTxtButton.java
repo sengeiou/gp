@@ -73,7 +73,7 @@ public class UbtSubTxtButton extends android.support.v7.widget.AppCompatButton {
         if (!TextUtils.isEmpty(mRightText)){
             Rect mBound=new Rect();
             getPaint().getTextBounds(mRightText.toString(),0,mRightText.length(),mBound);
-            mRightTextY=(getMeasuredHeight()+mBound.height())/2-2;
+            mRightTextY=(getMeasuredHeight()+mBound.height()-4)/2;
             mRightTextX=getMeasuredWidth()-mRightTextPadding-mBound.width();
         }
     }

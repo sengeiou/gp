@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@null"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+   >
+
+    <LinearLayout
+        android:id="@+id/ubt_layout_userinfo"
+        style="@style/UBTUserInfoItemThem"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/ubt_16dp"
+        android:gravity="center_vertical|end"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/ubt_16dp"
+            android:layout_weight="0.9"
+            android:textSize="16sp"
+            android:textColor="@color/ubt_tips_txt_color"
+            android:text="@string/ubt_photo" />
+
+        <ImageView
+            android:id="@+id/ubt_img_photo"
+            android:layout_width="@dimen/ubt_userinfo_photo_size"
+            android:layout_height="@dimen/ubt_userinfo_photo_size"
+            android:layout_marginEnd="@dimen/ubt_16dp"
+            android:layout_weight="0.1"
+            android:src="@drawable/ic_sign_in" />
+
+    </LinearLayout>
+    <com.ubtechinc.commlib.view.UbtSubTxtButton
+        android:layout_below="@+id/ubt_layout_userinfo"
+        android:id="@+id/ubt_btn_user_name"
+        android:gravity="center_vertical|start"
+        android:paddingStart="@dimen/ubt_16dp"
+        android:text="名字"
+        app:rightText="xiaoxx"
+        app:rightTextColor="@color/ubt_version_color"
+        app:rightTextSize="14sp"
+        app:rightTextPadding="@dimen/ubt_16dp"
+        style="@style/UBTUserInfoItemThem" />
+    <com.ubtechinc.commlib.view.UbtSubTxtButton
+        android:layout_below="@+id/ubt_btn_user_name"
+        android:id="@+id/ubt_btn_account"
+        android:gravity="center_vertical|start"
+        android:paddingStart="@dimen/ubt_16dp"
+        android:text="@string/ubt_account"
+        android:drawableEnd="@drawable/ic_goto"
+        android:paddingEnd="@dimen/ubt_16dp"
+        app:rightText="@string/ubt_associalted_account"
+        app:rightTextColor="@color/ubt_version_color"
+        app:rightTextSize="14sp"
+        app:rightTextPadding="32dp"
+        style="@style/UBTUserInfoItemThem" />
+
+    <Button
+        android:id="@+id/ubt_btn_logout"
+        android:layout_width="wrap_content"
+        android:textSize="15sp"
+        android:background="@drawable/selector_ubt_logout_btn"
+        android:textColor="@color/ubt_dialog_btn_txt_color"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/ubt_logout_btn_marginbottom"
+        android:text="@string/ubt_logout" />
+</RelativeLayout>

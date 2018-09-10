@@ -51,5 +51,10 @@
     <string name="ubt_help">帮助与反馈</string>
     <string name="ubt_about">关于</string>
     <string name="ubt_version_format">版本%1$s</string>
+    <string name="ubt_account">账号关联</string>
+    <string name="ubt_associalted_account">关联QQ或微信</string>
+    <string name="ubt_user_info">个人信息</string>
+    <string name="ubt_photo">头像</string>
+    <string name="ubt_logout">退出登录</string>
 
 </resources>

@@ -58,14 +58,14 @@
                     android:textSize="18sp" />
 
                 <ImageButton
-                    android:id="@+id/ub_btn_go_login"
-                    android:layout_width="@dimen/ubt_24dp"
-                    android:layout_height="@dimen/ubt_24dp"
+                    android:id="@+id/ubt_btn_go_login"
+                    android:layout_width="@dimen/ubt_30dp"
+                    android:layout_height="@dimen/ubt_30dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_margin="10dp"
                     android:background="@null"
-                    android:padding="6dp"
+                    android:padding="8dp"
                     android:src="@drawable/ic_goto" />
             </RelativeLayout>
 

@@ -1,5 +1,6 @@
 package com.ubtechinc.goldenpig.base;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
@@ -87,6 +88,11 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
             }catch (Exception e){
 
             }
+        }
+    }
+    protected void setToolBarBackground(int color){
+        if (toolbar!=null){
+            toolbar.setBackgroundColor(color);
         }
     }
     protected void setSkipEnable(boolean enable){

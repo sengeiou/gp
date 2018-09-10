@@ -66,4 +66,7 @@
     <!--我的野蛮使用尺寸-->
     <dimen name="ubt_me_btn_height">54dp</dimen>
     <dimen name="ubt_user_layouy_margintop">28dp</dimen>
+    <dimen name="ubt_me_userinfo_height">60dp</dimen>
+    <dimen name="ubt_userinfo_photo_size">40dp</dimen>
+    <dimen name="ubt_logout_btn_marginbottom">49dp</dimen>
 </resources>

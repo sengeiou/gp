@@ -19,6 +19,8 @@ import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.about.UbtAboutActivtiy;
 import com.ubtechinc.goldenpig.base.BaseFragment;
 import com.ubtechinc.goldenpig.feedback.FeedBackActivity;
+import com.ubtechinc.goldenpig.login.observable.AuthLive;
+import com.ubtechinc.goldenpig.me.UserInfoActivity;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 
@@ -31,6 +33,8 @@ import com.ubtechinc.goldenpig.route.ActivityRoute;
  * @changTime  :2018/8/17 17:58
  */
 public class PersonalFragment extends BaseFragment implements View.OnClickListener{
+
+    private View mToUserInfo;
     private View mSetNetBtn;   //绑定配网按钮
     private View mFeedBackBtn; //反馈帮助
     private UbtSubTxtButton mAboutBtn; //关于页按钮
@@ -49,11 +53,13 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         inits();
-        translucentStatusBar(getActivity(),true);
     }
 
 
     private void inits(){
+        mToUserInfo=getActivity().findViewById(R.id.ubt_btn_go_login);
+        mToUserInfo.setOnClickListener(this);
+
         mSetNetBtn=getActivity().findViewById(R.id.ubt_btn_person_set_wifi);
         mSetNetBtn.setOnClickListener(this);
 
@@ -74,6 +80,9 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            case R.id.ubt_btn_go_login:
+                ActivityRoute.toAnotherActivity(getActivity(), UserInfoActivity.class,false);
+                break;
             case R.id.ubt_btn_person_set_wifi:
                 ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class,false);
                 break;

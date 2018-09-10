@@ -104,7 +104,7 @@ ext {
             //-------------------------EventBus--------------------------------------
             eventBus:'org.greenrobot:eventbus:3.1.1',
             //Glide-------------------------------
-            glide:'com.github.bumptech.glide:glide:4.8.0',
+            glide:'com.github.bumptech.glide:glide:3.8.0',
             //--------------------------------RxAndroid----------------------------
             //rxAndroid : "io.reactivex:rxandroid:${thirdSupprotVersion.rxAndroidVersion}",
             rxJava : "io.reactivex.rxjava2:rxjava:${thirdSupprotVersion.rxJavaVersion}",

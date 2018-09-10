@@ -60,6 +60,9 @@
         <activity android:name=".feedback.FeedBackActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
+        <activity android:name=".me.UserInfoActivity"
+            android:screenOrientation="portrait"
+            />
     </application>
 
 </manifest>
