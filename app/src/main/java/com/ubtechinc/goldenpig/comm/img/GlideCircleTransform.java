@@ -21,7 +21,7 @@ import java.security.MessageDigest;
 
 public class GlideCircleTransform extends BitmapTransformation {
     public GlideCircleTransform(Context context) {
-        super();
+        super(context);
     }
 
     @Override
@@ -57,8 +57,5 @@ public class GlideCircleTransform extends BitmapTransformation {
         return getClass().getName();
     }
 
-    @Override
-    public void updateDiskCacheKey(@NonNull MessageDigest messageDigest) {
 
-    }
 }
