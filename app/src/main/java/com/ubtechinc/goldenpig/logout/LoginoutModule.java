@@ -6,7 +6,7 @@ import com.ubtechinc.nets.http.Url;
 
 @Keep
 public class LoginoutModule {
-    @Url("delete /user/logout ")
+    @Url("/user-service-rest/v2/user/logout")
     @Keep
     public class Request {
     }
