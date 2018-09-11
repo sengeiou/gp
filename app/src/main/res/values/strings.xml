@@ -56,5 +56,6 @@
     <string name="ubt_user_info">个人信息</string>
     <string name="ubt_photo">头像</string>
     <string name="ubt_logout">退出登录</string>
+    <string name="ubt_nikename">名字</string>
 
 </resources>

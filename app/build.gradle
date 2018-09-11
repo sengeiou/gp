@@ -118,5 +118,6 @@ dependencies {
     implementation project(path: ':utilcode')
     implementation project(path: ':netutils')
     implementation project(path: ':protocollibrary')
+    implementation project(path: ':imlib')
     implementation 'com.facebook.stetho:stetho:1.3.1'
 }
