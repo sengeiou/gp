@@ -28,7 +28,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoToolbar">
-        <activity android:name=".main.MainActivity"
+        <activity android:name=".login.LoginActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoToolbar"
@@ -40,7 +40,7 @@
             </intent-filter>
         </activity>
 
-         <activity android:name=".login.LoginActivity"
+         <activity android:name=".main.MainActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"
             />

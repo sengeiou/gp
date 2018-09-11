@@ -3,6 +3,7 @@ package com.ubtechinc.goldenpig.login;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.ubt.im.UbtTIMManager;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.comm.entity.UserInfo;
@@ -23,27 +24,30 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
     private TVSAuthRepository tvsAuthRepository;
     private AuthLive authLive ;
     private UBTAuthRepository ubtAuthRepository;
+    private UbtTIMManager timManager;
     public LoginModel(){
         tvsAuthRepository = new TVSAuthRepository(BuildConfig.APP_ID_WX,BuildConfig.APP_ID_QQ);
         ubtAuthRepository = new UBTAuthRepository();
         authLive = AuthLive.getInstance();
+        timManager=UbtTIMManager.getInstance();
     }
 
     @Override
     public void onTVSLoginSuccess(LoginInfo userInfo) {
         ubtAuthRepository.login(userInfo, this);
-
     }
 
 
     @Override
     public void onSuccess(UserInfo userInfo) {
         authLive.logined(userInfo);
-
+        timManager.loginTIM(userInfo.getUserId(),BuildConfig.IM_Channel);
     }
 
     @Override
     public void onError() {
+        tvsAuthRepository.logout();
+        authLive.error();
         UbtLogger.i(TAG,"onError");
     }
 

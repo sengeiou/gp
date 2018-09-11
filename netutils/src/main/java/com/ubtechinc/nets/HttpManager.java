@@ -34,7 +34,7 @@ import okhttp3.Interceptor;
 public final class HttpManager {
     //这个值在HeaderInterceptor内被替换掉
     public static String BASE_URL = "http://10.10.20.71:8010";
-    public static final String IM_TAG = BASE_URL + "im";
+    public static final String IM_TAG = BASE_URL + "/im";
     public static final String SER_TAG = BASE_URL + "alpha2-web";
     public static final String USER_TAG = BASE_URL + "user-service-rest";
     public static final String XINGE_TAG = BASE_URL + "xinge-push-rest";
@@ -62,7 +62,7 @@ public final class HttpManager {
     private void initialize(Context context) {
         RestNet.Builder builder = new RestNet.Builder(context);
         builder.cacheable(true)
-                .connectTimeout(10, TimeUnit.SECONDS)
+                .connectTimeout(20, TimeUnit.SECONDS)
                 .writeTimeout(10, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
                 .loggable(true)
@@ -162,6 +162,14 @@ public final class HttpManager {
         }
         Type type = Utils.getParameterUpperBound(0, (ParameterizedType) types[0]);
         mRestApi.doDelete(url, new ProxyRawCallback<T>(mContext, type, listener));
+    }
+    public <T> void doDeleteWithHeader(String url,Map<String, String> headers, final ResponseListener<T> listener) {
+        Type[] types = listener.getClass().getGenericInterfaces();
+        if (Utils.hasUnresolvableType(types[0])) {
+            return;
+        }
+        Type type = Utils.getParameterUpperBound(0, (ParameterizedType) types[0]);
+        mRestApi.doDeleteWithHeaders(url,new HashMap<String,String>(),headers,new ProxyRawCallback<T>(mContext, type, listener));
     }
 
     public <T> void doPostWithJsonAndHeader(String url, String jsonStr, Map<String, String> headers, final ResponseListener<T> listener) {
