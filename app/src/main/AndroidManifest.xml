@@ -28,7 +28,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoToolbar">
         <activity
-            android:name=".main.MainActivity"
+            android:name=".login.LoginActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoToolbar">
@@ -39,12 +39,8 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".login.LoginActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".pigmanager.SearchPigActivity"
+
+
          <activity android:name=".main.MainActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTop"

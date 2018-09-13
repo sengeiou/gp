@@ -61,7 +61,7 @@ android {
             buildConfigField "String", "APP_ID","\"100080018\"" /// 临时用
             //金猪APPKEY
             buildConfigField "String", "APP_KEY", "\"85650f0ffe314beda3b85a9ab626662d\""
-            buildConfigField "String", "APP_KEY","\"85650f0ffe314beda3b85a9ab626662d\""
+
 
             //登录Url 域名
             buildConfigField "String",  "LOGIN_URL","\"https://testjimu.ubtrobot.com:8443\""
@@ -112,23 +112,23 @@ android {
     dexOptions {
         javaMaxHeapSize "4g"
         jumboMode = true
-        threadCount ="4"
+        threadCount = "4"
     }
     android.applicationVariants.all {
-        variant -> variant.outputs.all {
-            if(variant.buildType.name.equals('release')) {
-                outputFileName = "goldenPig_${defaultConfig.versionName}_${releaseTime()}_release.apk"
-            }else {
-                outputFileName = "goldenPig_${defaultConfig.versionName}_${releaseTime()}_debug.apk"
+        variant ->
+            variant.outputs.all {
+                if (variant.buildType.name.equals('release')) {
+                    outputFileName = "goldenPig_${defaultConfig.versionName}_${releaseTime()}_release.apk"
+                } else {
+                    outputFileName = "goldenPig_${defaultConfig.versionName}_${releaseTime()}_debug.apk"
+                }
             }
-        }
     }
-
 
 
 }
 
-repositories{
+repositories {
     flatDir {
         dirs 'libs'
     }
@@ -154,6 +154,13 @@ dependencies {
     implementation rootProject.ext.deps.glide
     implementation rootProject.ext.deps.lifecycle
     implementation rootProject.ext.deps.multidex
+    implementation rootProject.ext.deps.butterknife_runtime
+    annotationProcessor rootProject.ext.deps.butterknife_compiler
+    implementation rootProject.ext.deps.eventBus
+    //下拉刷新
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.5'
+    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.5'
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.34'
 
     implementation 'com.yanzhenjie:permission:1.1.0'
     implementation project(path: ':bluetoothlibrary')
@@ -162,4 +169,5 @@ dependencies {
     implementation project(path: ':protocollibrary')
     implementation project(path: ':imlib')
     implementation 'com.facebook.stetho:stetho:1.3.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 }
