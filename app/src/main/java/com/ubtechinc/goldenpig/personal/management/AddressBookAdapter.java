@@ -71,16 +71,20 @@ public class AddressBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     notifyDataSetChanged();
                 }
             });
-            aHolder.swipe_menu.setOnClickListener(new View.OnClickListener() {
+            aHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(mContext, "这是第" + (position + 1) + "条数据", Toast.LENGTH_SHORT)
-                            .show();
+                    if (aHolder.swipe_menu.isMenuOpen()) {
+                        aHolder.swipe_menu.smoothToCloseMenu();
+                    } else {
+                        Toast.makeText(mContext, "这是第" + (position + 1) + "条数据", Toast.LENGTH_SHORT)
+                                .show();
+                    }
                 }
             });
         } else {
             AddressBookHolder2 aHolder = (AddressBookHolder2) holder;
-            aHolder.tv_content.setText("通讯录已满10人,如需新增请先删除联系人");
+            aHolder.tv_content.setText(mContext.getString(R.string.contact_limit));
         }
     }
 

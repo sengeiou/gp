@@ -14,18 +14,28 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.ubtech.utilcode.utils.LogUtils;
+import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewImg;
+import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.model.AddressBookmodel;
 import com.ubtechinc.goldenpig.mvp.MVPBaseActivity;
+import com.ubtechinc.goldenpig.personal.DeviceManageActivity;
+import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.swipe_menu.SwipeMenuLayout;
 import com.ubtechinc.goldenpig.view.swipe_menu.SwipeRecycleView;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_CONTACT_SUCCESS;
 
 public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.View,
         AddressBookPrestener> implements OnRefreshListener, AddressBookContract.View {
@@ -45,6 +55,11 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
     }
 
     @Override
+    protected boolean isRegisterEventBus() {
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         rl_titlebar.setTitleText(getString(R.string.address_book));
@@ -58,7 +73,13 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
         rl_titlebar.setRightOnclickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (mList.size() < 11) {
+                    ActivityRoute.toAnotherActivity(AddressBookActivity.this,
+                            AddAndSetContactActivity
+                                    .class, false);
+                } else {
+                    ToastUtils.showShortToast(getString(R.string.contact_limit));
+                }
             }
         });
         refreshLayout.setEnableAutoLoadMore(false);
@@ -130,17 +151,23 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
         return mHandler;
     }
 
-//    @OnClick({R.id.rl_my_pig, R.id.rl_pairing, R.id.rl_member_group, R.id.rl_addressbook})
-//    public void onClick(View view) {
-//        switch (view.getId()) {
-//            case R.id.rl_my_pig:
-//                break;
-//            case R.id.rl_pairing:
-//                break;
-//            case R.id.rl_member_group:
-//                break;
-//            case R.id.rl_addressbook:
-//                break;
-//        }
-//    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(Event event) {
+        LogUtils.d("onMessageEvent");
+        if (event != null) {
+            onReceiveEvent(event);
+        }
+    }
+
+    /**
+     * 接收到分发到事件
+     *
+     * @param event 事件
+     */
+    protected void onReceiveEvent(Event event) {
+        if (event.getCode() == ADD_CONTACT_SUCCESS) {
+            ToastUtils.showShortToast("更新数据");
+        }
+    }
+
 }
