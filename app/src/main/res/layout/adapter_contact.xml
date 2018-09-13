@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="@dimen/dp_55"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gray_round_frame"
+        android:gravity="center"
+        android:paddingBottom="@dimen/dp_3"
+        android:paddingTop="@dimen/dp_3"
+        android:textColor="@color/ubt_white"
+        android:textSize="@dimen/sp_12"
+        tools:text="爸爸" />
+</LinearLayout>

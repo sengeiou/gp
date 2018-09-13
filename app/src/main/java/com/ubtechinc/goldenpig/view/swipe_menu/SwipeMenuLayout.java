@@ -10,6 +10,7 @@ import android.view.ViewConfiguration;
 import android.widget.LinearLayout;
 import android.widget.OverScroller;
 
+import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtechinc.goldenpig.R;
 
 
@@ -92,19 +93,24 @@ public class SwipeMenuLayout extends LinearLayout {
                 if (deltaX > 0) {
                     //向左滑动
                     currentState = STATE_MOVING_LEFT;
+                    LogUtils.d("hdf","向左滑动currentState:"+currentState);
                     if (deltaX >= menuWidth || getScrollX() + deltaX >= menuWidth) {
                         //右边缘检测
                         scrollTo(menuWidth, 0);
                         currentState = STATE_OPEN;
+                        LogUtils.d("hdf","向左滑动currentState右边缘检测:"+currentState);
                         break;
                     }
                 } else if (deltaX < 0) {
+                    LogUtils.d("hdf","向右滑动:"+deltaX);
                     //向右滑动
                     currentState = STATE_MOVING_RIGHT;
+                    LogUtils.d("hdf","向右滑动currentState:"+currentState);
                     if (deltaX + getScrollX() <= 0) {
                         //左边缘检测
                         scrollTo(0, 0);
                         currentState = STATE_CLOSED;
+                        LogUtils.d("hdf","向右滑动currentState左边缘检测:"+currentState);
                         break;
                     }
                 }
