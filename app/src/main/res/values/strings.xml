@@ -56,5 +56,11 @@
     <string name="ubt_user_info">个人信息</string>
     <string name="ubt_photo">头像</string>
     <string name="ubt_logout">退出登录</string>
+    <string name="my_pig">我的小猪</string>
+    <string name="pic_pair">小猪配对</string>
+    <string name="member_group">成员组</string>
+    <string name="address_book">通讯录</string>
+    <string name="device_manage">设置管理</string>
+    <string name="nickname_call_phone">报昵称打电话</string>
 
 </resources>

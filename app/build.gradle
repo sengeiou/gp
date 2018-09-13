@@ -4,6 +4,7 @@ apply plugin: 'com.android.application'
 def releaseTime() {
     return new Date().format("yyMMddHH")
 }
+
 android {
     compileSdkVersion COMPILE_SDK_VERSION
     compileOptions {
@@ -14,7 +15,7 @@ android {
     defaultConfig {
         applicationId "com.ubtechinc.goldenpig"
         minSdkVersion MIN_SDK_VERSION
-        targetSdkVersion  TARGET_SDK_VERSION
+        targetSdkVersion TARGET_SDK_VERSION
         versionCode 1
         versionName "1.0"
         //multiDexEnabled true
@@ -23,23 +24,23 @@ android {
         release {
             storeFile file("../goldPig.jks")
             storePassword 'goldpig2018'
-            keyAlias  'goldPig'
+            keyAlias 'goldPig'
             keyPassword 'goldpig2018'
         }
     }
     buildTypes {
-        debug{
+        debug {
             //微信APP_ID
             buildConfigField "String", "APP_ID_WX", "\"wx0238743de057a634\""
             //QQ APP_ID
             buildConfigField "String", "APP_ID_QQ", "\"1106279915\""
             //金猪productId
-            buildConfigField "String", "PRODUCT_ID" , "\"ffb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589\""
+            buildConfigField "String", "PRODUCT_ID", "\"ffb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589\""
 
             //金猪APPID
-            buildConfigField "String", "APP_ID","\"100080014\""
+            buildConfigField "String", "APP_ID", "\"100080014\""
             //金猪APPKEY
-            buildConfigField "String", "APP_KEY","\"85650f0ffe314beda3b85a9ab626662d\""
+            buildConfigField "String", "APP_KEY", "\"85650f0ffe314beda3b85a9ab626662d\""
             minifyEnabled false
             shrinkResources false
             signingConfig signingConfigs.release
@@ -51,11 +52,11 @@ android {
             //QQ APP_ID
             buildConfigField "String", "APP_ID_QQ", "\"1106279915\""
             //金猪productId
-            buildConfigField "String", "PRODUCT_ID" , "\"ffb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589\""
+            buildConfigField "String", "PRODUCT_ID", "\"ffb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589\""
             //金猪APPID
-            buildConfigField "String", "APP_ID","\"100080014\""
+            buildConfigField "String", "APP_ID", "\"100080014\""
             //金猪APPKEY
-            buildConfigField "String", "APP_KEY","\"85650f0ffe314beda3b85a9ab626662d\""
+            buildConfigField "String", "APP_KEY", "\"85650f0ffe314beda3b85a9ab626662d\""
             //是否优化zip
             zipAlignEnabled true
             // 移除无用的resource文件
@@ -70,23 +71,23 @@ android {
     dexOptions {
         javaMaxHeapSize "4g"
         jumboMode = true
-        threadCount ="4"
+        threadCount = "4"
     }
     android.applicationVariants.all {
-        variant -> variant.outputs.all {
-            if(variant.buildType.name.equals('release')) {
-                outputFileName = "goldenPig_${defaultConfig.versionName}_${releaseTime()}_release.apk"
-            }else {
-                outputFileName = "goldenPig_${defaultConfig.versionName}_${releaseTime()}_debug.apk"
+        variant ->
+            variant.outputs.all {
+                if (variant.buildType.name.equals('release')) {
+                    outputFileName = "goldenPig_${defaultConfig.versionName}_${releaseTime()}_release.apk"
+                } else {
+                    outputFileName = "goldenPig_${defaultConfig.versionName}_${releaseTime()}_debug.apk"
+                }
             }
-        }
     }
-
 
 
 }
 
-repositories{
+repositories {
     flatDir {
         dirs 'libs'
     }
@@ -112,6 +113,13 @@ dependencies {
     implementation rootProject.ext.deps.glide
     implementation rootProject.ext.deps.lifecycle
     implementation rootProject.ext.deps.multidex
+    implementation rootProject.ext.deps.butterknife_runtime
+    annotationProcessor rootProject.ext.deps.butterknife_compiler
+    implementation rootProject.ext.deps.eventBus
+    //下拉刷新
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.5'
+    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.5'
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.34'
 
     implementation 'com.yanzhenjie:permission:1.1.0'
     implementation project(path: ':bluetoothlibrary')
@@ -119,4 +127,5 @@ dependencies {
     implementation project(path: ':netutils')
     implementation project(path: ':protocollibrary')
     implementation 'com.facebook.stetho:stetho:1.3.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.3'
 }

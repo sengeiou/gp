@@ -96,7 +96,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile project(':utilcode')
 //    compile project(':servicesdk')
-     provided rootProject.ext.deps.timber
+    compileOnly rootProject.ext.deps.timber
     //测试
     testCompile rootProject.ext.deps.junit
     testCompile rootProject.ext.deps.truth
@@ -110,7 +110,7 @@ dependencies {
     compile rootProject.ext.deps.logging_interceptor
 
     compile rootProject.ext.deps.protobufLava
-    provided rootProject.ext.deps.supportAnnotations
+    compileOnly rootProject.ext.deps.supportAnnotations
     compile rootProject.ext.deps.eventbus
 
 
