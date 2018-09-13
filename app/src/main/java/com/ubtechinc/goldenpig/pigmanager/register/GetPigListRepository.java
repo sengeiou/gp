@@ -20,8 +20,8 @@ import java.util.HashMap;
  *@changetime    :2018/9/12 17:39
 */
 public class GetPigListRepository {
-    public void getRobotBindUsers(String token,String appid,String serialNumber,final OnGetPigListLitener listener) {
-        GetRobotListModule.Request request=new GetRobotListModule().new Request();
+    public void getUserPigs(String token,String appid,String serialNumber,final OnGetPigListLitener listener) {
+        GetRobotListModule.Request request=new GetRobotListModule.Request();
         if (!TextUtils.isEmpty(serialNumber)) {
             request.setSerialNumber(serialNumber);
         }
@@ -38,7 +38,7 @@ public class GetPigListRepository {
 
             @Override
             public void onSuccess(GetRobotListModule.Response response) {
-
+                Log.i("getUserPigs",response.getMsg());
                 listener.onSuccess(response);
             }
         });

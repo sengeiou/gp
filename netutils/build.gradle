@@ -54,8 +54,8 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             def props = getProps(rootProject.ext.app.serverEnviroment)
             if (props != null) {
-                buildConfigField 'String', 'HOST', props['host']
-                buildConfigField 'String', 'IM_HOST', "\"http://10.10.1.43:9080\""
+                buildConfigField 'String', 'HOST', "\"https://testjimu.ubtrobot.com:8443\""
+                buildConfigField 'String', 'IM_HOST', "\"http://210.75.21.106:9080\""
                 buildConfigField 'String', 'USER_HOST', props['user_host']
                 buildConfigField 'String', 'XINGE_HOST', props['xinge_host']
                 buildConfigField 'String', 'UPDATE', props['update']
@@ -69,8 +69,8 @@ android {
         debug {
             def props = getProps(rootProject.ext.app.serverEnviroment)
             if (props != null) {
-                buildConfigField 'String', 'HOST', props['host']
-                buildConfigField 'String', 'IM_HOST', "\"http://10.10.1.43:9080\""
+                buildConfigField 'String', 'HOST', "\"https://testjimu.ubtrobot.com:8443\""
+                buildConfigField 'String', 'IM_HOST', "\"http://210.75.21.106:9080\""
                 buildConfigField 'String', 'USER_HOST', props['user_host']
                 buildConfigField 'String', 'XINGE_HOST', props['xinge_host']
                 buildConfigField 'String', 'UPDATE', props['update']

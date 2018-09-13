@@ -1,0 +1,14 @@
+syntax = "proto3";
+option java_package = "com.ubtrobot.gold";
+option java_outer_classname="GPResponse";
+
+message Response {
+    bool result=1;  // true -> 操作成功 false-content为errorInfo
+    ErrorInfo error=2;
+}
+
+//错误信息  当response result=false时的content 为errorInfo
+message ErrorInfo {
+    int32 errorCode=1;
+    string errorMsg=2;
+}

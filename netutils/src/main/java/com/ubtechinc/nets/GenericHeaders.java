@@ -99,7 +99,7 @@ public final class GenericHeaders {
 
     public static HashMap<String, String>  getPhoneDeviceHeaders(Context context){
         HashMap<String, String> headers = new HashMap<>();
-        final String imei = PhoneUtils.getIMEI();
+        final String imei ="" /*PhoneUtils.getIMEI()*/;
         if (!TextUtils.isEmpty(imei)) {
             headers.put(IMEI, imei);
         }
