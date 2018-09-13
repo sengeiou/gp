@@ -1,4 +1,4 @@
-package com.ubt.im;
+package com.ubt.im.listener;
 
 public interface OnTIMLoginListener {
     void onFailure(String erroe);

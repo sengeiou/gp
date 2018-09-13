@@ -28,8 +28,20 @@ android {
     }
 
     buildTypes {
+        debug {
+            minifyEnabled false
+            //IM登录渠道
+            buildConfigField "String","IM_Channel","\"A2\""
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            ndk {
+                // 需要将 x86 架构过滤掉
+                abiFilters "armeabi", "armeabi-v7a", "arm64-v8a"
+            }
+        }
         release {
             minifyEnabled false
+            //IM登录渠道
+            buildConfigField "String","IM_Channel","\"A2\""
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             ndk {
                 // 需要将 x86 架构过滤掉

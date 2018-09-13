@@ -66,8 +66,7 @@ android {
             buildConfigField "String",  "LOGIN_URL","\"http://10.10.20.71:8010\""
             //IM操作URL域名
             buildConfigField "String", "IM_URL","\"http://10.10.1.43:9080\""
-            //IM登录渠道
-            buildConfigField "String","IM_Channel","\"A2\""
+
             minifyEnabled false
             shrinkResources false
             signingConfig signingConfigs.release
@@ -93,8 +92,7 @@ android {
             buildConfigField "String", "LOGIN_URL","\"http://10.10.20.71:8010\""
             //IM操作URL域名
             buildConfigField "String", "IM_URL","\"http://10.10.1.43:9080\""
-            //IM登录渠道
-            buildConfigField "String","IM_Channel","\"A2\""
+
             //是否优化zip
             zipAlignEnabled true
             // 移除无用的resource文件

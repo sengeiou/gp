@@ -17,12 +17,12 @@ import java.util.HashMap;
  * [A brief description] :  获取与机器人关联的所有用户信息
  */
 
-public class CheckRobotRepository {
+public class CheckUserRepository {
 
     public void getRobotBindUsers(String searialNumber,final ICheckBindStateCallBack callback){
         CheckBindRobotModule.Request request = new CheckBindRobotModule.Request();
         request.setSerialNumber(searialNumber);
-        HashMap<String,String> headers=new HashMap<>();
+
 
 
         HttpProxy.get().doGet(request, new ResponseListener<CheckBindRobotModule.Response>() {

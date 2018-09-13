@@ -29,7 +29,7 @@ public class RegisterPigRepository {
         request.setSerialNumber(srialNumber);
         HashMap<String,String> hearder=new HashMap<>();
         hearder.put("authorization",token);
-        hearder.put("X-UBT-AppId","100080018");
+        hearder.put("X-UBT-AppId",appid);  //
         HttpProxy.get().doPost(request, hearder,new ResponseListener<RegisterRobotModule.Response>() {
             @Override
             public void onError(ThrowableWrapper e) {

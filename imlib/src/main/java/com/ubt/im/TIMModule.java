@@ -3,10 +3,10 @@ package com.ubt.im;
 import android.support.annotation.Keep;
 
 import com.ubtechinc.nets.http.Url;
-
+@Keep
 public class TIMModule {
-    @Url("/im/getInfo")
     @Keep
+    @Url("/im/getInfo")
     public class LoginRequest {
         private String signature;
         private String time;
@@ -46,24 +46,37 @@ public class TIMModule {
         }
     }
     @Keep
-    public class Response{
-        private String Code;
-        private String message;
+    public class Response extends  BaseResponse{
+        /*private String returnMap;
+        private String returnMsg;
+        private String returnCode;
 
-        public String getCode() {
-            return Code;
+        public String getReturnMap() {
+            return returnMap;
         }
 
-        public void setCode(String code) {
-            Code = code;
+        public void setReturnMap(String returnMap) {
+            this.returnMap = returnMap;
         }
 
-        public String getMessage() {
-            return message;
+        public String getReturnMsg() {
+            return returnMsg;
         }
 
-        public void setMessage(String message) {
-            this.message = message;
+        public void setReturnMsg(String returnMsg) {
+            this.returnMsg = returnMsg;
         }
+
+        public String getReturnCode() {
+            return returnCode;
+        }
+
+        public void setReturnCode(String returnCode) {
+            this.returnCode = returnCode;
+        }*/
+    }
+    @Keep
+    public class Data{
+
     }
 }

@@ -12,7 +12,7 @@ import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.observeable.LiveResult;
 import com.ubtechinc.goldenpig.pigmanager.observeable.RobotBindStateLive;
 import com.ubtechinc.goldenpig.pigmanager.observeable.RobotUnbindLive;
-import com.ubtechinc.goldenpig.pigmanager.register.CheckRobotRepository;
+import com.ubtechinc.goldenpig.pigmanager.register.CheckUserRepository;
 import com.ubtechinc.nets.http.ThrowableWrapper;
 
 import java.util.ArrayList;
@@ -31,15 +31,15 @@ public class RobotAllAccountViewModel {
 
     private String TAG = getClass().getSimpleName();
 
-    private CheckRobotRepository mCheckRobotRepository;
+    private CheckUserRepository mCheckRobotRepository;
 
     public RobotAllAccountViewModel() {
-        mCheckRobotRepository = new CheckRobotRepository();
+        mCheckRobotRepository = new CheckUserRepository();
     }
 
     public RobotBindStateLive checkRobotBindState(String searialNumber,String token,String appId) {
         final RobotBindStateLive robotBindStateLive = new RobotBindStateLive();
-        mCheckRobotRepository.getRobotBindUsers(searialNumber,token,appId, new CheckRobotRepository.ICheckBindStateCallBack() {
+        mCheckRobotRepository.getRobotBindUsers(searialNumber,token,appId, new CheckUserRepository.ICheckBindStateCallBack() {
             @Override
             public void onError(ThrowableWrapper e) {
                 robotBindStateLive.networkError();
@@ -88,7 +88,7 @@ public class RobotAllAccountViewModel {
 
     public LiveResult getBindUsers(String searialNumber){
         final LiveResult result = new LiveResult();
-        mCheckRobotRepository.getRobotBindUsers(searialNumber, new CheckRobotRepository.ICheckBindStateCallBack() {
+        mCheckRobotRepository.getRobotBindUsers(searialNumber, new CheckUserRepository.ICheckBindStateCallBack() {
             @Override
             public void onError(ThrowableWrapper e) {
                 result.fail("network error");
@@ -123,7 +123,7 @@ public class RobotAllAccountViewModel {
     public RobotUnbindLive getRobotUnBindWays(String searialNumber) {
         final RobotUnbindLive robotUnbindLive = new RobotUnbindLive();
         Log.i("getRobotUnBindWays", "getRobotUnBindWays: robotUnbindLive:" + robotUnbindLive);
-        mCheckRobotRepository.getRobotBindUsers(searialNumber, new CheckRobotRepository.ICheckBindStateCallBack() {
+        mCheckRobotRepository.getRobotBindUsers(searialNumber, new CheckUserRepository.ICheckBindStateCallBack() {
             @Override
             public void onError(ThrowableWrapper e) {
                 robotUnbindLive.networkError();
