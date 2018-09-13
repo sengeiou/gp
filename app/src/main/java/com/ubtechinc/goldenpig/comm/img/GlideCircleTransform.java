@@ -11,12 +11,13 @@ import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 
 import java.security.MessageDigest;
-
-/**
- * 类描述
- * 类传参
- * 创建人:Lyb
- * 创建时间：2018/3/9
+ /**
+  *@auther        :hqt
+  *@email         :qiangta.huang@ubtrobot.com
+  *@description   :
+  *@time          :2018/9/10 16:25
+  *@change        :
+  *@changetime    :2018/9/10 16:25
  */
 
 public class GlideCircleTransform extends BitmapTransformation {
@@ -38,9 +39,9 @@ public class GlideCircleTransform extends BitmapTransformation {
 
         Bitmap squared = Bitmap.createBitmap(source, x, y, size, size);
 
-        Bitmap result = pool.get(size, size, Bitmap.Config.ARGB_8888);
+        Bitmap result = pool.get(size, size, Bitmap.Config.RGB_565);
         if (result == null) {
-            result = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+            result = Bitmap.createBitmap(size, size, Bitmap.Config.RGB_565);
         }
 
         Canvas canvas = new Canvas(result);

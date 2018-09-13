@@ -62,5 +62,6 @@
     <string name="address_book">通讯录</string>
     <string name="device_manage">设置管理</string>
     <string name="nickname_call_phone">报昵称打电话</string>
+    <string name="ubt_nikename">名字</string>
 
 </resources>

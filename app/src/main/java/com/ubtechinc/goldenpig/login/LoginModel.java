@@ -2,13 +2,20 @@ package com.ubtechinc.goldenpig.login;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 
+import com.ubt.im.UbtTIMManager;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.comm.entity.UserInfo;
+import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.login.repository.UBTAuthRepository;
+import com.ubtechinc.goldenpig.net.GetRobotListModule;
+import com.ubtechinc.goldenpig.net.RegisterRobotModule;
+import com.ubtechinc.goldenpig.pigmanager.register.GetPigListRepository;
 import com.ubtechinc.goldenpig.repository.TVSAuthRepository;
+import com.ubtechinc.nets.http.ThrowableWrapper;
 import com.ubtechinc.tvlloginlib.entity.LoginInfo;
 
 /**
@@ -18,32 +25,51 @@ import com.ubtechinc.tvlloginlib.entity.LoginInfo;
  *@change        :
  *@changetime    :2018/8/21 11:14
 */
-public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthRepository.UBTAuthCallBack{
+public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthRepository.UBTAuthCallBack,UbtTIMManager.UbtIMCallBack{
     private final String TAG="LoginModel";
     private TVSAuthRepository tvsAuthRepository;
     private AuthLive authLive ;
     private UBTAuthRepository ubtAuthRepository;
+    private GetPigListRepository getPigListRepository; //获取用户当前小猪列表
+    private UbtTIMManager timManager;
     public LoginModel(){
         tvsAuthRepository = new TVSAuthRepository(BuildConfig.APP_ID_WX,BuildConfig.APP_ID_QQ);
         ubtAuthRepository = new UBTAuthRepository();
+        getPigListRepository=new GetPigListRepository();
         authLive = AuthLive.getInstance();
+        timManager=UbtTIMManager.getInstance();
     }
 
     @Override
     public void onTVSLoginSuccess(LoginInfo userInfo) {
         ubtAuthRepository.login(userInfo, this);
-
     }
 
 
     @Override
     public void onSuccess(UserInfo userInfo) {
         authLive.logined(userInfo);
+        getPigList();
+        timManager.loginTIM(userInfo.getUserId(), com.ubt.imlib.BuildConfig.IM_Channel);
 
     }
+    private void getPigList(){
+        getPigListRepository.getRobotBindUsers(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListRepository.OnGetPigListLitener() {
+            @Override
+            public void onError(ThrowableWrapper e) {
+                Log.e("getPigList",e.getMessage());
+            }
 
+            @Override
+            public void onSuccess(GetRobotListModule.Response response) {
+                Log.e("getPigList",response.getMsg());
+            }
+        });
+    }
     @Override
     public void onError() {
+        tvsAuthRepository.logout();
+        authLive.error();
         UbtLogger.i(TAG,"onError");
     }
 
@@ -101,4 +127,13 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
     }
 
 
+    @Override
+    public void onError(int i, String s) {
+
+    }
+
+    @Override
+    public void onSuccess() {
+
+    }
 }

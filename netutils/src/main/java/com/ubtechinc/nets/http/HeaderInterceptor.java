@@ -42,6 +42,9 @@ public class HeaderInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         final Request request = chain.request();
         String newUrl = request.url().toString();
+        if (newUrl.startsWith(HttpManager.IM_TAG)) {
+            newUrl = newUrl.replace(HttpManager.BASE_URL, IM_URL_HOST);
+        }
         /*if (newUrl.startsWith(HttpManager.IM_TAG)) {
             newUrl = newUrl.replace(HttpManager.BASE_URL, IM_URL_HOST);
         } else if (newUrl.startsWith(HttpManager.SER_TAG)) {

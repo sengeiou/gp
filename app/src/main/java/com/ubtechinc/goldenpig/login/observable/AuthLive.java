@@ -5,10 +5,13 @@ import android.os.Looper;
 
 
 import com.ubtechinc.goldenpig.comm.entity.UserInfo;
+import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
 
 import static com.ubtechinc.goldenpig.login.observable.AuthLive.AuthState.NORMAL;
 
@@ -37,7 +40,7 @@ public class AuthLive extends LiveData<AuthLive> {
 
 
     private UserInfo currentUser;
-
+    private ArrayList<PigInfo>  currentPigList;
     private AuthState state;
     private String loginToken;
     public void logining() {
@@ -59,6 +62,20 @@ public class AuthLive extends LiveData<AuthLive> {
         }
     }
 
+    public PigInfo getCurrentPig() {
+        if (currentPigList!=null&&currentPigList.size()>0) {
+            return currentPigList.get(0);
+        }
+        return null;
+    }
+
+    public void setCurrentPig(PigInfo currentPig) {
+        if (this.currentPigList==null) {
+           currentPigList=new ArrayList<>();
+        }
+        this.currentPigList.add(currentPig);
+
+    }
 
     public void logout() {
         this.state = AuthState.LOGOUTTED;

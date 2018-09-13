@@ -31,7 +31,7 @@ import java.lang.ref.WeakReference;
 public class LoginActivity extends BaseActivity implements View.OnClickListener  {
     /**qq登录按钮和微信登录按钮**/
     private View mQQLoginBtn;
-    private View mWecahtLoginBtn;
+    private View mWechatLoginBtn;
 
     private LoginModel mLoginModel;
 
@@ -39,6 +39,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     private NetworkHelper.NetworkInductor mInductor;
     private LoginHandler handler;
+    private boolean isLogined;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +71,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         if (mLoginModel != null) {
             mLoginModel.onResume();
         }
+        if (isLogined) {
+            isLogined=false;
+            registerProxy();
+        }
     }
 
     @Override
@@ -100,8 +105,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         mQQLoginBtn=findViewById(R.id.ubt_btn_qq_login);
         mQQLoginBtn.setOnClickListener(this);
 
-        mWecahtLoginBtn=findViewById(R.id.ubt_btn_wechat_login);
-        mWecahtLoginBtn.setOnClickListener(this);
+        mWechatLoginBtn=findViewById(R.id.ubt_btn_wechat_login);
+        mWechatLoginBtn.setOnClickListener(this);
 
     }
 
@@ -121,11 +126,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
      *@description   :注册登录代理
     */
     private void registerProxy() {
-        mLoginModel = new LoginModel();
+        if (mLoginModel==null) {
+            mLoginModel = new LoginModel();
+        }
         if (mLoginModel.checkToken(this)) {
             handler.sendEmptyMessage(0);
         }else if (!NetworkHelper.sharedHelper().isNetworkAvailable()) {
-
             mLoginModel.logoutTVS();
             return;
         }else {
@@ -134,6 +140,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void wxLogin(){
+        if (mLoginModel==null){
+            return;
+        }
         if (!mLoginModel.isWXInstall()) {
             ToastUtils.showShortToast(this,getString(R.string.ubt_wx_uninstalled));
             return;
@@ -143,10 +152,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             return;
         }
         mLoginModel.loginWX(LoginActivity.this);
+        isLogined=true;
     }
     private void qqLogin(){
         if (mLoginModel!=null){
             mLoginModel.loginQQ(this);
+            isLogined=true;
         }
     }
     private void registerEventObserve(){

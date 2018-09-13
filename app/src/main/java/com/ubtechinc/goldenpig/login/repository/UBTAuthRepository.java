@@ -5,11 +5,14 @@ import com.ubtechinc.goldenpig.comm.entity.UserInfo;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.login.ThirdPartLoginModule;
 
+import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.logout.LoginoutModule;
 import com.ubtechinc.nets.ResponseListener;
 import com.ubtechinc.nets.http.HttpProxy;
 import com.ubtechinc.nets.http.ThrowableWrapper;
 import com.ubtechinc.tvlloginlib.entity.LoginInfo;
+
+import java.util.HashMap;
 
 /**
  * Created by ubt on 2017/9/30.
@@ -46,7 +49,9 @@ public class UBTAuthRepository {
 
     public void logout(final UBTAuthCallBack callback) {
         LoginoutModule.Request request = new LoginoutModule().new Request();
-        HttpProxy.get().doDelete(request, new ResponseListener<LoginoutModule.Response>() {
+        HashMap<String,String> header=new HashMap<>();
+        header.put(CookieInterceptor.AUTHORIZATION,CookieInterceptor.get().getToken());
+        HttpProxy.get().doDelete(request,header,new ResponseListener<LoginoutModule.Response>() {
             @Override
             public void onError(ThrowableWrapper e) {
                 if (callback != null) {

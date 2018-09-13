@@ -97,7 +97,12 @@ public final class RestNet {
                 .compose(exceptionTransformer)
                 .subscribe(new InnerSubscriber(callback));
     }
-
+    public void doDeleteWithHeaders(String url, HashMap<String, String> maps, Map<String, String> headers,RawCallback callback) {
+        mRestApi.doDelete(url, maps,headers)
+                .compose(schedulersTransformer)
+                .compose(exceptionTransformer)
+                .subscribe(new InnerSubscriber(callback));
+    }
     public void doDelete(String url, RawCallback callback) {
         mRestApi.doDelete(url)
                 .compose(schedulersTransformer)

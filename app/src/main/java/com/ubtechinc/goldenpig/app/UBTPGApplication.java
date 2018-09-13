@@ -20,8 +20,11 @@ public class UBTPGApplication extends LoginApplication {
     @Override
     public void onCreate() {
         super.onCreate();
+        MultiDex.install(this);
         com.ubtech.utilcode.utils.Utils.init(this);
         instance = this;
+        Foreground.init(this);
+
         Stetho.initializeWithDefaults(this);
         UbtLogger.init(getApplicationContext());
         UbtLogger.i("", ProtoBufferDisposer.TAG);

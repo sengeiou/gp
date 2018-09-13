@@ -50,7 +50,8 @@ public interface RestApi {
 
     @DELETE()
     Observable<ResponseBody> doDelete(@Url String url);
-
+    @DELETE()
+    Observable<ResponseBody> doDelete(@Url String url,@QueryMap Map<String, String> maps,@HeaderMap Map<String, String> headers);
 
     @POST()
     Observable<ResponseBody> doPostWithJsonAndHeader(@Url String url, @Body RequestBody body, @HeaderMap Map<String, String> headers);

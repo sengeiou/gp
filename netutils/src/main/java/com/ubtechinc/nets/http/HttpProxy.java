@@ -218,5 +218,18 @@ public class HttpProxy {
         }
 
     }
+    public <T> void doDelete(Object baseRequest, Map<String, String> headers,final ResponseListener<T> listener) {
+        String requestUrl = null;
+        if (baseRequest.getClass().isAnnotationPresent(Url.class)) {
+            Url url = baseRequest.getClass().getAnnotation(Url.class);
+            requestUrl = url.value();
+        }
+        if (!TextUtils.isEmpty(requestUrl)) {
+            HttpManager.get(com.ubtech.utilcode.utils.Utils.getContext()).doDeleteWithHeader(requestUrl,headers, listener);
+        } else {//没有注解Url报错
+            if (listener == null) return;
+            listener.onError(ErrorUtil.handleException(new NullUrlException()));
+        }
 
+    }
 }
