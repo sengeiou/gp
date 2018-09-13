@@ -71,6 +71,7 @@ ext {
             protobuflite : "3.0.1",
             protobufjava : "3.4.0",
             eventbus: "3.0.0",
+            butterknife : "8.8.1",
     ]
 
     pluginVersion = [
@@ -157,5 +158,8 @@ ext {
             //----activity 生命周期------------------
             lifecycle: 'android.arch.lifecycle:runtime:1.0.0-alpha9',
             lifecycleExt: 'android.arch.lifecycle:extensions:1.0.0-alpha9',
+            //butterknife 注释
+            butterknife_runtime: "com.jakewharton:butterknife:$thirdSupprotVersion.butterknife",
+            butterknife_compiler: "com.jakewharton:butterknife-compiler:$thirdSupprotVersion.butterknife"
     ]
 }

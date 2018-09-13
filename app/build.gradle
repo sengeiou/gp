@@ -35,7 +35,7 @@ android {
     defaultConfig {
         applicationId "com.ubtechinc.goldenpig"
         minSdkVersion MIN_SDK_VERSION
-        targetSdkVersion  TARGET_SDK_VERSION
+        targetSdkVersion TARGET_SDK_VERSION
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -44,12 +44,12 @@ android {
         release {
             storeFile file("../goldPig.jks")
             storePassword 'goldpig2018'
-            keyAlias  'goldPig'
+            keyAlias 'goldPig'
             keyPassword 'goldpig2018'
         }
     }
     buildTypes {
-        debug{
+        debug {
             //微信APP_ID
             buildConfigField "String", "APP_ID_WX", "\"wx0238743de057a634\""
             //QQ APP_ID
@@ -60,6 +60,7 @@ android {
             //金猪APPID
             buildConfigField "String", "APP_ID","\"100080018\"" /// 临时用
             //金猪APPKEY
+            buildConfigField "String", "APP_KEY", "\"85650f0ffe314beda3b85a9ab626662d\""
             buildConfigField "String", "APP_KEY","\"85650f0ffe314beda3b85a9ab626662d\""
 
             //登录Url 域名

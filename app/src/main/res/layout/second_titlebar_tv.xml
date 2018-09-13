@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rl_layout"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_45">
+
+    <ImageView
+        android:id="@+id/iv_left"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:contentDescription="@null"
+        android:paddingBottom="@dimen/dp_11"
+        android:paddingLeft="@dimen/dp_4"
+        android:paddingTop="@dimen/dp_11"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_back" />
+
+    <TextView
+        android:id="@+id/tv_center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxWidth="250dp"
+        android:singleLine="true"
+        android:text="@null"
+        android:textColor="@color/ubt_tips_txt_color"
+        android:textSize="@dimen/sp_16"
+        android:textStyle="normal" />
+
+    <TextView
+        android:id="@+id/tv_right"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:paddingLeft="@dimen/dp_20"
+        android:paddingRight="@dimen/dp_20"
+        android:textColor="@color/ubt_tips_txt_color"
+        android:textSize="@dimen/sp_15"
+        android:visibility="gone" />
+
+</RelativeLayout>

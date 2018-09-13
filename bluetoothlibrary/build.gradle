@@ -31,6 +31,6 @@ dependencies {
     compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
     implementation rootProject.ext.deps.appCompatV7
     testCompile rootProject.ext.deps.junit
-    provided project(':netutils')
-    provided project(':protocollibrary')
+    compileOnly project(':netutils')
+    compileOnly project(':protocollibrary')
 }

@@ -148,4 +148,10 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/ubt_tips_txt_color</item>
     </style>
+
+    <declare-styleable name="StateView">
+        <attr name="emptyResource" format="reference" />
+        <attr name="retryResource" format="reference" />
+        <attr name="loadingResource" format="reference" />
+    </declare-styleable>
 </resources>

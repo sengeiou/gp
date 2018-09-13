@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_menu"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/dp_45"
+    android:layout_centerInParent="true"
+    android:background="@color/ubt_main_bg_color"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_25"
+        android:gravity="center_horizontal"
+        android:textSize="@dimen/sp_16"
+        tools:text="通讯录已满10人,如需新增请先删除联系人" />
+</LinearLayout>

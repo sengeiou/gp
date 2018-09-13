@@ -18,6 +18,7 @@ buildscript {
         classpath 'com.tencent.bugly:symtabfileuploader:latest.release'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.1'// 项目根目录build.gradle配置代码
+        classpath 'com.jakewharton:butterknife-gradle-plugin:8.8.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
