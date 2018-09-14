@@ -14,6 +14,8 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.ubt.im.UbtTIMManager;
+import com.ubt.im.event.MessageEvent;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
@@ -27,6 +29,7 @@ import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.swipe_menu.SwipeMenuLayout;
 import com.ubtechinc.goldenpig.view.swipe_menu.SwipeRecycleView;
 
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -37,8 +40,10 @@ import butterknife.BindView;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_CONTACT_SUCCESS;
 
+import java.util.Observable;
+import java.util.Observer;
 public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.View,
-        AddressBookPrestener> implements OnRefreshListener, AddressBookContract.View {
+        AddressBookPrestener> implements OnRefreshListener, AddressBookContract.View,Observer {
     @BindView(R.id.rl_titlebar)
     SecondTitleBarViewImg rl_titlebar;
     @BindView(R.id.recycler)
@@ -97,6 +102,7 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
         recycler.addItemDecoration(divider);
         adapter = new AddressBookAdapter(this, mList);
         recycler.setAdapter(adapter);
+        UbtTIMManager.getInstance().setMsgObserve(this);
 //        recycler.setAdapter(adapter = new BaseQuickAdapter<AddressBookmodel, BaseViewHolder>(
 //                R.layout.adapter_addressbook, mList) {
 //            @Override
@@ -170,4 +176,17 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UbtTIMManager.getInstance().deleteMsgObserve(this);
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+
+    }
+    private void sendMsg(String nikName,String number){
+
+    }
 }

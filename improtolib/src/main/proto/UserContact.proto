@@ -1,5 +1,5 @@
 syntax = "proto3";
-option java_package = "com.ubtrobot.gold";
+option java_package = "com.ubt.improtolib";
 option java_outer_classname="UserContacts";
 message UserContact{
     repeated User user = 1;

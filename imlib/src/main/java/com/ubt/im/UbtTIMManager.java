@@ -27,6 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.Observer;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
@@ -156,7 +157,12 @@ public class UbtTIMManager {
             sendCache();
         }
     }
-
+    public void setMsgObserve(Observer observe){
+        MessageEvent.getInstance().addObserver(observe);
+    }
+    public void deleteMsgObserve(Observer observer){
+        MessageEvent.getInstance().deleteObserver(observer);
+    }
     private void sendCache(){
         if (msgQueue!=null&&msgQueue.size()>0){
             while (msgQueue.peek() != null ) {
