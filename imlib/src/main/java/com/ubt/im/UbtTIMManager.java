@@ -73,8 +73,8 @@ public class UbtTIMManager {
                 //sendTIMMsg( msg);
             }
         });
-        setPigaccount("358182063451144/09");//临时测试小猪账号
-        setTIMLoginListener();
+        setPigAccount("7817d42c");//临时测试小猪账号
+        doTIMLogin();
     }
 
     public static UbtTIMManager getInstance() {
@@ -117,18 +117,18 @@ public class UbtTIMManager {
             repository.login(singa, String.valueOf(time), userId, channel);
         }
     }
-    public void setPigaccount(String account){
+    public void setPigAccount(String account){
         conversation=TIMManager.getInstance().getConversation(
                 TIMConversationType.C2C,    //会话类型：单聊
                 account);                      //会话对方用户帐号//对方ID
 
     }
-    private void setTIMLoginListener() {
+    public void doTIMLogin() {
         if (repository != null) {
             repository.setLoginListener(new OnTIMLoginListener() {
                 @Override
                 public void onFailure(String error) {
-                    UbtLogger.e("setTIMLoginListener", error);
+                    UbtLogger.e("doTIMLogin", error);
                 }
 
                 @Override
@@ -146,19 +146,21 @@ public class UbtTIMManager {
     private void dealIMResponse(String msg) throws JSONException {
         if (!TextUtils.isEmpty(msg)) {
             JSONObject jsonObject = new JSONObject(msg);
-            jsonObject = jsonObject.getJSONObject("returnMap");
-            accountType = jsonObject.getString("accountType");
-            userSig = jsonObject.getString("userSig");
-            appidAt3rd = jsonObject.getString("appidAt3rd");
-            final int type = Integer.valueOf(accountType);
-            InitBusiness.start(com.ubtech.utilcode.utils.Utils.getContext(), 0, type);
-            initUserConfig();
-            TIMManager.getInstance().login(
-                    userId,
-                    userSig,
-                    timCallBack);
-            isLoginedTIM = true;
-            sendCache();
+            if ("success".equals(jsonObject.getString("returnMsg"))) {
+                jsonObject = jsonObject.getJSONObject("returnMap");
+                accountType = jsonObject.getString("accountType");
+                userSig = jsonObject.getString("userSig");
+                appidAt3rd = jsonObject.getString("appidAt3rd");
+                final int type = Integer.valueOf(accountType);
+                InitBusiness.start(com.ubtech.utilcode.utils.Utils.getContext(), 0, type);
+                initUserConfig();
+                TIMManager.getInstance().login(
+                        userId,
+                        userSig,
+                        timCallBack);
+                isLoginedTIM = true;
+                sendCache();
+        }
         }
     }
     public void setMsgObserve(Observer observe){
@@ -307,6 +309,7 @@ public class UbtTIMManager {
         TIMCustomElem elem = new TIMCustomElem();
 
         elem.setData(data);
+        msg.addElement(elem);
         return msg;
     }
 
