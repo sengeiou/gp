@@ -13,13 +13,11 @@ import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.tencent.imsdk.TIMMessage;
-import com.ubt.im.UbtTIMManager;
-import com.ubt.im.listener.OnUbtTIMConverListener;
+import com.ubt.imlibv2.bean.UbtTIMManager;
+import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.ScreenUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
-import com.ubtechinc.alpha.im.TecentIMManager;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewTv;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
@@ -82,7 +80,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
             }
 
             @Override
-            public void onSuccess(TIMMessage timMessage) {
+            public void onSuccess() {
 
             }
         });
