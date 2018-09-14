@@ -1,16 +1,20 @@
 package com.ubtechinc.goldenpig.personal.management;
 
+import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
+import com.google.protobuf.Extension;
+import com.google.protobuf.Message;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -26,6 +30,12 @@ import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.swipe_menu.SwipeMenuLayout;
 import com.ubtechinc.goldenpig.view.swipe_menu.SwipeRecycleView;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
+import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -42,7 +52,7 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
     @BindView(R.id.rl_titlebar)
     SecondTitleBarViewImg rl_titlebar;
     @BindView(R.id.recycler)
-    SwipeRecycleView recycler;
+    SwipeMenuRecyclerView recycler;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
     AddressBookAdapter adapter;
@@ -95,37 +105,13 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
                 OrientationHelper.VERTICAL);
         divider.setHeight((int) getResources().getDimension(R.dimen.ubt_1px));
         recycler.addItemDecoration(divider);
+        recycler.setSwipeMenuCreator(swipeMenuCreator);
+        recycler.setSwipeMenuItemClickListener(mMenuItemClickListener);
         adapter = new AddressBookAdapter(this, mList);
         recycler.setAdapter(adapter);
-//        recycler.setAdapter(adapter = new BaseQuickAdapter<AddressBookmodel, BaseViewHolder>(
-//                R.layout.adapter_addressbook, mList) {
-//            @Override
-//            protected void convert(BaseViewHolder helper, AddressBookmodel item) {
-//                helper.setText(R.id.tv_content, item.name);
-//                helper.setOnClickListener(R.id.tv_set, new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        if (((SwipeMenuLayout) helper.getView(R.id.swipe_menu)).isMenuOpen()) {
-//                            ((SwipeMenuLayout) helper.getView(R.id.swipe_menu))
-// .smoothToCloseMenu();
-//                        }
-//                        Toast.makeText(mContext, "编辑", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//                helper.setOnClickListener(R.id.tv_delete, new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        if (((SwipeMenuLayout) helper.getView(R.id.swipe_menu)).isMenuOpen()) {
-//                            ((SwipeMenuLayout) helper.getView(R.id.swipe_menu))
-// .smoothToCloseMenu();
-//                        }
-//                        mList.remove(helper.getPosition());
-//                        notifyDataSetChanged();
-//                    }
-//                });
-//            }
-//        });
         refreshLayout.autoRefresh();
+        Extension.MessageType f;
+        Message m;
     }
 
     @Override
@@ -169,5 +155,75 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
             ToastUtils.showShortToast("更新数据");
         }
     }
+
+    /**
+     * 菜单创建器，在Item要创建菜单的时候调用。
+     */
+    private SwipeMenuCreator swipeMenuCreator = new SwipeMenuCreator() {
+        @Override
+        public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
+            if (viewType == 1) {
+                return;
+            }
+            int width = getResources().getDimensionPixelSize(R.dimen.dp_70);
+
+            // 1. MATCH_PARENT 自适应高度，保持和Item一样高;
+            // 2. 指定具体的高，比如80;
+            // 3. WRAP_CONTENT，自身高度，不推荐;
+            int height = ViewGroup.LayoutParams.MATCH_PARENT;
+            // 添加右侧的，如果不添加，则右侧不会出现菜单。
+            {
+                SwipeMenuItem addItem = new SwipeMenuItem(AddressBookActivity.this)
+                        .setBackgroundColor(getResources().getColor(R.color
+                                .ubt_tab_btn_txt_checked_color))
+                        .setText("编辑")
+                        .setTextColor(Color.WHITE)
+                        .setWidth(width)
+                        .setHeight(height);
+                swipeRightMenu.addMenuItem(addItem); // 添加菜单到右侧。
+                SwipeMenuItem deleteItem = new SwipeMenuItem(AddressBookActivity.this)
+                        .setBackgroundColor(getResources().getColor(R.color
+                                .ubt_dialog_btn_txt_color))
+                        .setText("删除")
+                        .setTextColor(Color.WHITE)
+                        .setWidth(width)
+                        .setHeight(height);
+                swipeRightMenu.addMenuItem(deleteItem);// 添加菜单到右侧。
+
+            }
+        }
+    };
+
+    /**
+     * RecyclerView的Item的Menu点击监听。
+     */
+    private SwipeMenuItemClickListener mMenuItemClickListener = new SwipeMenuItemClickListener() {
+        @Override
+        public void onItemClick(SwipeMenuBridge menuBridge) {
+            menuBridge.closeMenu();
+            int direction = menuBridge.getDirection(); // 左侧还是右侧菜单。
+            int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
+            int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
+            if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
+                if (menuPosition == 0) {
+
+                } else if (menuPosition == 1) {
+                    mList.remove(adapterPosition);
+                    try {
+                        if (mList.get(mList.size() - 1).type == 1) {
+                            mList.remove(mList.size() - 1);
+                        }
+                    } catch (Exception e) {
+                    }
+                    adapter.notifyDataSetChanged();
+                }
+                Toast.makeText(AddressBookActivity.this, "list第" + adapterPosition + "; 右侧菜单第" +
+                        menuPosition, Toast.LENGTH_SHORT).show();
+            } else if (direction == SwipeMenuRecyclerView.LEFT_DIRECTION) {
+                Toast.makeText(AddressBookActivity.this, "list第" + adapterPosition + "; 左侧菜单第" +
+                        menuPosition, Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
 }

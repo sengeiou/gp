@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.ubtechinc.goldenpig.view.swipe_menu.SwipeMenuLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipe_menu"
@@ -10,47 +10,12 @@
     android:background="@color/ubt_white"
     app:right_id="@+id/ll_right_menu">
 
-    <RelativeLayout
-        android:id="@+id/ll_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipChildren="false"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/tv_content"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/dp_15"
-            android:textSize="@dimen/sp_16"
-            tools:text="HelloWorld" />
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/ll_right_menu"
+    <TextView
+        android:id="@+id/tv_content"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/tv_set"
-            android:layout_width="@dimen/dp_65"
-            android:layout_height="match_parent"
-            android:background="@color/ubt_tab_btn_txt_checked_color"
-            android:gravity="center"
-            android:text="编辑"
-            android:textColor="@color/ubt_white"
-            android:textSize="@dimen/sp_15" />
-
-        <TextView
-            android:id="@+id/tv_delete"
-            android:layout_width="@dimen/dp_65"
-            android:layout_height="match_parent"
-            android:background="@color/ubt_dialog_btn_txt_color"
-            android:gravity="center"
-            android:text="删除"
-            android:textColor="@color/ubt_white"
-            android:textSize="@dimen/sp_15" />
-    </LinearLayout>
-</com.ubtechinc.goldenpig.view.swipe_menu.SwipeMenuLayout>
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:textSize="@dimen/sp_16"
+        tools:text="HelloWorld" />
+</RelativeLayout>

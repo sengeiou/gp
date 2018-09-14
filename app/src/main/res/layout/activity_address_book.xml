@@ -29,11 +29,16 @@
         <com.scwang.smartrefresh.header.MaterialHeader
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
-        <com.ubtechinc.goldenpig.view.swipe_menu.SwipeRecycleView
+        <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
             android:id="@+id/recycler"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="visible" />
+            android:layout_height="match_parent">
+        </com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView>
+
+        <!--<com.ubtechinc.goldenpig.view.swipe_menu.SwipeRecycleView-->
+            <!--android:id="@+id/recycler"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:visibility="visible" />-->
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>
