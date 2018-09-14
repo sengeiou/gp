@@ -46,42 +46,42 @@ public class AddressBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             AddressBookHolder aHolder = (AddressBookHolder) holder;
             AddressBookmodel model = mList.get(position);
             aHolder.tv_content.setText(model.name);
-            aHolder.tv_set.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (aHolder.swipe_menu.isMenuOpen()) {
-                        aHolder.swipe_menu.smoothToCloseMenu();
-                    }
-                    Toast.makeText(mContext, "编辑", Toast.LENGTH_SHORT).show();
-                }
-            });
-            aHolder.tv_delete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (aHolder.swipe_menu.isMenuOpen()) {
-                        aHolder.swipe_menu.smoothToCloseMenu();
-                    }
-                    mList.remove(position);
-                    try {
-                        if (mList.get(mList.size() - 1).type == 1) {
-                            mList.remove(mList.size() - 1);
-                        }
-                    } catch (Exception e) {
-                    }
-                    notifyDataSetChanged();
-                }
-            });
-            aHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (aHolder.swipe_menu.isMenuOpen()) {
-                        aHolder.swipe_menu.smoothToCloseMenu();
-                    } else {
-                        Toast.makeText(mContext, "这是第" + (position + 1) + "条数据", Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                }
-            });
+//            aHolder.tv_set.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (aHolder.swipe_menu.isMenuOpen()) {
+//                        aHolder.swipe_menu.smoothToCloseMenu();
+//                    }
+//                    Toast.makeText(mContext, "编辑", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+//            aHolder.tv_delete.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (aHolder.swipe_menu.isMenuOpen()) {
+//                        aHolder.swipe_menu.smoothToCloseMenu();
+//                    }
+//                    mList.remove(position);
+//                    try {
+//                        if (mList.get(mList.size() - 1).type == 1) {
+//                            mList.remove(mList.size() - 1);
+//                        }
+//                    } catch (Exception e) {
+//                    }
+//                    notifyDataSetChanged();
+//                }
+//            });
+//            aHolder.itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (aHolder.swipe_menu.isMenuOpen()) {
+//                        aHolder.swipe_menu.smoothToCloseMenu();
+//                    } else {
+//                        Toast.makeText(mContext, "这是第" + (position + 1) + "条数据", Toast.LENGTH_SHORT)
+//                                .show();
+//                    }
+//                }
+//            });
         } else {
             AddressBookHolder2 aHolder = (AddressBookHolder2) holder;
             aHolder.tv_content.setText(mContext.getString(R.string.contact_limit));
@@ -99,14 +99,14 @@ public class AddressBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     public class AddressBookHolder extends RecyclerView.ViewHolder {
-        private TextView tv_content, tv_set, tv_delete;
-        private SwipeMenuLayout swipe_menu;
+        private TextView tv_content;//, tv_set, tv_delete;
+        //private SwipeMenuLayout swipe_menu;
 
         public AddressBookHolder(View itemView) {
             super(itemView);
-            swipe_menu = (SwipeMenuLayout) itemView.findViewById(R.id.swipe_menu);
-            tv_set = (TextView) itemView.findViewById(R.id.tv_set);
-            tv_delete = (TextView) itemView.findViewById(R.id.tv_delete);
+//            swipe_menu = (SwipeMenuLayout) itemView.findViewById(R.id.swipe_menu);
+//            tv_set = (TextView) itemView.findViewById(R.id.tv_set);
+//            tv_delete = (TextView) itemView.findViewById(R.id.tv_delete);
             tv_content = (TextView) itemView.findViewById(R.id.tv_content);
         }
     }

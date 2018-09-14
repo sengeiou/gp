@@ -73,8 +73,8 @@ public class UbtTIMManager {
                 //sendTIMMsg( msg);
             }
         });
-        setPigAccount("7817d42c");//临时测试小猪账号
-        doTIMLogin();
+        setPigaccount("2cb9b9a3");//临时测试小猪账号
+        setTIMLoginListener();
     }
 
     public static UbtTIMManager getInstance() {

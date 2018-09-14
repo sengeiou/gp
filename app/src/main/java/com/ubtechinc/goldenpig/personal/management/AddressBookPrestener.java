@@ -16,10 +16,11 @@ public class AddressBookPrestener extends BasePresenterImpl<AddressBookContract.
             @Override
             public void run() {
                 List<AddressBookmodel> list = new ArrayList<>();
-                for (int i = 1; i < 11; i++) {
+                int count = Math.random() > 0.5 ? 0 : 11;
+                for (int i = 1; i < count; i++) {
                     AddressBookmodel addressBookmodel = new AddressBookmodel();
                     addressBookmodel.name = "测试" + i;
-                    addressBookmodel.phone = "1547784545";
+                    addressBookmodel.phone = "15912345678";
                     list.add(addressBookmodel);
                 }
                 mView.getHandler().postDelayed(new Runnable() {
