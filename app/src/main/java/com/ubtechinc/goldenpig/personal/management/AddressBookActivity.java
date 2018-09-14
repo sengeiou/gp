@@ -186,7 +186,7 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
     public void update(Observable o, Object arg) {
 
     }
-    private void sendMsg(String nikName,String number){
-
+    private void addUser(String nikName,String number){
+        UbtTIMManager.getInstance().addUser(nikName,number);
     }
 }

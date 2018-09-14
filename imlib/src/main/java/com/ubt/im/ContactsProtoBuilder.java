@@ -1,4 +1,4 @@
-package com.ubtechinc.goldenpig.proto;
+package com.ubt.im;
 
 import com.google.protobuf.Any;
 import com.google.protobuf.Message;
@@ -12,7 +12,8 @@ public class ContactsProtoBuilder {
     <call path="/im/mail/delete"/>
     <call path="/im/mail/update"/>
 */
-    public byte[] getAddContactsInfo(String name, String number) {
+    public static byte[] getAddContactsInfo(String name, String number) {
+
         ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction("/im/mail/add").setTime(System.currentTimeMillis()).build();
         UserContacts.UserContact.Builder userContactBuilder = UserContacts.UserContact.newBuilder();
 
@@ -31,7 +32,7 @@ public class ContactsProtoBuilder {
 
         return channelMessage.toByteArray();
     }
-    public byte[] getUpdateContactsInfo(String name, String number,String key) {
+    public static byte[] getUpdateContactsInfo(String name, String number,String key) {
         ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction("/im/mail/delete").setTime(System.currentTimeMillis()).build();
         UserContacts.UserContact.Builder userContactBuilder = UserContacts.UserContact.newBuilder();
 
@@ -50,7 +51,7 @@ public class ContactsProtoBuilder {
 
         return channelMessage.toByteArray();
     }
-    public byte[] getDeleteContactsInfo(String name, String number,String key) {
+    public static byte[] getDeleteContactsInfo(String name, String number,String key) {
         ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction("/im/mail/delete").setTime(System.currentTimeMillis()).build();
         UserContacts.UserContact.Builder userContactBuilder = UserContacts.UserContact.newBuilder();
 

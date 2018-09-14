@@ -8,6 +8,7 @@ import com.tencent.imsdk.TIMCallBack;
 import com.tencent.imsdk.TIMConnListener;
 import com.tencent.imsdk.TIMConversation;
 import com.tencent.imsdk.TIMConversationType;
+import com.tencent.imsdk.TIMCustomElem;
 import com.tencent.imsdk.TIMManager;
 import com.tencent.imsdk.TIMMessage;
 import com.tencent.imsdk.TIMTextElem;
@@ -253,7 +254,50 @@ public class UbtTIMManager {
         userConfig = MessageEvent.getInstance().init(userConfig);
         TIMManager.getInstance().setUserConfig(userConfig);
     }
+    public void  addUser(String nikeName,String number) {
 
+
+        byte[] data = ContactsProtoBuilder.getAddContactsInfo(nikeName, number);
+        TIMMessage msg=creatElem(data);
+        sendTIM(msg);
+    }
+    public void  adeleteUser(String nikeName,String number,String userId) {
+
+
+        byte[] data = ContactsProtoBuilder.getDeleteContactsInfo(nikeName, number,userId);
+        TIMMessage msg=creatElem(data);
+        sendTIM(msg);
+    }
+    public void updateUser(String nikeName,String number,String userId) {
+
+
+        byte[] data = ContactsProtoBuilder.getDeleteContactsInfo(nikeName, number,userId);
+        TIMMessage msg=creatElem(data);
+        sendTIM(msg);
+    }
+
+    private void sendTIM(TIMMessage msg){
+        conversation.sendMessage(msg,new TIMValueCallBack<TIMMessage>(){
+
+            @Override
+            public void onError(int i, String s) {
+
+            }
+
+            @Override
+            public void onSuccess(TIMMessage timMessage) {
+
+            }
+        });
+    }
+    private TIMMessage creatElem(byte[] data){
+        //构造一条消息
+        TIMMessage msg = new TIMMessage();
+        TIMCustomElem elem = new TIMCustomElem();
+
+        elem.setData(data);
+        return msg;
+    }
     public interface UbtIMCallBack {
         void onError(int i, String s);
 
