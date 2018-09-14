@@ -20,6 +20,7 @@ import com.ubt.im.event.MessageEvent;
 import com.ubt.im.listener.OnPigOnlineStateListener;
 import com.ubt.im.listener.OnTIMLoginListener;
 
+import com.ubt.im.listener.OnUbtTIMConverListener;
 import com.ubt.imlib.BuildConfig;
 import com.ubtech.utilcode.utils.MD5Utils;
 import com.ubtechinc.commlib.log.UbtLogger;
@@ -56,6 +57,7 @@ public class UbtTIMManager {
     private String userSig;
     private String appidAt3rd;
 
+    private OnUbtTIMConverListener onUbtTIMConverListener; //358182063451144/09
     private ArrayBlockingQueue<UbtTIMMsg> msgQueue=new ArrayBlockingQueue<>(16); //IM信息队列
     private UbtTIMManager() {
         repository = new TIMRepository();
@@ -68,9 +70,10 @@ public class UbtTIMManager {
 
             @Override
             public void OnSuccess(String account,String state,String msg) {
-                sendTIMMsg( msg);
+                //sendTIMMsg( msg);
             }
         });
+        setPigaccount("358182063451144/09");//临时测试小猪账号
         setTIMLoginListener();
     }
 
@@ -114,7 +117,7 @@ public class UbtTIMManager {
             repository.login(singa, String.valueOf(time), userId, channel);
         }
     }
-    public void setPigacount(String account){
+    public void setPigaccount(String account){
         conversation=TIMManager.getInstance().getConversation(
                 TIMConversationType.C2C,    //会话类型：单聊
                 account);                      //会话对方用户帐号//对方ID
@@ -275,18 +278,26 @@ public class UbtTIMManager {
         TIMMessage msg=creatElem(data);
         sendTIM(msg);
     }
-
+    public void queryUser() {
+        byte[] data = ContactsProtoBuilder.getQueryData();
+        TIMMessage msg=creatElem(data);
+        sendTIM(msg);
+    }
     private void sendTIM(TIMMessage msg){
         conversation.sendMessage(msg,new TIMValueCallBack<TIMMessage>(){
 
             @Override
             public void onError(int i, String s) {
-
+                if (onUbtTIMConverListener!=null){
+                    onUbtTIMConverListener.onError(i,s);
+                }
             }
 
             @Override
             public void onSuccess(TIMMessage timMessage) {
-
+                if (onUbtTIMConverListener!=null){
+                    onUbtTIMConverListener.onSuccess(timMessage);
+                }
             }
         });
     }
@@ -297,6 +308,17 @@ public class UbtTIMManager {
 
         elem.setData(data);
         return msg;
+    }
+
+    public OnUbtTIMConverListener getOnUbtTIMConverListener() {
+        return onUbtTIMConverListener;
+    }
+
+    public void setOnUbtTIMConverListener(OnUbtTIMConverListener onUbtTIMConverListener) {
+        this.onUbtTIMConverListener = onUbtTIMConverListener;
+    }
+    public void removeOnUbtTIMConverListener(){
+        this.onUbtTIMConverListener=null;
     }
     public interface UbtIMCallBack {
         void onError(int i, String s);
