@@ -29,7 +29,7 @@
         android:theme="@style/AppTheme.NoToolbar">
         <activity
             android:name=".login.LoginActivity"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoToolbar">
             <intent-filter>

@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -14,8 +15,9 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.ubt.im.UbtTIMManager;
-import com.ubt.im.event.MessageEvent;
+
+import com.ubt.imlibv2.bean.UbtTIMManager;
+import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
@@ -103,6 +105,18 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
         adapter = new AddressBookAdapter(this, mList);
         recycler.setAdapter(adapter);
         UbtTIMManager.getInstance().setMsgObserve(this);
+        UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
+            @Override
+            public void onError(int i, String s) {
+
+            }
+
+            @Override
+            public void onSuccess() {
+
+            }
+        });
+        UbtTIMManager.getInstance().addUser("didi","1523360");
 //        recycler.setAdapter(adapter = new BaseQuickAdapter<AddressBookmodel, BaseViewHolder>(
 //                R.layout.adapter_addressbook, mList) {
 //            @Override
@@ -184,7 +198,7 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
 
     @Override
     public void update(Observable o, Object arg) {
-
+        Log.i("update",arg.toString());
     }
     private void addUser(String nikName,String number){
         UbtTIMManager.getInstance().addUser(nikName,number);

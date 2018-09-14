@@ -1,5 +1,6 @@
 package com.ubtechinc.goldenpig.pigmanager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -29,6 +30,14 @@ public class SetNetWorkEnterActivity extends BaseToolBarActivity implements View
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        boolean backable=getIntent().getBooleanExtra("back",false);
+        boolean skipebale=getIntent().getBooleanExtra("skip",true);
+        setTitleBack(backable);
+        if (skipebale){
+            mTvSkip.setVisibility(View.VISIBLE);
+        }else {
+            mTvSkip.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -55,6 +64,19 @@ public class SetNetWorkEnterActivity extends BaseToolBarActivity implements View
     protected void onDestroy() {
         super.onDestroy();
 
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        boolean backable=intent.getBooleanExtra("back",true);
+        boolean skipebale=intent.getBooleanExtra("skip",false);
+        setTitleBack(backable);
+        if (skipebale){
+            mTvSkip.setVisibility(View.VISIBLE);
+        }else {
+            mTvSkip.setVisibility(View.GONE);
+        }
     }
 
     private void initViews(){

@@ -4,7 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 
-import com.ubt.im.UbtTIMManager;
+
+import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.comm.entity.UserInfo;
@@ -51,9 +52,10 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
     public void onSuccess(UserInfo userInfo) {
         authLive.logined(userInfo);
         getPigList();
-        timManager.loginTIM(userInfo.getUserId(), com.ubt.imlib.BuildConfig.IM_Channel);
+        timManager.loginTIM(userInfo.getUserId(), com.ubt.imlibv2.BuildConfig.IM_Channel);
 
     }
+    ///  获取用户绑定的小猪
     private void getPigList(){
         if (AuthLive.getInstance().getCurrentPigList()!=null){
             AuthLive.getInstance().getCurrentPigList().clear();

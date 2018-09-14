@@ -33,6 +33,7 @@
                 android:layout_marginEnd="@dimen/ubt_16dp"
                 android:layout_marginStart="@dimen/ubt_16dp"
                 android:layout_marginBottom="4dp"
+                android:layout_marginTop="@dimen/ubt_16dp"
                 android:layout_width="match_parent"
                 android:background="@drawable/shape_ubt_card_bg"
                 android:layout_height="wrap_content">

@@ -44,7 +44,9 @@ public class UbtSubTxtButton extends android.support.v7.widget.AppCompatButton {
             TypedArray typedArray= context.obtainStyledAttributes(attrs,
                     R.styleable.UbtRightTxtButtonStyle);
             if (typedArray!=null){
-                mRightText=typedArray.getText(R.styleable.UbtRightTxtButtonStyle_rightText).toString();
+                if(typedArray.getText(R.styleable.UbtRightTxtButtonStyle_rightText)!=null){
+                    mRightText=typedArray.getText(R.styleable.UbtRightTxtButtonStyle_rightText).toString();
+                }
                 mRightTextColor=typedArray.getColor(R.styleable.UbtRightTxtButtonStyle_rightTextColor,Color.BLACK);
                 mRightTextPadding=typedArray.getDimensionPixelOffset(R.styleable.UbtRightTxtButtonStyle_rightTextPadding,0);
                 mRightTextSize=typedArray.getDimensionPixelSize(R.styleable.UbtRightTxtButtonStyle_rightTextSize,(int) getTextSize());
