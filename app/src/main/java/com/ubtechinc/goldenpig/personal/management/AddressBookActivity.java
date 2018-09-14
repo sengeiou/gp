@@ -29,9 +29,11 @@ import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewImg;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
+import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.model.AddressBookmodel;
 import com.ubtechinc.goldenpig.mvp.MVPBaseActivity;
 import com.ubtechinc.goldenpig.personal.DeviceManageActivity;
+import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.StateView;
@@ -136,47 +138,27 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
         recycler.setSwipeMenuItemClickListener(mMenuItemClickListener);
         adapter = new AddressBookAdapter(this, mList);
         recycler.setAdapter(adapter);
+        PigInfo pigInfo=AuthLive.getInstance().getCurrentPig();
+        if (pigInfo!=null) {
+            UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
+        }else {
+            UbtTIMManager.getInstance().setPigAccount("2cb9b9a3");
+        }
         UbtTIMManager.getInstance().setMsgObserve(this);
         UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
             @Override
             public void onError(int i, String s) {
-
+                Log.e("setOnUbtTIMConver",s);
             }
 
             @Override
             public void onSuccess() {
-
+                Log.e("setOnUbtTIMConver","sss");
             }
         });
-        UbtTIMManager.getInstance().addUser("didi","1523360");
-//        recycler.setAdapter(adapter = new BaseQuickAdapter<AddressBookmodel, BaseViewHolder>(
-//                R.layout.adapter_addressbook, mList) {
-//            @Override
-//            protected void convert(BaseViewHolder helper, AddressBookmodel item) {
-//                helper.setText(R.id.tv_content, item.name);
-//                helper.setOnClickListener(R.id.tv_set, new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        if (((SwipeMenuLayout) helper.getView(R.id.swipe_menu)).isMenuOpen()) {
-//                            ((SwipeMenuLayout) helper.getView(R.id.swipe_menu))
-// .smoothToCloseMenu();
-//                        }
-//                        Toast.makeText(mContext, "编辑", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//                helper.setOnClickListener(R.id.tv_delete, new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        if (((SwipeMenuLayout) helper.getView(R.id.swipe_menu)).isMenuOpen()) {
-//                            ((SwipeMenuLayout) helper.getView(R.id.swipe_menu))
-// .smoothToCloseMenu();
-//                        }
-//                        mList.remove(helper.getPosition());
-//                        notifyDataSetChanged();
-//                    }
-//                });
-//            }
-//        });
+
+        UbtTIMManager.getInstance().queryUser();
+        UbtTIMManager.getInstance().addUser("didid","123456789");
         refreshLayout.autoRefresh();
     }
 

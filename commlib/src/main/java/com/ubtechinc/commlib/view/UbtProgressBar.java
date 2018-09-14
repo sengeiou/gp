@@ -23,11 +23,11 @@ public class UbtProgressBar extends ProgressBar {
     }
 
     private void init() {
-        if (android.os.Build.VERSION.SDK_INT > 22) {//android 6.0替换clip的加载动画
+        /*if (android.os.Build.VERSION.SDK_INT > 22) {//android 6.0替换clip的加载动画
             final Drawable drawable = getContext().getApplicationContext().getResources()
                     .getDrawableForDensity(R.drawable.anim_ubt_loading_blue, getContext()
                             .getResources().getDisplayMetrics().densityDpi, null);
             setIndeterminateDrawable(drawable);
-        }
+        }*/
     }
 }
