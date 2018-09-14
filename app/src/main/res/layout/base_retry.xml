@@ -15,7 +15,6 @@
         android:layout_width="@dimen/dp_150"
         android:layout_height="@dimen/dp_150"
         android:layout_gravity="center_horizontal"
-        android:background="@color/empty_ic_bg"
         android:src="@drawable/img_maillist" />
 
     <TextView

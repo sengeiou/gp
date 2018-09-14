@@ -1,1 +1,3 @@
-include ':app', ':commlib', ':protollib', ':tvlloginlib',':utilcode',':servicemodel',':netutils',':protocollibrary', ':imlib', ':improtolib','bluetoothlibrary'
+include ':app', ':commlib', ':protollib', ':tvlloginlib', ':utilcode',
+        ':servicemodel', ':netutils', ':protocollibrary',
+        ':imlib', ':improtolib', ':bluetoothlibrary'

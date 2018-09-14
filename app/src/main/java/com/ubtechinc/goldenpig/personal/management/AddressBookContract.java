@@ -12,6 +12,7 @@ public class AddressBookContract {
     interface View extends BaseView {
         void onRefreshSuccess(List<AddressBookmodel> list);
 
+        void onError(String str);
         Handler getHandler();
     }
 

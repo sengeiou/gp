@@ -57,9 +57,10 @@ dependencies {
     implementation project(path: ':netutils')
     implementation project(path: ':commlib')
     implementation rootProject.ext.deps.appCompatV7
-    implementation files('libs/imsdk_group_ext.jar')
-    implementation files('libs/imsdk_msg_ext.jar')
-    implementation files('libs/imsdk_sns_ext.jar')
+    api files('libs/imsdk_group_ext.jar')
+    api files('libs/imsdk_msg_ext.jar')
+    api files('libs/imsdk_sns_ext.jar')
+    api files('libs/imsdk.jar')
     /*testImplementation 'junit:junit:4.12'
         androidTestImplementation 'com.android.support.test:runner:1.0.1'
         androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'*/
