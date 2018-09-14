@@ -18,6 +18,8 @@ import com.google.protobuf.Message;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.ubt.im.UbtTIMManager;
+import com.ubt.im.event.MessageEvent;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
@@ -37,6 +39,7 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
+
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -47,8 +50,10 @@ import butterknife.BindView;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_CONTACT_SUCCESS;
 
+import java.util.Observable;
+import java.util.Observer;
 public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.View,
-        AddressBookPrestener> implements OnRefreshListener, AddressBookContract.View {
+        AddressBookPrestener> implements OnRefreshListener, AddressBookContract.View,Observer {
     @BindView(R.id.rl_titlebar)
     SecondTitleBarViewImg rl_titlebar;
     @BindView(R.id.recycler)
@@ -109,6 +114,35 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
         recycler.setSwipeMenuItemClickListener(mMenuItemClickListener);
         adapter = new AddressBookAdapter(this, mList);
         recycler.setAdapter(adapter);
+        UbtTIMManager.getInstance().setMsgObserve(this);
+//        recycler.setAdapter(adapter = new BaseQuickAdapter<AddressBookmodel, BaseViewHolder>(
+//                R.layout.adapter_addressbook, mList) {
+//            @Override
+//            protected void convert(BaseViewHolder helper, AddressBookmodel item) {
+//                helper.setText(R.id.tv_content, item.name);
+//                helper.setOnClickListener(R.id.tv_set, new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        if (((SwipeMenuLayout) helper.getView(R.id.swipe_menu)).isMenuOpen()) {
+//                            ((SwipeMenuLayout) helper.getView(R.id.swipe_menu))
+// .smoothToCloseMenu();
+//                        }
+//                        Toast.makeText(mContext, "编辑", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//                helper.setOnClickListener(R.id.tv_delete, new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        if (((SwipeMenuLayout) helper.getView(R.id.swipe_menu)).isMenuOpen()) {
+//                            ((SwipeMenuLayout) helper.getView(R.id.swipe_menu))
+// .smoothToCloseMenu();
+//                        }
+//                        mList.remove(helper.getPosition());
+//                        notifyDataSetChanged();
+//                    }
+//                });
+//            }
+//        });
         refreshLayout.autoRefresh();
     }
 
@@ -224,4 +258,17 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
         }
     };
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UbtTIMManager.getInstance().deleteMsgObserve(this);
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+
+    }
+    private void addUser(String nikName,String number){
+        UbtTIMManager.getInstance().addUser(nikName,number);
+    }
 }

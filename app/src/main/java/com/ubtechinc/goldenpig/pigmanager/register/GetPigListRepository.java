@@ -38,7 +38,6 @@ public class GetPigListRepository {
 
             @Override
             public void onSuccess(GetRobotListModule.Response response) {
-                Log.i("getUserPigs",response.getMsg());
                 listener.onSuccess(response);
             }
         });

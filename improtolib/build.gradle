@@ -1,0 +1,68 @@
+apply plugin: 'com.android.library'
+/*apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'*/
+apply plugin: 'com.google.protobuf'
+
+protobuf {
+    protoc {
+        artifact = rootProject.ext.plugin.protocArtifact
+    }
+    plugins {
+        java {
+            artifact = rootProject.ext.plugin.protocArtifact
+        }
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.plugins {
+                java {}
+            }
+        }
+    }
+}
+android {
+    compileSdkVersion rootProject.ext.alphamini.compileSdkVersion
+    buildToolsVersion rootProject.ext.alphamini.buildToolsVersion
+
+
+    defaultConfig {
+        minSdkVersion rootProject.ext.alphamini.minSdkVersion
+        targetSdkVersion rootProject.ext.alphamini.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    buildToolsVersion '27.0.3'
+    sourceSets{
+        main{
+            java{
+                srcDir 'src/main/java'
+            }
+            proto{
+                srcDir 'src/main/protobuf'
+                include '**/*.proto'
+            }
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    /*compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"*/
+
+//    compile deps.utillib
+    compile project(':netutils')
+   /* compile 'com.google.protobuf:protobuf-java:3.1.0'
+    compile 'com.google.protobuf:protoc:3.1.0'*/
+}
