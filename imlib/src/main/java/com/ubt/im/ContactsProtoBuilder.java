@@ -5,6 +5,8 @@ import com.google.protobuf.Message;
 import com.ubt.improtolib.UserContacts;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 
+import java.util.List;
+
 
 public class ContactsProtoBuilder {
     /*  <call path="/im/mail/add"/>
@@ -68,6 +70,14 @@ public class ContactsProtoBuilder {
                 .setPayload(Any.pack(contact))
                 .build();
 
+        return channelMessage.toByteArray();
+    }
+
+    public static byte[] getQueryData(){
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction("/im/mail/query").setTime(System.currentTimeMillis()).build();
+        ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer.ChannelMessage.newBuilder()
+                .setHeader(header)
+                .build();
         return channelMessage.toByteArray();
     }
 }
