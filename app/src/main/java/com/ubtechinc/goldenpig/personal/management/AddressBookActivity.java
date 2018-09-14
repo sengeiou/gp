@@ -110,8 +110,6 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
         adapter = new AddressBookAdapter(this, mList);
         recycler.setAdapter(adapter);
         refreshLayout.autoRefresh();
-        Extension.MessageType f;
-        Message m;
     }
 
     @Override
