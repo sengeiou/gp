@@ -36,6 +36,7 @@ public class PigInfo implements Serializable {
     private String masterUserName; //主账号昵称
     private String equipmentSeq; //主账号昵称
 
+    private int bindingId;
     private long confirmOffline;
 
     private List<PigPermission> robotPermissionList;
@@ -172,5 +173,13 @@ public class PigInfo implements Serializable {
 
     public void setConfirmOffline(long confirmOffline) {
         this.confirmOffline = confirmOffline;
+    }
+
+    public int getBindingId() {
+        return bindingId;
+    }
+
+    public void setBindingId(int bindingId) {
+        this.bindingId = bindingId;
     }
 }

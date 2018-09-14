@@ -1,0 +1,18 @@
+syntax = "proto3";
+option java_package = "com.ubtrobot.gold";
+option java_outer_classname="UserRecords";
+message UserRecord{
+    repeated Record record = 1;
+}
+
+
+// type: INCOMING_TYPE = 1, OUTGOING_TYPE = 2,MISSED_TYPE = 3,VOICEMAIL_TYPE = 4,REJECTED_TYPE = 5
+
+message Record{
+    string number = 1;
+    string name = 2;
+    int32 type = 3;
+    int64 duration = 4;
+    int64 dateLong = 5;
+    int64 id = 6;
+}

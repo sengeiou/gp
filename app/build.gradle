@@ -5,7 +5,6 @@ apply plugin: 'com.android.application'
 def releaseTime() {
     return new Date().format("yyMMddHH")
 }
-
 android {
     compileSdkVersion COMPILE_SDK_VERSION
     compileOptions {
@@ -54,20 +53,20 @@ android {
             //微信APP_ID
             buildConfigField "String", "APP_ID_WX", "\"wx0238743de057a634\""
             //QQ APP_ID
-            buildConfigField "String", "APP_ID_QQ", "\"1106279915\""
+            buildConfigField "String", "APP_ID_QQ", "\"1107514711\""
             //金猪productId
-            buildConfigField "String", "PRODUCT_ID", "\"ffb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589\""
+            buildConfigField "String", "PRODUCT_ID" , "\"ffb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589\""
 
             //金猪APPID
-            buildConfigField "String", "APP_ID", "\"100080014\""
+            buildConfigField "String", "APP_ID","\"100080018\"" /// 临时用
             //金猪APPKEY
             buildConfigField "String", "APP_KEY", "\"85650f0ffe314beda3b85a9ab626662d\""
-            buildConfigField "String", "APP_KEY","\"85650f0ffe314beda3b85a9ab626662d\""
+
 
             //登录Url 域名
-            buildConfigField "String",  "LOGIN_URL","\"http://10.10.20.71:8010\""
+            buildConfigField "String",  "LOGIN_URL","\"https://testjimu.ubtrobot.com:8443\""
             //IM操作URL域名
-            buildConfigField "String", "IM_URL","\"http://10.10.1.43:9080\""
+            buildConfigField "String", "IM_URL","\"https://10.10.1.43:9080\""
 
             minifyEnabled false
             shrinkResources false
@@ -82,19 +81,18 @@ android {
             //微信APP_ID
             buildConfigField "String", "APP_ID_WX", "\"wx0238743de057a634\""
             //QQ APP_ID
-            buildConfigField "String", "APP_ID_QQ", "\"1106279915\""
+            buildConfigField "String", "APP_ID_QQ", "\"1107514711\""
             //金猪productId
-            buildConfigField "String", "PRODUCT_ID", "\"ffb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589\""
+            buildConfigField "String", "PRODUCT_ID" , "\"ffb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589\""
             //金猪APPID
-            buildConfigField "String", "APP_ID", "\"100080014\""
+            buildConfigField "String", "APP_ID","\"100080018\"" /// 临时用
             //金猪APPKEY
-            buildConfigField "String", "APP_KEY", "\"85650f0ffe314beda3b85a9ab626662d\""
             buildConfigField "String", "APP_KEY","\"85650f0ffe314beda3b85a9ab626662d\""
 
             //登录Url 域名
-            buildConfigField "String", "LOGIN_URL","\"http://10.10.20.71:8010\""
+            buildConfigField "String", "LOGIN_URL","\"https://testjimu.ubtrobot.com:8443\""
             //IM操作URL域名
-            buildConfigField "String", "IM_URL","\"http://10.10.1.43:9080\""
+            buildConfigField "String", "IM_URL","\"https://210.75.21.106:9080\""
 
             //是否优化zip
             zipAlignEnabled true

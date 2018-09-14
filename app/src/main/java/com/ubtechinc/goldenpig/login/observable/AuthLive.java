@@ -69,6 +69,13 @@ public class AuthLive extends LiveData<AuthLive> {
         return null;
     }
 
+    public ArrayList<PigInfo> getCurrentPigList() {
+        if (currentPigList==null){
+            currentPigList=new ArrayList<>();
+        }
+        return currentPigList;
+    }
+
     public void setCurrentPig(PigInfo currentPig) {
         if (this.currentPigList==null) {
            currentPigList=new ArrayList<>();

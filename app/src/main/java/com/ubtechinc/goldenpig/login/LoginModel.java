@@ -15,6 +15,7 @@ import com.ubtechinc.goldenpig.net.GetRobotListModule;
 import com.ubtechinc.goldenpig.net.RegisterRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPigListRepository;
 import com.ubtechinc.goldenpig.repository.TVSAuthRepository;
+import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.nets.http.ThrowableWrapper;
 import com.ubtechinc.tvlloginlib.entity.LoginInfo;
 
@@ -54,7 +55,10 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
 
     }
     private void getPigList(){
-        getPigListRepository.getRobotBindUsers(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListRepository.OnGetPigListLitener() {
+        if (AuthLive.getInstance().getCurrentPigList()!=null){
+            AuthLive.getInstance().getCurrentPigList().clear();
+        }
+        getPigListRepository.getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListRepository.OnGetPigListLitener() {
             @Override
             public void onError(ThrowableWrapper e) {
                 Log.e("getPigList",e.getMessage());
@@ -63,6 +67,7 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
             @Override
             public void onSuccess(GetRobotListModule.Response response) {
                 Log.e("getPigList",response.getMsg());
+                PigUtils.getPigList(response.getMsg(),AuthLive.getInstance().getUserId(),AuthLive.getInstance().getCurrentPigList());
             }
         });
     }
