@@ -61,7 +61,14 @@ public class AuthLive extends LiveData<AuthLive> {
             postValue(this);
         }
     }
-
+    public void timLogined(){
+        this.state = AuthState.LOGINED;
+        if(isMainThread()){
+            setValue(this);
+        }else {
+            postValue(this);
+        }
+    }
     public PigInfo getCurrentPig() {
         if (currentPigList!=null&&currentPigList.size()>0) {
             return currentPigList.get(0);

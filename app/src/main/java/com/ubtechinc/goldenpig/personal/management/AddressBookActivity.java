@@ -13,6 +13,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
+import com.google.protobuf.Extension;
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.Message;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -34,6 +40,9 @@ import com.ubtechinc.goldenpig.mvp.MVPBaseActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.StateView;
+import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
+import com.ubtechinc.goldenpig.view.swipe_menu.SwipeMenuLayout;
+import com.ubtechinc.goldenpig.view.swipe_menu.SwipeRecycleView;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
@@ -153,6 +162,8 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
                 Log.e("setOnUbtTIMConver", "sss");
             }
         });
+
+        UbtTIMManager.getInstance().queryUser();
         refreshLayout.autoRefresh();
     }
 
@@ -338,6 +349,32 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
         super.onReceiveStickyEvent(event);
         if (event.getCode() == CONTACT_CHECK_SUCCESS) {
             refreshLayout.autoRefresh();
+        }
+    public void update(Observable o, Object arg) {
+        LogUtils.d("");
+
+    }
+    /* <call path="/im/mail/add"/>
+    <call path="/im/mail/query"/>
+    <call path="/im/mail/delete"/>
+    <call path="/im/mail/update"/>*/
+    private void dealMsg(Object arg) throws InvalidProtocolBufferException {
+        ChannelMessageContainer.ChannelMessage msg= ChannelMessageContainer.ChannelMessage.parseFrom((byte[])arg);
+        String action=msg.getHeader().getAction();
+        switch (action){
+            case "/im/mail/query":
+                msg.getPayload().unpack(UserContacts.UserContact.class).getUserList();
+                break;
+            case "/im/mail/add":
+                msg.getPayload().unpack(GPResponse.Response.class).getResult();
+                break;
+
+            case "/im/mail/delete":
+                msg.getPayload().unpack(GPResponse.Response.class).getResult();
+                break;
+            case "/im/mail/update":
+                msg.getPayload().unpack(GPResponse.Response.class).getResult();
+                break;
         }
     }
 }

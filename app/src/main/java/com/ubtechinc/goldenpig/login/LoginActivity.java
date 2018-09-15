@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtechinc.commlib.network.NetworkHelper;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.goldenpig.main.MainActivity;
@@ -129,9 +130,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         if (mLoginModel==null) {
             mLoginModel = new LoginModel();
         }
-        if (mLoginModel.checkToken(this)) {
+        mLoginModel.setTIMLoingCallback(new UbtTIMManager.UbtIMCallBack() {
+            @Override
+            public void onError(int i, String s) {
+                AuthLive.getInstance().error();
+            }
+
+            @Override
+            public void onSuccess() {
+                AuthLive.getInstance().timLogined();
+            }
+        });
+        /*if (mLoginModel.checkToken(this)) {
             handler.sendEmptyMessage(0);
-        }else if (!NetworkHelper.sharedHelper().isNetworkAvailable()) {
+        }else*/ if (!NetworkHelper.sharedHelper().isNetworkAvailable()) {
             mLoginModel.logoutTVS();
             return;
         }else {
@@ -171,9 +183,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         showLoadingDialog();
                         break;
                     case LOGINED:
-                        dismissLoadDialog();
-                        ActivityRoute.toAnotherActivity(LoginActivity.this, SetNetWorkEnterActivity.class,true);
-                        finish();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                dismissLoadDialog();
+                                ActivityRoute.toAnotherActivity(LoginActivity.this, MainActivity.class,true);
+                            }
+                        },2000);
                         break;
                     case ERROR:
                         ToastUtils.showShortToast(LoginActivity.this,getString(R.string.ubt_login_failure));
