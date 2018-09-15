@@ -8,7 +8,9 @@ import com.chad.library.adapter.base.entity.MultiItemEntity;
 public class AddressBookmodel implements Parcelable, MultiItemEntity {
     public String name;
     public String phone;
-    public int type=0;
+    public long id;
+    public int type = 0;
+
     public AddressBookmodel() {
     }
 
@@ -16,6 +18,7 @@ public class AddressBookmodel implements Parcelable, MultiItemEntity {
     protected AddressBookmodel(Parcel in) {
         name = in.readString();
         phone = in.readString();
+        id = in.readLong();
         type = in.readInt();
     }
 
@@ -23,6 +26,7 @@ public class AddressBookmodel implements Parcelable, MultiItemEntity {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeString(phone);
+        dest.writeLong(id);
         dest.writeInt(type);
     }
 

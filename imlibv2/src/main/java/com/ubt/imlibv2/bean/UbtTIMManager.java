@@ -276,7 +276,7 @@ public class UbtTIMManager {
     public void updateUser(String nikeName,String number,String userId) {
 
 
-        byte[] data = ContactsProtoBuilder.getDeleteContactsInfo(nikeName, number,userId);
+        byte[] data = ContactsProtoBuilder.getUpdateContactsInfo(nikeName, number,userId);
         TIMMessage msg=creatElem(data);
         sendTIM(msg);
     }
