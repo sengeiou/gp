@@ -36,6 +36,7 @@ public class PigInfo implements Serializable {
     private String masterUserName; //主账号昵称
     private String equipmentSeq; //主账号昵称
 
+    public boolean isAdmin;
     private int bindingId;
     private long confirmOffline;
 

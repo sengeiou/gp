@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/ubt_global_bg_color"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/ubt_img_pig_state"
+        android:layout_width="@dimen/ubt_pig_state_size"
+        android:layout_height="@dimen/ubt_pig_state_size"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@null"
+        android:layout_marginTop="@dimen/ubt_mypig_state_margtop"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/img_pig" />
+
+
+
+    <Button
+        android:id="@+id/ubt_btn_unbind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/ubt_24dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:textSize="@dimen/sp_15"
+        android:background="@drawable/selector_ubt_logout_btn"
+        android:textColor="@color/ubt_dialog_btn_txt_color"
+        android:text="@string/ubt_unbind"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/ubt_btn_dev_update"
+        style="@style/UBTButtonTheme.Cyan"
+        android:layout_marginBottom="@dimen/ubt_24dp"
+        android:text="@string/ubt_device_update"
+        app:layout_constraintBottom_toTopOf="@+id/ubt_btn_unbind"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/ubt_tv_searialno"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/sp_15"
+        android:textColor="@color/ubt_tips_txt_color"
+        android:layout_marginTop="@dimen/dp_22"
+        android:lines="1"
+        android:text="@string/ubt_pig_serialno"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ubt_img_pig_state" />
+
+    <TextView
+        android:id="@+id/ubt_tv_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_14"
+        android:textSize="@dimen/sp_14"
+        android:lines="1"
+        android:text="@string/ubt_pig_version_format"
+        android:textColor="@color/ubt_version_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ubt_tv_searialno" />
+</android.support.constraint.ConstraintLayout>

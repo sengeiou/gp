@@ -25,6 +25,7 @@ public class UBTBaseDialog extends BaseDialog implements View.OnClickListener{
     private OnUbtDialogClickLinsenter onUbtDialogClickLinsenter;
     private Button mLeftBtn,mRightBtn;
     private TextView mTipsTv;  //对话框提示语
+    private int mLeftBtnColor=-1,mRightBtnColor=-1;
     public UBTBaseDialog(@NonNull Context context) {
         this(context,0);
     }
@@ -48,9 +49,15 @@ public class UBTBaseDialog extends BaseDialog implements View.OnClickListener{
 
         this.setContentView(root);
         mLeftBtn=(Button) findViewById(R.id.ubt_dialog_left_btn);
+        if (mLeftBtnColor!=-1){
+            mLeftBtn.setTextColor(mLeftBtnColor);
+        }
         mLeftBtn.setOnClickListener(this);
 
         mRightBtn=(Button)findViewById(R.id.ubt_dialog_right_btn);
+        if (mRightBtnColor!=-1){
+            mRightBtn.setTextColor(mRightBtnColor);
+        }
         mRightBtn.setOnClickListener(this);
     }
     public void setTips(String tips){
@@ -92,7 +99,18 @@ public class UBTBaseDialog extends BaseDialog implements View.OnClickListener{
         }
         dismiss();
     }
-
+    public void setLeftBtnColor(int color){
+        if (mLeftBtn!=null){
+            mLeftBtn.setTextColor(color);
+        }
+        mLeftBtnColor=color;
+    }
+    public void setRightBtnColor(int color){
+        if (mRightBtn!=null){
+            mRightBtn.setTextColor(color);
+        }
+        mRightBtnColor=color;
+    }
     public interface OnUbtDialogClickLinsenter{
         void onLeftButtonClick(View view);
         void onRightButtonClick(View view);

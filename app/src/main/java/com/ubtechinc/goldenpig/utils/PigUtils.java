@@ -22,18 +22,19 @@ public class PigUtils {
                     for(int index=0;index<length;index++){
                         JSONObject object=jsonArray.getJSONObject(index);
                         if (object.has("userId")){
-                            if(object.getInt("userId")==Integer.valueOf(userId)){
+
                                 PigInfo pigInfo=new PigInfo();
                                 pigInfo.setRobotUserId(userId);
                                 pigInfo.setMasterUserId(userId);
                                 pigInfo.setRobotName(object.getString("serialNumber"));
                                 pigInfo.setBindingId(object.getInt("bindingId"));
-                                if (object.getInt("isAdmin")==1){
+                                if (object.getInt("isAdmin")==1||object.getInt("userId")==Integer.valueOf(userId)){
+                                    pigInfo.isAdmin=true;
                                     pigInfos.add(0,pigInfo);
                                 }else {
                                     pigInfos.add(pigInfo);
                                 }
-                            }
+
                         }
                     }
                 }

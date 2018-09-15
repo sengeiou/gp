@@ -23,10 +23,8 @@ import com.ubtechinc.goldenpig.main.fragment.MainFragmentAdpater;
 import com.ubtechinc.goldenpig.main.fragment.PersonalFragment;
 import com.ubtechinc.goldenpig.main.fragment.PigFragment;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
-import com.ubtechinc.goldenpig.pigmanager.register.GetPigListRepository;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
-import com.ubtechinc.goldenpig.utils.PigUtils;
-import com.ubtechinc.nets.http.ThrowableWrapper;
+
 
 import java.util.ArrayList;
 

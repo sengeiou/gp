@@ -8,6 +8,8 @@ import android.support.v7.app.AppCompatActivity;
 import com.ubtechinc.goldenpig.app.ActivityManager;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 
+import butterknife.ButterKnife;
+
 
 /**
  * @author     : HQT
@@ -25,6 +27,7 @@ public class BaseActivity extends AppCompatActivity {
 
         ActivityManager am = ActivityManager.getInstance();
         am.popActivity(this);
+
     }
 
     @Override

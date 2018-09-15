@@ -14,7 +14,8 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.login.repository.UBTAuthRepository;
 import com.ubtechinc.goldenpig.net.GetRobotListModule;
 import com.ubtechinc.goldenpig.net.RegisterRobotModule;
-import com.ubtechinc.goldenpig.pigmanager.register.GetPigListRepository;
+
+import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.repository.TVSAuthRepository;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.nets.http.ThrowableWrapper;
@@ -32,12 +33,12 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
     private TVSAuthRepository tvsAuthRepository;
     private AuthLive authLive ;
     private UBTAuthRepository ubtAuthRepository;
-    private GetPigListRepository getPigListRepository; //获取用户当前小猪列表
+    private GetPigListHttpProxy getPigListRepository; //获取用户当前小猪列表
     private UbtTIMManager timManager;
     public LoginModel(){
         tvsAuthRepository = new TVSAuthRepository(BuildConfig.APP_ID_WX,BuildConfig.APP_ID_QQ);
         ubtAuthRepository = new UBTAuthRepository();
-        getPigListRepository=new GetPigListRepository();
+        getPigListRepository=new GetPigListHttpProxy();
         authLive = AuthLive.getInstance();
         timManager=UbtTIMManager.getInstance();
     }
@@ -60,7 +61,7 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
         if (AuthLive.getInstance().getCurrentPigList()!=null){
             AuthLive.getInstance().getCurrentPigList().clear();
         }
-        getPigListRepository.getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListRepository.OnGetPigListLitener() {
+        getPigListRepository.getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListHttpProxy.OnGetPigListLitener() {
             @Override
             public void onError(ThrowableWrapper e) {
                 Log.e("getPigList",e.getMessage());

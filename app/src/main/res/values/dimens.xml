@@ -490,4 +490,6 @@
     <dimen name="sp_40">40sp</dimen>
     <dimen name="sp_42">42sp</dimen>
     <dimen name="sp_48">48sp</dimen>
+    <dimen name="ubt_mypig_state_margtop">70dp</dimen>
+    <dimen name="ubt_pig_state_size">146dp</dimen>
 </resources>
