@@ -24,6 +24,6 @@ public class EventBusUtil {
     }
 
 
-    public static final int ADD_CONTACT_SUCCESS = 10001;
+    public static final int CONTACT_CHECK_SUCCESS = 10002;
 
 }

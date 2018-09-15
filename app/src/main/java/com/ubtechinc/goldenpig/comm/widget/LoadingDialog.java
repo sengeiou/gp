@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 
 
@@ -19,10 +20,16 @@ public class LoadingDialog extends Dialog {
     public static LoadingDialog mDia;
     public static final int CHECK_TIME_OUT = 1000;
     private int mTimeout = 20000;
+    private static Boolean showToast = false;
 
-    public void setTimeout(int timeout) {
+    public LoadingDialog setShowToast(Boolean showToast) {
+        this.showToast = showToast;
+        return mDia;
+    }
 
+    public LoadingDialog setTimeout(int timeout) {
         this.mTimeout = timeout * 1000;
+        return mDia;
     }
 
     public void setCancelable(boolean cancelable) {
@@ -63,10 +70,12 @@ public class LoadingDialog extends Dialog {
     public static LoadingDialog getInstance(Context _context) {
         if (mDia != null && mDia.isShowing()) {
             /*在dimiss一个dialog之前，必须确保所在的Activity没有被销毁，否则会出现崩溃异常*/
-            try{
+            try {
                 mDia.cancel();
-            }catch (Exception e){}
+            } catch (Exception e) {
+            }
         }
+        showToast = false;
         mDia = new LoadingDialog(_context);
         mDia.initDia();
         return mDia;
@@ -81,7 +90,7 @@ public class LoadingDialog extends Dialog {
             }
         } catch (Exception e) {
             // TODO: handle exception
-        }finally {
+        } finally {
             mDia = null;
         }
 
@@ -107,9 +116,12 @@ public class LoadingDialog extends Dialog {
                     if (mDia != null && mDia.isShowing()) {
                         try {
                             mDia.cancel();
+                            if (showToast) {
+                                ToastUtils.showShortToast("请求超时，请重试");
+                            }
                         } catch (Exception e) {
 
-                        }finally {
+                        } finally {
                             mDia = null;
                         }
                     }

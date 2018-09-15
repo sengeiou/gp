@@ -10,9 +10,9 @@ import android.support.v7.widget.OrientationHelper;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.StackView;
 import android.widget.Toast;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -22,7 +22,8 @@ import com.google.protobuf.Message;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-
+import com.tencent.TIMCustomElem;
+import com.tencent.TIMMessage;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubt.improtolib.GPResponse;
@@ -31,15 +32,15 @@ import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewImg;
+import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.model.AddressBookmodel;
 import com.ubtechinc.goldenpig.mvp.MVPBaseActivity;
-import com.ubtechinc.goldenpig.personal.DeviceManageActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
-import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.StateView;
+import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.ubtechinc.goldenpig.view.swipe_menu.SwipeMenuLayout;
 import com.ubtechinc.goldenpig.view.swipe_menu.SwipeRecycleView;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
@@ -50,19 +51,17 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
-
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import butterknife.BindView;
 
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_CONTACT_SUCCESS;
-
-import java.util.Observable;
-import java.util.Observer;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CONTACT_CHECK_SUCCESS;
 
 public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.View,
         AddressBookPrestener> implements OnRefreshListener, AddressBookContract.View, Observer {
@@ -75,6 +74,7 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
     AddressBookAdapter adapter;
     private ArrayList<AddressBookmodel> mList;
     Handler mHandler = new Handler();
+    public int deletePosition = 0;
     /**
      * 先拉取到数据，添加联系人时要在app端作对比后再提交给音箱
      */
@@ -142,22 +142,24 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
         recycler.setSwipeMenuItemClickListener(mMenuItemClickListener);
         adapter = new AddressBookAdapter(this, mList);
         recycler.setAdapter(adapter);
-        PigInfo pigInfo=AuthLive.getInstance().getCurrentPig();
-        if (pigInfo!=null) {
+        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+        if (pigInfo != null) {
             UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
-        }else {
+        } else {
             UbtTIMManager.getInstance().setPigAccount("2cb9b9a3");
         }
         UbtTIMManager.getInstance().setMsgObserve(this);
         UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
             @Override
             public void onError(int i, String s) {
-                Log.e("setOnUbtTIMConver",s);
+                Log.e("setOnUbtTIMConver", s);
+                LoadingDialog.getInstance(AddressBookActivity.this).dismiss();
+                ToastUtils.showShortToast(s);
             }
 
             @Override
             public void onSuccess() {
-                Log.e("setOnUbtTIMConver","sss");
+                Log.e("setOnUbtTIMConver", "sss");
             }
         });
 
@@ -167,7 +169,7 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
 
     @Override
     public void onRefresh(RefreshLayout refreshLayout) {
-        mPresenter.refreshData();
+        UbtTIMManager.getInstance().queryUser();
     }
 
     @Override
@@ -203,26 +205,6 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
     @Override
     public Handler getHandler() {
         return mHandler;
-    }
-
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(Event event) {
-        LogUtils.d("onMessageEvent");
-        if (event != null) {
-            onReceiveEvent(event);
-        }
-    }
-
-    /**
-     * 接收到分发到事件
-     *
-     * @param event 事件
-     */
-    protected void onReceiveEvent(Event event) {
-        if (event.getCode() == ADD_CONTACT_SUCCESS) {
-            ToastUtils.showShortToast("更新数据");
-            refreshLayout.autoRefresh();
-        }
     }
 
     /**
@@ -277,25 +259,19 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
             int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
             if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
                 if (menuPosition == 0) {
-
+                    Intent it = new Intent(AddressBookActivity.this, AddAndSetContactActivity
+                            .class);
+                    it.putParcelableArrayListExtra("list", mList);
+                    it.putExtra("type", 1);
+                    it.putExtra("position", adapterPosition);
+                    startActivity(it);
                 } else if (menuPosition == 1) {
-                    mList.remove(adapterPosition);
-                    try {
-                        if (mList.get(mList.size() - 1).type == 1) {
-                            mList.remove(mList.size() - 1);
-                        }
-                    } catch (Exception e) {
-                    }
-                    if (mList.size() == 0) {
-                        mStateView.showEmpty();
-                    }
-                    adapter.notifyDataSetChanged();
+                    UbtTIMManager.getInstance().deleteUser(mList.get(adapterPosition).name, mList
+                            .get(adapterPosition).phone, mList.get(adapterPosition).id + "");
+                    deletePosition = adapterPosition;
+                    LoadingDialog.getInstance(AddressBookActivity.this).setTimeout(20)
+                            .setShowToast(true).show();
                 }
-                Toast.makeText(AddressBookActivity.this, "list第" + adapterPosition + "; 右侧菜单第" +
-                        menuPosition, Toast.LENGTH_SHORT).show();
-            } else if (direction == SwipeMenuRecyclerView.LEFT_DIRECTION) {
-                Toast.makeText(AddressBookActivity.this, "list第" + adapterPosition + "; 左侧菜单第" +
-                        menuPosition, Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -307,6 +283,73 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
     }
 
     @Override
+    public void update(Observable o, Object arg) {
+        TIMMessage msg = (TIMMessage) arg;
+        for (int i = 0; i < msg.getElementCount(); ++i) {
+            TIMCustomElem elem = (TIMCustomElem) msg.getElement(i);
+            try {
+                dealMsg(elem.getData());
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+                ToastUtils.showShortToast("数据异常，请重试");
+                refreshLayout.finishRefresh(true);
+            }
+        }
+    }
+
+    private void dealMsg(Object arg) throws InvalidProtocolBufferException {
+        ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage
+                .parseFrom((byte[]) arg);
+        String action = msg.getHeader().getAction();
+        switch (action) {
+            case "/im/mail/query":
+                List<UserContacts.User> list = msg.getPayload().unpack(UserContacts.UserContact
+                        .class).getUserList();
+                List<AddressBookmodel> ss = new ArrayList<>();
+                for (int j = 0; j < list.size(); j++) {
+                    AddressBookmodel mo = new AddressBookmodel();
+                    mo.name = list.get(j).getName();
+                    mo.phone = list.get(j).getNumber();
+                    mo.id = list.get(j).getId();
+                    ss.add(mo);
+                }
+                onRefreshSuccess(ss);
+                break;
+            case "/im/mail/add":
+                msg.getPayload().unpack(GPResponse.Response.class).getResult();
+                break;
+
+            case "/im/mail/delete":
+                Boolean flag = msg.getPayload().unpack(GPResponse.Response.class).getResult();
+                LoadingDialog.getInstance(AddressBookActivity.this).dismiss();
+                if (flag) {
+                    mList.remove(deletePosition);
+                    try {
+                        if (mList.get(mList.size() - 1).type == 1) {
+                            mList.remove(mList.size() - 1);
+                        }
+                    } catch (Exception e) {
+                    }
+                    if (mList.size() == 0) {
+                        mStateView.showEmpty();
+                    }
+                    adapter.notifyDataSetChanged();
+                } else {
+                    ToastUtils.showShortToast("删除失败，请重试");
+                }
+                break;
+            case "/im/mail/update":
+                msg.getPayload().unpack(GPResponse.Response.class).getResult();
+                break;
+        }
+    }
+
+    @Override
+    protected void onReceiveStickyEvent(Event event) {
+        super.onReceiveStickyEvent(event);
+        if (event.getCode() == CONTACT_CHECK_SUCCESS) {
+            refreshLayout.autoRefresh();
+        }
     public void update(Observable o, Object arg) {
         LogUtils.d("");
 
