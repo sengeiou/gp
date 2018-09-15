@@ -54,8 +54,10 @@ public class UbtTIMManager {
     private String userSig;
     private int appidAt3rd;
 
-    private OnUbtTIMConverListener onUbtTIMConverListener; //358182063451144/09
+    private OnUbtTIMConverListener onUbtTIMConverListener;
     private ArrayBlockingQueue<UbtTIMMsg> msgQueue=new ArrayBlockingQueue<>(16); //IM信息队列
+
+
     private UbtTIMManager() {
         repository = new TIMRepository();
         onLineRepository=new TIMPigOnLineRepository();
@@ -70,7 +72,6 @@ public class UbtTIMManager {
                 //sendTIMMsg( msg);
             }
         });
-        setPigAccount("2cb9b9a3");//临时测试小猪账号
         doTIMLogin();
     }
 
@@ -126,6 +127,8 @@ public class UbtTIMManager {
                 @Override
                 public void onFailure(String error) {
                     UbtLogger.e("doTIMLogin", error);
+
+
                 }
 
                 @Override
@@ -217,6 +220,7 @@ public class UbtTIMManager {
             if (ubtCallBack != null) {
                 ubtCallBack.onSuccess();
             }
+
         }
     };
 
@@ -303,6 +307,7 @@ public class UbtTIMManager {
             }
         });
     }
+
     private TIMMessage creatElem(byte[] data){
         //构造一条消息
         TIMMessage msg = new TIMMessage();
@@ -323,9 +328,13 @@ public class UbtTIMManager {
     public void removeOnUbtTIMConverListener(){
         this.onUbtTIMConverListener=null;
     }
+
+
+
     public interface UbtIMCallBack {
         void onError(int i, String s);
 
         void onSuccess();
     }
+
 }

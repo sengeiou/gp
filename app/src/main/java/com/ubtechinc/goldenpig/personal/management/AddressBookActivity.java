@@ -17,6 +17,7 @@ import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.google.protobuf.Extension;
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.Message;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -24,6 +25,8 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
+import com.ubt.improtolib.GPResponse;
+import com.ubt.improtolib.UserContacts;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
@@ -39,6 +42,7 @@ import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.StateView;
 import com.ubtechinc.goldenpig.view.swipe_menu.SwipeMenuLayout;
 import com.ubtechinc.goldenpig.view.swipe_menu.SwipeRecycleView;
+import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
@@ -158,7 +162,6 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
         });
 
         UbtTIMManager.getInstance().queryUser();
-        UbtTIMManager.getInstance().addUser("didid","123456789");
         refreshLayout.autoRefresh();
     }
 
@@ -306,9 +309,29 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
     @Override
     public void update(Observable o, Object arg) {
         LogUtils.d("");
-    }
 
-    private void addUser(String nikName, String number) {
-        UbtTIMManager.getInstance().addUser(nikName, number);
+    }
+    /* <call path="/im/mail/add"/>
+    <call path="/im/mail/query"/>
+    <call path="/im/mail/delete"/>
+    <call path="/im/mail/update"/>*/
+    private void dealMsg(Object arg) throws InvalidProtocolBufferException {
+        ChannelMessageContainer.ChannelMessage msg= ChannelMessageContainer.ChannelMessage.parseFrom((byte[])arg);
+        String action=msg.getHeader().getAction();
+        switch (action){
+            case "/im/mail/query":
+                msg.getPayload().unpack(UserContacts.UserContact.class).getUserList();
+                break;
+            case "/im/mail/add":
+                msg.getPayload().unpack(GPResponse.Response.class).getResult();
+                break;
+
+            case "/im/mail/delete":
+                msg.getPayload().unpack(GPResponse.Response.class).getResult();
+                break;
+            case "/im/mail/update":
+                msg.getPayload().unpack(GPResponse.Response.class).getResult();
+                break;
+        }
     }
 }

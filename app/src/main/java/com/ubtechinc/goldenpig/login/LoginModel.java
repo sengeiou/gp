@@ -27,7 +27,7 @@ import com.ubtechinc.tvlloginlib.entity.LoginInfo;
  *@change        :
  *@changetime    :2018/8/21 11:14
 */
-public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthRepository.UBTAuthCallBack,UbtTIMManager.UbtIMCallBack{
+public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthRepository.UBTAuthCallBack{
     private final String TAG="LoginModel";
     private TVSAuthRepository tvsAuthRepository;
     private AuthLive authLive ;
@@ -51,9 +51,9 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
     @Override
     public void onSuccess(UserInfo userInfo) {
         authLive.logined(userInfo);
-        getPigList();
-        timManager.loginTIM(userInfo.getUserId(), com.ubt.imlibv2.BuildConfig.IM_Channel);
 
+        timManager.loginTIM(userInfo.getUserId(), com.ubt.imlibv2.BuildConfig.IM_Channel);
+        getPigList();
     }
     ///  获取用户绑定的小猪
     private void getPigList(){
@@ -67,9 +67,14 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
             }
 
             @Override
-            public void onSuccess(GetRobotListModule.Response response) {
-                Log.e("getPigList",response.getMsg());
-                PigUtils.getPigList(response.getMsg(),AuthLive.getInstance().getUserId(),AuthLive.getInstance().getCurrentPigList());
+            public void onException(Exception e) {
+                Log.e("getPigList",e.getMessage());
+            }
+
+            @Override
+            public void onSuccess(String response) {
+                Log.e("getPigList",response);
+                PigUtils.getPigList(response,AuthLive.getInstance().getUserId(),AuthLive.getInstance().getCurrentPigList());
             }
         });
     }
@@ -129,18 +134,16 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
     }
     public void onResume() {
         tvsAuthRepository.onResume();
-    }public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    }
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         tvsAuthRepository.onActivityResult(requestCode, resultCode, data);
     }
 
-
-    @Override
-    public void onError(int i, String s) {
-
+    public void setTIMLoingCallback(UbtTIMManager.UbtIMCallBack callback){
+        if (timManager!=null){
+            timManager.setUbtCallBack(callback);
+        }
     }
 
-    @Override
-    public void onSuccess() {
 
-    }
 }
