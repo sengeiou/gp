@@ -350,31 +350,5 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
         if (event.getCode() == CONTACT_CHECK_SUCCESS) {
             refreshLayout.autoRefresh();
         }
-    public void update(Observable o, Object arg) {
-        LogUtils.d("");
-
-    }
-    /* <call path="/im/mail/add"/>
-    <call path="/im/mail/query"/>
-    <call path="/im/mail/delete"/>
-    <call path="/im/mail/update"/>*/
-    private void dealMsg(Object arg) throws InvalidProtocolBufferException {
-        ChannelMessageContainer.ChannelMessage msg= ChannelMessageContainer.ChannelMessage.parseFrom((byte[])arg);
-        String action=msg.getHeader().getAction();
-        switch (action){
-            case "/im/mail/query":
-                msg.getPayload().unpack(UserContacts.UserContact.class).getUserList();
-                break;
-            case "/im/mail/add":
-                msg.getPayload().unpack(GPResponse.Response.class).getResult();
-                break;
-
-            case "/im/mail/delete":
-                msg.getPayload().unpack(GPResponse.Response.class).getResult();
-                break;
-            case "/im/mail/update":
-                msg.getPayload().unpack(GPResponse.Response.class).getResult();
-                break;
-        }
     }
 }

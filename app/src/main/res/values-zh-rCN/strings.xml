@@ -33,7 +33,7 @@
     <string name="ubt_connecting">连接中</string>
     <string name="ubt_mina">我的</string>
     <string name="ubt_pig">小猪</string>
-    <string name="ubt_unbund_pig">音箱未绑定，点击绑定</string>
+    <string name="ubt_unbund_pig">音箱未绑定，</string>
     <string name="ubt_my_pig">我的小猪</string>
     <string name="ubt_send_voice">给自己的音箱发送语音留言</string>
     <string name="ubt_skills_manual">技能手册</string>
@@ -63,4 +63,9 @@
     <string name="ubt_unbing_tips">解绑后，将不能通过app使用此音箱</string>
     <string name="ubt_pig_serialno">音响序列号：%1$s</string>
     <string name="ubt_pig_version_format">音箱当前版本：%1$s</string>
+    <string name="ubt_ubbind_success">成功解除绑定</string>
+    <string name="ubt_transfer_admin_tips">你是管理员，解绑前请先转让管理员权限</string>
+    <string name="ubt_pig_unbing">音箱未配绑定</string>
+    <string name="ubt_pig_unset_net">音箱未配网</string>
+    <string name="ubt_click_for_bind">点击绑定</string>
 </resources>

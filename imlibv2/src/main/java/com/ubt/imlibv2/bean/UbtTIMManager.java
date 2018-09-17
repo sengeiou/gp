@@ -127,7 +127,7 @@ public class UbtTIMManager {
                 @Override
                 public void onFailure(String error) {
                     UbtLogger.e("doTIMLogin", error);
-
+                    ubtCallBack.onError(1001, error);
 
                 }
 

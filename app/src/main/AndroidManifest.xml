@@ -43,7 +43,7 @@
 
          <activity android:name=".main.MainActivity"
             android:screenOrientation="portrait"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             />
         <activity android:name=".pigmanager.SearchPigActivity"
             android:launchMode="singleTask"
@@ -82,7 +82,11 @@
             />
         <activity android:name=".pigmanager.mypig.MyPigActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".pigmanager.mypig.DeviceUpdateActivity" />
+        <activity android:name=".pigmanager.mypig.DeviceUpdateActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".pigmanager.mypig.TransferAdminActivity"
+            android:screenOrientation="portrait"
+            />
     </application>
 
 </manifest>
