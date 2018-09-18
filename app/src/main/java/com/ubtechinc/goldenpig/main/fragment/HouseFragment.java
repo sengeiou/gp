@@ -20,6 +20,27 @@ public class HouseFragment extends BaseFragment {
     public HouseFragment(){
         super();
     }
+
+    @Override
+    protected void onNoPig() {
+
+    }
+
+    @Override
+    protected void onNoSetNet() {
+
+    }
+
+    @Override
+    protected void onHasPig() {
+
+    }
+
+    @Override
+    protected void onSetedNet() {
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {

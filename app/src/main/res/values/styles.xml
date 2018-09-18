@@ -87,6 +87,9 @@
         <item name="android:layout_marginBottom">@dimen/ubt_dialog_marginbottom</item>
         <item name="android:gravity">center</item>
     </style>
+    <style name="UBTDialogEdtTheme" parent="UBTDialogTipsTheme">
+        <item name="android:background">@drawable/shape_ubt_dialog_edt__gb</item>
+    </style>
     <style name="UBTDialogBottonTheme" parent="Base.Widget.AppCompat.Button">
         <item name="android:lines">1</item>
         <item name="android:background">@null</item>

@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,9 +29,13 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.me.UserInfoActivity;
 import com.ubtechinc.goldenpig.personal.DeviceManageActivity;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
+import com.ubtechinc.goldenpig.pigmanager.hotspot.SetHotSpotActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 
 import java.util.HashMap;
+
+import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * @author : HQT
@@ -42,14 +47,59 @@ import java.util.HashMap;
  */
 public class PersonalFragment extends BaseFragment implements View.OnClickListener {
 
+
     private View mToUserInfo;
     private View mSetNetBtn;   //绑定配网按钮
+    @BindView(R.id.ubt_btn_person_hotspot)
+    View mToHospotBtn;
     private View mFeedBackBtn; //反馈帮助
     private UbtSubTxtButton mAboutBtn; //关于页按钮
     private ImageView mPohtoImg;
     private TextView mNikenameTv;
+    private TextView mTitle;
+    private View mCyanBg;  /// 蓝色渐进色背景板
     public PersonalFragment() {
         super();
+    }
+
+    @Override
+    protected void onNoPig() {
+        if (mCyanBg!=null){
+            mCyanBg.setVisibility(View.GONE);
+        }
+        if (mTitle!=null){
+            mTitle.setTextColor(ResourcesCompat.getColor(getResources(),R.color.ubt_tips_txt_color,null));
+        }
+    }
+
+    @Override
+    protected void onNoSetNet() {
+        if (mCyanBg!=null){
+            mCyanBg.setVisibility(View.GONE);
+        }
+        if (mTitle!=null){
+            mTitle.setTextColor(ResourcesCompat.getColor(getResources(),R.color.ubt_tips_txt_color,null));
+        }
+    }
+
+    @Override
+    protected void onHasPig() {
+        if (mCyanBg!=null){
+            mCyanBg.setVisibility(View.VISIBLE);
+        }
+        if (mTitle!=null){
+            mTitle.setTextColor(ResourcesCompat.getColor(getResources(),R.color.ubt_white,null));
+        }
+    }
+
+    @Override
+    protected void onSetedNet() {
+        if (mCyanBg!=null){
+            mCyanBg.setVisibility(View.VISIBLE);
+        }
+        if (mTitle!=null){
+            mTitle.setTextColor(ResourcesCompat.getColor(getResources(),R.color.ubt_white,null));
+        }
     }
 
     @Nullable
@@ -81,7 +131,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
             mNikenameTv.setText(AuthLive.getInstance().getCurrentUser().getNickName());
         }
 
-
+        mCyanBg=getActivity().findViewById(R.id.ubt_me_normal_bg);
         mToUserInfo = getActivity().findViewById(R.id.ubt_btn_go_login);
         mToUserInfo.setOnClickListener(this);
 
@@ -110,6 +160,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
     }
 
     @Override
+    @OnClick(R.id.ubt_btn_person_hotspot)
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ubt_btn_go_login:
@@ -122,6 +173,10 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                 ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class,params,
                         false);
                 break;
+            case R.id.ubt_btn_person_hotspot:
+                ActivityRoute.toAnotherActivity(getActivity(), SetHotSpotActivity.class,
+                        false);
+                break;
             case R.id.ubt_btn_person_feedback:
                 ActivityRoute.toAnotherActivity(getActivity(), FeedBackActivity.class, false);
                 break;
@@ -129,5 +184,11 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                 ActivityRoute.toAnotherActivity(getActivity(), UbtAboutActivtiy.class, false);
                 break;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
     }
 }

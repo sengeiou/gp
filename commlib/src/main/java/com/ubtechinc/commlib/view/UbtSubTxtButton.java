@@ -65,6 +65,11 @@ public class UbtSubTxtButton extends android.support.v7.widget.AppCompatButton {
         this.mRightText=rightText;
         countTextLocation();
     }
+
+    public String getRightText() {
+        return mRightText;
+    }
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);

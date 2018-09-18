@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@null"
+    android:layout_height="match_parent">
+    <com.ubtechinc.commlib.view.UbtSubTxtButton
+        style="@style/UBTMeBtnTheme"
+        android:layout_marginTop="@dimen/dp_20"
+        android:id="@+id/ubt_btn_hotspot_name"
+        android:gravity="center_vertical|left"
+        android:layout_width="match_parent"
+        android:text="热点名称"
+        app:rightTextPadding="@dimen/dp_32"
+        app:rightTextColor="@color/ubt_version_color"
+        android:paddingStart="@dimen/dp_15"
+        android:paddingEnd="@dimen/dp_15"
+        android:layout_height="@dimen/dp_44" />
+    <com.ubtechinc.commlib.view.UbtSubTxtButton
+        android:id="@+id/ubt_btn_hotspot_pwd"
+        android:layout_marginTop="@dimen/dp_5"
+        android:gravity="center_vertical|left"
+        style="@style/UBTMeBtnTheme"
+        android:text="热点密码"
+        android:paddingStart="@dimen/dp_15"
+        android:paddingEnd="@dimen/dp_15"
+        app:rightTextColor="@color/ubt_version_color"
+        app:rightTextSize="14sp"
+        app:rightTextPadding="@dimen/dp_32"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_44" />
+</LinearLayout>

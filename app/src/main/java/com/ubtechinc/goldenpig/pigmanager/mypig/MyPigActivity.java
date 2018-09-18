@@ -24,6 +24,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Observable;
+import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -37,7 +39,7 @@ import butterknife.OnClick;
  *@change        :
  *@changetime    :2018/9/15 12:48
 */
-public class MyPigActivity extends BaseToolBarActivity {
+public class MyPigActivity extends BaseToolBarActivity implements Observer{
     @BindView(R.id.ubt_btn_dev_update)
     Button mDevUpateBtn;        //升级按钮
     @BindView(R.id.ubt_btn_unbind)
@@ -74,7 +76,7 @@ public class MyPigActivity extends BaseToolBarActivity {
                     try {
                         JSONObject jsonObject=new JSONObject(reponse);
                         int code=jsonObject.has("code")?jsonObject.getInt("code"):-1;
-                        final String msg=jsonObject.has("message")?jsonObject.getString("message"):"返回的结果格式错误";
+
                         if (code==0){
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -84,6 +86,7 @@ public class MyPigActivity extends BaseToolBarActivity {
                                 }
                             });
                         }else {
+                            final String msg=jsonObject.has("message")?jsonObject.getString("message"):"返回的结果格式错误";
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -99,6 +102,8 @@ public class MyPigActivity extends BaseToolBarActivity {
 
             }
         };
+
+
     }
 
     @Override
@@ -173,9 +178,13 @@ public class MyPigActivity extends BaseToolBarActivity {
 
     }
     private void toDeviceUpdate(){
-        if (mPig!=null &&mPig.isAdmin&&mPig.isMaster()){
+       // if (mPig!=null &&mPig.isAdmin&&mPig.isMaster()){
             ActivityRoute.toAnotherActivity(this,DeviceUpdateActivity.class,false);
-        }
+        //}
     }
 
+    @Override
+    public void update(Observable o, Object arg) {
+
+    }
 }

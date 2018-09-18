@@ -87,6 +87,9 @@
         <activity android:name=".pigmanager.mypig.TransferAdminActivity"
             android:screenOrientation="portrait"
             />
+        <activity android:name=".pigmanager.hotspot.SetHotSpotActivity"
+            android:screenOrientation="portrait"
+            />
     </application>
 
 </manifest>

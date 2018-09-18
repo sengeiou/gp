@@ -28,6 +28,7 @@
         android:id="@+id/ubt_btn_qq_login"
         style="@style/UBTButtonTheme.Cyan"
         android:layout_centerHorizontal="true"
+        android:visibility="invisible"
         android:layout_above="@id/ubt_btn_wechat_login"
         app:icon="@drawable/ic_qq"
         app:iconMargin="@dimen/ubt_btn_icon_margin_start"

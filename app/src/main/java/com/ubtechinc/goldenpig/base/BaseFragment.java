@@ -64,7 +64,7 @@ public abstract class BaseFragment extends Fragment {
         mTipsView=view.findViewById(R.id.ubt_layout_tips);
         mTipsClickView=view.findViewById(R.id.ubt_bind_tv);
         mTipsTv=view.findViewById(R.id.ubt_tv_main_tips);
-        showTips();
+
     }
 
     protected   void showTips(){
@@ -72,6 +72,7 @@ public abstract class BaseFragment extends Fragment {
             final PigInfo pigInfo=AuthLive.getInstance().getCurrentPig();
             mTipsView.setVisibility(View.VISIBLE);
             if (pigInfo==null) {
+                onNoPig();
                 mTipsTv.setText(R.string.ubt_pig_unbing);
                 if (mTipsClickView!=null){
                     mTipsClickView.setText(R.string.ubt_click_for_bind);
@@ -79,8 +80,12 @@ public abstract class BaseFragment extends Fragment {
             } /*else if (!pigInfo.isOnline()){
                 mTipsTv.setText(R.string.ubt_pig_unset_net);
                  mTipsClickView.setText(R.string.ubt_click_for_bind);
+                 onNoSetNet();
+                 onSetedNet();
             }*/else {
                 mTipsView.setVisibility(View.GONE);
+                onHasPig();
+
             }
         }
         if (mTipsClickView!=null){
@@ -156,6 +161,7 @@ public abstract class BaseFragment extends Fragment {
     public void onResume() {
         super.onResume();
         //checkPigWifi();
+        showTips();
     }
     private void checkPigWifi(){
         String message = new JsonCommandProduce().getPigNetWorkState();
@@ -166,4 +172,8 @@ public abstract class BaseFragment extends Fragment {
         super.onDestroy();
         unbinder.unbind();
     }
+    protected  abstract void onNoPig();
+    protected  abstract void onNoSetNet();
+    protected  abstract void onHasPig();
+    protected  abstract void onSetedNet();
 }

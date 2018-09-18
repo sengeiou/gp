@@ -78,5 +78,7 @@
     <string name="ubt_pig_unbing">音箱未配绑定</string>
     <string name="ubt_pig_unset_net">音箱未配网</string>
     <string name="ubt_click_for_bind">点击绑定</string>
+    <string name="ubt_click_bind">点击绑定</string>
+    <string name="ubt_hotspot_name">热点名称</string>
 
 </resources>

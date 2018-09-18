@@ -54,6 +54,26 @@ public class PigFragment extends BaseFragment{
         super.onResume();
     }
 
+    @Override
+    protected void onNoPig() {
+
+    }
+
+    @Override
+    protected void onNoSetNet() {
+
+    }
+
+    @Override
+    protected void onHasPig() {
+
+    }
+
+    @Override
+    protected void onSetedNet() {
+
+    }
+
     @OnClick({R.id.ubt_bind_tv})
     public void Onclick(View view){
         switch (view.getId()){
