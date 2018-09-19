@@ -40,12 +40,12 @@
         </activity>
 
 
-
-         <activity android:name=".main.MainActivity"
-            android:screenOrientation="portrait"
+        <activity
+            android:name=".main.MainActivity"
             android:launchMode="singleTop"
-            />
-        <activity android:name=".pigmanager.SearchPigActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pigmanager.SearchPigActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
@@ -76,13 +76,25 @@
         <activity
             android:name=".personal.management.AddAndSetContactActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".login.LoginActivity"
-            android:screenOrientation="portrait"
+        <activity
+            android:name=".login.LoginActivity"
             android:launchMode="singleTask"
-            />
-        <activity android:name=".pigmanager.mypig.MyPigActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".pigmanager.mypig.DeviceUpdateActivity" />
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pigmanager.mypig.MyPigActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".personal.alarm.AlarmListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".personal.alarm.AddAlarmActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".personal.alarm.SetRepeatActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pigmanager.mypig.DeviceUpdateActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

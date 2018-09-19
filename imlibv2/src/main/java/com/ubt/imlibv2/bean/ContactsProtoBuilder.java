@@ -32,7 +32,7 @@ public class ContactsProtoBuilder {
         return channelMessage.toByteArray();
     }
     public static byte[] getUpdateContactsInfo(String name, String number,String key) {
-        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction("/im/mail/delete").setTime(System.currentTimeMillis()).build();
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction("/im/mail/update").setTime(System.currentTimeMillis()).build();
         UserContacts.UserContact.Builder userContactBuilder = UserContacts.UserContact.newBuilder();
 
         UserContacts.User.Builder builder = UserContacts.User.newBuilder();

@@ -73,5 +73,6 @@
     <string name="ubt_unbing_tips">解绑后，将不能通过app使用此音箱</string>
     <string name="ubt_pig_serialno">音响序列号：%1$s</string>
     <string name="ubt_pig_version_format">音箱当前版本：%1$s</string>
+    <string name="alarm">闹钟</string>
 
 </resources>

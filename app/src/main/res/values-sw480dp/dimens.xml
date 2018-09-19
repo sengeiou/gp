@@ -418,4 +418,6 @@
 	<dimen name="sp_48">64.0000sp</dimen>
 
 	<integer name="test">480</integer>
+
+	<dimen name="add_alarm_curline_height">26.18dp</dimen>
 </resources>

@@ -419,4 +419,5 @@
 
 	<integer name="test">400</integer>
 
+	<dimen name="add_alarm_curline_height">21.8dp</dimen>
 </resources>

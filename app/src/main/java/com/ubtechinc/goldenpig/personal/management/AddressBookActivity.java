@@ -1,5 +1,6 @@
 package com.ubtechinc.goldenpig.personal.management;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -10,15 +11,8 @@ import android.support.v7.widget.OrientationHelper;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
-import com.google.protobuf.Extension;
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.protobuf.Message;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -28,7 +22,6 @@ import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubt.improtolib.GPResponse;
 import com.ubt.improtolib.UserContacts;
-import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewImg;
@@ -41,9 +34,6 @@ import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.StateView;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
-import com.ubtechinc.goldenpig.view.swipe_menu.SwipeMenuLayout;
-import com.ubtechinc.goldenpig.view.swipe_menu.SwipeRecycleView;
-import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
@@ -51,9 +41,7 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -73,12 +61,32 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
     SmartRefreshLayout refreshLayout;
     AddressBookAdapter adapter;
     private ArrayList<AddressBookmodel> mList;
-    Handler mHandler = new Handler();
     public int deletePosition = 0;
     /**
      * 先拉取到数据，添加联系人时要在app端作对比后再提交给音箱
      */
     private Boolean hasLoadMsg = false;
+
+    private MyHandler mHandler;
+
+    private class MyHandler extends Handler {
+        WeakReference<Activity> mWeakReference;
+
+        public MyHandler(Activity activity) {
+            mWeakReference = new WeakReference<Activity>(activity);
+        }
+
+        @Override
+        public void handleMessage(android.os.Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 1) {
+                ToastUtils.showShortToast("请求超时，请重试");
+                if (mWeakReference.get() != null) {
+                    ((AddressBookActivity) mWeakReference.get()).refreshLayout.finishRefresh(true);
+                }
+            }
+        }
+    }
 
     @Override
     protected int getContentViewId() {
@@ -93,6 +101,7 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mHandler = new MyHandler(this);
         initStateView(true);
         mStateView.setOnRetryClickListener(new StateView.OnRetryClickListener() {
             @Override
@@ -162,18 +171,23 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
                 Log.e("setOnUbtTIMConver", "sss");
             }
         });
-
-        UbtTIMManager.getInstance().queryUser();
         refreshLayout.autoRefresh();
     }
 
     @Override
     public void onRefresh(RefreshLayout refreshLayout) {
+        if (mHandler.hasMessages(1)) {
+            mHandler.removeMessages(1);
+        }
+        mHandler.sendEmptyMessageDelayed(1, 20 * 1000);// 20s 秒后检查加载框是否还在
         UbtTIMManager.getInstance().queryUser();
     }
 
     @Override
     public void onRefreshSuccess(List<AddressBookmodel> list) {
+        if (mHandler.hasMessages(1)) {
+            mHandler.removeMessages(1);
+        }
         hasLoadMsg = true;
         refreshLayout.finishRefresh(true);
         mList.clear();
@@ -279,6 +293,8 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mHandler.removeCallbacksAndMessages(null);
+        mHandler = null;
         UbtTIMManager.getInstance().deleteMsgObserve(this);
     }
 
@@ -297,6 +313,10 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
         }
     }
 
+    /* <call path="/im/mail/add"/>
+    <call path="/im/mail/query"/>
+    <call path="/im/mail/delete"/>
+    <call path="/im/mail/update"/>*/
     private void dealMsg(Object arg) throws InvalidProtocolBufferException {
         ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage
                 .parseFrom((byte[]) arg);
@@ -349,32 +369,6 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
         super.onReceiveStickyEvent(event);
         if (event.getCode() == CONTACT_CHECK_SUCCESS) {
             refreshLayout.autoRefresh();
-        }
-    public void update(Observable o, Object arg) {
-        LogUtils.d("");
-
-    }
-    /* <call path="/im/mail/add"/>
-    <call path="/im/mail/query"/>
-    <call path="/im/mail/delete"/>
-    <call path="/im/mail/update"/>*/
-    private void dealMsg(Object arg) throws InvalidProtocolBufferException {
-        ChannelMessageContainer.ChannelMessage msg= ChannelMessageContainer.ChannelMessage.parseFrom((byte[])arg);
-        String action=msg.getHeader().getAction();
-        switch (action){
-            case "/im/mail/query":
-                msg.getPayload().unpack(UserContacts.UserContact.class).getUserList();
-                break;
-            case "/im/mail/add":
-                msg.getPayload().unpack(GPResponse.Response.class).getResult();
-                break;
-
-            case "/im/mail/delete":
-                msg.getPayload().unpack(GPResponse.Response.class).getResult();
-                break;
-            case "/im/mail/update":
-                msg.getPayload().unpack(GPResponse.Response.class).getResult();
-                break;
         }
     }
 }
