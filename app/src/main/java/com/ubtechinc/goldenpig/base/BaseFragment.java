@@ -14,6 +14,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
+
+import com.ubtechinc.bluetooth.UbtBluetoothManager;
+import com.ubtechinc.bluetooth.command.JsonCommandProduce;
+import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.login.observable.AuthLive;
+import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
+import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.route.ActivityRoute;
+
+import java.util.HashMap;
+
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 import static com.ubtech.utilcode.utils.BarUtils.getStatusBarHeight;
 
@@ -25,9 +39,13 @@ import static com.ubtech.utilcode.utils.BarUtils.getStatusBarHeight;
  * @change :
  * @changTime :2018/8/17 17:58
  */
-public class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment {
     private ViewGroup mView;
     protected View mStatusBarView;
+    private Unbinder unbinder;
+    protected View mTipsView;
+    protected TextView mTipsClickView;
+    protected TextView mTipsTv;
     public BaseFragment() {
         super();
     }
@@ -42,8 +60,56 @@ public class BaseFragment extends Fragment {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
         }*/
+        unbinder = ButterKnife.bind(this, view);
+        mTipsView=view.findViewById(R.id.ubt_layout_tips);
+        mTipsClickView=view.findViewById(R.id.ubt_bind_tv);
+        mTipsTv=view.findViewById(R.id.ubt_tv_main_tips);
+
     }
 
+    protected   void showTips(){
+        if (mTipsView!=null) {
+            final PigInfo pigInfo=AuthLive.getInstance().getCurrentPig();
+            mTipsView.setVisibility(View.VISIBLE);
+            if (pigInfo==null) {
+                onNoPig();
+                mTipsTv.setText(R.string.ubt_pig_unbing);
+                if (mTipsClickView!=null){
+                    mTipsClickView.setText(R.string.ubt_click_for_bind);
+                }
+            } /*else if (!pigInfo.isOnline()){
+                mTipsTv.setText(R.string.ubt_pig_unset_net);
+                 mTipsClickView.setText(R.string.ubt_click_for_bind);
+                 onNoSetNet();
+                 onSetedNet();
+            }*/else {
+                mTipsView.setVisibility(View.GONE);
+                onHasPig();
+
+            }
+        }
+        if (mTipsClickView!=null){
+            mTipsClickView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tipsClick();
+                }
+            });
+        }
+    }
+    /**获取用户是否绑定小猪或小猪是否有联网*/
+    protected int getUsetPigState(){
+
+        return 0;
+    }
+    protected  void tipsClick(){
+        if (AuthLive.getInstance().getCurrentPig()==null) {
+            HashMap<String,Boolean> params=new HashMap<>();
+            params.put("back",true);
+            params.put("skip",false);
+            ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class,params,false);
+        }
+    }
     /**
      *@auther        :hqt
      *@description   :设置状态栏背景色
@@ -90,4 +156,24 @@ public class BaseFragment extends Fragment {
                 mView.addView(mStatusBarView, 0);
         }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //checkPigWifi();
+        showTips();
+    }
+    private void checkPigWifi(){
+        String message = new JsonCommandProduce().getPigNetWorkState();
+        UbtBluetoothManager.getInstance().sendMessageToBle(message);
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
+    }
+    protected  abstract void onNoPig();
+    protected  abstract void onNoSetNet();
+    protected  abstract void onHasPig();
+    protected  abstract void onSetedNet();
 }

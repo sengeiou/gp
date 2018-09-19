@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle"
+    >
+    <corners android:radius="@dimen/dp_8"/>
+    <solid android:color="@color/ubt_white"/>
+    <stroke android:width="@dimen/ubt_1px"
+        android:color="@color/ubt_dilog_decore_color"
+        />
+</shape>

@@ -10,6 +10,7 @@
         android:id="@+id/ubt_me_normal_bg"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ubt_me_normal_height"
+        android:visibility="gone"
         android:background="@drawable/shape_ubt_tv_cyan_gb" />
 
     <LinearLayout
@@ -22,8 +23,8 @@
             style="@style/UBTTabTitleTheme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/shape_ubt_tv_cyan_gb"
-            android:paddingTop="@dimen/ubt_16dp"
+            android:id="@+id/ubt_me_fragment_title"
+             android:paddingTop="@dimen/ubt_16dp"
             android:text="@string/ubt_mina" />
 
         <include layout="@layout/include_tips" />

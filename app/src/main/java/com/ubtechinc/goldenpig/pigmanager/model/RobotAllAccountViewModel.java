@@ -7,12 +7,16 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ubtechinc.commlib.log.UbtLogger;
+import com.ubtechinc.goldenpig.BuildConfig;
+import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.observeable.LiveResult;
 import com.ubtechinc.goldenpig.pigmanager.observeable.RobotBindStateLive;
 import com.ubtechinc.goldenpig.pigmanager.observeable.RobotUnbindLive;
 import com.ubtechinc.goldenpig.pigmanager.register.CheckUserRepository;
+import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
+import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.nets.http.ThrowableWrapper;
 
 import java.util.ArrayList;
@@ -76,6 +80,23 @@ public class RobotAllAccountViewModel {
                         }else {
                             robotBindStateLive.haventBind();
                         }
+                        new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListHttpProxy.OnGetPigListLitener() {
+                            @Override
+                            public void onError(ThrowableWrapper e) {
+                                Log.e("getPigList",e.getMessage());
+                            }
+
+                            @Override
+                            public void onException(Exception e) {
+                                Log.e("getPigList",e.getMessage());
+                            }
+
+                            @Override
+                            public void onSuccess(String response) {
+                                Log.e("getPigList",response);
+                                PigUtils.getPigList(response,AuthLive.getInstance().getUserId(),AuthLive.getInstance().getCurrentPigList());
+                            }
+                        });
                     } else {
                         robotBindStateLive.haventBind();
                     }

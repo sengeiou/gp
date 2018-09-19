@@ -17,6 +17,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.Window;
 
+import com.ubtechinc.bluetooth.Constants;
 import com.ubtechinc.bluetooth.UbtBluetoothDevice;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
@@ -93,7 +94,7 @@ public class PigListDialog extends BaseDialog {
             public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
                 final boolean isHasDevice=isHasDevice(device);
 
-                if (!isHasDevice && !TextUtils.isEmpty(device.getName())&& device.getName().startsWith("Pig_")){
+                if (!isHasDevice && !TextUtils.isEmpty(device.getName())&& device.getName().startsWith(Constants.ROBOT_TAG)){
                     UbtBluetoothDevice ubtBluetoothDevice=new UbtBluetoothDevice();
                     ubtBluetoothDevice.setDevice(device);
                     mLeList.add(ubtBluetoothDevice);

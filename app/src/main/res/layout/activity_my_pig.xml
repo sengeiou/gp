@@ -55,7 +55,6 @@
         android:textColor="@color/ubt_tips_txt_color"
         android:layout_marginTop="@dimen/dp_22"
         android:lines="1"
-        android:text="@string/ubt_pig_serialno"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ubt_img_pig_state" />
@@ -67,7 +66,6 @@
         android:layout_marginTop="@dimen/dp_14"
         android:textSize="@dimen/sp_14"
         android:lines="1"
-        android:text="@string/ubt_pig_version_format"
         android:textColor="@color/ubt_version_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

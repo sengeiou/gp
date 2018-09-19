@@ -1,0 +1,16 @@
+syntax = "proto3";
+option java_package = "com.ubtrobot.gold";
+option java_outer_classname="UserContacts";
+
+message HotSpotMessage {
+    bool enableWifi = 1; // false：设置成功，true，设置失败
+    string ssid=2; //热点名
+    string password=3;//密码
+}
+
+//热点账号信息
+message AccountRequest {
+    bool request = 1; //false 返回账号信息，true 获取账号信息
+    string ssid=2; //热点名
+    string password=3;//密码
+}

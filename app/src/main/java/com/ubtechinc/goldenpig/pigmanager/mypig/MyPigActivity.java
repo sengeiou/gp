@@ -2,18 +2,30 @@ package com.ubtechinc.goldenpig.pigmanager.mypig;
 
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ubtechinc.commlib.utils.ContextUtils;
+import com.ubtechinc.commlib.utils.ToastUtils;
+import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
+import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.Observable;
+import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,7 +39,7 @@ import butterknife.OnClick;
  *@change        :
  *@changetime    :2018/9/15 12:48
 */
-public class MyPigActivity extends BaseToolBarActivity {
+public class MyPigActivity extends BaseToolBarActivity implements Observer{
     @BindView(R.id.ubt_btn_dev_update)
     Button mDevUpateBtn;        //升级按钮
     @BindView(R.id.ubt_btn_unbind)
@@ -41,6 +53,7 @@ public class MyPigActivity extends BaseToolBarActivity {
     @BindView(R.id.ubt_tv_searialno)
     TextView mSearialNoTv;
     private PigInfo mPig;
+    private UnbindPigProxy.UnBindPigCallback unBindPigCallback;
     @Override
     protected int getConentView() {
         return R.layout.activity_my_pig;
@@ -51,6 +64,46 @@ public class MyPigActivity extends BaseToolBarActivity {
         ButterKnife.bind(this);
         setTitleBack(true);
         setToolBarTitle(R.string.my_pig);
+        unBindPigCallback=new UnbindPigProxy.UnBindPigCallback() {
+            @Override
+            public void onError(IOException e) {
+
+            }
+
+            @Override
+            public void onSuccess(String reponse) {
+                if (!TextUtils.isEmpty(reponse)){
+                    try {
+                        JSONObject jsonObject=new JSONObject(reponse);
+                        int code=jsonObject.has("code")?jsonObject.getInt("code"):-1;
+
+                        if (code==0){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ToastUtils.showShortToast(MyPigActivity.this,R.string.ubt_ubbind_success);
+                                    finish();
+                                }
+                            });
+                        }else {
+                            final String msg=jsonObject.has("message")?jsonObject.getString("message"):"返回的结果格式错误";
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ToastUtils.showShortToast(MyPigActivity.this,msg);
+                                }
+                            });
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
+            }
+        };
+
+
     }
 
     @Override
@@ -74,12 +127,43 @@ public class MyPigActivity extends BaseToolBarActivity {
 
     /*显示确认对转权限话框*/
     private void showComfireDialog(){
+        final boolean isMaster=isSingalOrMaster();
         UBTBaseDialog dialog=new UBTBaseDialog(this);
-        dialog.setTips(getString(R.string.ubt_unbing_tips));
+        if (isMaster) {
+            dialog.setTips(getString(R.string.ubt_unbing_tips));
+        }else {
+            dialog.setTips(getString(R.string.ubt_transfer_admin_tips));
+        }
         dialog.setLeftButtonTxt(getString(R.string.ubt_cancel));
         dialog.setRightButtonTxt(getString(R.string.ubt_enter));
         dialog.setRightBtnColor(ResourcesCompat.getColor(getResources(),R.color.ubt_tab_btn_txt_checked_color,null));
+        dialog.setOnUbtDialogClickLinsenter(new UBTBaseDialog.OnUbtDialogClickLinsenter() {
+            @Override
+            public void onLeftButtonClick(View view) {
+
+            }
+
+            @Override
+            public void onRightButtonClick(View view) {
+                if (isMaster) {
+                    UnbindPigProxy pigProxy = new UnbindPigProxy();
+                    final String serialNo = AuthLive.getInstance().getCurrentPig().getRobotName();
+                    final String userId = AuthLive.getInstance().getUserId();
+                    final String token = CookieInterceptor.get().getToken();
+                    pigProxy.unbindPig(serialNo, userId, token, BuildConfig.APP_ID, unBindPigCallback);
+                }else {
+                    ActivityRoute.toAnotherActivity(MyPigActivity.this,TransferAdminActivity.class,false);
+                }
+            }
+        });
         dialog.show();
+    }
+    private boolean isSingalOrMaster(){
+        boolean result=false;
+        if (mPig!=null&&(mPig.isMaster()||mPig.isAdmin)){
+            result=true;
+        }
+        return  result;
     }
     private void showPigNo(){
         if (mPig!=null){
@@ -94,9 +178,13 @@ public class MyPigActivity extends BaseToolBarActivity {
 
     }
     private void toDeviceUpdate(){
-        if (mPig!=null &&mPig.isAdmin&&mPig.isMaster()){
+       // if (mPig!=null &&mPig.isAdmin&&mPig.isMaster()){
             ActivityRoute.toAnotherActivity(this,DeviceUpdateActivity.class,false);
-        }
+        //}
     }
 
+    @Override
+    public void update(Observable o, Object arg) {
+
+    }
 }

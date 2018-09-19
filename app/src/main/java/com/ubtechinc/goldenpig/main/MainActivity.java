@@ -69,7 +69,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 @Override
                 public void onSuccess(String response) {
                     PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance().getCurrentPigList());*/
-                    if (AuthLive.getInstance().getCurrentPigList()==null||AuthLive.getInstance().getCurrentPigList().size()<0){
+                    if (AuthLive.getInstance().getCurrentPigList()==null||AuthLive.getInstance().getCurrentPigList().size()<1){
                         ActivityRoute.toAnotherActivity(MainActivity.this, SetNetWorkEnterActivity.class,false);
                     }
                /* }

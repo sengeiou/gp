@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package upgrade;
+
+option java_package = "com.ubtrobot.upgrade";
+option java_outer_classname  = "VersionInformation";
+
+message UpgradeInfo {
+    string currentVersion = 1;
+    string latestVersion = 2;
+    string updateMessage = 3;
+    //默认为0, 1=有版本更新,2=当前版本已是最新版本
+    //3=系统正处于升级状态，升级包会在连接无线网络时自动下载安装
+    //4=收到升级请求，小猪会在连接无线网络的情况下自动下载和安装
+    //5=异常错误，请重试
+    int32 status = 4;
+}
