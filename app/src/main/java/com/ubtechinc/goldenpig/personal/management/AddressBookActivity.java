@@ -145,8 +145,6 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null) {
             UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
-        } else {
-            UbtTIMManager.getInstance().setPigAccount("2cb9b9a3");
         }
         UbtTIMManager.getInstance().setMsgObserve(this);
         UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
@@ -154,7 +152,11 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
             public void onError(int i, String s) {
                 Log.e("setOnUbtTIMConver", s);
                 LoadingDialog.getInstance(AddressBookActivity.this).dismiss();
-                ToastUtils.showShortToast(s);
+                if (AuthLive.getInstance().getCurrentPig()!=null) {
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("小猪未登录");
+                }else{
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定小猪");
+                }
             }
 
             @Override

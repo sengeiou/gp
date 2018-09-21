@@ -289,7 +289,13 @@ public class UbtTIMManager {
         TIMMessage msg=creatElem(data);
         sendTIM(msg);
     }
-    private void sendTIM(TIMMessage msg){
+    public void sendTIM(TIMMessage msg){
+        if (conversation==null){
+            if (onUbtTIMConverListener!=null){
+                onUbtTIMConverListener.onError(0,"TIMConversation 未初始化");
+            }
+            return;
+        }
         conversation.sendMessage(msg,new TIMValueCallBack<TIMMessage>(){
 
             @Override

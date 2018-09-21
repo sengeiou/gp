@@ -40,6 +40,7 @@ public class UBTAuthRepository {
 
             @Override
             public void onSuccess(ThirdPartLoginModule.Response loginResponse) {
+
                 CookieInterceptor.get().setToken(loginResponse.getToken().getToken());
                 CookieInterceptor.get().setExpireAt(loginResponse.getToken().getExpireAt());
                 callback.onSuccess(loginResponse.getUser());

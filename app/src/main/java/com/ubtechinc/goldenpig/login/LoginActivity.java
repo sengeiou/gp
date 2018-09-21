@@ -11,6 +11,7 @@ import android.view.View;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtechinc.commlib.network.NetworkHelper;
 import com.ubtechinc.commlib.utils.ToastUtils;
+import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.main.MainActivity;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseActivity;
@@ -89,6 +90,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         handler = null;
         NetworkHelper.sharedHelper().removeNetworkInductor(mInductor);
     }
+
+    @Override
+    protected int getContentViewId() {
+        return R.layout.activity_login;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -163,6 +170,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             ToastUtils.showShortToast(this,getString(R.string.ubt_wx_unspported));
             return;
         }
+
         mLoginModel.loginWX(LoginActivity.this);
         isLogined=true;
     }

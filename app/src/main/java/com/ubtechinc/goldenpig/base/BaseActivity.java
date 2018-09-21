@@ -4,11 +4,13 @@ package com.ubtechinc.goldenpig.base;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.WindowManager;
 
 import com.ubtechinc.goldenpig.app.ActivityManager;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 
 /**
@@ -19,7 +21,8 @@ import butterknife.ButterKnife;
  * @change     :
  * @changTime  :2018/8/17 17:58
  */
-public class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity {
+    Unbinder unbinder;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +30,9 @@ public class BaseActivity extends AppCompatActivity {
 
         ActivityManager am = ActivityManager.getInstance();
         am.popActivity(this);
-
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE); //防止截屏
+        setContentView(getContentViewId());
+        unbinder=ButterKnife.bind(this);
     }
 
     @Override
@@ -35,6 +40,9 @@ public class BaseActivity extends AppCompatActivity {
         super.onDestroy();
         ActivityManager am = ActivityManager.getInstance();
         am.clearRecord(this);
+        if (unbinder!=null){
+            unbinder.unbind();
+        }
     }
     @Override
     public void onBackPressed() {
@@ -45,7 +53,7 @@ public class BaseActivity extends AppCompatActivity {
     public void showLoadingDialog() {
         LoadingDialog.getInstance(this).show();
     }
-
+    protected abstract int getContentViewId();
     public void dismissLoadDialog() {
         LoadingDialog.dissMiss();
     }

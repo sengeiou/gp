@@ -1,7 +1,13 @@
 package com.ubtechinc.goldenpig.main;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 
@@ -22,18 +28,20 @@ import com.ubtechinc.goldenpig.route.ActivityRoute;
  *@time          :2018/9/15 10:11
  *@change        :
  *@changetime    :2018/9/15 10:11
-*/
+ */
 public class SplashActivity extends BaseActivity {
     private NetworkHelper.NetworkInductor mInductor;
-    private LoginModel mLoginModel =null;
+    private LoginModel mLoginModel = null;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState); requestWindowFeature(Window.FEATURE_NO_TITLE);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         //全屏
-        getWindow().setFlags(WindowManager.LayoutParams. FLAG_FULLSCREEN ,
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        setContentView(R.layout.activity_splash);
+        super.onCreate(savedInstanceState);
+        String m_szAndroidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        Log.i("ANDOIRID", m_szAndroidID + "==" + android.os.Build.SERIAL );
         checkLogin();
     }
     private void checkLogin(){
@@ -62,6 +70,11 @@ public class SplashActivity extends BaseActivity {
 
             @Override
             public void onSuccess() {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 ActivityRoute.toAnotherActivity(SplashActivity.this, MainActivity.class,true);
             }
         });
@@ -84,5 +97,10 @@ public class SplashActivity extends BaseActivity {
             mLoginModel.onCancel();
             mLoginModel.logoutTVS();
         }
+    }
+
+    @Override
+    protected int getContentViewId() {
+        return R.layout.activity_splash;
     }
 }

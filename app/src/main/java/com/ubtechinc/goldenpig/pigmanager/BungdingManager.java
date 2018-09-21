@@ -187,7 +187,7 @@ public class BungdingManager {
                                 mSid = rePlyJson.getString(Constants.SERISAL_NUMBER);
                             }
                             String serailId = mCurrentDevices.getName().replace(Constants.ROBOT_TAG,"");
-                            checkRobotBindState(serailId,mToken,BuildConfig.APP_ID_WX);
+                            checkRobotBindState(serailId,mToken,BuildConfig.APP_ID);
                         }
 
                     }else if (command==PIG_REPLY_NET_STATE){

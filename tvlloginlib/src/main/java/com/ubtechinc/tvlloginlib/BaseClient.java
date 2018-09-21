@@ -61,7 +61,7 @@ public abstract class BaseClient implements AuthorizeListener {
         return proxy.isTokenExist(platform, context);
     }
 
-    public void login(Activity activity) {
+    public void login(Activity activity,String productId,String dsn) {
         Log.i(TAG, "tvs login start platform = " + platform.name());
         proxy.requestLogin(platform, "", "", activity);
     }

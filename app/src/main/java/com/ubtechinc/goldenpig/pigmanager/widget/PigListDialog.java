@@ -92,7 +92,7 @@ public class PigListDialog extends BaseDialog {
         mLecallback = new BluetoothAdapter.LeScanCallback() {
             @Override
             public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
-                final boolean isHasDevice=isHasDevice(device);
+                 boolean isHasDevice=isHasDevice(device);
 
                 if (!isHasDevice && !TextUtils.isEmpty(device.getName())&& device.getName().startsWith(Constants.ROBOT_TAG)){
                     UbtBluetoothDevice ubtBluetoothDevice=new UbtBluetoothDevice();
@@ -116,7 +116,8 @@ public class PigListDialog extends BaseDialog {
         }
         final int devLen=mLeList.size();
         for (int index = 0; index < devLen; index++) {
-            if (mLeList.get(index).getDevice().getAddress().equals(device.getAddress())){
+            if (mLeList.get(index).getDevice().getAddress().equals(device.getAddress())
+                    ||mLeList.get(index).getDevice().getName().equals(device.getName())){
                 return true;
             }
         }

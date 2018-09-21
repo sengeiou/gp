@@ -61,6 +61,7 @@ class UbtBluetoothConnector {
     // 判断是否写入成功
     private volatile OnceResponse onceResponse = new OnceResponse();//记录每一次写入是否成功的变量
     //private Object semaphore = new Object();
+    private volatile int mConnectTime; /// 重连次数
 
     public enum ConnectState {
         INIT, CONNECTING, CONNECTED, DISCOVERING, DISCOVERED, DISCONNECTING, DISCONNECTED,
@@ -283,15 +284,20 @@ class UbtBluetoothConnector {
      * @param msg 消息
      */
     void sendMessage(String msg) {
-        //if (connectState == UbtBluetoothConnector.ConnectState.DISCOVERED) {
+        if (connectState == UbtBluetoothConnector.ConnectState.DISCOVERED) {
             Message message = Message.obtain();
             message.obj = msg;
             message.what = MSG_WRITE_REQUEST;
             lazySetupMessageHandler();
             mMessageHandler.sendMessage(message);
-        /*} else {
+            mConnectTime=0;
+        } else {
             Log.e(TAG, "Illegal State: 还未与机器人建立服务连接...");
-        }*/
+            if (mConnectTime<6){
+                mConnectTime++;
+                connect(mCurrentDevice);
+            }
+        }
     }
 
     void setBleConnectListener(BleConnectListener bleConnectListener) {

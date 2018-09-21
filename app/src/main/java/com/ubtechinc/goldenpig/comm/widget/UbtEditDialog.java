@@ -64,6 +64,13 @@ public class UbtEditDialog extends BaseDialog implements View.OnClickListener{
             mClearEdt.setText(rawTxt);
         }
     }
+    public String getNewEdtTxt(){
+
+        if (mClearEdt!=null){
+            return  mClearEdt.getText().toString();
+        }
+        return "";
+    }
     @Override
     protected void onStart() {
         super.onStart();

@@ -23,6 +23,7 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.utils.NetUtils;
 
 import java.util.HashMap;
 
@@ -170,7 +171,9 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        unbinder.unbind();
+        if (unbinder!=null) {
+            unbinder.unbind();
+        }
     }
     protected  abstract void onNoPig();
     protected  abstract void onNoSetNet();

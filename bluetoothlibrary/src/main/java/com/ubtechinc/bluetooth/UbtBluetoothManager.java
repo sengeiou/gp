@@ -32,7 +32,6 @@ public class UbtBluetoothManager {
     private boolean isFromCodeMao = false; //是否从home页进入
     private volatile BleConnectListener mOuterConnectListener;
     private volatile UbtBluetoothDevice device;
-
     private UbtBluetoothManager(Context context) {
         init(context);
     }

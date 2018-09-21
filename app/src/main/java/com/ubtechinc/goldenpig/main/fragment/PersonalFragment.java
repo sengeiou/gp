@@ -130,7 +130,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
             mNikenameTv=(TextView)getActivity().findViewById(R.id.ubt_tv_me_nikename);
             mNikenameTv.setText(AuthLive.getInstance().getCurrentUser().getNickName());
         }
-
+        mTitle=getActivity().findViewById(R.id.ubt_me_fragment_title);
         mCyanBg=getActivity().findViewById(R.id.ubt_me_normal_bg);
         mToUserInfo = getActivity().findViewById(R.id.ubt_btn_go_login);
         mToUserInfo.setOnClickListener(this);
@@ -167,15 +167,19 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                 ActivityRoute.toAnotherActivity(getActivity(), UserInfoActivity.class, false);
                 break;
             case R.id.ubt_btn_person_set_wifi:
-                HashMap<String,Boolean> params=new HashMap<>();
-                params.put("back",true);
-                params.put("skip",false);
-                ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class,params,
-                        false);
+                if (AuthLive.getInstance().getCurrentPig()!=null) {
+                    HashMap<String, Boolean> params = new HashMap<>();
+                    params.put("back", true);
+                    params.put("skip", false);
+                    ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class, params,
+                            false);
+                }
                 break;
             case R.id.ubt_btn_person_hotspot:
-                ActivityRoute.toAnotherActivity(getActivity(), SetHotSpotActivity.class,
-                        false);
+                if (AuthLive.getInstance().getCurrentPig()!=null) {
+                    ActivityRoute.toAnotherActivity(getActivity(), SetHotSpotActivity.class,
+                            false);
+                }
                 break;
             case R.id.ubt_btn_person_feedback:
                 ActivityRoute.toAnotherActivity(getActivity(), FeedBackActivity.class, false);

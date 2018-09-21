@@ -40,7 +40,11 @@
         </activity>
 
 
-
+        <provider
+            android:name="qrom.component.wup.runInfo.QRomWupProvider"
+            android:exported="true"
+            android:process=":tcm_service"
+            android:authorities="com.ubtechinc.goldenpig.wup.QRomProvider" />
          <activity android:name=".main.MainActivity"
             android:screenOrientation="portrait"
             android:launchMode="singleTask"
@@ -88,6 +92,13 @@
             android:screenOrientation="portrait"
             />
         <activity android:name=".pigmanager.hotspot.SetHotSpotActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".pigmanager.mypig.PigLastVersionActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".pigmanager.mypig.PigMemberActivity" />
+        <activity android:name=".about.PrivacyPolicyActivity"
             android:screenOrientation="portrait"
             />
     </application>

@@ -88,7 +88,11 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
         UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
             @Override
             public void onError(int i, String s) {
-                ToastUtils.showShortToast(s);
+                if (AuthLive.getInstance().getCurrentPig()!=null) {
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("小猪未登录");
+                }else{
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定小猪");
+                }
                 LoadingDialog.getInstance(AddAndSetContactActivity.this).dismiss();
             }
 

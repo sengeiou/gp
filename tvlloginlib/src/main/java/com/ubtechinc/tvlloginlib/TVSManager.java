@@ -56,16 +56,16 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
         proxy.setOwnActivity(activity);
     }
 
-    public void wxLogin(Activity activity, TVSLoginListener listener) {
+    public void wxLogin(Activity activity, String pid,String dns,TVSLoginListener listener) {
         addLoginListener(listener);
-        wxClient.login(activity);
+        wxClient.login(activity,  pid,  dns);
     }
 
-    public void qqLogin(Activity activity, TVSLoginListener listener) {
+    public void qqLogin(Activity activity, String pid,String dns,TVSLoginListener listener) {
         proxy.setAuthorizeListener(this);
         qqClient.logout(activity);
         addLoginListener(listener);
-        qqClient.login(activity);
+        qqClient.login(activity,pid,dns);
     }
 
     public void refreshLoginToken(TVSLoginListener listener) {

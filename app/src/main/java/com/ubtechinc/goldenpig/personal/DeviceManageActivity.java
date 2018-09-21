@@ -8,6 +8,7 @@ import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewTv;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
 import com.ubtechinc.goldenpig.personal.management.AddressBookActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.MyPigActivity;
+import com.ubtechinc.goldenpig.pigmanager.mypig.PigMemberActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 
 import butterknife.BindView;
@@ -44,6 +45,7 @@ public class DeviceManageActivity extends BaseNewActivity {
             case R.id.rl_pairing:
                 break;
             case R.id.rl_member_group:
+                ActivityRoute.toAnotherActivity(this, PigMemberActivity.class,false);
                 break;
             case R.id.rl_addressbook:
                 ActivityRoute.toAnotherActivity(DeviceManageActivity.this, AddressBookActivity

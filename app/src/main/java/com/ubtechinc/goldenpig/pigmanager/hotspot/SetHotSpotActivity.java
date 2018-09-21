@@ -3,13 +3,31 @@ package com.ubtechinc.goldenpig.pigmanager.hotspot;
 import android.os.Binder;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
+import android.util.Log;
 import android.view.View;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.tencent.TIMCustomElem;
+import com.tencent.TIMMessage;
+import com.ubt.imlibv2.bean.ContactsProtoBuilder;
+import com.ubt.imlibv2.bean.UbtTIMManager;
+import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
+import com.ubt.improtolib.GPResponse;
+import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.commlib.view.UbtSubTxtButton;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
+import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
 import com.ubtechinc.goldenpig.comm.widget.UbtEditDialog;
+import com.ubtechinc.goldenpig.login.observable.AuthLive;
+import com.ubtechinc.goldenpig.personal.management.AddressBookActivity;
+import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
+import com.ubtrobot.gold.UserContacts;
+
+import java.util.Observable;
+import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,13 +41,15 @@ import butterknife.OnClick;
  *@change        :
  *@changetime    :2018/9/18 11:10
 */
-public class SetHotSpotActivity extends BaseToolBarActivity {
+public class SetHotSpotActivity extends BaseToolBarActivity implements Observer {
     @BindView(R.id.ubt_btn_hotspot_name)
     UbtSubTxtButton mHotspotNameBtn;
     @BindView(R.id.ubt_btn_hotspot_pwd)
     UbtSubTxtButton mHotspotPwdBtn;
 
     private UbtEditDialog dialog;
+
+    private String hotSpotName,hotSpotPwd;
     @Override
     protected int getConentView() {
         return R.layout.activity_set_wifi_hotspot;
@@ -40,6 +60,28 @@ public class SetHotSpotActivity extends BaseToolBarActivity {
         setTitleBack(true);
         setToolBarTitle(R.string.ubt_device_manger);
         ButterKnife.bind(this);
+        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+        if (pigInfo != null) {
+            UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
+        }
+        UbtTIMManager.getInstance().setMsgObserve(this);
+        UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
+            @Override
+            public void onError(int i, String s) {
+                Log.e("setOnUbtTIMConver", s);
+                LoadingDialog.getInstance(SetHotSpotActivity.this).dismiss();
+                if (AuthLive.getInstance().getCurrentPig()!=null) {
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("小猪未登录");
+                }else{
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定小猪");
+                }
+            }
+
+            @Override
+            public void onSuccess() {
+            }
+        });
+        UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg( ContactsProtoBuilder.getHotSpot()));
     }
     @OnClick({R.id.ubt_btn_hotspot_pwd,R.id.ubt_btn_hotspot_name})
     public void OnClick(View view){
@@ -61,9 +103,8 @@ public class SetHotSpotActivity extends BaseToolBarActivity {
         dialog.setOnEnterClickListener(new UbtEditDialog.OnEnterClickListener() {
             @Override
             public void onEnterClick(View view, String newStr) {
-                if (mHotspotNameBtn!=null) {
-                    mHotspotNameBtn.setRightText(newStr);
-                }
+                hotSpotName=dialog.getNewEdtTxt();
+                sendUpdateHotSpot();
             }
         });
         dialog.show();
@@ -78,16 +119,91 @@ public class SetHotSpotActivity extends BaseToolBarActivity {
         dialog.setOnEnterClickListener(new UbtEditDialog.OnEnterClickListener() {
             @Override
             public void onEnterClick(View view, String newStr) {
-                if (mHotspotPwdBtn!=null){
-                    mHotspotPwdBtn.setRightText(newStr);
-                }
-
+                hotSpotPwd=dialog.getNewEdtTxt();
+                sendUpdateHotSpot();
             }
         });
         dialog.show();
     }
+
     private void initDialog(){
         dialog=new UbtEditDialog(this);
 
+    }
+    private void sendUpdateHotSpot(){
+        TIMMessage message=ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.updateHotSpot(hotSpotName,hotSpotPwd));
+        UbtTIMManager.getInstance().sendTIM(message);
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UbtTIMManager.getInstance().deleteMsgObserve(this);
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        TIMMessage msg = (TIMMessage) arg;
+        for (int i = 0; i < msg.getElementCount(); ++i) {
+            TIMCustomElem elem = (TIMCustomElem) msg.getElement(i);
+            try {
+                dealMsg(elem.getData());
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+                ToastUtils.showShortToast("数据异常，请重试");
+
+            }
+        }
+    }
+    private void dealMsg(Object arg) throws InvalidProtocolBufferException {
+        ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage
+                .parseFrom((byte[]) arg);
+        String action = msg.getHeader().getAction();
+        switch (action){
+            case ContactsProtoBuilder.GET_HOTSPOT:
+                unPackHotSpot(msg);
+                break;
+            case ContactsProtoBuilder.UPAT_HOTSPOT:
+                unPackRepsponse(msg);
+                break;
+        }
+    }
+
+    private void unPackHotSpot(ChannelMessageContainer.ChannelMessage msg){
+        UserContacts.AccountRequest request= null;
+        try {
+            request = msg.getPayload().unpack(UserContacts.AccountRequest.class);
+            if (request.getRequest()){
+                final String name=request.getSsid();
+                final String pwd=request.getPassword();
+                if (mHotspotNameBtn!=null){
+                    mHotspotNameBtn.setRightText(name);
+                }
+                hotSpotName=name;
+                if (mHotspotPwdBtn!=null){
+                    mHotspotPwdBtn.setRightText(pwd);
+                }
+                hotSpotPwd=pwd;
+            }else {
+                ToastUtils.showLongToast("获取热点信息失败");
+            }
+        } catch (InvalidProtocolBufferException e) {
+            e.printStackTrace();
+            ToastUtils.showLongToast("获取热点信息失败");
+        }
+
+    }
+
+    private void unPackRepsponse(ChannelMessageContainer.ChannelMessage msg){
+        try {
+            final boolean result=msg.getPayload().unpack(GPResponse.Response.class).getResult();
+            if (result){
+                ToastUtils.showLongToast("修改成功");
+            }else {
+                ToastUtils.showLongToast("修改失败");
+            }
+        } catch (InvalidProtocolBufferException e) {
+            e.printStackTrace();
+            ToastUtils.showLongToast("修改失败");
+        }
     }
 }
