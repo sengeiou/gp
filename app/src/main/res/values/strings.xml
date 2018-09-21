@@ -94,5 +94,6 @@
     <string name="ubt_trans_admin">转让管理员</string>
     <string name="ubt_delete">删除</string>
     <string name="ubt_add_member">添加成员</string>
+    <string name="ubt_addmember_desc">·请让需绑定此音箱的用户，打开小猪APP-我的-设备管理-加入成员组：</string>
 
 </resources>

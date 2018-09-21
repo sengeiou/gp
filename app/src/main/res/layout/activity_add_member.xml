@@ -17,4 +17,26 @@
         android:layout_marginTop="@dimen/dp_20"
         android:background="@color/ubt_loading_dialog_bg"
         android:layout_height="@dimen/ubt_1px"/>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textSize="@dimen/sp_16"
+                android:textColor="@color/ubt_tips_txt_color"
+                android:layout_width="match_parent"
+                android:text="@string/ubt_add_member"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/ubt_tv_desc"
+                android:textSize="@dimen/sp_12"
+                android:textColor="@color/ubt_skip_txt_unenable_color"
+                android:text="@string/ubt_addmember_desc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

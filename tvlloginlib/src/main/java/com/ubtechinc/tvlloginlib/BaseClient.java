@@ -194,6 +194,7 @@ public abstract class BaseClient implements AuthorizeListener {
         String type = LoginInfo.LoginType.get(platform.ordinal());
         loginInfo.setLoginType(type);
         loginInfo.setOpenId(loginInfoManager.openID);
+        loginInfo.setTvsId(loginInfoManager.tvsID);
         return loginInfo;
     }
 

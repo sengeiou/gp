@@ -22,7 +22,7 @@ public class LoginInfo {
     private String loginType;
     private String miniTvsId;
     private String openId;
-
+    private String tvsId;
     public String getAccessToken() {
         return accessToken;
     }
@@ -61,5 +61,13 @@ public class LoginInfo {
 
     public void setOpenId(String openId) {
         this.openId = openId;
+    }
+
+    public String getTvsId() {
+        return tvsId;
+    }
+
+    public void setTvsId(String tvsId) {
+        this.tvsId = tvsId;
     }
 }
