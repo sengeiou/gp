@@ -73,6 +73,7 @@
     <string name="ubt_unbing_tips">解绑后，将不能通过app使用此音箱</string>
     <string name="ubt_pig_serialno">音响序列号：%1$s</string>
     <string name="ubt_pig_version_format">音箱当前版本：%1$s</string>
+    <string name="alarm">闹钟</string>
     <string name="ubt_ubbind_success">成功解除绑定</string>
     <string name="ubt_transfer_admin_tips">你是管理员，解绑前请先转让管理员权限</string>
     <string name="ubt_pig_unbing">音箱未配绑定</string>
@@ -96,4 +97,5 @@
     <string name="ubt_add_member">添加成员</string>
     <string name="ubt_addmember_desc">·请让需绑定此音箱的用户，打开小猪APP-我的-设备管理-加入成员组：</string>
 
+    <string name="record_empty_prompt">没有最近通话</string>
 </resources>

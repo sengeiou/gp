@@ -49,6 +49,10 @@
             android:screenOrientation="portrait"
             android:launchMode="singleTask"
             />
+        <activity
+            android:name=".main.MainActivity"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
         <activity android:name=".pigmanager.SearchPigActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
@@ -80,14 +84,26 @@
         <activity
             android:name=".personal.management.AddAndSetContactActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".login.LoginActivity"
-            android:screenOrientation="portrait"
+        <activity
+            android:name=".login.LoginActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pigmanager.mypig.MyPigActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".personal.alarm.AlarmListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".personal.alarm.AddAlarmActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".personal.alarm.SetRepeatActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pigmanager.mypig.DeviceUpdateActivity"
+            android:screenOrientation="portrait" />
             />
-        <activity android:name=".pigmanager.mypig.MyPigActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".pigmanager.mypig.DeviceUpdateActivity"
-            android:screenOrientation="portrait"/>
         <activity android:name=".pigmanager.mypig.TransferAdminActivity"
             android:screenOrientation="portrait"
             />
@@ -99,6 +115,12 @@
             />
         <activity android:name=".pigmanager.mypig.PigMemberActivity" />
         <activity android:name=".about.PrivacyPolicyActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".pigmanager.RecordActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".pigmanager.EditRecordActivity"
             android:screenOrientation="portrait"
             />
     </application>

@@ -1,0 +1,16 @@
+apply plugin: 'com.android.library'
+
+android {
+
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 28
+    }
+}
+
+dependencies {
+    compile rootProject.ext.deps.recyclerView
+    compile 'com.yanzhenjie:loading:1.0.2'
+}

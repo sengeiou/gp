@@ -28,6 +28,7 @@ import com.ubtechinc.goldenpig.feedback.FeedBackActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.me.UserInfoActivity;
 import com.ubtechinc.goldenpig.personal.DeviceManageActivity;
+import com.ubtechinc.goldenpig.personal.alarm.AlarmListActivity;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.hotspot.SetHotSpotActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
@@ -56,6 +57,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
     private UbtSubTxtButton mAboutBtn; //关于页按钮
     private ImageView mPohtoImg;
     private TextView mNikenameTv;
+
     private TextView mTitle;
     private View mCyanBg;  /// 蓝色渐进色背景板
     public PersonalFragment() {
@@ -118,8 +120,8 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
 
 
     private void inits() {
-        if (AuthLive.getInstance().getCurrentUser()!=null){
-            mPohtoImg=(ImageView)getActivity().findViewById(R.id.ubt_img_me_photo);
+        if (AuthLive.getInstance().getCurrentUser() != null) {
+            mPohtoImg = (ImageView) getActivity().findViewById(R.id.ubt_img_me_photo);
             Glide.with(getActivity())
                     .load(AuthLive.getInstance().getCurrentUser().getUserImage())
                     .asBitmap()
@@ -127,7 +129,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                     .transform(new GlideCircleTransform(getActivity()))
                     .into(mPohtoImg);
 
-            mNikenameTv=(TextView)getActivity().findViewById(R.id.ubt_tv_me_nikename);
+            mNikenameTv = (TextView) getActivity().findViewById(R.id.ubt_tv_me_nikename);
             mNikenameTv.setText(AuthLive.getInstance().getCurrentUser().getNickName());
         }
         mTitle=getActivity().findViewById(R.id.ubt_me_fragment_title);
@@ -143,6 +145,9 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
 
         mAboutBtn = (UbtSubTxtButton) getActivity().findViewById(R.id.ubt_btn_person_about);
         mAboutBtn.setOnClickListener(this);
+
+        getActivity().findViewById(R.id.ubt_btn_person_clock).setOnClickListener(this);
+
         try {
             String versionName = String.format(getString(R.string.ubt_version_format),
                     ContextUtils.getVerName(getContext()));
@@ -167,13 +172,12 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                 ActivityRoute.toAnotherActivity(getActivity(), UserInfoActivity.class, false);
                 break;
             case R.id.ubt_btn_person_set_wifi:
-                if (AuthLive.getInstance().getCurrentPig()!=null) {
-                    HashMap<String, Boolean> params = new HashMap<>();
-                    params.put("back", true);
-                    params.put("skip", false);
-                    ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class, params,
-                            false);
-                }
+                HashMap<String, Boolean> params = new HashMap<>();
+                params.put("back", true);
+                params.put("skip", false);
+                ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class,
+                        params,
+                        false);
                 break;
             case R.id.ubt_btn_person_hotspot:
                 if (AuthLive.getInstance().getCurrentPig()!=null) {
@@ -186,6 +190,9 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.ubt_btn_person_about:
                 ActivityRoute.toAnotherActivity(getActivity(), UbtAboutActivtiy.class, false);
+                break;
+            case R.id.ubt_btn_person_clock:
+                ActivityRoute.toAnotherActivity(getActivity(), AlarmListActivity.class, false);
                 break;
         }
     }

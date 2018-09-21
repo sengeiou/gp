@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.tencent.TIMCustomElem;
+import com.tencent.TIMMessage;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubt.improtolib.GPResponse;
@@ -307,11 +309,15 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
     public void update(Observable o, Object arg) {
         LogUtils.d("dsadsadaa");
         LoadingDialog.getInstance(AddAndSetContactActivity.this).dismiss();
-        try {
-            dealMsg(arg);
-        } catch (InvalidProtocolBufferException e) {
-            e.printStackTrace();
-            ToastUtils.showShortToast("请求异常，请重试");
+        TIMMessage msg = (TIMMessage) arg;
+        for (int i = 0; i < msg.getElementCount(); ++i) {
+            TIMCustomElem elem = (TIMCustomElem) msg.getElement(i);
+            try {
+                dealMsg(elem.getData());
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+                ToastUtils.showShortToast("数据异常，请重试");
+            }
         }
     }
 

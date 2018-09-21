@@ -1765,4 +1765,16 @@ public class TimeUtils {
     private static long toYears(long date) {
         return toMonths(date) / 365L;
     }
+
+    public static String format2(String time) {
+        String result = "";
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date date = format.parse(time);
+            result = format.format(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

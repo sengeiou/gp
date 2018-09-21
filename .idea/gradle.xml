@@ -13,9 +13,11 @@
             <option value="$PROJECT_DIR$/commlib" />
             <option value="$PROJECT_DIR$/imlibv2" />
             <option value="$PROJECT_DIR$/improtolib" />
+            <option value="$PROJECT_DIR$/loopview" />
             <option value="$PROJECT_DIR$/netutils" />
             <option value="$PROJECT_DIR$/protocollibrary" />
             <option value="$PROJECT_DIR$/protollib" />
+            <option value="$PROJECT_DIR$/recyclerview-swipe" />
             <option value="$PROJECT_DIR$/servicemodel" />
             <option value="$PROJECT_DIR$/tvlloginlib" />
             <option value="$PROJECT_DIR$/utilcode" />
