@@ -22,11 +22,14 @@ import com.ubt.imlibv2.bean.event.MessageEvent;
 import com.ubt.imlibv2.bean.listener.OnPigOnlineStateListener;
 import com.ubt.imlibv2.bean.listener.OnTIMLoginListener;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
+import com.ubt.improtolib.UserContacts;
+import com.ubt.improtolib.UserRecords;
 import com.ubtechinc.commlib.log.UbtLogger;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.Observer;
 import java.util.concurrent.ArrayBlockingQueue;
 
@@ -337,4 +340,15 @@ public class UbtTIMManager {
         void onSuccess();
     }
 
+    public void queryRecord() {
+        byte[] data = ContactsProtoBuilder.getQueryRecord();
+        TIMMessage msg=creatElem(data);
+        sendTIM(msg);
+    }
+
+    public void  deleteRecord(List<UserRecords.Record> list) {
+        byte[] data = ContactsProtoBuilder.getDeleteRecordInfo(list);
+        TIMMessage msg=creatElem(data);
+        sendTIM(msg);
+    }
 }

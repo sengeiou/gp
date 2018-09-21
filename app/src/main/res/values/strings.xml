@@ -82,4 +82,5 @@
     <string name="ubt_click_bind">点击绑定</string>
     <string name="ubt_hotspot_name">热点名称</string>
 
+    <string name="record_empty_prompt">没有最近通话</string>
 </resources>

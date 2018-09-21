@@ -1,4 +1,4 @@
-package com.ubtechinc.goldenpig.personal.management;
+package com.ubtechinc.goldenpig.pigmanager;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,15 +23,16 @@ import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubt.improtolib.GPResponse;
 import com.ubt.improtolib.UserContacts;
+import com.ubt.improtolib.UserRecords;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
-import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewImg;
+import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewTv;
+import com.ubtechinc.goldenpig.base.BaseNewActivity;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
-import com.ubtechinc.goldenpig.model.AddressBookmodel;
-import com.ubtechinc.goldenpig.mvp.MVPBaseActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.pigmanager.bean.RecordModel;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.StateView;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
@@ -49,21 +51,18 @@ import java.util.Observer;
 
 import butterknife.BindView;
 
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CONTACT_CHECK_SUCCESS;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DELETE_RECORD_SUCCESS;
 
-public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.View,
-        AddressBookPrestener> implements OnRefreshListener, AddressBookContract.View, Observer {
+public class RecordActivity extends BaseNewActivity implements Observer {
     @BindView(R.id.rl_titlebar)
-    SecondTitleBarViewImg rl_titlebar;
+    SecondTitleBarViewTv rl_titlebar;
     @BindView(R.id.recycler)
     SwipeMenuRecyclerView recycler;
-    @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
-    AddressBookAdapter adapter;
-    private ArrayList<AddressBookmodel> mList;
+    RecordAdapter adapter;
+    private ArrayList<RecordModel> mList;
     public int deletePosition = 0;
     /**
-     * 先拉取到数据，添加联系人时要在app端作对比后再提交给音箱
+     *
      */
     private Boolean hasLoadMsg = false;
 
@@ -82,7 +81,10 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
             if (msg.what == 1) {
                 ToastUtils.showShortToast("请求超时，请重试");
                 if (mWeakReference.get() != null) {
-                    ((AddressBookActivity) mWeakReference.get()).refreshLayout.finishRefresh(true);
+                    LoadingDialog.getInstance(mWeakReference.get()).dismiss();
+                    if (mList.size() == 0) {
+                        mStateView.showRetry();
+                    }
                 }
             }
         }
@@ -90,7 +92,7 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
 
     @Override
     protected int getContentViewId() {
-        return R.layout.activity_address_book;
+        return R.layout.activity_record;
     }
 
     @Override
@@ -106,38 +108,32 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
         mStateView.setOnRetryClickListener(new StateView.OnRetryClickListener() {
             @Override
             public void onRetryClick() {
-                refreshLayout.autoRefresh();
+
             }
         });
-        rl_titlebar.setTitleText(getString(R.string.address_book));
+        rl_titlebar.setTitleText(getString(R.string.ubt_recent_calls));
         rl_titlebar.setLeftOnclickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
-        rl_titlebar.setIvRight(R.drawable.ic_add);
+        rl_titlebar.setTvRightName("编辑");
+        rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color
+                .ubt_tab_btn_txt_checked_color));
         rl_titlebar.setRightOnclickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                if (!hasLoadMsg) {
-//                    ToastUtils.showShortToast("请先加载联系人成功后再添加");
-//                    return;
-//                }
-                if (mList.size() < 10) {
-                    Intent it = new Intent(AddressBookActivity.this, AddAndSetContactActivity
-                            .class);
+                if (mList.size() > 0) {
+                    Intent it = new Intent(RecordActivity.this, EditRecordActivity.class);
                     it.putParcelableArrayListExtra("list", mList);
                     startActivity(it);
                 } else {
-                    ToastUtils.showShortToast(getString(R.string.contact_limit));
+                    ToastUtils.showShortToast(getString(R.string.record_empty_prompt));
                 }
             }
         });
-        refreshLayout.setEnableAutoLoadMore(false);
-        refreshLayout.setOnRefreshListener(this);
         mList = new ArrayList<>();
-        // adapter = new AddressBookAdapter(this, mList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recycler.setLayoutManager(linearLayoutManager);
@@ -149,7 +145,7 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
         recycler.addItemDecoration(divider);
         recycler.setSwipeMenuCreator(swipeMenuCreator);
         recycler.setSwipeMenuItemClickListener(mMenuItemClickListener);
-        adapter = new AddressBookAdapter(this, mList);
+        adapter = new RecordAdapter(this, mList);
         recycler.setAdapter(adapter);
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null) {
@@ -162,7 +158,7 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
             @Override
             public void onError(int i, String s) {
                 Log.e("setOnUbtTIMConver", s);
-                LoadingDialog.getInstance(AddressBookActivity.this).dismiss();
+                LoadingDialog.getInstance(RecordActivity.this).dismiss();
                 ToastUtils.showShortToast(s);
             }
 
@@ -171,41 +167,35 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
                 Log.e("setOnUbtTIMConver", "sss");
             }
         });
-        refreshLayout.autoRefresh();
+        onRefresh();
     }
 
-    @Override
-    public void onRefresh(RefreshLayout refreshLayout) {
+    public void onRefresh() {
+        LoadingDialog.getInstance(this).setTimeout(20).setShowToast(true).show();
         if (mHandler.hasMessages(1)) {
             mHandler.removeMessages(1);
         }
         mHandler.sendEmptyMessageDelayed(1, 20 * 1000);// 20s 秒后检查加载框是否还在
-        UbtTIMManager.getInstance().queryUser();
+        UbtTIMManager.getInstance().queryRecord();
+//        mHandler.postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+//                List<RecordModel> ss = new ArrayList<>();
+//                for (int j = 0; j < 10; j++) {
+//                    RecordModel mo = new RecordModel();
+//                    mo.name = "测试" + j;
+//                    mo.number = "15911234567";
+//                    mo.id = j;
+//                    mo.type = j % 4;
+//                    mo.dateLong = System.currentTimeMillis() - 1000 * j * 60;
+//                    mo.duration = j % 5;
+//                    ss.add(mo);
+//                }
+//                onRefreshSuccess(ss);
+//            }
+//        }, 2000);
     }
 
-    @Override
-    public void onRefreshSuccess(List<AddressBookmodel> list) {
-        if (mHandler.hasMessages(1)) {
-            mHandler.removeMessages(1);
-        }
-        hasLoadMsg = true;
-        refreshLayout.finishRefresh(true);
-        mList.clear();
-        mList.addAll(list);
-        if (mList.size() >= 10) {
-            AddressBookmodel ab = new AddressBookmodel();
-            ab.type = 1;
-            mList.add(ab);
-        }
-        if (mList.size() == 0) {
-            mStateView.showEmpty();
-        } else {
-            mStateView.showContent();
-        }
-        adapter.notifyDataSetChanged();
-    }
-
-    @Override
     public void onError(String str) {
         hasLoadMsg = false;
         ToastUtils.showShortToast(str);
@@ -216,7 +206,6 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
         }
     }
 
-    @Override
     public Handler getHandler() {
         return mHandler;
     }
@@ -231,23 +220,13 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
                 return;
             }
             int width = getResources().getDimensionPixelSize(R.dimen.dp_65);
-
             // 1. MATCH_PARENT 自适应高度，保持和Item一样高;
             // 2. 指定具体的高，比如80;
             // 3. WRAP_CONTENT，自身高度，不推荐;
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
             // 添加右侧的，如果不添加，则右侧不会出现菜单。
             {
-                SwipeMenuItem addItem = new SwipeMenuItem(AddressBookActivity.this)
-                        .setBackgroundColor(getResources().getColor(R.color
-                                .ubt_tab_btn_txt_checked_color))
-                        .setText("编辑")
-                        .setTextColor(Color.WHITE)
-                        .setTextSize(16)
-                        .setWidth(width)
-                        .setHeight(height);
-                swipeRightMenu.addMenuItem(addItem); // 添加菜单到右侧。
-                SwipeMenuItem deleteItem = new SwipeMenuItem(AddressBookActivity.this)
+                SwipeMenuItem deleteItem = new SwipeMenuItem(RecordActivity.this)
                         .setBackgroundColor(getResources().getColor(R.color
                                 .ubt_dialog_btn_txt_color))
                         .setText("删除")
@@ -273,17 +252,18 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
             int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
             if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
                 if (menuPosition == 0) {
-                    Intent it = new Intent(AddressBookActivity.this, AddAndSetContactActivity
-                            .class);
-                    it.putParcelableArrayListExtra("list", mList);
-                    it.putExtra("type", 1);
-                    it.putExtra("position", adapterPosition);
-                    startActivity(it);
-                } else if (menuPosition == 1) {
-                    UbtTIMManager.getInstance().deleteUser(mList.get(adapterPosition).name, mList
-                            .get(adapterPosition).phone, mList.get(adapterPosition).id + "");
+                    UserRecords.Record.Builder recordBuild =  UserRecords.Record.newBuilder();
+                    recordBuild.setName(mList.get(adapterPosition).name);
+                    recordBuild.setNumber(mList.get(adapterPosition).number);
+                    recordBuild.setDateLong(mList.get(adapterPosition).dateLong);
+                    recordBuild.setDuration(mList.get(adapterPosition).duration);
+                    recordBuild.setType(mList.get(adapterPosition).type);
+                    recordBuild.setId(mList.get(adapterPosition).id);
+                    List<UserRecords.Record> list = new ArrayList();
+                    list.add(recordBuild.build());
+                    UbtTIMManager.getInstance().deleteRecord(list);
                     deletePosition = adapterPosition;
-                    LoadingDialog.getInstance(AddressBookActivity.this).setTimeout(20)
+                    LoadingDialog.getInstance(RecordActivity.this).setTimeout(20)
                             .setShowToast(true).show();
                 }
             }
@@ -308,7 +288,7 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
                 ToastUtils.showShortToast("数据异常，请重试");
-                refreshLayout.finishRefresh(true);
+                LoadingDialog.getInstance(RecordActivity.this).dismiss();
             }
         }
     }
@@ -322,26 +302,25 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
                 .parseFrom((byte[]) arg);
         String action = msg.getHeader().getAction();
         switch (action) {
-            case "/im/mail/query":
-                List<UserContacts.User> list = msg.getPayload().unpack(UserContacts.UserContact
-                        .class).getUserList();
-                List<AddressBookmodel> ss = new ArrayList<>();
+            case "/im/record/query":
+                List<UserRecords.Record> list = msg.getPayload().unpack(UserRecords.UserRecord
+                        .class).getRecordList();
+                List<RecordModel> ss = new ArrayList<>();
                 for (int j = 0; j < list.size(); j++) {
-                    AddressBookmodel mo = new AddressBookmodel();
+                    RecordModel mo = new RecordModel();
                     mo.name = list.get(j).getName();
-                    mo.phone = list.get(j).getNumber();
+                    mo.number = list.get(j).getNumber();
                     mo.id = list.get(j).getId();
+                    mo.type = list.get(j).getType();
+                    mo.dateLong = list.get(j).getDateLong() * 1000;
+                    mo.duration = list.get(j).getDuration();
                     ss.add(mo);
                 }
                 onRefreshSuccess(ss);
                 break;
-            case "/im/mail/add":
-                msg.getPayload().unpack(GPResponse.Response.class).getResult();
-                break;
-
-            case "/im/mail/delete":
+            case "/im/record/delete":
                 Boolean flag = msg.getPayload().unpack(GPResponse.Response.class).getResult();
-                LoadingDialog.getInstance(AddressBookActivity.this).dismiss();
+                LoadingDialog.getInstance(RecordActivity.this).dismiss();
                 if (flag) {
                     mList.remove(deletePosition);
                     try {
@@ -352,23 +331,39 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
                     }
                     if (mList.size() == 0) {
                         mStateView.showEmpty();
+                        mStateView.setEmptyViewMSG("无最近通话");
                     }
                     adapter.notifyDataSetChanged();
                 } else {
                     ToastUtils.showShortToast("删除失败，请重试");
                 }
                 break;
-            case "/im/mail/update":
-                msg.getPayload().unpack(GPResponse.Response.class).getResult();
-                break;
         }
     }
 
     @Override
-    protected void onReceiveStickyEvent(Event event) {
-        super.onReceiveStickyEvent(event);
-        if (event.getCode() == CONTACT_CHECK_SUCCESS) {
-            refreshLayout.autoRefresh();
+    protected void onReceiveEvent(Event event) {
+        super.onReceiveEvent(event);
+        if (event.getCode() == DELETE_RECORD_SUCCESS) {
+            onRefresh();
         }
     }
+
+    public void onRefreshSuccess(List<RecordModel> list) {
+        if (mHandler.hasMessages(1)) {
+            mHandler.removeMessages(1);
+        }
+        LoadingDialog.getInstance(this).dismiss();
+        hasLoadMsg = true;
+        mList.clear();
+        mList.addAll(list);
+        if (mList.size() == 0) {
+            mStateView.showEmpty();
+            mStateView.setEmptyViewMSG("无最近通话");
+        } else {
+            mStateView.showContent();
+        }
+        adapter.notifyDataSetChanged();
+    }
+
 }

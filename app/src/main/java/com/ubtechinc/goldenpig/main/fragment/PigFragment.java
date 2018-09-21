@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseFragment;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
+import com.ubtechinc.goldenpig.pigmanager.RecordActivity;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 
@@ -74,11 +75,14 @@ public class PigFragment extends BaseFragment{
 
     }
 
-    @OnClick({R.id.ubt_bind_tv})
+    @OnClick({R.id.ubt_bind_tv,R.id.ll_record})
     public void Onclick(View view){
         switch (view.getId()){
             case R.id.ubt_bind_tv:
                 ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class,false);
+                break;
+            case R.id.ll_record:
+                ActivityRoute.toAnotherActivity(getActivity(), RecordActivity.class,false);
                 break;
         }
     }

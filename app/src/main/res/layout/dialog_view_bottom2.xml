@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/ubt_transparent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_delete"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_52"
+        android:background="@drawable/btn_bg_no_corner_white"
+        android:gravity="center"
+        android:text="删除所选最近通话"
+        android:textColor="@color/ubt_dialog_btn_txt_color"
+        android:textSize="@dimen/sp_20" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="10dp" />
+
+    <TextView
+        android:id="@+id/tv_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_52"
+        android:background="@drawable/btn_bg_no_corner_white"
+        android:gravity="center"
+        android:text="取消"
+        android:textColor="@color/ubt_tips_txt_color"
+        android:textSize="@dimen/sp_20" />
+
+</LinearLayout>

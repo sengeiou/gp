@@ -44,13 +44,6 @@
             android:name=".main.MainActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".pigmanager.SearchPigActivity"
-
-         <activity android:name=".main.MainActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask"
-            />
         <activity android:name=".pigmanager.SearchPigActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
@@ -102,14 +95,16 @@
             android:name=".pigmanager.mypig.DeviceUpdateActivity"
             android:screenOrientation="portrait" />
             />
-        <activity android:name=".pigmanager.mypig.MyPigActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".pigmanager.mypig.DeviceUpdateActivity"
-            android:screenOrientation="portrait"/>
         <activity android:name=".pigmanager.mypig.TransferAdminActivity"
             android:screenOrientation="portrait"
             />
         <activity android:name=".pigmanager.hotspot.SetHotSpotActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".pigmanager.RecordActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".pigmanager.EditRecordActivity"
             android:screenOrientation="portrait"
             />
     </application>

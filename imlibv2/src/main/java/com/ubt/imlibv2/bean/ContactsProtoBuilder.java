@@ -2,7 +2,10 @@ package com.ubt.imlibv2.bean;
 
 import com.google.protobuf.Any;
 import com.ubt.improtolib.UserContacts;
+import com.ubt.improtolib.UserRecords;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
+
+import java.util.List;
 
 
 public class ContactsProtoBuilder {
@@ -13,7 +16,8 @@ public class ContactsProtoBuilder {
 */
     public static byte[] getAddContactsInfo(String name, String number) {
 
-        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction("/im/mail/add").setTime(System.currentTimeMillis()).build();
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder()
+                .setAction("/im/mail/add").setTime(System.currentTimeMillis()).build();
         UserContacts.UserContact.Builder userContactBuilder = UserContacts.UserContact.newBuilder();
 
         UserContacts.User.Builder builder = UserContacts.User.newBuilder();
@@ -23,35 +27,19 @@ public class ContactsProtoBuilder {
         UserContacts.User user = builder.build();
         userContactBuilder.addUser(user);
 
-        UserContacts.UserContact contact=userContactBuilder.build();
-        ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer.ChannelMessage.newBuilder()
+        UserContacts.UserContact contact = userContactBuilder.build();
+        ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer
+                .ChannelMessage.newBuilder()
                 .setHeader(header)
                 .setPayload(Any.pack(contact))
                 .build();
 
         return channelMessage.toByteArray();
     }
-    public static byte[] getUpdateContactsInfo(String name, String number,String key) {
-        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction("/im/mail/update").setTime(System.currentTimeMillis()).build();
-        UserContacts.UserContact.Builder userContactBuilder = UserContacts.UserContact.newBuilder();
 
-        UserContacts.User.Builder builder = UserContacts.User.newBuilder();
-        builder.setName(name);
-        builder.setNumber(number);
-        builder.setId(Integer.valueOf(key));
-        UserContacts.User user = builder.build();
-        userContactBuilder.addUser(user);
-
-        UserContacts.UserContact contact=userContactBuilder.build();
-        ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer.ChannelMessage.newBuilder()
-                .setHeader(header)
-                .setPayload(Any.pack(contact))
-                .build();
-
-        return channelMessage.toByteArray();
-    }
-    public static byte[] getDeleteContactsInfo(String name, String number,String key) {
-        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction("/im/mail/delete").setTime(System.currentTimeMillis()).build();
+    public static byte[] getUpdateContactsInfo(String name, String number, String key) {
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder()
+                .setAction("/im/mail/update").setTime(System.currentTimeMillis()).build();
         UserContacts.UserContact.Builder userContactBuilder = UserContacts.UserContact.newBuilder();
 
         UserContacts.User.Builder builder = UserContacts.User.newBuilder();
@@ -61,8 +49,9 @@ public class ContactsProtoBuilder {
         UserContacts.User user = builder.build();
         userContactBuilder.addUser(user);
 
-        UserContacts.UserContact contact=userContactBuilder.build();
-        ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer.ChannelMessage.newBuilder()
+        UserContacts.UserContact contact = userContactBuilder.build();
+        ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer
+                .ChannelMessage.newBuilder()
                 .setHeader(header)
                 .setPayload(Any.pack(contact))
                 .build();
@@ -70,11 +59,66 @@ public class ContactsProtoBuilder {
         return channelMessage.toByteArray();
     }
 
-    public static byte[] getQueryData(){
-        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction("/im/mail/query").setTime(System.currentTimeMillis()).build();
-        ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer.ChannelMessage.newBuilder()
+    public static byte[] getDeleteContactsInfo(String name, String number, String key) {
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder()
+                .setAction("/im/mail/delete").setTime(System.currentTimeMillis()).build();
+        UserContacts.UserContact.Builder userContactBuilder = UserContacts.UserContact.newBuilder();
+
+        UserContacts.User.Builder builder = UserContacts.User.newBuilder();
+        builder.setName(name);
+        builder.setNumber(number);
+        builder.setId(Integer.valueOf(key));
+        UserContacts.User user = builder.build();
+        userContactBuilder.addUser(user);
+
+        UserContacts.UserContact contact = userContactBuilder.build();
+        ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer
+                .ChannelMessage.newBuilder()
+                .setHeader(header)
+                .setPayload(Any.pack(contact))
+                .build();
+
+        return channelMessage.toByteArray();
+    }
+
+    public static byte[] getQueryData() {
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder()
+                .setAction("/im/mail/query").setTime(System.currentTimeMillis()).build();
+        ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer
+                .ChannelMessage.newBuilder()
                 .setHeader(header)
                 .build();
+        return channelMessage.toByteArray();
+    }
+
+    public static byte[] getQueryRecord() {
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder()
+                .setAction("/im/record/query").setTime(System.currentTimeMillis()).build();
+        ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer
+                .ChannelMessage.newBuilder()
+                .setHeader(header)
+                .build();
+        return channelMessage.toByteArray();
+    }
+
+    public static byte[] getDeleteRecordInfo(List<UserRecords.Record> list) {
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder()
+                .setAction("/im/record/delete").setTime(System.currentTimeMillis()).build();
+        UserRecords.UserRecord.Builder userContactBuilder = UserRecords.UserRecord.newBuilder();
+//        UserContacts.User.Builder builder = UserContacts.User.newBuilder();
+//        builder.setName(name);
+//        builder.setNumber(number);
+//        builder.setId(Integer.valueOf(key));
+//        UserContacts.User user = builder.build();
+        userContactBuilder.addAllRecord(list);
+
+        UserRecords.UserRecord contact = userContactBuilder.build();
+        ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer
+                .ChannelMessage.newBuilder()
+                .setHeader(header)
+                .setPayload(Any.pack(contact))
+                .build();
+
         return channelMessage.toByteArray();
     }
 }

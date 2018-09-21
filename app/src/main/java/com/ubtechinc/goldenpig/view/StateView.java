@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtechinc.goldenpig.R;
@@ -210,6 +211,14 @@ public class StateView extends View {
 
     public void showContent() {
         setVisibility(GONE);
+    }
+
+    public void setEmptyViewMSG(String state) {
+        if (mEmptyView == null) {
+            mEmptyView = inflate(mEmptyResource);
+        }
+        TextView tv = mEmptyView.findViewById(R.id.tv_empty);
+        tv.setText(state);
     }
 
     public View showEmpty() {
