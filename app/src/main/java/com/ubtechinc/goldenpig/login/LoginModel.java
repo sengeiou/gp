@@ -35,6 +35,7 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
     private UBTAuthRepository ubtAuthRepository;
     private GetPigListHttpProxy getPigListRepository; //获取用户当前小猪列表
     private UbtTIMManager timManager;
+    private UbtTIMManager.UbtIMCallBack ubtIMCallBack;
     public LoginModel(){
         tvsAuthRepository = new TVSAuthRepository(BuildConfig.APP_ID_WX,BuildConfig.APP_ID_QQ);
         ubtAuthRepository = new UBTAuthRepository();
@@ -81,9 +82,14 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
     }
     @Override
     public void onError() {
-        tvsAuthRepository.logout();
+        if (tvsAuthRepository!=null) {
+            tvsAuthRepository.logout();
+        }
         authLive.error();
         UbtLogger.i(TAG,"onError");
+       if (ubtIMCallBack!=null){
+           ubtIMCallBack.onError(-1,"IM SDK 登录失败");
+       }
     }
 
     @Override
@@ -141,6 +147,7 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
     }
 
     public void setTIMLoingCallback(UbtTIMManager.UbtIMCallBack callback){
+        this.ubtIMCallBack=callback;
         if (timManager!=null){
             timManager.setUbtCallBack(callback);
         }

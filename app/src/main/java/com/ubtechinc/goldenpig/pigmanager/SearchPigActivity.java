@@ -303,12 +303,16 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         @Override
         public void onFaild(int errorCode) {
             super.onFaild(errorCode);
+            pigListDialog.dismiss();
             switch (errorCode){
                 case 2041:
                     if (pigListDialog!=null&&pigListDialog.isShowing()) {
-                        pigListDialog.dismiss();
+
                         ToastUtils.showShortToast(SearchPigActivity.this, R.string.ubt_one_user_one_pig);
                     }
+                    break;
+                default:
+                    ToastUtils.showShortToast(SearchPigActivity.this, Constants.getErrorMsg(errorCode));
                     break;
             }
 

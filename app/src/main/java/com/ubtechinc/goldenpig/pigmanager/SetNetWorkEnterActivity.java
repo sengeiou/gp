@@ -66,6 +66,8 @@ public class SetNetWorkEnterActivity extends BaseToolBarActivity implements View
 
     }
 
+
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);

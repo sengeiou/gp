@@ -48,8 +48,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_main);
         inits();
+    }
+
+    @Override
+    protected int getContentViewId() {
+        return R.layout.activity_main;
     }
 
     private void inits() {

@@ -26,4 +26,5 @@
     <!--卡片阴影颜色-->
     <color name="ubt_card_bg_color">#C6DEF0</color>
     <color name="empty_ic_bg">#F3C1A9</color>
+    <color name="ubt_toast_bg">#B3010101</color>
 </resources>

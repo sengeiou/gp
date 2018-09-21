@@ -3,6 +3,7 @@ package com.ubtechinc.goldenpig.repository;
 import android.app.Activity;
 import android.content.Intent;
 
+import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.tvlloginlib.TVSManager;
 import com.ubtechinc.tvlloginlib.entity.LoginInfo;
@@ -17,7 +18,7 @@ public class TVSAuthRepository {
 
     public void loginWX(Activity activity, final AuthCallBack authCallBack) {
         tvsManager.init(activity);
-        tvsManager.wxLogin(activity, new TVSManager.TVSLoginListener() {
+        tvsManager.wxLogin(activity, BuildConfig.PRODUCT_ID,BuildConfig.APP_KEY,new TVSManager.TVSLoginListener() {
             @Override
             public void onSuccess(LoginInfo t) {
                 callBackSuccess(authCallBack, t);
@@ -37,7 +38,7 @@ public class TVSAuthRepository {
 
     public void loginQQ(Activity activity, final AuthCallBack authCallBack) {
         tvsManager.init(activity);
-        tvsManager.qqLogin(activity, new TVSManager.TVSLoginListener() {
+        tvsManager.qqLogin(activity, BuildConfig.PRODUCT_ID,BuildConfig.APP_KEY, new TVSManager.TVSLoginListener() {
             @Override
             public void onSuccess(LoginInfo t) {
                 callBackSuccess(authCallBack, t);

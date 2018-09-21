@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@color/ubt_global_bg_color"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/ubt_btn_unbind_member"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_ubt_logout_btn"
+        android:textColor="@color/ubt_dialog_btn_txt_color"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/ubt_unbind_member"
+        android:layout_marginBottom="@dimen/dp_30"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
+        android:id="@+id/ubt_rcy_member"
+        android:layout_marginTop="@dimen/dp_16"
+        android:layout_width="match_parent"
+        android:background="@null"
+        android:layout_height="match_parent"
+        android:paddingEnd="@dimen/dp_16"
+        android:paddingStart="@dimen/dp_16"
+        android:layout_above="@+id/ubt_btn_unbind_member"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="@dimen/dp_16"
+        android:layout_marginEnd="0dp" />
+
+</RelativeLayout>

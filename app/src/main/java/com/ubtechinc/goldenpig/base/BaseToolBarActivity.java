@@ -36,11 +36,12 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
     private Toolbar toolbar;
     private TextView mNotifyTv; ///动态提示
     protected View mTvSkip;              //跳过按钮
+    protected View mAddBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_base_toolbar);
+
         //1、设置支出，并不显示项目的title文字
         toolbar = (Toolbar) findViewById(R.id.ubt_toolbar);
         setSupportActionBar(toolbar);
@@ -62,6 +63,10 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
         init(savedInstanceState);
 
 
+    }
+    @Override
+    protected int getContentViewId() {
+        return R.layout.activity_base_toolbar;
     }
     protected void showNotify(String notifyTips){
         if (mNotifyTv==null){

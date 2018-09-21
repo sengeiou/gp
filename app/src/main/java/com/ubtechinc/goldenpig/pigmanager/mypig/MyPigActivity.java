@@ -9,16 +9,27 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.tencent.TIMCustomElem;
+import com.tencent.TIMMessage;
+import com.ubt.imlibv2.bean.ContactsProtoBuilder;
+import com.ubt.imlibv2.bean.UbtTIMManager;
+import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubtechinc.commlib.utils.ContextUtils;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
+import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.pigmanager.hotspot.SetHotSpotActivity;
+import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
+import com.ubtrobot.upgrade.VersionInformation;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,6 +41,7 @@ import java.util.Observer;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Optional;
 
 /**
  *@auther        :hqt
@@ -39,20 +51,15 @@ import butterknife.OnClick;
  *@change        :
  *@changetime    :2018/9/15 12:48
 */
-public class MyPigActivity extends BaseToolBarActivity implements Observer{
-    @BindView(R.id.ubt_btn_dev_update)
+public class MyPigActivity extends BaseToolBarActivity implements Observer,View.OnClickListener{
     Button mDevUpateBtn;        //升级按钮
-    @BindView(R.id.ubt_btn_unbind)
     Button mUnBindBtn;          //解除绑定按钮
-    @BindView(R.id.ubt_img_pig_state)
-    ImageView mPigStateImg;    // 小猪在线状态图标
 
-
-    @BindView(R.id.ubt_tv_version)
     TextView mPigVersionTv;
-    @BindView(R.id.ubt_tv_searialno)
     TextView mSearialNoTv;
     private PigInfo mPig;
+
+    private boolean isNeedUpdate;
     private UnbindPigProxy.UnBindPigCallback unBindPigCallback;
     @Override
     protected int getConentView() {
@@ -61,7 +68,6 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer{
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        ButterKnife.bind(this);
         setTitleBack(true);
         setToolBarTitle(R.string.my_pig);
         unBindPigCallback=new UnbindPigProxy.UnBindPigCallback() {
@@ -82,6 +88,12 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer{
                                 @Override
                                 public void run() {
                                     ToastUtils.showShortToast(MyPigActivity.this,R.string.ubt_ubbind_success);
+                                    new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "",null);
+                                    try {
+                                        Thread.sleep(100);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
                                     finish();
                                 }
                             });
@@ -103,18 +115,50 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer{
             }
         };
 
+        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+        if (pigInfo != null) {
+            UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
+        }
+        UbtTIMManager.getInstance().setMsgObserve(this);
+        UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
+            @Override
+            public void onError(int i, String s) {
+                Log.e("setOnUbtTIMConver", s);
+                LoadingDialog.getInstance(MyPigActivity.this).dismiss();
+                if (AuthLive.getInstance().getCurrentPig()!=null) {
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("小猪未登录");
+                }else{
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定小猪");
+                }
+            }
 
+            @Override
+            public void onSuccess() {
+            }
+        });
+        getPigVersion();
+        initViews();
     }
-
+    private void initViews(){
+         mDevUpateBtn=findViewById(R.id.ubt_btn_dev_update);
+        mDevUpateBtn.setOnClickListener(this);
+         mUnBindBtn=findViewById(R.id.ubt_btn_unbind);
+         mUnBindBtn.setOnClickListener(this);
+         mPigVersionTv=findViewById(R.id.ubt_tv_version);
+         mSearialNoTv=findViewById(R.id.ubt_tv_searialno);
+    }
+    private void getPigVersion(){
+        UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getPigVersionState()));
+    }
     @Override
     protected void onResume() {
         super.onResume();
         mPig= AuthLive.getInstance().getCurrentPig();
         showPigNo();
     }
-
+    @Optional
     @OnClick({R.id.ubt_btn_dev_update,R.id.ubt_btn_unbind})
-    public void onClik(View view){
+    public void onClick(View view){
         switch (view.getId()){
             case R.id.ubt_btn_dev_update:
                 toDeviceUpdate();
@@ -123,6 +167,12 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer{
                 showComfireDialog();
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UbtTIMManager.getInstance().deleteMsgObserve(this);
     }
 
     /*显示确认对转权限话框*/
@@ -170,7 +220,7 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer{
             mSearialNoTv.setText(String.format(getString(R.string.ubt_pig_serialno),mPig.getRobotName()));
             if (mPig.isAdmin&&mPig.isMaster()){
                 mPigVersionTv.setVisibility(View.VISIBLE);
-                mPigVersionTv.setText(String.format(getString(R.string.ubt_pig_version_format), ContextUtils.getVerName(this)));
+
             }else {
                 mPigVersionTv.setVisibility(View.GONE);
             }
@@ -179,12 +229,40 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer{
     }
     private void toDeviceUpdate(){
        // if (mPig!=null &&mPig.isAdmin&&mPig.isMaster()){
-            ActivityRoute.toAnotherActivity(this,DeviceUpdateActivity.class,false);
+        if (isNeedUpdate) {
+            ActivityRoute.toAnotherActivity(this, DeviceUpdateActivity.class, false);
+        }else {
+            ActivityRoute.toAnotherActivity(this, PigLastVersionActivity.class, false);
+        }
         //}
     }
 
     @Override
     public void update(Observable o, Object arg) {
+        TIMMessage msg = (TIMMessage) arg;
+        for (int i = 0; i < msg.getElementCount(); ++i) {
+            TIMCustomElem elem = (TIMCustomElem) msg.getElement(i);
+            try {
+                dealMsg(elem.getData());
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+                com.ubtech.utilcode.utils.ToastUtils.showShortToast("数据异常，请重试");
 
+            }
+        }
+    }
+    private void dealMsg(Object arg)throws InvalidProtocolBufferException{
+        ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage
+                .parseFrom((byte[]) arg);
+        String action = msg.getHeader().getAction();
+        if (action.equals(ContactsProtoBuilder.GET_VERSION_STATE_ACTION)){
+            VersionInformation.UpgradeInfo info= msg.getPayload().unpack(VersionInformation.UpgradeInfo.class);
+            if (info!=null){
+                if (mPigVersionTv!=null) {
+                    mPigVersionTv.setText(String.format(getString(R.string.ubt_pig_version_format), info.getCurrentVersion()));
+                }
+                isNeedUpdate=info.getStatus()==1;
+            }
+        }
     }
 }

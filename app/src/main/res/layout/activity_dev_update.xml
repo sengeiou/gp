@@ -10,6 +10,8 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
+        android:scrollbars="none"
+        android:background="@color/ubt_global_bg_color"
         android:layout_height="match_parent">
         <LinearLayout
             android:orientation="vertical"
@@ -29,23 +31,35 @@
                 app:srcCompat="@drawable/img_upgrade" />
 
             <TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
+                android:id="@+id/ubt_tv_version_name"
+                android:layout_marginTop="@dimen/dp_46"
+                android:layout_width="wrap_content"
+                android:lines="1"
+                android:layout_gravity="center_horizontal"
+                android:textSize="@dimen/sp_15"
+                android:textColor="@color/ubt_tips_txt_color"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                 />
 
 
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/ubt_tv_version_msg"
                 android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/dp_20"
+                android:textColor="@color/ubt_tab_btn_txt_color"
+                android:layout_marginStart="@dimen/ubt_login_btn_margin"
+                android:layout_marginEnd="@dimen/ubt_login_btn_margin"
                 android:layout_height="wrap_content"
-                android:text="TextView" />
+                />
             <Button
-                android:id="@+id/button"
+                style="@style/UBTButtonTheme.Cyan"
+                android:layout_marginTop="@dimen/dp_85"
+                android:id="@+id/ubt_btn_dev_update"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:layout_marginBottom="@dimen/dp_117"
+                android:text="@string/ubt_upgrade_now" />
         </LinearLayout>
     </ScrollView>
 

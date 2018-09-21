@@ -81,6 +81,21 @@
     <string name="ubt_click_for_bind">点击绑定</string>
     <string name="ubt_click_bind">点击绑定</string>
     <string name="ubt_hotspot_name">热点名称</string>
+    <string name="ubt_device_version_update">设备版本升级</string>
+    <string name="ubt_upgrade_now">立即升级</string>
+    <string name="ubt_pig_updateing">系统正处于升级状态，升级包会在连接无线网络时自动下载安装</string>
+    <string name="ubt_pig_update_failure">升级失败，请重试</string>
+    <string name="ubt_pig_is_last_version">当前设备已是最新版本</string>
+    <string name="ubt_unbind_member">解除绑定</string>
+    <string name="ubt_privacy_policy">隐私协议</string>
+    <string name="ubt_pig_voice_box">小猪音箱</string>
+    <string name="ubt_no_pigs">没有绑定小猪</string>
+    <string name="ubt_menber_group">成员组</string>
+    <string name="ubt_admin">管理员</string>
+    <string name="ubt_trans_admin">转让管理员</string>
+    <string name="ubt_delete">删除</string>
+    <string name="ubt_add_member">添加成员</string>
+    <string name="ubt_addmember_desc">·请让需绑定此音箱的用户，打开小猪APP-我的-设备管理-加入成员组：</string>
 
     <string name="record_empty_prompt">没有最近通话</string>
 </resources>

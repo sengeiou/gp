@@ -28,6 +28,16 @@
             android:layout_gravity="right"
             android:gravity="center_vertical"
             android:text="@string/ubt_skip" />
+        <ImageView
+            android:background="@null"
+            android:foregroundGravity="right"
+            android:layout_gravity="right"
+            android:src="@drawable/ic_add"
+            android:padding="@dimen/dp_10"
+            android:visibility="gone"
+            android:id="@+id/ubt_imgbtn_add"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40" />
     </android.support.v7.widget.Toolbar>
     <FrameLayout
         android:background="@null"
