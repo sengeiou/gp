@@ -29,6 +29,7 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.me.UserInfoActivity;
 import com.ubtechinc.goldenpig.personal.DeviceManageActivity;
 import com.ubtechinc.goldenpig.personal.alarm.AlarmListActivity;
+import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionActivity;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.hotspot.SetHotSpotActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
@@ -147,6 +148,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
         mAboutBtn.setOnClickListener(this);
 
         getActivity().findViewById(R.id.ubt_btn_person_clock).setOnClickListener(this);
+        getActivity().findViewById(R.id.ubt_btn_person_answer).setOnClickListener(this);
 
         try {
             String versionName = String.format(getString(R.string.ubt_version_format),
@@ -191,6 +193,9 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.ubt_btn_person_clock:
                 ActivityRoute.toAnotherActivity(getActivity(), AlarmListActivity.class, false);
+                break;
+            case R.id.ubt_btn_person_answer:
+                ActivityRoute.toAnotherActivity(getActivity(), InterlocutionActivity.class, false);
                 break;
         }
     }

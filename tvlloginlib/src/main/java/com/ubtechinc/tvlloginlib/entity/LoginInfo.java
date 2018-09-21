@@ -20,6 +20,7 @@ public class LoginInfo {
     private String accessToken;
     private String appId;
     private String loginType;
+    //qbid
     private String miniTvsId;
     private String openId;
 

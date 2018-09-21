@@ -107,6 +107,9 @@
         <activity android:name=".pigmanager.EditRecordActivity"
             android:screenOrientation="portrait"
             />
+        <activity android:name=".personal.interlocution.InterlocutionActivity"
+            android:screenOrientation="portrait"
+            />
     </application>
 
 </manifest>

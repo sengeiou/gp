@@ -31,6 +31,7 @@ public class UBTAuthRepository {
         loginRequest.setAccessToken(info.getAccessToken());
         loginRequest.setAppId(info.getAppId());
         loginRequest.setUbtAppId(UBT_APP_ID);//为了后台统计不同产品的注册数据，增肌一个字段ubtAppId
+        CookieInterceptor.get().setLoginInfo(info);
         HttpProxy.get().doPut(loginRequest, new ResponseListener<ThirdPartLoginModule.Response>() {
 
             @Override
