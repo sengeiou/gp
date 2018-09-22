@@ -3,7 +3,7 @@
     android:layout_width="match_parent" android:layout_height="match_parent">
 
 
-    <ImageView
+    <pl.droidsonroids.gif.GifImageView
         android:id="@+id/ubt_img_set_net_logo"
         android:layout_width="@dimen/ubt_set_net_logo_size"
         android:layout_height="@dimen/ubt_set_net_logo_size"
