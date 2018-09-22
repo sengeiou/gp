@@ -51,8 +51,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
 
     private View mToUserInfo;
     private View mSetNetBtn;   //绑定配网按钮
-    @BindView(R.id.ubt_btn_person_hotspot)
-    View mToHospotBtn;
+   ;
     private View mFeedBackBtn; //反馈帮助
     private UbtSubTxtButton mAboutBtn; //关于页按钮
     private ImageView mPohtoImg;
@@ -60,6 +59,19 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
 
     private TextView mTitle;
     private View mCyanBg;  /// 蓝色渐进色背景板
+
+    @BindView(R.id.ubt_btn_person_hotspot)
+    Button mToHospotBtn;
+    @BindView(R.id.ubt_btn_device_manager)
+    Button mDevMangerBtn;
+    @BindView(R.id.ubt_btn_person_answer)
+    Button mAnswerBtn;
+    @BindView(R.id.ubt_btn_person_clock)
+    Button mClockBtn;
+    @BindView(R.id.ubt_btn_person_remind)
+    Button mRemindBtn;
+    @BindView(R.id.ubt_btn_person_qq)
+    Button mQQMusicBtn;
     public PersonalFragment() {
         super();
     }
@@ -162,8 +174,29 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                 ActivityRoute.toAnotherActivity(getActivity(), DeviceManageActivity.class, false);
             }
         });
+        changeItemAlpha();
     }
+    private void changeItemAlpha(){
+        float alpha=1f;
+        boolean isEnable=true;
+        if (AuthLive.getInstance().getCurrentPig()==null){
+            isEnable=false;
+            alpha=0.5f;
+        }
+        mToHospotBtn.setAlpha(alpha);
+        mToHospotBtn.setEnabled(isEnable);
+        mDevMangerBtn.setAlpha(alpha);
+        mDevMangerBtn.setEnabled(isEnable);
+        mAnswerBtn.setAlpha(alpha);
+        mAnswerBtn.setEnabled(isEnable);
+        mClockBtn.setAlpha(alpha);
+        mClockBtn.setEnabled(isEnable);
+        mRemindBtn.setAlpha(alpha);
+        mRemindBtn.setEnabled(isEnable);
+        mQQMusicBtn.setAlpha(alpha);
+        mQQMusicBtn.setEnabled(isEnable);
 
+    }
     @Override
     @OnClick(R.id.ubt_btn_person_hotspot)
     public void onClick(View v) {
