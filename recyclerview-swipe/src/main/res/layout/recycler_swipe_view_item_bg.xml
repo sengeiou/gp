@@ -46,6 +46,6 @@
     <com.yanzhenjie.recyclerview.swipe.ImageViewXfermode
         android:id="@+id/iv"
         android:layout_width="match_parent"
-        android:layout_height="115dp"
+        android:layout_height="@dimen/dp_115"
         android:scaleType="fitXY" />
 </RelativeLayout>

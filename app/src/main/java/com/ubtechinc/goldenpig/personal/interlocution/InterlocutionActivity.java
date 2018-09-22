@@ -5,33 +5,25 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.tencent.TIMCustomElem;
-import com.tencent.TIMMessage;
-import com.ubt.imlibv2.bean.UbtTIMManager;
-import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
-import com.ubt.improtolib.GPResponse;
-import com.ubt.improtolib.UserRecords;
-import com.ubtech.utilcode.utils.LogUtils;
+import com.google.gson.reflect.TypeToken;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewImg;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
-import com.ubtechinc.goldenpig.login.observable.AuthLive;
-import com.ubtechinc.goldenpig.pigmanager.RecordAdapter;
-import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
-import com.ubtechinc.goldenpig.pigmanager.bean.RecordModel;
+import com.ubtechinc.goldenpig.model.InterlocutionItemModel;
+import com.ubtechinc.goldenpig.model.JsonCallback;
+import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.StateView;
-import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
+import com.yanzhenjie.recyclerview.swipe.SwipeItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
@@ -39,53 +31,26 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
-import java.io.IOException;
-import java.lang.ref.WeakReference;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import butterknife.BindView;
 
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DELETE_RECORD_SUCCESS;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_INTERLO_SUCCESS;
 
-public class InterlocutionActivity extends BaseNewActivity implements Observer {
+public class InterlocutionActivity extends BaseNewActivity implements SwipeItemClickListener {
     @BindView(R.id.rl_titlebar)
     SecondTitleBarViewImg rl_titlebar;
     @BindView(R.id.recycler)
     SwipeMenuRecyclerView recycler;
     InterlocutionAdapter adapter;
-    private ArrayList<RecordModel> mList;
-    public int deletePosition = 0;
+    private ArrayList<InterlocutionItemModel> mList;
     /**
      *
      */
     private Boolean hasLoadMsg = false;
-
-    private MyHandler mHandler;
-
-    private class MyHandler extends Handler {
-        WeakReference<Activity> mWeakReference;
-
-        public MyHandler(Activity activity) {
-            mWeakReference = new WeakReference<Activity>(activity);
-        }
-
-        @Override
-        public void handleMessage(android.os.Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == 1) {
-                ToastUtils.showShortToast("请求超时，请重试");
-                if (mWeakReference.get() != null) {
-                    LoadingDialog.getInstance(mWeakReference.get()).dismiss();
-                    if (mList.size() == 0) {
-                        mStateView.showRetry();
-                    }
-                }
-            }
-        }
-    }
+    InterlocutionModel requestModel;
 
     @Override
     protected int getContentViewId() {
@@ -100,12 +65,11 @@ public class InterlocutionActivity extends BaseNewActivity implements Observer {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mHandler = new MyHandler(this);
         initStateView(true);
         mStateView.setOnRetryClickListener(new StateView.OnRetryClickListener() {
             @Override
             public void onRetryClick() {
-
+                onRefresh();
             }
         });
         rl_titlebar.setTitleText(getString(R.string.ubt_custom_answer));
@@ -115,106 +79,69 @@ public class InterlocutionActivity extends BaseNewActivity implements Observer {
                 finish();
             }
         });
-//        rl_titlebar.setRightOnclickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                if (mList.size() > 0) {
-//                    Intent it = new Intent(InterlocutionActivity.this, EditRecordActivity.class);
-//                    it.putParcelableArrayListExtra("list", mList);
-//                    startActivity(it);
-//                } else {
-//                    ToastUtils.showShortToast(getString(R.string.record_empty_prompt));
-//                }
-//            }
-//        });
+        rl_titlebar.setIvRight(R.drawable.ic_add);
+        rl_titlebar.setRightOnclickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ActivityRoute.toAnotherActivity(InterlocutionActivity.this, AddInterlocutionActivity
+                        .class, false);
+            }
+        });
         mList = new ArrayList<>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        recycler.setCustomBackgroundSize(getResources().getDimensionPixelSize(R.dimen.dp_94) + 1);
         recycler.setLayoutManager(linearLayoutManager);
         recycler.setHasFixedSize(true);
         Divider divider = new Divider(new ColorDrawable(getResources().getColor(R.color
-                .ubt_wifi_list_divider)),
+                .ubt_main_bg_color)),
                 OrientationHelper.VERTICAL);
-        divider.setHeight((int) getResources().getDimension(R.dimen.ubt_1px));
+        divider.setHeight((int) getResources().getDimension(R.dimen.dp_10));
         recycler.addItemDecoration(divider);
         recycler.setSwipeMenuCreator(swipeMenuCreator);
+        recycler.setSwipeItemClickListener(this);
         recycler.setSwipeMenuItemClickListener(mMenuItemClickListener);
         adapter = new InterlocutionAdapter(this, mList);
         recycler.setAdapter(adapter);
-        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
-        if (pigInfo != null) {
-            UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
-        } else {
-            UbtTIMManager.getInstance().setPigAccount("2cb9b9a3");
-        }
-        UbtTIMManager.getInstance().setMsgObserve(this);
-        UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
-            @Override
-            public void onError(int i, String s) {
-                Log.e("setOnUbtTIMConver", s);
-                LoadingDialog.getInstance(InterlocutionActivity.this).dismiss();
-                ToastUtils.showShortToast(s);
-            }
-
-            @Override
-            public void onSuccess() {
-                Log.e("setOnUbtTIMConver", "sss");
-            }
-        });
+        requestModel = new InterlocutionModel();
         onRefresh();
     }
 
     public void onRefresh() {
-        LoadingDialog.getInstance(this).setTimeout(20).setShowToast(true).show();
-        if (mHandler.hasMessages(1)) {
-            mHandler.removeMessages(1);
-        }
-        mHandler.sendEmptyMessageDelayed(1, 20 * 1000);// 20s 秒后检查加载框是否还在
-        new InterlocutionModel().getInterlocutionRequest(new InterlocutionModel.InterlocutionCallback() {
-
-
+        LoadingDialog.getInstance(this).show();
+        Type type = new TypeToken<List<InterlocutionItemModel>>() {
+        }.getType();
+        requestModel.getInterlocutionRequest(new JsonCallback<List<InterlocutionItemModel>>(type) {
             @Override
-            public void onError(IOException e) {
-                LogUtils.d("getInterlocutionRequest-onError");
+            public void onError(String e) {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtils.showShortToast(e);
+                        LoadingDialog.getInstance(InterlocutionActivity.this).dismiss();
+                    }
+                });
+
             }
 
             @Override
-            public void onSuccess(String reponse) {
-                LogUtils.d(reponse);
+            public void onSuccess(List<InterlocutionItemModel> reponse) {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        LoadingDialog.getInstance(InterlocutionActivity.this).dismiss();
+                        mList.clear();
+                        if (reponse == null || reponse.size() < 2) {
+                            InterlocutionItemModel model = new InterlocutionItemModel();
+                            model.type = 1;
+                            mList.add(model);
+                        }
+                        mList.addAll(reponse);
+                        adapter.notifyDataSetChanged();
+                    }
+                });
             }
         });
-//        UbtTIMManager.getInstance().queryRecord();
-//        mHandler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                List<RecordModel> ss = new ArrayList<>();
-//                for (int j = 0; j < 10; j++) {
-//                    RecordModel mo = new RecordModel();
-//                    mo.name = "测试" + j;
-//                    mo.number = "15911234567";
-//                    mo.id = j;
-//                    mo.type = j % 4;
-//                    mo.dateLong = System.currentTimeMillis() - 1000 * j * 60;
-//                    mo.duration = j % 5;
-//                    ss.add(mo);
-//                }
-//                onRefreshSuccess(ss);
-//            }
-//        }, 2000);
-    }
-
-    public void onError(String str) {
-        hasLoadMsg = false;
-        ToastUtils.showShortToast(str);
-        if (mList.size() == 0) {
-            mStateView.showRetry();
-        } else {
-            mStateView.showContent();
-        }
-    }
-
-    public Handler getHandler() {
-        return mHandler;
     }
 
     /**
@@ -259,17 +186,40 @@ public class InterlocutionActivity extends BaseNewActivity implements Observer {
             int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
             if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
                 if (menuPosition == 0) {
-                    UserRecords.Record.Builder recordBuild = UserRecords.Record.newBuilder();
-                    recordBuild.setName(mList.get(adapterPosition).name);
-                    recordBuild.setNumber(mList.get(adapterPosition).number);
-                    recordBuild.setDateLong(mList.get(adapterPosition).dateLong);
-                    recordBuild.setDuration(mList.get(adapterPosition).duration);
-                    recordBuild.setType(mList.get(adapterPosition).type);
-                    recordBuild.setId(mList.get(adapterPosition).id);
-                    List<UserRecords.Record> list = new ArrayList();
-                    list.add(recordBuild.build());
-                    UbtTIMManager.getInstance().deleteRecord(list);
-                    deletePosition = adapterPosition;
+                    requestModel.deleteInterlocRequest(mList.get(adapterPosition).strDocId, new
+                            JsonCallback<String>(String.class) {
+                                @Override
+                                public void onSuccess(String reponse) {
+                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            ToastUtils.showShortToast("删除成功");
+                                            LoadingDialog.getInstance(InterlocutionActivity.this)
+                                                    .dismiss();
+                                            mList.remove(adapterPosition);
+                                            if (mList.size() < 2) {
+                                                InterlocutionItemModel model = new
+                                                        InterlocutionItemModel();
+                                                model.type = 1;
+                                                mList.add(model);
+                                            }
+                                            adapter.notifyDataSetChanged();
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onError(String str) {
+                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            LoadingDialog.getInstance(InterlocutionActivity.this)
+                                                    .dismiss();
+                                            ToastUtils.showShortToast(str);
+                                        }
+                                    });
+                                }
+                            });
                     LoadingDialog.getInstance(InterlocutionActivity.this).setTimeout(20)
                             .setShowToast(true).show();
                 }
@@ -280,97 +230,22 @@ public class InterlocutionActivity extends BaseNewActivity implements Observer {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mHandler.removeCallbacksAndMessages(null);
-        mHandler = null;
-        UbtTIMManager.getInstance().deleteMsgObserve(this);
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
-        TIMMessage msg = (TIMMessage) arg;
-        for (int i = 0; i < msg.getElementCount(); ++i) {
-            TIMCustomElem elem = (TIMCustomElem) msg.getElement(i);
-            try {
-                dealMsg(elem.getData());
-            } catch (InvalidProtocolBufferException e) {
-                e.printStackTrace();
-                ToastUtils.showShortToast("数据异常，请重试");
-                LoadingDialog.getInstance(InterlocutionActivity.this).dismiss();
-            }
-        }
-    }
-
-    /* <call path="/im/mail/add"/>
-    <call path="/im/mail/query"/>
-    <call path="/im/mail/delete"/>
-    <call path="/im/mail/update"/>*/
-    private void dealMsg(Object arg) throws InvalidProtocolBufferException {
-        ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage
-                .parseFrom((byte[]) arg);
-        String action = msg.getHeader().getAction();
-        switch (action) {
-            case "/im/record/query":
-                List<UserRecords.Record> list = msg.getPayload().unpack(UserRecords.UserRecord
-                        .class).getRecordList();
-                List<RecordModel> ss = new ArrayList<>();
-                for (int j = 0; j < list.size(); j++) {
-                    RecordModel mo = new RecordModel();
-                    mo.name = list.get(j).getName();
-                    mo.number = list.get(j).getNumber();
-                    mo.id = list.get(j).getId();
-                    mo.type = list.get(j).getType();
-                    mo.dateLong = list.get(j).getDateLong() * 1000;
-                    mo.duration = list.get(j).getDuration();
-                    ss.add(mo);
-                }
-                onRefreshSuccess(ss);
-                break;
-            case "/im/record/delete":
-                Boolean flag = msg.getPayload().unpack(GPResponse.Response.class).getResult();
-                LoadingDialog.getInstance(InterlocutionActivity.this).dismiss();
-                if (flag) {
-                    mList.remove(deletePosition);
-                    try {
-                        if (mList.get(mList.size() - 1).type == 1) {
-                            mList.remove(mList.size() - 1);
-                        }
-                    } catch (Exception e) {
-                    }
-                    if (mList.size() == 0) {
-                        mStateView.showEmpty();
-                        mStateView.setEmptyViewMSG("无最近通话");
-                    }
-                    adapter.notifyDataSetChanged();
-                } else {
-                    ToastUtils.showShortToast("删除失败，请重试");
-                }
-                break;
-        }
+        requestModel.release();
     }
 
     @Override
     protected void onReceiveEvent(Event event) {
         super.onReceiveEvent(event);
-        if (event.getCode() == DELETE_RECORD_SUCCESS) {
+        if (event.getCode() == ADD_INTERLO_SUCCESS) {
             onRefresh();
         }
     }
 
-    public void onRefreshSuccess(List<RecordModel> list) {
-        if (mHandler.hasMessages(1)) {
-            mHandler.removeMessages(1);
+    @Override
+    public void onItemClick(View itemView, int position) {
+        if (mList.get(position).type == 1) {
+            ActivityRoute.toAnotherActivity(InterlocutionActivity.this, AddInterlocutionActivity
+                    .class, false);
         }
-        LoadingDialog.getInstance(this).dismiss();
-        hasLoadMsg = true;
-        mList.clear();
-        mList.addAll(list);
-        if (mList.size() == 0) {
-            mStateView.showEmpty();
-            mStateView.setEmptyViewMSG("无最近通话");
-        } else {
-            mStateView.showContent();
-        }
-        adapter.notifyDataSetChanged();
     }
-
 }

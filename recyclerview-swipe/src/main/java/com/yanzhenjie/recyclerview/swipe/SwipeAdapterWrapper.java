@@ -20,10 +20,12 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.util.SparseArrayCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import java.lang.reflect.Field;
 import java.util.List;
@@ -46,12 +48,14 @@ public class SwipeAdapterWrapper extends RecyclerView.Adapter<RecyclerView.ViewH
     private SwipeMenuItemClickListener mSwipeMenuItemClickListener;
     private SwipeItemClickListener mSwipeItemClickListener;
     private SwipeItemLongClickListener mSwipeItemLongClickListener;
-    private Boolean customBackground = false;
+    private int customBackground = 0;
+    Context context;
 
-    SwipeAdapterWrapper(Context context, RecyclerView.Adapter adapter, Boolean customBackground) {
+    SwipeAdapterWrapper(Context context, RecyclerView.Adapter adapter, int customBackground) {
         this.mInflater = LayoutInflater.from(context);
         this.mAdapter = adapter;
         this.customBackground = customBackground;
+        this.context = context;
     }
 
     public RecyclerView.Adapter getOriginAdapter() {
@@ -133,10 +137,14 @@ public class SwipeAdapterWrapper extends RecyclerView.Adapter<RecyclerView.ViewH
         if (mSwipeMenuCreator == null) return viewHolder;
         SwipeMenuLayout swipeMenuLayout = null;
         View view = null;
-        if (customBackground) {
+        if (customBackground > 0) {
             view = mInflater.inflate(R.layout
                     .recycler_swipe_view_item_bg, parent, false);
             swipeMenuLayout = view.findViewById(R.id.swipeMenuLayout);
+            ImageView iv = view.findViewById(R.id.iv);
+            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) iv.getLayoutParams();
+            params.height = customBackground;
+            iv.setLayoutParams(params);
         } else {
             swipeMenuLayout = (SwipeMenuLayout) mInflater.inflate(R.layout
                     .recycler_swipe_view_item, parent, false);
@@ -172,7 +180,7 @@ public class SwipeAdapterWrapper extends RecyclerView.Adapter<RecyclerView.ViewH
         try {
             Field itemView = getSupperClass(viewHolder.getClass()).getDeclaredField("itemView");
             if (!itemView.isAccessible()) itemView.setAccessible(true);
-            if (customBackground) {
+            if (customBackground > 0) {
                 itemView.set(viewHolder, view);
             } else {
                 itemView.set(viewHolder, swipeMenuLayout);
@@ -352,7 +360,7 @@ public class SwipeAdapterWrapper extends RecyclerView.Adapter<RecyclerView.ViewH
         mAdapter.onDetachedFromRecyclerView(recyclerView);
     }
 
-    public void setCustomBackground(Boolean customBackground) {
+    public void setCustomBackgroundSize(int customBackground) {
         this.customBackground = customBackground;
     }
 }

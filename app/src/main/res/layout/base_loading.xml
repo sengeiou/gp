@@ -4,6 +4,21 @@
     android:layout_height="match_parent"
     android:background="@color/ubt_main_bg_color">
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="@dimen/dp_150"
+        android:layout_height="@dimen/dp_150"
+        android:layout_centerInParent="true"
+        android:background="@drawable/shape_loading_dialog_bg"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/ubt_30dp">
 
-
+        <com.ubtechinc.commlib.view.UbtProgressBar
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminateBehavior="repeat"
+            android:indeterminateDrawable="@drawable/anim_ubt_loading_white"
+            android:indeterminateOnly="true" />
+    </LinearLayout>
 </RelativeLayout>

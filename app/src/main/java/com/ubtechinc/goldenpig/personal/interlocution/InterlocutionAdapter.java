@@ -1,15 +1,20 @@
 package com.ubtechinc.goldenpig.personal.interlocution;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.model.AddressBookmodel;
+import com.ubtechinc.goldenpig.model.InterlocutionItemModel;
 import com.ubtechinc.goldenpig.pigmanager.bean.RecordModel;
+import com.ubtechinc.goldenpig.route.ActivityRoute;
 
 import java.util.List;
 
@@ -19,9 +24,9 @@ import java.util.List;
 
 public class InterlocutionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context mContext;
-    private List<RecordModel> mList;
+    private List<InterlocutionItemModel> mList;
 
-    public InterlocutionAdapter(Context mContext, List<RecordModel> mList) {
+    public InterlocutionAdapter(Context mContext, List<InterlocutionItemModel> mList) {
         this.mContext = mContext;
         this.mList = mList;
     }
@@ -43,11 +48,16 @@ public class InterlocutionAdapter extends RecyclerView.Adapter<RecyclerView.View
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
         if (mList.get(position).type == 0) {
             InterlocutionHolder aHolder = (InterlocutionHolder) holder;
-            RecordModel model = mList.get(position);
-            aHolder.tv_content.setText(model.name);
+            InterlocutionItemModel model = mList.get(position);
+            if (model.vQueries != null && model.vQueries.size() > 0) {
+                aHolder.tv_question.setText(model.vQueries.get(0).strQuery);
+            }
+            if (model.vAnswers != null && model.vAnswers.size() > 0) {
+                aHolder.tv_answer.setText(model.vAnswers.get(0).strText);
+            }
         } else {
             InterlocutionHolder2 aHolder = (InterlocutionHolder2) holder;
-            aHolder.tv_content.setText(mContext.getString(R.string.contact_limit));
+            aHolder.tv_add.setText("添加问答");
         }
     }
 
@@ -73,11 +83,11 @@ public class InterlocutionAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     public class InterlocutionHolder2 extends RecyclerView.ViewHolder {
-        TextView tv_content;
+        TextView tv_add;
 
         public InterlocutionHolder2(View itemView) {
             super(itemView);
-            tv_content = itemView.findViewById(R.id.tv_content);
+            tv_add = itemView.findViewById(R.id.tv_add);
         }
     }
 }

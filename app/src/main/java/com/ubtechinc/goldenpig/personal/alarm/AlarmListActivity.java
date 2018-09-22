@@ -118,7 +118,7 @@ public class AlarmListActivity extends BaseNewActivity implements OnRefreshListe
         mList = new ArrayList<>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recycler.setCustomBackground(true);
+        recycler.setCustomBackgroundSize(getResources().getDimensionPixelSize(R.dimen.dp_115));
         recycler.setLayoutManager(linearLayoutManager);
         recycler.setHasFixedSize(true);
         Divider divider = new Divider(new ColorDrawable(getResources().getColor(R.color

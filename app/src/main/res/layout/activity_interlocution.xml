@@ -17,5 +17,7 @@
     <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_marginRight="@dimen/dp_15" />
 </LinearLayout>

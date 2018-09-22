@@ -65,7 +65,7 @@ public class ImageViewXfermode extends ImageView {
         int defaultWidth = getResources().getDisplayMetrics().widthPixels - getResources()
                 .getDimensionPixelSize(R.dimen.dp_30);
         //xml里view的宽度是85dp
-        int defaultdHeight = getResources().getDimensionPixelSize(R.dimen.dp_115);
+        int defaultdHeight = getMeasuredHeight();//getResources().getDimensionPixelSize(R.dimen.dp_115);
 
         //拿到黄色圆形的bitmap
         Bitmap bitcircle = Bitmap.createBitmap(getWidth(), getHeight(), Bitmap.Config

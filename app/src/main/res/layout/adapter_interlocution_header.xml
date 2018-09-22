@@ -31,5 +31,5 @@
         android:gravity="center_vertical"
         android:textColor="@color/ubt_tab_btn_txt_checked_color"
         android:textSize="@dimen/sp_18"
-        tools:text="HelloWorld" />
+        tools:text="添加问答" />
 </RelativeLayout>
