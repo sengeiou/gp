@@ -98,4 +98,7 @@
     <string name="ubt_addmember_desc">·请让需绑定此音箱的用户，打开小猪APP-我的-设备管理-加入成员组：\n·扫描上面的二维码，加入成员组；\n·加入成员组后用户即与此音箱绑定，可正常使用此APP功能；</string>
 
     <string name="record_empty_prompt">没有最近通话</string>
+    <string name="ubt_coming_soon">敬请期待</string>
+    <string name="ubt_pair_pig">小猪配对</string>
+    <string name="ubt_pair_pig_desc">·请让配对设备的管理员打开小猪APP-我的-设备管理-小猪配对；\\n·点击右上角“扫一扫”，扫描上面的二维码，配对小猪；\\n·配对成功的小猪可以相互发送语音留言；</string>
 </resources>

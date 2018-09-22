@@ -34,6 +34,7 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *@auther        :hqt
@@ -123,9 +124,9 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
     }
     private void setAddBtnEnable(boolean isEnable){
         if (isEnable){
-            mAddBtn=findViewById(R.id.ubt_imgbtn_add);
-            mAddBtn.setVisibility(View.VISIBLE);
-            mAddBtn.setOnClickListener(this);
+            mToolbarRightBtn=findViewById(R.id.ubt_imgbtn_add);
+            mToolbarRightBtn.setVisibility(View.VISIBLE);
+            mToolbarRightBtn.setOnClickListener(this);
         }else {
             findViewById(R.id.ubt_imgbtn_add).setVisibility(View.GONE);
         }
@@ -150,7 +151,9 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.ubt_imgbtn_add:
-                ActivityRoute.toAnotherActivity(this,AddMemberActivity.class,false);
+                HashMap<String,Boolean> param=new HashMap<>();
+                param.put("isPair",false);
+                ActivityRoute.toAnotherActivity(this,QRCodeActivity.class,param,false);
                 break;
             case R.id.ubt_btn_unbind_member:
                 doUnbind(AuthLive.getInstance().getUserId());

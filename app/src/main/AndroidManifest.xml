@@ -122,6 +122,12 @@
         <activity
             android:name=".pigmanager.EditRecordActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".pigmanager.mypig.QRCodeActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".pigmanager.mypig.QRScanActivity"
+            android:screenOrientation="portrait"
+            />
     </application>
 
 </manifest>
