@@ -39,18 +39,14 @@
             </intent-filter>
         </activity>
 
-
         <provider
             android:name="qrom.component.wup.runInfo.QRomWupProvider"
             android:authorities="com.ubtechinc.goldenpig.wup.QRomProvider"
             android:exported="true"
-            android:process=":tcm_service"
-            android:authorities="com.ubtechinc.goldenpig.wup.QRomProvider" />
-         <activity android:name=".main.MainActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTask"
-            />
-        <activity android:name=".pigmanager.SearchPigActivity"
+            android:process=":tcm_service" />
+
+        <activity
+            android:name=".pigmanager.SearchPigActivity"
             android:process=":tcm_service" />
 
         <activity
@@ -58,10 +54,6 @@
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
 
-        <activity
-            android:name=".pigmanager.SearchPigActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".pigmanager.SetPigNetWorkActivity"
             android:launchMode="singleTask"
@@ -129,21 +121,21 @@
         <activity
             android:name=".pigmanager.EditRecordActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".pigmanager.mypig.QRCodeActivity"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".pigmanager.mypig.QRScanActivity"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".personal.interlocution.InterlocutionActivity"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".personal.interlocution.AddInterlocutionActivity"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".personal.interlocution.SetQuestOrAnswerActivity"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name=".pigmanager.mypig.QRCodeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pigmanager.mypig.QRScanActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".personal.interlocution.InterlocutionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".personal.interlocution.AddInterlocutionActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".personal.interlocution.SetQuestOrAnswerActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
