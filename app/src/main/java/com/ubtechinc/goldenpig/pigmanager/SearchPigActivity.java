@@ -40,6 +40,8 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import pl.droidsonroids.gif.GifImageView;
+
 import static com.ubtechinc.bluetooth.Constants.ROBOT_BANGDING_SUCCESS;
 import static com.ubtechinc.bluetooth.Constants.ROBOT_CONNECT_SUCCESS;
 import static com.ubtechinc.bluetooth.Constants.ROBOT_REPLY_WIFI_IS_OK_TRANS;
@@ -55,7 +57,7 @@ import static com.ubtechinc.bluetooth.Constants.WIFI_LIST_RESLUT_TRANS;
  * @changetime :2018/8/23 18:52
  */
 public class SearchPigActivity extends BaseToolBarActivity implements View.OnClickListener {
-    private ImageView mGifImg;
+    private GifImageView mGifImg;
     private Button mSearchBtn; ///开始搜索音箱
     private TextView mTipsTv;
     private final int BLUETOOTH_REQUESTCODE = 100; //权限申请后的返回码
@@ -93,8 +95,9 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
     }
 
     private void initViews() {
-        mGifImg = (ImageView) findViewById(R.id.ubt_img_set_net_logo);
-        ImageUtils.showGif(this, mGifImg, R.drawable.pig_mute);
+        mGifImg = (GifImageView) findViewById(R.id.ubt_img_set_net_logo);
+
+        mGifImg.setImageResource(R.drawable.pig_mute);
 
         mTipsTv = (TextView) findViewById(R.id.ubt_tv_set_net_tips);
         mTipsTv.setText(R.string.ubt_press_mute_btn_tips);

@@ -15,6 +15,8 @@ import com.ubtechinc.goldenpig.main.MainActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.ImageUtils;
 
+import pl.droidsonroids.gif.GifImageView;
+
 /**
  *@auther        :hqt
  *@email         :qiangta.huang@ubtrobot.com
@@ -24,7 +26,7 @@ import com.ubtechinc.goldenpig.utils.ImageUtils;
  *@changetime    :2018/8/23 10:03
 */
 public class SetNetWorkEnterActivity extends BaseToolBarActivity implements View.OnClickListener{
-    private ImageView mTipsImg;             //提示动画
+    private GifImageView mTipsImg;             //提示动画
     private View    mBtnStartSetNet;       //开始配网按钮
 
     @Override
@@ -82,11 +84,12 @@ public class SetNetWorkEnterActivity extends BaseToolBarActivity implements View
     }
 
     private void initViews(){
-        mTipsImg=(ImageView)findViewById(R.id.ubt_img_set_net_logo);
+        mTipsImg=(GifImageView)findViewById(R.id.ubt_img_set_net_logo);
         mTipsImg.post(new Runnable() {
             @Override
             public void run() {
-                ImageUtils.showGif(SetNetWorkEnterActivity.this,mTipsImg,R.drawable.open_pig);
+                //ImageUtils.showGif(SetNetWorkEnterActivity.this,mTipsImg,R.drawable.open_pig);
+                mTipsImg.setImageResource(R.drawable.open_pig);
             }
         });
 

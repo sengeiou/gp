@@ -42,6 +42,7 @@
 
         <provider
             android:name="qrom.component.wup.runInfo.QRomWupProvider"
+            android:authorities="com.ubtechinc.goldenpig.wup.QRomProvider"
             android:exported="true"
             android:process=":tcm_service"
             android:authorities="com.ubtechinc.goldenpig.wup.QRomProvider" />
@@ -50,6 +51,15 @@
             android:launchMode="singleTask"
             />
         <activity android:name=".pigmanager.SearchPigActivity"
+            android:process=":tcm_service" />
+
+        <activity
+            android:name=".main.MainActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".pigmanager.SearchPigActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
@@ -99,24 +109,30 @@
         <activity
             android:name=".pigmanager.mypig.DeviceUpdateActivity"
             android:screenOrientation="portrait" />
-            />
-        <activity android:name=".pigmanager.mypig.TransferAdminActivity"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".pigmanager.hotspot.SetHotSpotActivity"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".pigmanager.mypig.PigLastVersionActivity"
-            android:screenOrientation="portrait"
-            />
+        />
+        <activity
+            android:name=".pigmanager.mypig.TransferAdminActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pigmanager.hotspot.SetHotSpotActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pigmanager.mypig.PigLastVersionActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".pigmanager.mypig.PigMemberActivity" />
-        <activity android:name=".about.PrivacyPolicyActivity"
+        <activity
+            android:name=".about.PrivacyPolicyActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pigmanager.RecordActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".pigmanager.EditRecordActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".pigmanager.mypig.QRCodeActivity"
             android:screenOrientation="portrait"
             />
-        <activity android:name=".pigmanager.RecordActivity"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".pigmanager.EditRecordActivity"
+        <activity android:name=".pigmanager.mypig.QRScanActivity"
             android:screenOrientation="portrait"
             />
         <activity android:name=".personal.interlocution.InterlocutionActivity"

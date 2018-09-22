@@ -61,9 +61,17 @@ public class GetPigListHttpProxy extends BaseHttpProxy {
                // if (loginListener!=null) {
                     if (response != null) {
                         if (listener!=null) {
-                            String result = response.body().source().readUtf8();
-                            listener.onSuccess(result);
-                            Log.e("loginListener", result);
+                            if (response.isSuccessful()){
+                                try {
+                                    String result = response.body().source().readUtf8();
+                                    listener.onSuccess(result);
+                                } catch (RuntimeException e) {
+                                    listener.onError(new ThrowableWrapper(e,2222));
+                                }
+                            }else {
+                                listener.onSuccess(response.message());
+                            }
+
                         }
                         //loginListener.OnSuccess(result);
                     }

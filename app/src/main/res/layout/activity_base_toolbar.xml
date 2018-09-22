@@ -28,7 +28,7 @@
             android:layout_gravity="right"
             android:gravity="center_vertical"
             android:text="@string/ubt_skip" />
-        <ImageView
+        <ImageButton
             android:background="@null"
             android:foregroundGravity="right"
             android:layout_gravity="right"

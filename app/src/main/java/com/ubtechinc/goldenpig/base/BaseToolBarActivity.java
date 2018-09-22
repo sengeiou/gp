@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 
@@ -36,7 +37,7 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
     private Toolbar toolbar;
     private TextView mNotifyTv; ///动态提示
     protected View mTvSkip;              //跳过按钮
-    protected View mAddBtn;
+    protected ImageButton mToolbarRightBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
