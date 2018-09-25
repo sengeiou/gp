@@ -136,6 +136,15 @@
         <activity
             android:name=".personal.interlocution.SetQuestOrAnswerActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".personal.remind.RemindActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".personal.remind.AddRemindActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".personal.remind.SetRemindRepeatActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

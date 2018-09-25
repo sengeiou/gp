@@ -55,7 +55,7 @@ public class SetQuestOrAnswerActivity extends BaseNewActivity {
         if (!TextUtils.isEmpty(str)) {
             etSet.setText(str);
             try {
-                etSet.setSelection(str.length() - 1);
+                etSet.setSelection(str.length());
             } catch (Exception e) {
             }
         }

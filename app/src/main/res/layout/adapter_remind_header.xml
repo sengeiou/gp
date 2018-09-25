@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_menu"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:background="@color/ubt_transparent"
+    android:orientation="horizontal"
+    app:right_id="@+id/ll_right_menu">
+
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="@dimen/dp_50"
+        android:layout_height="@dimen/dp_50"
+        android:layout_below="@+id/view_curline"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/dp_31"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_add3" />
+
+    <TextView
+        android:id="@+id/tv_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/iv"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/dp_26"
+        android:layout_marginTop="@dimen/dp_10"
+        android:gravity="center_vertical"
+        android:textColor="@color/ubt_tab_btn_txt_checked_color"
+        android:textSize="@dimen/sp_18"
+        tools:text="设置提醒事项" />
+</RelativeLayout>

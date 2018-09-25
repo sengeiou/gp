@@ -1,6 +1,5 @@
-package com.ubtechinc.goldenpig.personal.interlocution;
+package com.ubtechinc.goldenpig.personal.remind;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -22,6 +21,10 @@ import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.model.InterlocutionItemModel;
 import com.ubtechinc.goldenpig.model.JsonCallback;
+import com.ubtechinc.goldenpig.model.RemindModel;
+import com.ubtechinc.goldenpig.personal.interlocution.AddInterlocutionActivity;
+import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionAdapter;
+import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionModel;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.StateView;
@@ -40,14 +43,15 @@ import java.util.List;
 import butterknife.BindView;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_INTERLO_SUCCESS;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_REMIND_SUCCESS;
 
-public class InterlocutionActivity extends BaseNewActivity implements SwipeItemClickListener {
+public class RemindActivity extends BaseNewActivity implements SwipeItemClickListener {
     @BindView(R.id.rl_titlebar)
     SecondTitleBarViewImg rl_titlebar;
     @BindView(R.id.recycler)
     SwipeMenuRecyclerView recycler;
-    InterlocutionAdapter adapter;
-    private ArrayList<InterlocutionItemModel> mList;
+    RemindAdapter adapter;
+    private ArrayList<RemindModel> mList;
     /**
      *
      */
@@ -56,7 +60,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
 
     @Override
     protected int getContentViewId() {
-        return R.layout.activity_interlocution;
+        return R.layout.activity_remind;
     }
 
     @Override
@@ -74,7 +78,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
                 onRefresh();
             }
         });
-        rl_titlebar.setTitleText(getString(R.string.ubt_custom_answer));
+        rl_titlebar.setTitleText("提醒事项");
         rl_titlebar.setLeftOnclickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,11 +86,11 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
             }
         });
         rl_titlebar.setIvRight(R.drawable.ic_add);
-        rl_titlebar.getIvRight().setVisibility(View.GONE);
+        rl_titlebar.getIvRight().setVisibility(View.INVISIBLE);
         rl_titlebar.setRightOnclickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityRoute.toAnotherActivity(InterlocutionActivity.this, AddInterlocutionActivity
+                ActivityRoute.toAnotherActivity(RemindActivity.this, AddRemindActivity
                         .class, false);
             }
         });
@@ -104,7 +108,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
         recycler.setSwipeMenuCreator(swipeMenuCreator);
         recycler.setSwipeItemClickListener(this);
         recycler.setSwipeMenuItemClickListener(mMenuItemClickListener);
-        adapter = new InterlocutionAdapter(this, mList);
+        adapter = new RemindAdapter(this, mList);
         recycler.setAdapter(adapter);
         requestModel = new InterlocutionModel();
         onRefresh();
@@ -112,42 +116,63 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
 
     public void onRefresh() {
         LoadingDialog.getInstance(this).show();
-        Type type = new TypeToken<List<InterlocutionItemModel>>() {
-        }.getType();
-        requestModel.getInterlocutionRequest(new JsonCallback<List<InterlocutionItemModel>>(type) {
+        new Handler().postDelayed(new Runnable() {
             @Override
-            public void onError(String e) {
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        ToastUtils.showShortToast(e);
-                        LoadingDialog.getInstance(InterlocutionActivity.this).dismiss();
-                    }
-                });
-
+            public void run() {
+                for (int i = 0; i < 10; i++) {
+                    RemindModel mo = new RemindModel();
+                    mo.date = "今天";
+                    mo.msg = "提醒事" + i;
+                    mo.time_am = "上午";
+                    mo.time = "9:10";
+                    mList.add(mo);
+                }
+                if (mList.size() > 0) {
+                    rl_titlebar.getIvRight().setVisibility(View.VISIBLE);
+                } else {
+                    RemindModel mo = new RemindModel();
+                    mo.type = 1;
+                    mList.add(mo);
+                    rl_titlebar.getIvRight().setVisibility(View.INVISIBLE);
+                }
+                adapter.notifyDataSetChanged();
+                LoadingDialog.getInstance(RemindActivity.this).dismiss();
             }
-
-            @Override
-            public void onSuccess(List<InterlocutionItemModel> reponse) {
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                    @Override
-                    public void run() {
-                        LoadingDialog.getInstance(InterlocutionActivity.this).dismiss();
-                        mList.clear();
-                        if (reponse == null || reponse.size() == 0) {
-                            InterlocutionItemModel model = new InterlocutionItemModel();
-                            model.type = 1;
-                            mList.add(model);
-                            rl_titlebar.getIvRight().setVisibility(View.GONE);
-                        } else {
-                            rl_titlebar.getIvRight().setVisibility(View.VISIBLE);
-                        }
-                        mList.addAll(reponse);
-                        adapter.notifyDataSetChanged();
-                    }
-                });
-            }
-        });
+        }, 2000);
+//        Type type = new TypeToken<List<InterlocutionItemModel>>() {
+//        }.getType();
+//        requestModel.getInterlocutionRequest(new JsonCallback<List<InterlocutionItemModel>>
+// (type) {
+//            @Override
+//            public void onError(String e) {
+//                new Handler(Looper.getMainLooper()).post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        ToastUtils.showShortToast(e);
+//                        LoadingDialog.getInstance(RemindActivity.this).dismiss();
+//                    }
+//                });
+//
+//            }
+//
+//            @Override
+//            public void onSuccess(List<InterlocutionItemModel> reponse) {
+//                new Handler(Looper.getMainLooper()).post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        LoadingDialog.getInstance(RemindActivity.this).dismiss();
+//                        mList.clear();
+//                        if (reponse == null || reponse.size() < 2) {
+//                            InterlocutionItemModel model = new InterlocutionItemModel();
+//                            model.type = 1;
+//                            mList.add(model);
+//                        }
+//                        mList.addAll(reponse);
+//                        adapter.notifyDataSetChanged();
+//                    }
+//                });
+//            }
+//        });
     }
 
     /**
@@ -166,7 +191,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
             // 添加右侧的，如果不添加，则右侧不会出现菜单。
             {
-                SwipeMenuItem deleteItem = new SwipeMenuItem(InterlocutionActivity.this)
+                SwipeMenuItem deleteItem = new SwipeMenuItem(RemindActivity.this)
                         .setBackgroundColor(getResources().getColor(R.color
                                 .ubt_dialog_btn_txt_color))
                         .setText("删除")
@@ -192,46 +217,43 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
             int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
             if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
                 if (menuPosition == 0) {
-                    requestModel.deleteInterlocRequest(mList.get(adapterPosition).strDocId, new
-                            JsonCallback<String>(String.class) {
-                                @Override
-                                public void onSuccess(String reponse) {
-                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            ToastUtils.showShortToast("删除成功");
-                                            LoadingDialog.getInstance(InterlocutionActivity.this)
-                                                    .dismiss();
-                                            mList.remove(adapterPosition);
-                                            if (mList.size() == 0) {
-                                                InterlocutionItemModel model = new
-                                                        InterlocutionItemModel();
-                                                model.type = 1;
-                                                mList.add(model);
-                                                rl_titlebar.getIvRight().setVisibility(View.GONE);
-                                            } else {
-                                                rl_titlebar.getIvRight().setVisibility(View
-                                                        .VISIBLE);
-                                            }
-                                            adapter.notifyDataSetChanged();
-                                        }
-                                    });
-                                }
-
-                                @Override
-                                public void onError(String str) {
-                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            LoadingDialog.getInstance(InterlocutionActivity.this)
-                                                    .dismiss();
-                                            ToastUtils.showShortToast(str);
-                                        }
-                                    });
-                                }
-                            });
-                    LoadingDialog.getInstance(InterlocutionActivity.this).setTimeout(20)
-                            .setShowToast(true).show();
+//                    requestModel.deleteInterlocRequest(mList.get(adapterPosition).strDocId, new
+//                            JsonCallback<String>(String.class) {
+//                                @Override
+//                                public void onSuccess(String reponse) {
+//                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            ToastUtils.showShortToast("删除成功");
+//                                            LoadingDialog.getInstance(RemindActivity.this)
+//                                                    .dismiss();
+//                                            mList.remove(adapterPosition);
+//                                            if (mList.size() < 2 && mList.size() > 0 && mList.get
+//                                                    (0).type != 1) {
+//                                                InterlocutionItemModel model = new
+//                                                        InterlocutionItemModel();
+//                                                model.type = 1;
+//                                                mList.add(model);
+//                                            }
+//                                            adapter.notifyDataSetChanged();
+//                                        }
+//                                    });
+//                                }
+//
+//                                @Override
+//                                public void onError(String str) {
+//                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            LoadingDialog.getInstance(RemindActivity.this)
+//                                                    .dismiss();
+//                                            ToastUtils.showShortToast(str);
+//                                        }
+//                                    });
+//                                }
+//                            });
+//                    LoadingDialog.getInstance(RemindActivity.this).setTimeout(20)
+//                            .setShowToast(true).show();
                 }
             }
         }
@@ -246,7 +268,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
     @Override
     protected void onReceiveEvent(Event event) {
         super.onReceiveEvent(event);
-        if (event.getCode() == ADD_INTERLO_SUCCESS) {
+        if (event.getCode() == ADD_REMIND_SUCCESS) {
             onRefresh();
         }
     }
@@ -255,11 +277,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
     public void onItemClick(View itemView, int position) {
         LogUtils.d("hdf", "position:" + position);
         if (mList.get(position).type == 1) {
-            Intent it = new Intent(InterlocutionActivity.this, AddInterlocutionActivity.class);
-            startActivity(it);
-        } else {
-            Intent it = new Intent(InterlocutionActivity.this, AddInterlocutionActivity.class);
-            it.putExtra("item", mList.get(position));
+            Intent it = new Intent(RemindActivity.this, AddRemindActivity.class);
             startActivity(it);
         }
     }

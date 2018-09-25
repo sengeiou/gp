@@ -34,7 +34,7 @@ public abstract class JsonCallback<T> implements Callback {
     @Override
     public void onResponse(Call call, Response response) throws IOException {
         String result = response.body().string();
-        LogUtils.d("InterlocutionModel", result);
+        LogUtils.d("hdf", result);
         JSONObject jsonObject = null;
         try {
             jsonObject = new JSONObject(result);

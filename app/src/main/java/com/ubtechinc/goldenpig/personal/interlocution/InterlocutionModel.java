@@ -234,6 +234,59 @@ public class InterlocutionModel extends BaseHttpProxy {
         call.enqueue(callback);
     }
 
+    public void updateInterlocutionRequest(String strQuest, String strItemId, String strAnswer,
+                                           String id, JsonCallback callback) {
+        StringBuilder sb = new StringBuilder();
+        if (CookieInterceptor.get().getThridLogin().getLoginType().toLowerCase().equals("wx")) {
+            sb.append(0);
+            sb.append("|");
+        } else {
+            sb.append(1);
+            sb.append("|");
+        }
+        sb.append(CookieInterceptor.get().getThridLogin().getAppId() + "|");
+        sb.append(CookieInterceptor.get().getThridLogin().getOpenId() + "|");
+        sb.append(CookieInterceptor.get().getThridLogin().getAccessToken() + "|");
+        sb.append(CookieInterceptor.get().getThridLogin().getTvsId());
+
+        OkHttpClient okHttpClient = getHttpClient();
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("type", CookieInterceptor.get().getThridLogin().getLoginType().toLowerCase()
+                    .equals("wx") ? "0" : "1");
+            obj.put("openId", CookieInterceptor.get().getThridLogin().getOpenId());
+            obj.put("token", CookieInterceptor.get().getThridLogin().getAccessToken());
+            obj.put("appId", CookieInterceptor.get().getThridLogin().getAppId());
+            JSONArray questions = new JSONArray();
+            JSONObject objQu = new JSONObject();
+            objQu.put("strQuery", strQuest);
+            objQu.put("strItemId", strItemId);
+            questions.put(objQu);
+            obj.put("questions", questions);
+            JSONArray answers = new JSONArray();
+            JSONObject objAn = new JSONObject();
+            objAn.put("strText", strAnswer);
+            answers.put(objAn);
+            obj.put("answers", answers);
+            obj.put("imgurl", "");
+            obj.put("audiourl", "");
+            LogUtils.d("hdf", obj.toString());
+            RequestBody requestBody = RequestBody.create(JSON, obj.toString().getBytes());
+            final Request okrequest = new Request.Builder()
+                    .url("https://ddsdk.html5.qq.com/api/ugc/" + id)
+                    .put(requestBody)
+                    .addHeader("dd-auth", sb.toString())
+                    .addHeader("Content-Type", "application/json")
+                    .build();
+            Call call = okHttpClient.newCall(okrequest);
+            call.enqueue(callback);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+
     public void release() {
         mHander.removeCallbacksAndMessages(null);
         getHttpClient().dispatcher().cancelAll();

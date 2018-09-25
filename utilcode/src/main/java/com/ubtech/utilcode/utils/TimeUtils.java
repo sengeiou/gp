@@ -12,12 +12,10 @@ import java.util.Date;
 import java.util.Locale;
 
 /**
- *
- *     @author: logic.peng
- *     @email  : pdlogic1987@gmail.com
- *     @time  : 2016/8/2
- *     desc  : 时间相关工具类
- *
+ * @author: logic.peng
+ * @email : pdlogic1987@gmail.com
+ * @time : 2016/8/2
+ * desc  : 时间相关工具类
  */
 public class TimeUtils {
 
@@ -33,7 +31,8 @@ public class TimeUtils {
      * 表示单引号。所有其他字符均不解释；只是在格式化时将它们简单复制到输出字符串，或者在分析时与输入字符串进行匹配。
      * </p>
      * 定义了以下模式字母（所有其他字符 'A' 到 'Z' 和 'a' 到 'z' 都被保留）： <br>
-     * <table border="1" cellspacing="1" cellpadding="1" summary="Chart shows pattern letters, date/time component,
+     * <table border="1" cellspacing="1" cellpadding="1" summary="Chart shows pattern letters,
+     * date/time component,
      * presentation, and examples.">
      * <tr>
      * <th align="left">字母</th>
@@ -156,35 +155,37 @@ public class TimeUtils {
      * <td><code>-0800</code> </td>
      * </tr>
      * </table>
-     *
-     *                          HH:mm    15:44
-     *                         h:mm a    3:44 下午
-     *                        HH:mm z    15:44 CST
-     *                        HH:mm Z    15:44 +0800
-     *                     HH:mm zzzz    15:44 中国标准时间
-     *                       HH:mm:ss    15:44:40
-     *                     yyyy-MM-dd    2016-08-12
-     *               yyyy-MM-dd HH:mm    2016-08-12 15:44
-     *            yyyy-MM-dd HH:mm:ss    2016-08-12 15:44:40
-     *       yyyy-MM-dd HH:mm:ss zzzz    2016-08-12 15:44:40 中国标准时间
-     *  EEEE yyyy-MM-dd HH:mm:ss zzzz    星期五 2016-08-12 15:44:40 中国标准时间
-     *       yyyy-MM-dd HH:mm:ss.SSSZ    2016-08-12 15:44:40.461+0800
-     *     yyyy-MM-dd'T'HH:mm:ss.SSSZ    2016-08-12T15:44:40.461+0800
-     *   yyyy.MM.dd G 'at' HH:mm:ss z    2016.08.12 公元 at 15:44:40 CST
-     *                         K:mm a    3:44 下午
-     *               EEE, MMM d, ''yy    星期五, 八月 12, '16
-     *          hh 'o''clock' a, zzzz    03 o'clock 下午, 中国标准时间
-     *   yyyyy.MMMMM.dd GGG hh:mm aaa    02016.八月.12 公元 03:44 下午
-     *     EEE, d MMM yyyy HH:mm:ss Z    星期五, 12 八月 2016 15:44:40 +0800
-     *                  yyMMddHHmmssZ    160812154440+0800
-     *     yyyy-MM-dd'T'HH:mm:ss.SSSZ    2016-08-12T15:44:40.461+0800
-     * EEEE 'DATE('yyyy-MM-dd')' 'TIME('HH:mm:ss')' zzzz    星期五 DATE(2016-08-12) TIME(15:44:40) 中国标准时间
-     *
+     * <p>
+     * HH:mm    15:44
+     * h:mm a    3:44 下午
+     * HH:mm z    15:44 CST
+     * HH:mm Z    15:44 +0800
+     * HH:mm zzzz    15:44 中国标准时间
+     * HH:mm:ss    15:44:40
+     * yyyy-MM-dd    2016-08-12
+     * yyyy-MM-dd HH:mm    2016-08-12 15:44
+     * yyyy-MM-dd HH:mm:ss    2016-08-12 15:44:40
+     * yyyy-MM-dd HH:mm:ss zzzz    2016-08-12 15:44:40 中国标准时间
+     * EEEE yyyy-MM-dd HH:mm:ss zzzz    星期五 2016-08-12 15:44:40 中国标准时间
+     * yyyy-MM-dd HH:mm:ss.SSSZ    2016-08-12 15:44:40.461+0800
+     * yyyy-MM-dd'T'HH:mm:ss.SSSZ    2016-08-12T15:44:40.461+0800
+     * yyyy.MM.dd G 'at' HH:mm:ss z    2016.08.12 公元 at 15:44:40 CST
+     * K:mm a    3:44 下午
+     * EEE, MMM d, ''yy    星期五, 八月 12, '16
+     * hh 'o''clock' a, zzzz    03 o'clock 下午, 中国标准时间
+     * yyyyy.MMMMM.dd GGG hh:mm aaa    02016.八月.12 公元 03:44 下午
+     * EEE, d MMM yyyy HH:mm:ss Z    星期五, 12 八月 2016 15:44:40 +0800
+     * yyMMddHHmmssZ    160812154440+0800
+     * yyyy-MM-dd'T'HH:mm:ss.SSSZ    2016-08-12T15:44:40.461+0800
+     * EEEE 'DATE('yyyy-MM-dd')' 'TIME('HH:mm:ss')' zzzz    星期五 DATE(2016-08-12) TIME(15:44:40)
+     * 中国标准时间
+     * <p>
      * 注意：SimpleDateFormat不是线程安全的，线程安全需用{@code ThreadLocal<SimpleDateFormat>}
      */
     public static final String DEFAULT_PATTERN = "yyyy-MM-dd HH:mm:ss";
     public static final String DEFAULT_PATTERN2 = "yyyy-MM-dd HH-mm-ss";
     public static final String DEFAULT_PATTERN3 = "yyyyMMddHHmmss";
+
     /**
      * 将时间戳转为时间字符串
      * <p>格式为yyyy-MM-dd HH:mm:ss</p>
@@ -339,8 +340,10 @@ public class TimeUtils {
      * @param pattern 时间格式
      * @return unit时间戳
      */
-    public static long getTimeSpan(String time0, String time1, @TimeConstant.Unit int unit, String pattern) {
-        return ConvertUtils.millis2TimeSpan(Math.abs(string2Millis(time0, pattern) - string2Millis(time1, pattern)), unit);
+    public static long getTimeSpan(String time0, String time1, @TimeConstant.Unit int unit,
+                                   String pattern) {
+        return ConvertUtils.millis2TimeSpan(Math.abs(string2Millis(time0, pattern) -
+                string2Millis(time1, pattern)), unit);
     }
 
     /**
@@ -359,7 +362,8 @@ public class TimeUtils {
      * @return unit时间戳
      */
     public static long getTimeSpan(Date date0, Date date1, @TimeConstant.Unit int unit) {
-        return ConvertUtils.millis2TimeSpan(Math.abs(date2Millis(date0) - date2Millis(date1)), unit);
+        return ConvertUtils.millis2TimeSpan(Math.abs(date2Millis(date0) - date2Millis(date1)),
+                unit);
     }
 
     /**
@@ -397,7 +401,8 @@ public class TimeUtils {
      * @return 合适型两个时间差
      */
     public static String getFitTimeSpan(String time0, String time1, int precision) {
-        return ConvertUtils.millis2FitTimeSpan(Math.abs(string2Millis(time0, DEFAULT_PATTERN) - string2Millis(time1, DEFAULT_PATTERN)), precision);
+        return ConvertUtils.millis2FitTimeSpan(Math.abs(string2Millis(time0, DEFAULT_PATTERN) -
+                string2Millis(time1, DEFAULT_PATTERN)), precision);
     }
 
     /**
@@ -417,7 +422,8 @@ public class TimeUtils {
      * @return 合适型两个时间差
      */
     public static String getFitTimeSpan(String time0, String time1, int precision, String pattern) {
-        return ConvertUtils.millis2FitTimeSpan(Math.abs(string2Millis(time0, pattern) - string2Millis(time1, pattern)), precision);
+        return ConvertUtils.millis2FitTimeSpan(Math.abs(string2Millis(time0, pattern) -
+                string2Millis(time1, pattern)), precision);
     }
 
     /**
@@ -435,7 +441,8 @@ public class TimeUtils {
      * @return 合适型两个时间差
      */
     public static String getFitTimeSpan(Date date0, Date date1, int precision) {
-        return ConvertUtils.millis2FitTimeSpan(Math.abs(date2Millis(date0) - date2Millis(date1)), precision);
+        return ConvertUtils.millis2FitTimeSpan(Math.abs(date2Millis(date0) - date2Millis(date1)),
+                precision);
     }
 
     /**
@@ -729,7 +736,8 @@ public class TimeUtils {
         long now = System.currentTimeMillis();
         long span = now - millis;
         if (span < 0)
-            return String.format("%tc", millis);// U can read http://www.apihome.cn/api/java/Formatter.html to understand it.
+            return String.format("%tc", millis);// U can read http://www.apihome
+        // .cn/api/java/Formatter.html to understand it.
         if (span < 1000) {
             return "刚刚";
         } else if (span < TimeConstant.MIN) {
@@ -788,7 +796,8 @@ public class TimeUtils {
      * @return {@code true}: 是<br>{@code false}: 否
      */
     public static boolean isSameDay(long millis) {
-        long wee = (System.currentTimeMillis() / TimeConstant.DAY) * TimeConstant.DAY - 8 * TimeConstant.HOUR;
+        long wee = (System.currentTimeMillis() / TimeConstant.DAY) * TimeConstant.DAY - 8 *
+                TimeConstant.HOUR;
         return millis >= wee && millis < wee + TimeConstant.DAY;
     }
 
@@ -1038,7 +1047,8 @@ public class TimeUtils {
         return getWeekOfYear(millis2Date(millis));
     }
 
-    private static final String[] CHINESE_ZODIAC = {"猴", "鸡", "狗", "猪", "鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊"};
+    private static final String[] CHINESE_ZODIAC = {"猴", "鸡", "狗", "猪", "鼠", "牛", "虎", "兔", "龙",
+            "蛇", "马", "羊"};
 
     /**
      * 获取生肖
@@ -1095,7 +1105,8 @@ public class TimeUtils {
         return CHINESE_ZODIAC[year % 12];
     }
 
-    private static final String[] ZODIAC = {"水瓶座", "双鱼座", "白羊座", "金牛座", "双子座", "巨蟹座", "狮子座", "处女座", "天秤座", "天蝎座", "射手座", "魔羯座"};
+    private static final String[] ZODIAC = {"水瓶座", "双鱼座", "白羊座", "金牛座", "双子座", "巨蟹座", "狮子座",
+            "处女座", "天秤座", "天蝎座", "射手座", "魔羯座"};
     private static final int[] ZODIAC_FLAGS = {20, 19, 21, 21, 21, 22, 23, 23, 23, 24, 23, 22};
 
     /**
@@ -1179,9 +1190,8 @@ public class TimeUtils {
     /**
      * 精确到毫秒
      */
-    public static final SimpleDateFormat DATE_FORMAT_MILLISECOND =  new SimpleDateFormat(
+    public static final SimpleDateFormat DATE_FORMAT_MILLISECOND = new SimpleDateFormat(
             "yyyy-MM-dd HH:mm:ss SSS");
-
 
 
     /**
@@ -1265,13 +1275,13 @@ public class TimeUtils {
     }
 
     public static Date stringFormatToDate(String dateStr,
-                                          SimpleDateFormat dateFormat)  {
+                                          SimpleDateFormat dateFormat) {
 
 
         if (dateStr == null || dateStr.length() == 0) {
             return null;
         }
-        if (dateFormat == null ) {
+        if (dateFormat == null) {
             dateFormat = DEFAULT_DATE_FORMAT;
         }
         Date date = null;
@@ -1283,7 +1293,6 @@ public class TimeUtils {
             e.printStackTrace();
         }
         return date;
-
 
 
     }
@@ -1298,8 +1307,7 @@ public class TimeUtils {
     /**
      * 返回年份
      *
-     * @param date
-     *            日期
+     * @param date 日期
      * @return 返回年份
      */
     public static int getYearFromDate(Date date) {
@@ -1311,8 +1319,7 @@ public class TimeUtils {
     /**
      * 返回月份
      *
-     * @param date
-     *            日期
+     * @param date 日期
      * @return 返回月份
      */
     public static int getMonthFromDate(Date date) {
@@ -1324,8 +1331,7 @@ public class TimeUtils {
     /**
      * 返回日份
      *
-     * @param date
-     *            日期
+     * @param date 日期
      * @return 返回日份
      */
     public static int getDayFromDate(Date date) {
@@ -1337,8 +1343,7 @@ public class TimeUtils {
     /**
      * 返回星期
      *
-     * @param date
-     *            日期
+     * @param date 日期
      * @return 返回星期
      */
     public static int getWeekFromDate(Date date) {
@@ -1350,8 +1355,7 @@ public class TimeUtils {
     /**
      * 返回小时
      *
-     * @param date
-     *            日期
+     * @param date 日期
      * @return 返回小时
      */
     public static int getHourFromDate(Date date) {
@@ -1363,8 +1367,7 @@ public class TimeUtils {
     /**
      * 返回分钟
      *
-     * @param date
-     *            日期
+     * @param date 日期
      * @return 返回分钟
      */
     public static int getMinuteFromDate(Date date) {
@@ -1376,8 +1379,7 @@ public class TimeUtils {
     /**
      * 返回秒钟
      *
-     * @param date
-     *            日期
+     * @param date 日期
      * @return 返回秒钟
      */
     public static int getSecondFromDate(Date date) {
@@ -1389,10 +1391,8 @@ public class TimeUtils {
     /**
      * 日期相加
      *
-     * @param date
-     *            日期
-     * @param month
-     *            天数
+     * @param date  日期
+     * @param month 天数
      * @return 返回相加后的日期
      */
     public static Date addMonth(Date date, int month) {
@@ -1406,10 +1406,8 @@ public class TimeUtils {
     /**
      * 日期相加
      *
-     * @param date
-     *            日期
-     * @param day
-     *            天数
+     * @param date 日期
+     * @param day  天数
      * @return 返回相加后的日期
      */
     public static Date addDate(Date date, int day) {
@@ -1422,10 +1420,8 @@ public class TimeUtils {
     /**
      * 日期相减
      *
-     * @param date
-     *            日期
-     * @param date1
-     *            日期
+     * @param date  日期
+     * @param date1 日期
      * @return 返回相减后的日期
      */
     public static int subtractDateForDay(Date date, Date date1) {
@@ -1435,10 +1431,8 @@ public class TimeUtils {
     /**
      * 日期相减获得秒钟
      *
-     * @param date
-     *            日期
-     * @param date1
-     *            日期
+     * @param date  日期
+     * @param date1 日期
      * @return 返回相减后的秒
      */
     public static int subtractDateForSecond(Date date, Date date1) {
@@ -1448,8 +1442,7 @@ public class TimeUtils {
     /**
      * 返回毫秒
      *
-     * @param date
-     *            日期
+     * @param date 日期
      * @return 返回毫秒
      */
     public static long getMillisFromDate(Date date) {
@@ -1461,10 +1454,8 @@ public class TimeUtils {
     /**
      * 日期相加
      *
-     * @param date
-     *            日期
-     * @param min
-     *            分钟
+     * @param date 日期
+     * @param min  分钟
      * @return 返回相加后的日期
      */
     public static Date addMin(Date date, int min) {
@@ -1475,13 +1466,14 @@ public class TimeUtils {
 
     /**
      * 分转换为小时
+     *
      * @param chargeSec 分
      * @return 小时格式
      */
     public static String changeMinuts2SpecFormat(String chargeSec) {
 
         String serviceTime = "0分";
-        if(chargeSec!=null) {
+        if (chargeSec != null) {
 
             Double min = Double.valueOf(chargeSec);
             String format;
@@ -1489,21 +1481,18 @@ public class TimeUtils {
             Integer cvtDay = (int) (min / (60 * 24));
             Integer cvtHour = (int) (min / (60) - cvtDay * 24);
             Integer cvtMinute = (int) (min - cvtHour * 60 - cvtDay * 24 * 60);
-            if (cvtDay > 0)
-            {
+            if (cvtDay > 0) {
                 format = "%1$,d天%2$,d小时%3$,d分";
                 array = new Object[]
-                        { cvtDay, cvtHour, cvtMinute };
-            } else if (cvtHour > 0)
-            {
+                        {cvtDay, cvtHour, cvtMinute};
+            } else if (cvtHour > 0) {
                 format = "%1$,d小时%2$,d分";
                 array = new Object[]
-                        { cvtHour, cvtMinute };
-            } else
-            {
+                        {cvtHour, cvtMinute};
+            } else {
                 format = "%1$,d分";
                 array = new Object[]
-                        { cvtMinute };
+                        {cvtMinute};
             }
             serviceTime = String.format(format, array);
         }
@@ -1512,35 +1501,35 @@ public class TimeUtils {
 
     /**
      * 秒转换为小时
+     *
      * @param second
      * @return
      */
-    public static String changeSecond2SpaceFormat(String second){
+    public static String changeSecond2SpaceFormat(String second) {
 
-        String serviceTime="0秒";
-        if(second!=null){
-            Double s= Double.valueOf(second);
+        String serviceTime = "0秒";
+        if (second != null) {
+            Double s = Double.valueOf(second);
             String format;
             Object[] array;
-            Integer day =(int) (s/(60*60*24));
-            Integer hours =(int) (s/(60*60)-day*24);
-            Integer minutes = (int) (s/60-hours*60-day*24*60);
-            Integer seconds = (int) (s-minutes*60-hours*60*60-day*24*60*60);
-            if(day>0){
-                format="%1$,d天%2$,d时%3$,d分%4$,d秒";
-                array=new Object[]{day,hours,minutes,seconds};
+            Integer day = (int) (s / (60 * 60 * 24));
+            Integer hours = (int) (s / (60 * 60) - day * 24);
+            Integer minutes = (int) (s / 60 - hours * 60 - day * 24 * 60);
+            Integer seconds = (int) (s - minutes * 60 - hours * 60 * 60 - day * 24 * 60 * 60);
+            if (day > 0) {
+                format = "%1$,d天%2$,d时%3$,d分%4$,d秒";
+                array = new Object[]{day, hours, minutes, seconds};
+            } else if (hours > 0) {
+                format = "%1$,d时%2$,d分%3$,d秒";
+                array = new Object[]{hours, minutes, seconds};
+            } else if (minutes > 0) {
+                format = "%1$,d分%2$,d秒";
+                array = new Object[]{minutes, seconds};
+            } else {
+                format = "%1$,d秒";
+                array = new Object[]{seconds};
             }
-            else if(hours>0){
-                format="%1$,d时%2$,d分%3$,d秒";
-                array=new Object[]{hours,minutes,seconds};
-            }else if(minutes>0){
-                format="%1$,d分%2$,d秒";
-                array=new Object[]{minutes,seconds};
-            }else{
-                format="%1$,d秒";
-                array=new Object[]{seconds};
-            }
-            serviceTime= String.format(format, array);
+            serviceTime = String.format(format, array);
         }
 
         return serviceTime;
@@ -1581,6 +1570,7 @@ public class TimeUtils {
         ss = ss - mm * 60;
         return (mm < 10 ? "0" + mm : mm) + ":" + (ss < 10 ? "0" + ss : ss);
     }
+
     public static String[] getCurrentTime() {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -1631,7 +1621,9 @@ public class TimeUtils {
         return c;
 
     }
+
     private static final String FORMAT = "yyyy-MM-dd HH:mm:ss";
+
     public static String date2Str(Calendar c) {// yyyy-MM-dd HH:mm:ss
         return date2Str(c, null);
     }
@@ -1742,6 +1734,7 @@ public class TimeUtils {
             return (years <= 0 ? 1 : years) + ONE_YEAR_AGO;
         }
     }
+
     private static long toSeconds(long date) {
         return date / 1000L;
     }
@@ -1776,5 +1769,25 @@ public class TimeUtils {
             e.printStackTrace();
         }
         return result;
+    }
+
+    public static String getWeekFromIn(int index) {
+        switch (index) {
+            case 1:
+                return "周日";
+            case 2:
+                return "周一";
+            case 3:
+                return "周二";
+            case 4:
+                return "周三";
+            case 5:
+                return "周四";
+            case 6:
+                return "周五";
+            case 7:
+                return "周六";
+        }
+        return "星期日";
     }
 }

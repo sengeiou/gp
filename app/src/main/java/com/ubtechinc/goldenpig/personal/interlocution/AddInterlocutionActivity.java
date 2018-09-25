@@ -64,6 +64,7 @@ public class AddInterlocutionActivity extends BaseNewActivity {
     LinearLayout llAnswer;
     public String strQuest, strAnswer;
     InterlocutionModel requestModel;
+    InterlocutionItemModel model;
 
     @Override
     protected int getContentViewId() {
@@ -78,7 +79,18 @@ public class AddInterlocutionActivity extends BaseNewActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        model = getIntent().getParcelableExtra("item");
         requestModel = new InterlocutionModel();
+        if (model != null) {
+            strQuest = model.vQueries.get(0).strQuery;
+            ll_add_question.setVisibility(View.GONE);
+            llQuestion.setVisibility(View.VISIBLE);
+            tvQuestion.setText("“" + strQuest + "”");
+            strAnswer = model.vAnswers.get(0).strText;
+            llAddAnswer.setVisibility(View.GONE);
+            llAnswer.setVisibility(View.VISIBLE);
+            tvAnswer.setText("“" + strAnswer + "”");
+        }
     }
 
     @OnClick({R.id.tv_left, R.id.tv_right, R.id.ll_add_question, R.id.ll_question, R.id
@@ -98,35 +110,68 @@ public class AddInterlocutionActivity extends BaseNewActivity {
                     return;
                 }
                 LoadingDialog.getInstance(this).show();
-                requestModel.addInterlocutionRequest(strQuest, strAnswer, new
-                        JsonCallback<String>(String.class) {
-                            @Override
-                            public void onSuccess(String reponse) {
-                                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        LoadingDialog.getInstance(AddInterlocutionActivity.this)
-                                                .dismiss();
-                                        ToastUtils.showShortToast("添加问答成功");
-                                        Event<String> event = new Event(ADD_INTERLO_SUCCESS);
-                                        EventBusUtil.sendEvent(event);
-                                        finish();
-                                    }
-                                });
-                            }
+                if (model == null) {
+                    requestModel.addInterlocutionRequest(strQuest, strAnswer, new
+                            JsonCallback<String>(String.class) {
+                                @Override
+                                public void onSuccess(String reponse) {
+                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            LoadingDialog.getInstance(AddInterlocutionActivity.this)
+                                                    .dismiss();
+                                            ToastUtils.showShortToast("添加问答成功");
+                                            Event<String> event = new Event(ADD_INTERLO_SUCCESS);
+                                            EventBusUtil.sendEvent(event);
+                                            finish();
+                                        }
+                                    });
+                                }
 
-                            @Override
-                            public void onError(String str) {
-                                new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        LoadingDialog.getInstance(AddInterlocutionActivity.this)
-                                                .dismiss();
-                                        ToastUtils.showShortToast("str");
-                                    }
-                                });
-                            }
-                        });
+                                @Override
+                                public void onError(String str) {
+                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            LoadingDialog.getInstance(AddInterlocutionActivity.this)
+                                                    .dismiss();
+                                            ToastUtils.showShortToast(str);
+                                        }
+                                    });
+                                }
+                            });
+                } else {
+                    requestModel.updateInterlocutionRequest(strQuest, model.vQueries.get(0)
+                            .strItemId, strAnswer, model.strDocId, new
+                            JsonCallback<String>(String.class) {
+                                @Override
+                                public void onSuccess(String reponse) {
+                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            LoadingDialog.getInstance(AddInterlocutionActivity.this)
+                                                    .dismiss();
+                                            ToastUtils.showShortToast("修改问答成功");
+                                            Event<String> event = new Event(ADD_INTERLO_SUCCESS);
+                                            EventBusUtil.sendEvent(event);
+                                            finish();
+                                        }
+                                    });
+                                }
+
+                                @Override
+                                public void onError(String str) {
+                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            LoadingDialog.getInstance(AddInterlocutionActivity.this)
+                                                    .dismiss();
+                                            ToastUtils.showShortToast(str);
+                                        }
+                                    });
+                                }
+                            });
+                }
                 break;
             case R.id.ll_add_question:
                 Intent it = new Intent(AddInterlocutionActivity.this, SetQuestOrAnswerActivity
