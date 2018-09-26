@@ -77,6 +77,8 @@ public class AlarmListActivity extends BaseNewActivity implements OnRefreshListe
         }
     }
 
+
+
     @Override
     protected int getContentViewId() {
         return R.layout.activity_alarm_list;
@@ -140,6 +142,7 @@ public class AlarmListActivity extends BaseNewActivity implements OnRefreshListe
         }
         mHandler.sendEmptyMessageDelayed(1, 20 * 1000);// 20s 秒后检查加载框是否还在
         //UbtTIMManager.getInstance().queryUser();
+
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {

@@ -49,6 +49,7 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
         wxClient = new WXClient(proxy, this);
         qqClient = new QQClient(proxy, this);
         proxy.setAuthorizeListener(this);
+
     }
 
 
