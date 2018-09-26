@@ -1,7 +1,9 @@
 package com.ubtechinc.goldenpig.pigmanager;
 
+import android.Manifest;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -9,6 +11,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -74,6 +77,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
     private String TAG="SearchPigActivity";
     private PigListDialog pigListDialog;
     private CountDownTimer mTimer;
+    private boolean mHasPermission;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,8 +109,40 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         mSearchBtn = (Button) findViewById(R.id.ubt_btn_start_set_net);
         mSearchBtn.setText(R.string.ubt_search_pig);
         mSearchBtn.setOnClickListener(this);
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+            requestPermission();
+        }
     }
+    /**
+     * 申请权限
+     */
+    private void requestPermission() {
+        mHasPermission = checkPermission();
+        if (!mHasPermission) {
+            ActivityCompat.requestPermissions(this,
+                    NEEDED_PERMISSIONS, PERMISSION_REQUEST_CODE);
+        }
 
+    }
+    private static final int PERMISSION_REQUEST_CODE = 0;
+    //两个危险权限需要动态申请
+    private static final String[] NEEDED_PERMISSIONS = new String[]{
+            Manifest.permission.ACCESS_COARSE_LOCATION,
+            Manifest.permission.ACCESS_FINE_LOCATION
+    };
+    /**
+     * 检查是否已经授予权限
+     * @return
+     */
+    private boolean checkPermission() {
+        for (String permission : NEEDED_PERMISSIONS) {
+            if (ActivityCompat.checkSelfPermission(this, permission)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
     @Override
     protected void onResume() {
         super.onResume();

@@ -43,7 +43,7 @@ public class RobotAllAccountViewModel {
 
     public RobotBindStateLive checkRobotBindState(String searialNumber,String token,String appId) {
         final RobotBindStateLive robotBindStateLive = new RobotBindStateLive();
-        mCheckRobotRepository.getRobotBindUsers(searialNumber,token,appId, new CheckUserRepository.ICheckBindStateCallBack() {
+        mCheckRobotRepository.getRobotBindUsers(searialNumber,token,appId,"1", new CheckUserRepository.ICheckBindStateCallBack() {
             @Override
             public void onError(ThrowableWrapper e) {
                 robotBindStateLive.networkError();

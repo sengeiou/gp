@@ -1,5 +1,6 @@
 package com.ubtechinc.goldenpig.pigmanager.adpater;
 
+import android.app.Activity;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -9,19 +10,25 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.ubt.improtolib.UserContacts;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.comm.img.GlideCircleTransform;
+import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.widget.PigListAdapter;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 
 public class PigMemberAdapter extends RecyclerView.Adapter<PigMemberAdapter.MemberHolder>{
 
     private ArrayList<CheckBindRobotModule.User> mUserList;
     private boolean isAdminUser;
-    public PigMemberAdapter(Context context,ArrayList<CheckBindRobotModule.User>userList){
+    private SoftReference<Activity> activityRefer;
+    public PigMemberAdapter(Activity context, ArrayList<CheckBindRobotModule.User>userList){
         this.mUserList=userList;
+        activityRefer=new SoftReference<>(context);
     }
     @NonNull
     @Override
@@ -36,7 +43,15 @@ public class PigMemberAdapter extends RecyclerView.Adapter<PigMemberAdapter.Memb
             CheckBindRobotModule.User user = mUserList.get(position);
             if (user!=null){
                 holder.userNameTv.setText(user.getNickName());
-                if (position==0){
+                if (activityRefer!=null&&activityRefer.get()!=null) {
+                    Glide.with(activityRefer.get())
+                            .load(user.getUserImage())
+                            .asBitmap()
+                            .centerCrop()
+                            .transform(new GlideCircleTransform(activityRefer.get()))
+                            .into(holder.userPoto);
+                }
+                if (user.getIsAdmin()==1){
                     holder.adminFlageView.setVisibility(View.VISIBLE);
                 }else {
                     holder.adminFlageView.setVisibility(View.INVISIBLE);

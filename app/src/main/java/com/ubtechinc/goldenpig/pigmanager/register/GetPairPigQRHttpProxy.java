@@ -19,12 +19,12 @@ import okhttp3.Response;
  *@change        :
  *@changetime    :2018/9/22 14:17
 */
-public class GetAddMemberQRHttpProxy extends BaseHttpProxy {
-    public void getMemberQR(String token,String appId,final GetMemberQRCallBack callBack){
+public class GetPairPigQRHttpProxy extends BaseHttpProxy {
+    public void getPairPigQR(String token,String appId,final GetPairPigQRCallBack callBack){
         OkHttpClient okHttpClient =getHttpClient();
 
         final Request okrequest = new Request.Builder()
-                .url(BuildConfig.HOST+"/user-service-rest/v2/goldenPig/getCiphertext")
+                .url(BuildConfig.HOST+"/user-service-rest/v2/goldenPig/getPairInfo")
                 .get()
                 .addHeader("authorization",token)
                 .addHeader("X-UBT-AppId",appId)
@@ -44,7 +44,7 @@ public class GetAddMemberQRHttpProxy extends BaseHttpProxy {
                     if (response.isSuccessful()){
                         try {
                             String result = response.body().source().readUtf8();
-                            callBack.onSuccess(result);
+
                         } catch (RuntimeException e) {
                             callBack.onError(e.getMessage());
                         }
@@ -58,7 +58,7 @@ public class GetAddMemberQRHttpProxy extends BaseHttpProxy {
         });
     }
 
-    public interface GetMemberQRCallBack{
+    public interface GetPairPigQRCallBack{
         void onError(String error);
         void onSuccess(String response);
     }

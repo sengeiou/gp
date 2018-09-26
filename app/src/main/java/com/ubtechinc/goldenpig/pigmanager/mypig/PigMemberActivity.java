@@ -3,11 +3,16 @@ package com.ubtechinc.goldenpig.pigmanager.mypig;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.ubt.imlibv2.bean.UbtTIMManager;
+import com.ubt.qrcodelib.QRScannerActivity;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.commlib.view.SpaceItemDecoration;
 import com.ubtechinc.goldenpig.BuildConfig;
@@ -16,6 +21,8 @@ import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.view.WrapContentLinearLayoutManager;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
+import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
+import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
 import com.ubtechinc.goldenpig.personal.management.AddAndSetContactActivity;
@@ -23,8 +30,10 @@ import com.ubtechinc.goldenpig.personal.management.AddressBookActivity;
 import com.ubtechinc.goldenpig.pigmanager.adpater.PigMemberAdapter;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.register.CheckUserRepository;
+import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.pigmanager.register.UnbindMemberHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.nets.http.ThrowableWrapper;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
@@ -33,8 +42,13 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  *@auther        :hqt
@@ -50,7 +64,9 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
     private Button mUnbindBtn;
     private PigInfo mPig;
     private ArrayList<CheckBindRobotModule.User> mUsertList=new ArrayList<>();
-    @Override
+    private boolean isDownloadedUserList;
+    private UnbindPigProxy.UnBindPigCallback unBindPigCallback;
+     @Override
     protected int getConentView() {
         return R.layout.activity_pigmember;
     }
@@ -61,21 +77,53 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
         setToolBarTitle(getString(R.string.ubt_menber_group));
         initViews();
 
-        getMember();
+        getMember("1");
         initData();
     }
-    private void initData(){
-        CheckBindRobotModule.User user=new CheckBindRobotModule().new User();
-        user.setNickName("哈哈哈哈哈");
-        mUsertList.add(user);
-        CheckBindRobotModule.User user2=new CheckBindRobotModule().new User();
-        user2.setNickName("嘻嘻嘻嘻嘻");
-        mUsertList.add(user2);
-        CheckBindRobotModule.User user3=new CheckBindRobotModule().new User();
-        user3.setNickName("哦哦哦哦哦");
-        mUsertList.add(user3);
+    private void initData() {
+        unBindPigCallback = new UnbindPigProxy.UnBindPigCallback() {
+            @Override
+            public void onError(IOException e) {
 
-        adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onSuccess(String reponse) {
+                if (!TextUtils.isEmpty(reponse)) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(reponse);
+                        int code = jsonObject.has("code") ? jsonObject.getInt("code") : -1;
+
+                        if (code == 0) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ToastUtils.showShortToast(PigMemberActivity.this, R.string.ubt_ubbind_success);
+                                    new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", null);
+                                    try {
+                                        Thread.sleep(100);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    finish();
+                                }
+                            });
+                        } else {
+                            final String msg = jsonObject.has("message") ? jsonObject.getString("message") : "返回的结果格式错误";
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ToastUtils.showShortToast(PigMemberActivity.this, msg);
+                                }
+                            });
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }
+        };
     }
     private void initViews(){
         mMemberRcy=findViewById(R.id.ubt_rcy_member);
@@ -97,15 +145,32 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
     }
 
     private boolean isCurrentAdmin(){
-        return true;
+         if (mUsertList!=null){
+             for (CheckBindRobotModule.User user:mUsertList){
+                if (user.getIsAdmin()==1&&user.getUserId()==Integer.valueOf(AuthLive.getInstance().getCurrentUser().getUserId())){
+                    return true;
+                }
+             }
+         }
+        return false;
     }
-    private void getMember(){
+    private void getMember(String admin){
+         if (isDownloadedUserList)
+             return;
+         if ("0".equals(admin)){
+             isDownloadedUserList=true;
+         }
         if (mPig==null) {
             ToastUtils.showShortToast(this, getString(R.string.ubt_no_pigs));
             return;
         }
+        if (mUsertList==null){
+            mUsertList=new ArrayList<>();
+        }else  if ("1".equals(admin)&&mUsertList!=null){
+            mUsertList.clear();
+        }
         CheckUserRepository repository=new CheckUserRepository();
-        repository.getRobotBindUsers(mPig.getRobotName(), CookieInterceptor.get().getToken(), BuildConfig.APP_ID, new CheckUserRepository.ICheckBindStateCallBack() {
+        repository.getRobotBindUsers(mPig.getRobotName(), CookieInterceptor.get().getToken(), BuildConfig.APP_ID,admin, new CheckUserRepository.ICheckBindStateCallBack() {
             @Override
             public void onError(ThrowableWrapper e) {
                 ToastUtils.showShortToast(PigMemberActivity.this, "获取成员列表失败");
@@ -118,10 +183,19 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
 
             @Override
             public void onSuccessWithJson(String jsonStr) {
-
+                final List<CheckBindRobotModule.User> bindUsers = jsonToUserList(jsonStr);
+                if (mUsertList!=null) {
+                    mUsertList.addAll(bindUsers);
+                    if (adapter!=null) {
+                        adapter.notifyDataSetChanged();
+                    }
+                    mUsertList.addAll(bindUsers);
+                }
+                getMember("0");
             }
         });
     }
+
     private void setAddBtnEnable(boolean isEnable){
         if (isEnable){
             mToolbarRightBtn=findViewById(R.id.ubt_imgbtn_add);
@@ -131,21 +205,39 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
             findViewById(R.id.ubt_imgbtn_add).setVisibility(View.GONE);
         }
     }
-    private void doUnbind(String userId){
-        if (mPig==null)
+    private void doUnbind(final String userId) {
+        if (mPig == null)
             return;
-        UnbindMemberHttpProxy proxy=new UnbindMemberHttpProxy();
-        proxy.doUnbind(BuildConfig.APP_ID, CookieInterceptor.get().getToken(), mPig.getRobotName(), userId, new UnbindMemberHttpProxy.UnbindCallBack() {
-            @Override
-            public void onError(String err) {
+        ///操作用户是唯一或只是一般成员可好直接弹框点击确认退出
+        //否则要跳转到权限转让界面操作
+        if (mUsertList.size()>1&&isCurrentAdmin()){
+            HashMap<String,ArrayList<CheckBindRobotModule.User>> param=new HashMap<>();
+            param.put("users",mUsertList);
+            ActivityRoute.toAnotherActivity(this,TransferAdminActivity.class,param,false);
+        }else {
+            UBTBaseDialog dialog = new UBTBaseDialog(this);
+            dialog.setRightButtonTxt(getString(R.string.ubt_enter));
+            dialog.setLeftButtonTxt(getString(R.string.ubt_cancel));
+            dialog.setTips(getString(R.string.ubt_drop_up_tips));
 
-            }
+            dialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
+            dialog.setOnUbtDialogClickLinsenter(new UBTBaseDialog.OnUbtDialogClickLinsenter() {
+                @Override
+                public void onLeftButtonClick(View view) {
 
-            @Override
-            public void onSuccess() {
+                }
 
-            }
-        });
+                @Override
+                public void onRightButtonClick(View view) {
+                    UnbindPigProxy pigProxy = new UnbindPigProxy();
+                    final String serialNo = AuthLive.getInstance().getCurrentPig().getRobotName();
+
+                    final String token = CookieInterceptor.get().getToken();
+                    pigProxy.unbindPig(serialNo, userId, token, BuildConfig.APP_ID, unBindPigCallback);
+                }
+            });
+            dialog.show();
+        }
     }
     @Override
     public void onClick(View v) {
@@ -178,7 +270,7 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
             // 添加右侧的，如果不添加，则右侧不会出现菜单。
             {
-                SwipeMenuItem addItem = new SwipeMenuItem(PigMemberActivity.this)
+                SwipeMenuItem transferItem = new SwipeMenuItem(PigMemberActivity.this)
                         .setBackgroundColor(getResources().getColor(R.color
                                 .ubt_tab_btn_txt_checked_color))
                         .setText(R.string.ubt_trans_admin)
@@ -186,7 +278,7 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
                         .setTextSize(15)
                         .setWidth(getResources().getDimensionPixelSize(R.dimen.dp_88))
                         .setHeight(height);
-                swipeRightMenu.addMenuItem(addItem); // 添加菜单到右侧。
+                swipeRightMenu.addMenuItem(transferItem); // 添加菜单到右侧。
                 SwipeMenuItem deleteItem = new SwipeMenuItem(PigMemberActivity.this)
                         .setBackground(getResources().getDrawable(R.drawable.shape_ubt_member_menu_bg))
                         .setText(R.string.ubt_delete)
@@ -207,12 +299,77 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
             int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
             int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
             if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
-                if (menuPosition == 0) {
-
-                } else if (menuPosition == 1) {
-
+                if (menuPosition==1) {
+                    if (mUsertList != null && adapterPosition > -1 && adapterPosition < mUsertList.size()) {
+                        showDeleteMember(String.valueOf(mUsertList.get(adapterPosition).getUserId()));
+                    }
+                }else if (menuPosition==0){
+                    showTransferAdminDialog();
                 }
+
+            }else if (direction == SwipeMenuRecyclerView.LEFT_DIRECTION){
+
             }
         }
     };
+
+    /**
+     * 显示删除成员确定框
+     * @param userId 用户ID
+     */
+    private void showDeleteMember(final String userId){
+        //doUnbind(String.valueOf(userId);
+        UBTBaseDialog dialog=new UBTBaseDialog(this);
+        dialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
+        dialog.setTips(getString(R.string.ubt_delte_member_tips));
+        dialog.setLeftButtonTxt(getString(R.string.ubt_cancel));
+        dialog.setRightButtonTxt(getString(R.string.ubt_enter));
+        dialog.setOnUbtDialogClickLinsenter(new UBTBaseDialog.OnUbtDialogClickLinsenter() {
+            @Override
+            public void onLeftButtonClick(View view) {
+
+            }
+
+            @Override
+            public void onRightButtonClick(View view) {
+                doUnbind(userId);
+            }
+        });
+        dialog.show();
+    }
+
+    /**
+     * 显示转让权限确认对话框
+     */
+    private void  showTransferAdminDialog(){
+        UBTSubTitleDialog dialog=new UBTSubTitleDialog(this);
+        dialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
+        dialog.setTips(getString(R.string.ubt_trandfer_admin_tips));
+        dialog.setLeftButtonTxt(getString(R.string.ubt_cancel));
+        dialog.setRightButtonTxt(getString(R.string.ubt_enter));
+        dialog.setSubTips(getString(R.string.ubt_transfer_tips));
+        dialog.setOnUbtDialogClickLinsenter(new UBTSubTitleDialog.OnUbtDialogClickLinsenter() {
+            @Override
+            public void onLeftButtonClick(View view) {
+
+            }
+
+            @Override
+            public void onRightButtonClick(View view) {
+
+            }
+        });
+        dialog.show();
+    }
+    private List<CheckBindRobotModule.User> jsonToUserList(String jsonStr){
+        List<CheckBindRobotModule.User> result=null;
+        Gson gson=new Gson();
+        try {
+            result = gson.fromJson(jsonStr, new TypeToken<List<CheckBindRobotModule.User>>() {
+            }.getType());
+        }catch (RuntimeException e){
+            e.printStackTrace();
+        }
+        return result;
+    }
 }

@@ -185,8 +185,8 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
         }
         mToHospotBtn.setAlpha(alpha);
         mToHospotBtn.setEnabled(isEnable);
-        mDevMangerBtn.setAlpha(alpha);
-        mDevMangerBtn.setEnabled(isEnable);
+        /*mDevMangerBtn.setAlpha(alpha);
+        mDevMangerBtn.setEnabled(isEnable);*/
         mAnswerBtn.setAlpha(alpha);
         mAnswerBtn.setEnabled(isEnable);
         mClockBtn.setAlpha(alpha);

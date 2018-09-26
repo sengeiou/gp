@@ -3,6 +3,7 @@ package com.ubtechinc.goldenpig.route;
 import android.app.Activity;
 import android.content.Intent;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -49,18 +50,17 @@ public class ActivityRoute {
             Object value = entry.getValue();
             if (value instanceof String) {
                 intent.putExtra(key, (String) value);
-            }
-            if (value instanceof Boolean) {
+            }else if (value instanceof Boolean) {
                 intent.putExtra(key, (boolean) value);
-            }
-            if (value instanceof Integer) {
+            }else if (value instanceof Integer) {
                 intent.putExtra(key, (int) value);
-            }
-            if (value instanceof Float) {
+            }else if (value instanceof Float) {
                 intent.putExtra(key, (float) value);
             }
-            if (value instanceof Double) {
+            else if (value instanceof Double) {
                 intent.putExtra(key, (double) value);
+            }else {
+                intent.putExtra(key, (Serializable) value);
             }
         }
         activity.startActivity(intent);

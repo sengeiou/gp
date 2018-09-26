@@ -37,9 +37,10 @@ public class CheckUserRepository {
             }
         });
     }
-    public void getRobotBindUsers(String searialNumber,String token,String appId,final ICheckBindStateCallBack callback){
+    public void getRobotBindUsers(String searialNumber,String token,String appId,String isAdmin,final ICheckBindStateCallBack callback){
         CheckBindRobotModule.Request request = new CheckBindRobotModule.Request();
         request.setSerialNumber(searialNumber);
+        request.setIsAdmin(isAdmin);
         HashMap<String,String> headers=new HashMap<>();
         headers.put("authorization",token);
 

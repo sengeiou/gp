@@ -28,7 +28,7 @@ public class PigUtils {
                                 pigInfo.setMasterUserId(userId);
                                 pigInfo.setRobotName(object.getString("serialNumber"));
                                 pigInfo.setBindingId(object.getInt("bindingId"));
-                                if (object.getInt("isAdmin")==1||object.getInt("userId")==Integer.valueOf(userId)){
+                                if (object.getInt("isAdmin")==1){
                                     pigInfo.isAdmin=true;
                                     pigInfos.add(0,pigInfo);
                                 }else {
