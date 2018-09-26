@@ -105,6 +105,7 @@ public class EditRecordActivity extends BaseNewActivity implements Observer {
         mStateView.setOnRetryClickListener(new StateView.OnRetryClickListener() {
             @Override
             public void onRetryClick() {
+                onRefresh();
             }
         });
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -193,12 +194,13 @@ public class EditRecordActivity extends BaseNewActivity implements Observer {
     }
 
 
-    public void onRefresh(RefreshLayout refreshLayout) {
+    public void onRefresh() {
         if (mHandler.hasMessages(1)) {
             mHandler.removeMessages(1);
         }
         mHandler.sendEmptyMessageDelayed(1, 20 * 1000);// 20s 秒后检查加载框是否还在
         UbtTIMManager.getInstance().queryRecord();
+        LoadingDialog.getInstance(this).setTimeout(20).setShowToast(true).show();
     }
 
     public void onError(String str) {
@@ -292,7 +294,7 @@ public class EditRecordActivity extends BaseNewActivity implements Observer {
                 List<UserRecords.Record> list = new ArrayList();
                 for (int i = 0; i < mList.size(); i++) {
                     if (mList.get(i).select) {
-                        UserRecords.Record.Builder recordBuild =  UserRecords.Record.newBuilder();
+                        UserRecords.Record.Builder recordBuild = UserRecords.Record.newBuilder();
                         recordBuild.setName(mList.get(i).name);
                         recordBuild.setNumber(mList.get(i).number);
                         recordBuild.setDateLong(mList.get(i).dateLong);

@@ -53,7 +53,7 @@ public class SwipeMenuRecyclerView extends RecyclerView {
      */
     public static final int RIGHT_DIRECTION = -1;
 
-    public boolean customBackground = false;
+    public int customBackground = 0;
 
     @IntDef({LEFT_DIRECTION, RIGHT_DIRECTION})
     @Retention(RetentionPolicy.SOURCE)
@@ -828,7 +828,7 @@ public class SwipeMenuRecyclerView extends RecyclerView {
         void onLoadMore();
     }
 
-    public void setCustomBackground(Boolean flag) {
+    public void setCustomBackgroundSize(int flag) {
         customBackground = flag;
     }
 }

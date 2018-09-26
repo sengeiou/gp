@@ -77,6 +77,8 @@ public class AlarmListActivity extends BaseNewActivity implements OnRefreshListe
         }
     }
 
+
+
     @Override
     protected int getContentViewId() {
         return R.layout.activity_alarm_list;
@@ -118,7 +120,7 @@ public class AlarmListActivity extends BaseNewActivity implements OnRefreshListe
         mList = new ArrayList<>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recycler.setCustomBackground(true);
+        recycler.setCustomBackgroundSize(getResources().getDimensionPixelSize(R.dimen.dp_115));
         recycler.setLayoutManager(linearLayoutManager);
         recycler.setHasFixedSize(true);
         Divider divider = new Divider(new ColorDrawable(getResources().getColor(R.color
@@ -140,6 +142,7 @@ public class AlarmListActivity extends BaseNewActivity implements OnRefreshListe
         }
         mHandler.sendEmptyMessageDelayed(1, 20 * 1000);// 20s 秒后检查加载框是否还在
         //UbtTIMManager.getInstance().queryUser();
+
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {

@@ -29,6 +29,8 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.me.UserInfoActivity;
 import com.ubtechinc.goldenpig.personal.DeviceManageActivity;
 import com.ubtechinc.goldenpig.personal.alarm.AlarmListActivity;
+import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionActivity;
+import com.ubtechinc.goldenpig.personal.remind.RemindActivity;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.hotspot.SetHotSpotActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
@@ -51,7 +53,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
 
     private View mToUserInfo;
     private View mSetNetBtn;   //绑定配网按钮
-   ;
+    ;
     private View mFeedBackBtn; //反馈帮助
     private UbtSubTxtButton mAboutBtn; //关于页按钮
     private ImageView mPohtoImg;
@@ -72,47 +74,50 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
     Button mRemindBtn;
     @BindView(R.id.ubt_btn_person_qq)
     Button mQQMusicBtn;
+
     public PersonalFragment() {
         super();
     }
 
     @Override
     protected void onNoPig() {
-        if (mCyanBg!=null){
+        if (mCyanBg != null) {
             mCyanBg.setVisibility(View.GONE);
         }
-        if (mTitle!=null){
-            mTitle.setTextColor(ResourcesCompat.getColor(getResources(),R.color.ubt_tips_txt_color,null));
+        if (mTitle != null) {
+            mTitle.setTextColor(ResourcesCompat.getColor(getResources(), R.color
+                    .ubt_tips_txt_color, null));
         }
     }
 
     @Override
     protected void onNoSetNet() {
-        if (mCyanBg!=null){
+        if (mCyanBg != null) {
             mCyanBg.setVisibility(View.GONE);
         }
-        if (mTitle!=null){
-            mTitle.setTextColor(ResourcesCompat.getColor(getResources(),R.color.ubt_tips_txt_color,null));
+        if (mTitle != null) {
+            mTitle.setTextColor(ResourcesCompat.getColor(getResources(), R.color
+                    .ubt_tips_txt_color, null));
         }
     }
 
     @Override
     protected void onHasPig() {
-        if (mCyanBg!=null){
+        if (mCyanBg != null) {
             mCyanBg.setVisibility(View.VISIBLE);
         }
-        if (mTitle!=null){
-            mTitle.setTextColor(ResourcesCompat.getColor(getResources(),R.color.ubt_white,null));
+        if (mTitle != null) {
+            mTitle.setTextColor(ResourcesCompat.getColor(getResources(), R.color.ubt_white, null));
         }
     }
 
     @Override
     protected void onSetedNet() {
-        if (mCyanBg!=null){
+        if (mCyanBg != null) {
             mCyanBg.setVisibility(View.VISIBLE);
         }
-        if (mTitle!=null){
-            mTitle.setTextColor(ResourcesCompat.getColor(getResources(),R.color.ubt_white,null));
+        if (mTitle != null) {
+            mTitle.setTextColor(ResourcesCompat.getColor(getResources(), R.color.ubt_white, null));
         }
     }
 
@@ -144,8 +149,8 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
             mNikenameTv = (TextView) getActivity().findViewById(R.id.ubt_tv_me_nikename);
             mNikenameTv.setText(AuthLive.getInstance().getCurrentUser().getNickName());
         }
-        mTitle=getActivity().findViewById(R.id.ubt_me_fragment_title);
-        mCyanBg=getActivity().findViewById(R.id.ubt_me_normal_bg);
+        mTitle = getActivity().findViewById(R.id.ubt_me_fragment_title);
+        mCyanBg = getActivity().findViewById(R.id.ubt_me_normal_bg);
         mToUserInfo = getActivity().findViewById(R.id.ubt_btn_go_login);
         mToUserInfo.setOnClickListener(this);
 
@@ -159,6 +164,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
         mAboutBtn.setOnClickListener(this);
 
         getActivity().findViewById(R.id.ubt_btn_person_clock).setOnClickListener(this);
+        getActivity().findViewById(R.id.ubt_btn_person_answer).setOnClickListener(this);
 
         try {
             String versionName = String.format(getString(R.string.ubt_version_format),
@@ -176,29 +182,31 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
         });
         changeItemAlpha();
     }
-    private void changeItemAlpha(){
-        float alpha=1f;
-        boolean isEnable=true;
-        if (AuthLive.getInstance().getCurrentPig()==null){
-            isEnable=false;
-            alpha=0.5f;
+
+    private void changeItemAlpha() {
+        float alpha = 1f;
+        boolean isEnable = true;
+        if (AuthLive.getInstance().getCurrentPig() == null) {
+            isEnable = false;
+            alpha = 0.5f;
         }
         mToHospotBtn.setAlpha(alpha);
         mToHospotBtn.setEnabled(isEnable);
         /*mDevMangerBtn.setAlpha(alpha);
         mDevMangerBtn.setEnabled(isEnable);*/
         mAnswerBtn.setAlpha(alpha);
-        mAnswerBtn.setEnabled(isEnable);
+        mAnswerBtn.setEnabled(true);//isEnable
         mClockBtn.setAlpha(alpha);
-        mClockBtn.setEnabled(isEnable);
+        mClockBtn.setEnabled(true);
         mRemindBtn.setAlpha(alpha);
-        mRemindBtn.setEnabled(isEnable);
+        mRemindBtn.setEnabled(true);
         mQQMusicBtn.setAlpha(alpha);
         mQQMusicBtn.setEnabled(isEnable);
 
     }
+
     @Override
-    @OnClick(R.id.ubt_btn_person_hotspot)
+    @OnClick({R.id.ubt_btn_person_hotspot, R.id.ubt_btn_person_remind})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ubt_btn_go_login:
@@ -213,7 +221,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                         false);
                 break;
             case R.id.ubt_btn_person_hotspot:
-                if (AuthLive.getInstance().getCurrentPig()!=null) {
+                if (AuthLive.getInstance().getCurrentPig() != null) {
                     ActivityRoute.toAnotherActivity(getActivity(), SetHotSpotActivity.class,
                             false);
                 }
@@ -226,6 +234,12 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.ubt_btn_person_clock:
                 ActivityRoute.toAnotherActivity(getActivity(), AlarmListActivity.class, false);
+                break;
+            case R.id.ubt_btn_person_answer:
+                ActivityRoute.toAnotherActivity(getActivity(), InterlocutionActivity.class, false);
+                break;
+            case R.id.ubt_btn_person_remind:
+                ActivityRoute.toAnotherActivity(getActivity(), RemindActivity.class, false);
                 break;
         }
     }

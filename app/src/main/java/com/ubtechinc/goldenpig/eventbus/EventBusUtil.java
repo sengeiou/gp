@@ -28,5 +28,10 @@ public class EventBusUtil {
     public static final int SET_REPEAT_SUCCESS = 10003;
     public static final int SET_ALARM_SUCCESS = 10004;
     public static final int DELETE_RECORD_SUCCESS = 10005;
+    public static final int SET_QUESTTION_SUCCESS = 10006;
+    public static final int SET_ANSWER_SUCCESS = 10007;
+    public static final int ADD_INTERLO_SUCCESS = 10008;
+    public static final int ADD_REMIND_SUCCESS = 10009;
+    public static final int ADD_REMIND_REPEAT_SUCCESS = 10010;
 
 }

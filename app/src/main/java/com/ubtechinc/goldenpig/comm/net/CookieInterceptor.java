@@ -2,6 +2,8 @@ package com.ubtechinc.goldenpig.comm.net;
 
 import android.text.TextUtils;
 
+import com.ubtechinc.tvlloginlib.entity.LoginInfo;
+
 import java.io.IOException;
 
 import okhttp3.Interceptor;
@@ -13,6 +15,8 @@ public class CookieInterceptor implements Interceptor {
     private String token;
 
     private Long expireAt;
+
+    private LoginInfo info;
 
     public static final String AUTHORIZATION = "authorization";
     public static final String COOKIE = "cookie";
@@ -61,5 +65,13 @@ public class CookieInterceptor implements Interceptor {
 
     public void setExpireAt(Long expireAt) {
         this.expireAt = expireAt;
+    }
+
+    public void setLoginInfo(LoginInfo info) {
+        this.info = info;
+    }
+
+    public LoginInfo getThridLogin() {
+        return info;
     }
 }
