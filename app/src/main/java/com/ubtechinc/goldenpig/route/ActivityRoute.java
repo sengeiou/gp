@@ -60,7 +60,12 @@ public class ActivityRoute {
             else if (value instanceof Double) {
                 intent.putExtra(key, (double) value);
             }else {
-                intent.putExtra(key, (Serializable) value);
+                try {
+                    intent.putExtra(key, (Serializable) value);
+                }catch (Exception e){
+
+                }
+
             }
         }
         activity.startActivity(intent);

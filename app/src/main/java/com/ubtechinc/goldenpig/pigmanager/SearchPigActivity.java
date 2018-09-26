@@ -321,9 +321,8 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
     private void toSetWifi(){
         closeEnterDialog();
         cancelTimer();
-        HashMap<String,UbtBluetoothDevice> value=new HashMap<>();
-        value.put("dev",mBluetoothDevice);
-        ActivityRoute.toAnotherActivity(SearchPigActivity.this,SetPigNetWorkActivity.class,value,false);
+
+        ActivityRoute.toAnotherActivity(SearchPigActivity.this,SetPigNetWorkActivity.class,false);
     }
     private Handler mHandler = new Handler(){
         @Override
