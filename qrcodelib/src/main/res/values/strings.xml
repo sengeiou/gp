@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">qcodelib</string>
+    <string name="app_name">QRLibrary</string>
+    <string name="scan_text">扫一扫</string>
+    <string name="scan_qr_join">扫码进组</string>
 </resources>

@@ -138,7 +138,7 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
             case WX_TVSIDRECV_TYPE:
                 wxClient.onSuccess(i, var2);
                 break;
-            case QQOPEN_TVSIDRECV_TYPE:
+            case QQOPEN_VALID_LOGIN_TYPE:
                 qqClient.onSuccess(i, var2);
                 break;
             case TOKENVERIFY_TYPE:
@@ -267,7 +267,7 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
     }
 
     private void addLoginListener(TVSLoginListener listener) {
-        if (authListeners == null) {
+        if (loginListeners == null) {
             loginListeners = new ArrayList<>();
         }
         loginListeners.add(listener);
