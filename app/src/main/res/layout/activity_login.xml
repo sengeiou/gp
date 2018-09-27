@@ -30,6 +30,7 @@
         android:layout_centerHorizontal="true"
         android:layout_above="@id/ubt_btn_wechat_login"
         app:icon="@drawable/ic_qq"
+        android:visibility="visible"
         app:iconMargin="@dimen/ubt_btn_icon_margin_start"
         app:iconWidth="@dimen/ubt_btn_icon_szie"
         app:iconHeight="@dimen/ubt_btn_icon_szie"
