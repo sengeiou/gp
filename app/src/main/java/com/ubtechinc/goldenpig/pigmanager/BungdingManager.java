@@ -381,7 +381,7 @@ public class BungdingManager {
                         }
                         break;
                     case Networkerror:
-                        UbtBluetoothManager.getInstance().closeConnectBle();
+                        //UbtBluetoothManager.getInstance().closeConnectBle();
                         if(mBanddingListener != null){
                             mBanddingListener.onFaild(Constants.REGISTER_ROBOT_ERROR_CODE);
                         }

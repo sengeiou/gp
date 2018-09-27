@@ -82,7 +82,7 @@ public class PigFragment extends BaseFragment{
                 ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class,false);
                 break;
             case R.id.ll_record:
-                ActivityRoute.toAnotherActivity(getActivity(), RecordActivity.class,false);
+                //ActivityRoute.toAnotherActivity(getActivity(), RecordActivity.class,false);
                 break;
         }
     }
