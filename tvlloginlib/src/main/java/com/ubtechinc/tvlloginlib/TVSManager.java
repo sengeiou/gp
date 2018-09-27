@@ -46,6 +46,7 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
     private TVSManager(Context context,String wxId,String qqOpenId) {
         proxy = LoginProxy.getInstance(wxId, qqOpenId, context);
         proxy.setLoginEnv(ELoginEnv.FORMAL);
+
         wxClient = new WXClient(proxy, this);
         qqClient = new QQClient(proxy, this);
         proxy.setAuthorizeListener(this);

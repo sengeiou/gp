@@ -10,6 +10,7 @@ import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewTv;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.personal.management.AddressBookActivity;
+import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.mypig.MyPigActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.PigMemberActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.QRCodeActivity;
@@ -27,6 +28,7 @@ public class DeviceManageActivity extends BaseNewActivity {
     TextView memberItemTitle;
     @BindView(R.id.ubt_tv_member_subtitle)
     TextView memberItemSubTitle;
+    private PigInfo mPig;
     @Override
     protected int getContentViewId() {
         return R.layout.activity_device_manage;
@@ -42,10 +44,7 @@ public class DeviceManageActivity extends BaseNewActivity {
                 finish();
             }
         });
-        if (AuthLive.getInstance().getCurrentPig()==null){
-            memberItemSubTitle.setText(R.string.ubt_san_formember);
-            memberItemTitle.setText(R.string.ubt_join_group);
-        }
+        mPig=AuthLive.getInstance().getCurrentPig();
     }
 
     @Override
@@ -53,6 +52,11 @@ public class DeviceManageActivity extends BaseNewActivity {
         super.onResume();
         if (AuthLive.getInstance().getCurrentPig()==null){
             memberItemSubTitle.setText(R.string.ubt_san_formember);
+        }
+        if (mPig.isAdmin||mPig.isMaster()){
+            findViewById(R.id.rl_pairing).setVisibility(View.VISIBLE);
+        }else {
+            findViewById(R.id.rl_pairing).setVisibility(View.GONE);
         }
     }
 

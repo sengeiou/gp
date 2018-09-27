@@ -23,6 +23,7 @@ import java.util.ArrayList;
 public class MemberPermissionAdapter extends RecyclerView.Adapter<MemberPermissionAdapter.MemberHolder> {
     private ArrayList<CheckBindRobotModule.User> mUserList;
     private SoftReference<Activity> activityRefer;
+    private int selectedIndex=-1;
     public MemberPermissionAdapter(Activity context, ArrayList<CheckBindRobotModule.User> userLsit){
         this.mUserList=userLsit;
         activityRefer=new SoftReference<>(context);
@@ -48,6 +49,18 @@ public class MemberPermissionAdapter extends RecyclerView.Adapter<MemberPermissi
                             .transform(new GlideCircleTransform(activityRefer.get()))
                             .into(holder.userPhoto);
                 }
+                if (position==selectedIndex){
+                    holder.transferBox.setVisibility(View.VISIBLE);
+                }else {
+                    holder.transferBox.setVisibility(View.INVISIBLE);
+                }
+                holder.itemView.setTag(position);
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        selectedIndex=(int)v.getTag();
+                    }
+                });
         }
     }
 
@@ -58,10 +71,13 @@ public class MemberPermissionAdapter extends RecyclerView.Adapter<MemberPermissi
         return mUserList.size();
     }
 
+    public int getSelectedIndex(){
+        return selectedIndex;
+    }
     protected static class MemberHolder extends RecyclerView.ViewHolder{
         public ImageView userPhoto; //头像
         public TextView  userName;  //用户名称
-        public CheckBox  transferBox; //
+        public ImageView  transferBox; //
         public MemberHolder(View itemView) {
             super(itemView);
             userPhoto=itemView.findViewById(R.id.ubt_img_member_photo);

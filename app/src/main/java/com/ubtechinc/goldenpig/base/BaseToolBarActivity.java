@@ -36,7 +36,7 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
     private FrameLayout viewContent;
     private Toolbar toolbar;
     private TextView mNotifyTv; ///动态提示
-    protected View mTvSkip;              //跳过按钮
+    protected TextView mTvSkip;              //跳过按钮
     protected ImageButton mToolbarRightBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

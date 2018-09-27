@@ -12,7 +12,6 @@
 
     <RelativeLayout
         android:id="@+id/rl_my_pig"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_45"
         android:layout_marginTop="@dimen/dp_12"
@@ -40,10 +39,10 @@
 
     <RelativeLayout
         android:id="@+id/rl_pairing"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_45"
         android:layout_marginTop="@dimen/dp_10"
+        android:visibility="gone"
         android:background="@color/ubt_white"
         android:orientation="horizontal">
 
@@ -71,7 +70,6 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_45"
         android:layout_marginTop="@dimen/dp_10"
-        android:visibility="gone"
         android:background="@color/ubt_white"
         android:orientation="horizontal">
 

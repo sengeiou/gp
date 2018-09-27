@@ -3,6 +3,7 @@ package com.ubtechinc.goldenpig.pigmanager.mypig;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
@@ -12,7 +13,7 @@ import com.ubtechinc.goldenpig.pigmanager.adpater.MemberPermissionAdapter;
 
 import java.util.ArrayList;
 
-public class TransferAdminActivity extends BaseToolBarActivity {
+public class TransferAdminActivity extends BaseToolBarActivity implements View.OnClickListener{
     private ArrayList<CheckBindRobotModule.User> mUserList;
     private MemberPermissionAdapter adapter;
     private RecyclerView memberRcy;
@@ -26,6 +27,7 @@ public class TransferAdminActivity extends BaseToolBarActivity {
     protected void init(Bundle savedInstanceState) {
         setTitleBack(true);
         setToolBarTitle(R.string.ubt_trans_permission);
+        setSkipEnable(true);
         getUserList(getIntent());
         initViews();
     }
@@ -37,10 +39,13 @@ public class TransferAdminActivity extends BaseToolBarActivity {
     }
 
     private void initViews(){
+        mTvSkip=findViewById(R.id.ubt_tv_set_net_skip);
+        mTvSkip.setOnClickListener(this);
         memberRcy=findViewById(R.id.ubt_rcy_permission_member);
         adapter=new MemberPermissionAdapter(this,mUserList);
         memberRcy.setLayoutManager(new WrapContentLinearLayoutManager(this));
         memberRcy.setAdapter(adapter);
+
         adapter.notifyDataSetChanged();
     }
     private void getUserList(Intent intent){
@@ -49,6 +54,9 @@ public class TransferAdminActivity extends BaseToolBarActivity {
         }
         if (intent.hasExtra("users")){
             mUserList=(ArrayList<CheckBindRobotModule.User>)intent.getSerializableExtra("users");
+            if (mUserList!=null){
+                mUserList.addAll(mUserList);
+            }
             if (adapter!=null){
                 adapter.notifyDataSetChanged();
             }
@@ -56,4 +64,21 @@ public class TransferAdminActivity extends BaseToolBarActivity {
     }
 
 
+    @Override
+    public void onClick(View v) {
+        if (v.getId()==R.id.ubt_tv_set_net_skip){
+            doTransferAdmin();
+        }
+    }
+
+    /**
+     * 执行转让权限操作
+     */
+    private void doTransferAdmin(){
+        if (adapter!=null&&mUserList!=null
+                &&adapter.getSelectedIndex()>=0
+                &&mUserList.size()>adapter.getSelectedIndex()){
+            final int userId=mUserList.get(adapter.getSelectedIndex()).getUserId();
+        }
+    }
 }
