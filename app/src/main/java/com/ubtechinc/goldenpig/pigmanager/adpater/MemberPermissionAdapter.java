@@ -59,6 +59,7 @@ public class MemberPermissionAdapter extends RecyclerView.Adapter<MemberPermissi
                     @Override
                     public void onClick(View v) {
                         selectedIndex=(int)v.getTag();
+                        notifyDataSetChanged();
                     }
                 });
         }

@@ -7,9 +7,12 @@ import android.view.View;
 
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
+import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.view.WrapContentLinearLayoutManager;
+import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.adpater.MemberPermissionAdapter;
+import com.ubtechinc.goldenpig.pigmanager.register.TransferAdminHttpProxy;
 
 import java.util.ArrayList;
 
@@ -40,7 +43,9 @@ public class TransferAdminActivity extends BaseToolBarActivity implements View.O
 
     private void initViews(){
         mTvSkip=findViewById(R.id.ubt_tv_set_net_skip);
+        mTvSkip.setText(R.string.ubt_complete);
         mTvSkip.setOnClickListener(this);
+
         memberRcy=findViewById(R.id.ubt_rcy_permission_member);
         adapter=new MemberPermissionAdapter(this,mUserList);
         memberRcy.setLayoutManager(new WrapContentLinearLayoutManager(this));
@@ -78,7 +83,24 @@ public class TransferAdminActivity extends BaseToolBarActivity implements View.O
         if (adapter!=null&&mUserList!=null
                 &&adapter.getSelectedIndex()>=0
                 &&mUserList.size()>adapter.getSelectedIndex()){
-            final int userId=mUserList.get(adapter.getSelectedIndex()).getUserId();
+            final String userId=String.valueOf(mUserList.get(adapter.getSelectedIndex()).getUserId());
+            TransferAdminHttpProxy httpProxy=new TransferAdminHttpProxy();
+            httpProxy.transferAdmin(CookieInterceptor.get().getToken(), AuthLive.getInstance().getCurrentPig().getRobotName(), userId, new TransferAdminHttpProxy.TransferCallback() {
+                @Override
+                public void onError(String error) {
+
+                }
+
+                @Override
+                public void onException(Exception e) {
+
+                }
+
+                @Override
+                public void onSuccess(String msg) {
+
+                }
+            });
         }
     }
 }
