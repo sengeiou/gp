@@ -44,8 +44,8 @@ public class RemindAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if (mList.get(position).type == 0) {
             RemindHolder aHolder = (RemindHolder) holder;
             RemindModel model = mList.get(position);
-            aHolder.tv_remind_msg.setText(model.msg);
-            aHolder.tv_am.setText(model.time_am);
+            aHolder.tv_remind_msg.setText(model.sNote);
+            aHolder.tv_am.setText(model.amOrpm);
             aHolder.tv_time.setText(model.time);
             aHolder.tv_date.setText(model.date);
         } else {

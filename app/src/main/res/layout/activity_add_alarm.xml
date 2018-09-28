@@ -150,7 +150,7 @@
             android:layout_toRightOf="@+id/tv_cycle_status"
             android:gravity="end"
             android:singleLine="true"
-            android:text="永不"
+            android:text="单次"
             android:textColor="@color/ubt_tab_btn_txt_color"
             android:textSize="@dimen/sp_14" />
 

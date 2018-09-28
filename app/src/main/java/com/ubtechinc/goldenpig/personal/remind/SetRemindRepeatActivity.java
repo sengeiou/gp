@@ -123,7 +123,7 @@ public class SetRemindRepeatActivity extends BaseNewActivity implements Observer
 
     private void initData() {
         RepeatModel m0 = new RepeatModel();
-        m0.name = "永不";
+        m0.name = "单次";
         mList.add(m0);
         RepeatModel m1 = new RepeatModel();
         m1.name = "每天";

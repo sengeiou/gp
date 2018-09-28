@@ -1,6 +1,7 @@
 package com.ubtechinc.goldenpig.personal.alarm;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.StateView;
 import com.ubtechinc.tvlloginlib.TVSManager;
+import com.yanzhenjie.recyclerview.swipe.SwipeItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
@@ -50,14 +52,13 @@ import butterknife.BindView;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SET_ALARM_SUCCESS;
 
-public class AlarmListActivity extends BaseNewActivity {
+public class AlarmListActivity extends BaseNewActivity implements SwipeItemClickListener {
     @BindView(R.id.rl_titlebar)
     SecondTitleBarViewImg rl_titlebar;
     @BindView(R.id.recycler)
     SwipeMenuRecyclerView recycler;
     AlarmListAdapter adapter;
     private ArrayList<AlarmModel> mList;
-    public int deletePosition = 0;
 
     private MyHandler mHandler;
 
@@ -134,6 +135,7 @@ public class AlarmListActivity extends BaseNewActivity {
         recycler.addItemDecoration(divider);
         recycler.setSwipeMenuCreator(swipeMenuCreator);
         recycler.setSwipeMenuItemClickListener(mMenuItemClickListener);
+        recycler.setSwipeItemClickListener(this);
         adapter = new AlarmListAdapter(this, mList);
         recycler.setAdapter(adapter);
         onRefresh();
@@ -153,8 +155,9 @@ public class AlarmListActivity extends BaseNewActivity {
         }
         DeviceManager deviceManager = new DeviceManager();
         deviceManager.productId = BuildConfig.PRODUCT_ID;
-        deviceManager.dsn = AuthLive.getInstance().getCurrentPig() == null ? "hdfeng" : AuthLive.getInstance()
-                .getCurrentPig().getRobotName();
+//        deviceManager.dsn = AuthLive.getInstance().getCurrentPig() == null ? "hdfeng" : AuthLive
+//                .getInstance()
+//                .getCurrentPig().getRobotName();
         UniAccessInfo info = new UniAccessInfo();
         info.domain = "alarm";
         info.intent = "cloud_manager";
@@ -285,7 +288,6 @@ public class AlarmListActivity extends BaseNewActivity {
         }
     }
 
-
     public Handler getHandler() {
         return mHandler;
     }
@@ -340,6 +342,13 @@ public class AlarmListActivity extends BaseNewActivity {
     };
 
     @Override
+    public void onItemClick(View itemView, int position) {
+        Intent it = new Intent(AlarmListActivity.this, AddAlarmActivity.class);
+        it.putExtra("item", mList.get(position));
+        startActivity(it);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         mHandler.removeCallbacksAndMessages(null);
@@ -368,9 +377,9 @@ public class AlarmListActivity extends BaseNewActivity {
         }
         DeviceManager deviceManager = new DeviceManager();
         deviceManager.productId = BuildConfig.PRODUCT_ID;
-        deviceManager.dsn = AuthLive.getInstance()
-                .getCurrentPig() == null ? "hdfeng" : AuthLive.getInstance()
-                .getCurrentPig().getRobotName();
+//        deviceManager.dsn = AuthLive.getInstance()
+//                .getCurrentPig() == null ? "hdfeng" : AuthLive.getInstance()
+//                .getCurrentPig().getRobotName();
         UniAccessInfo info = new UniAccessInfo();
         info.domain = "alarm";
         info.intent = "cloud_manager";
