@@ -53,7 +53,7 @@ public class DeviceManageActivity extends BaseNewActivity {
         if (AuthLive.getInstance().getCurrentPig()==null){
             memberItemSubTitle.setText(R.string.ubt_san_formember);
         }
-        if (mPig.isAdmin||mPig.isMaster()){
+        if (mPig!=null &&(mPig.isAdmin||mPig.isMaster())){
             findViewById(R.id.rl_pairing).setVisibility(View.VISIBLE);
         }else {
             findViewById(R.id.rl_pairing).setVisibility(View.GONE);

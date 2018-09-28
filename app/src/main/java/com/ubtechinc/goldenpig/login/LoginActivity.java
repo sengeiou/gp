@@ -151,7 +151,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         /*if (mLoginModel.checkToken(this)) {
             handler.sendEmptyMessage(0);
         }else*/ if (!NetworkHelper.sharedHelper().isNetworkAvailable()) {
-            mLoginModel.logoutTVS();
+           // mLoginModel.logoutTVS();
             return;
         }else {
             handler.sendEmptyMessage(1);
