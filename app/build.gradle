@@ -56,7 +56,6 @@ android {
             buildConfigField "String", "APP_ID_QQ", "\"1107514711\""
             //金猪productId
             buildConfigField "String", "PRODUCT_ID" , "\"ffb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589\""
-
             //金猪APPID
             buildConfigField "String", "APP_ID","\"100080018\"" /// 临时用100080018
             //product   60101 区分产品

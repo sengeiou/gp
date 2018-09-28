@@ -33,7 +33,7 @@ import okhttp3.Response;
 public class InterlocutionModel extends BaseHttpProxy {
     Handler mHander = new Handler(Looper.getMainLooper());
 
-    public void unbindPig(String serialNumber, String userId, String token, String appid, final
+    public void unbindPig(String serialNumber, String userId, String token, String appid,String pId, final
     UnBindPigCallback callback) {
 
         OkHttpClient okHttpClient = getHttpClient();
@@ -47,6 +47,7 @@ public class InterlocutionModel extends BaseHttpProxy {
                 .url(BuildConfig.HOST + "/user-service-rest/v2/robot/common/unbinding")
                 .post(formBody)
                 .addHeader("authorization", token)
+                .addHeader("product",BuildConfig.product)
                 .addHeader("X-UBT-AppId", appid)
                 .build();
         Call call = okHttpClient.newCall(okrequest);
@@ -109,6 +110,7 @@ public class InterlocutionModel extends BaseHttpProxy {
                 .url("https://ddsdk.html5.qq.com/api/ugc")
                 .get()
                 .addHeader("dd-auth", sb.toString())
+                .addHeader("product",BuildConfig.product)
                 .build();
         Call call = okHttpClient.newCall(okrequest);
         call.enqueue(callback);
@@ -202,6 +204,7 @@ public class InterlocutionModel extends BaseHttpProxy {
                     .post(requestBody)
                     .addHeader("dd-auth", sb.toString())
                     .addHeader("Content-Type", "application/json")
+                    .addHeader("product",BuildConfig.product)
                     .build();
             Call call = okHttpClient.newCall(okrequest);
             call.enqueue(callback);
@@ -229,6 +232,7 @@ public class InterlocutionModel extends BaseHttpProxy {
                 .url("https://ddsdk.html5.qq.com/api/ugc/" + id)
                 .delete()
                 .addHeader("dd-auth", sb.toString())
+                .addHeader("product",BuildConfig.product)
                 .build();
         Call call = okHttpClient.newCall(okrequest);
         call.enqueue(callback);
@@ -278,6 +282,7 @@ public class InterlocutionModel extends BaseHttpProxy {
                     .put(requestBody)
                     .addHeader("dd-auth", sb.toString())
                     .addHeader("Content-Type", "application/json")
+                    .addHeader("product",BuildConfig.product)
                     .build();
             Call call = okHttpClient.newCall(okrequest);
             call.enqueue(callback);

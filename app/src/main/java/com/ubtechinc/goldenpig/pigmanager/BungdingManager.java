@@ -293,7 +293,7 @@ public class BungdingManager {
                 Log.i(TAG,"onSuccess======="+clientId);
                 clientIdRecord = clientId;
                 // 先绑定机器人绑定成功再发送clientId
-                mRobotRepository.registerRobot(token, userId,dsn,BuildConfig.APP_ID, mResponseListener);
+                mRobotRepository.registerRobot(token, userId,dsn,BuildConfig.APP_ID,BuildConfig.product, mResponseListener);
             }
 
             @Override

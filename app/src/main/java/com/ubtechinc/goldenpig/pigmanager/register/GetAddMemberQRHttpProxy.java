@@ -20,7 +20,7 @@ import okhttp3.Response;
  *@changetime    :2018/9/22 14:17
 */
 public class GetAddMemberQRHttpProxy extends BaseHttpProxy {
-    public void getMemberQR(String token,String appId,final GetMemberQRCallBack callBack){
+    public void getMemberQR(String token,String appId,String pId, final GetMemberQRCallBack callBack){
         OkHttpClient okHttpClient =getHttpClient();
 
         final Request okrequest = new Request.Builder()
@@ -28,6 +28,7 @@ public class GetAddMemberQRHttpProxy extends BaseHttpProxy {
                 .get()
                 .addHeader("authorization",token)
                 .addHeader("X-UBT-AppId",appId)
+                .addHeader("product",pId)
                 .build();
         Call call = okHttpClient.newCall(okrequest);
         call.enqueue(new Callback() {

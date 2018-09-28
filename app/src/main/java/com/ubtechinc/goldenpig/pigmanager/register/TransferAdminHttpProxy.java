@@ -35,6 +35,7 @@ public class TransferAdminHttpProxy extends BaseHttpProxy {
                 .url(BuildConfig.HOST+"/user-service-rest/v2/robot/common/transferAdmin")
                 .post(formBody)
                 .addHeader("authorization",token)
+                .addHeader("product",BuildConfig.product)
                 .build();
         Call call = okHttpClient.newCall(okrequest);
         call.enqueue(new Callback() {

@@ -22,7 +22,7 @@ import java.util.HashMap;
 
 public class RegisterPigRepository {
     private static final String TAG = RegisterPigRepository.class.getSimpleName();
-    public void registerRobot(String token,String userId, String srialNumber,String appid, final RegisterRobotListener listener){
+    public void registerRobot(String token,String userId, String srialNumber,String appid, String pId,final RegisterRobotListener listener){
 
         RegisterRobotModule.Request request = new RegisterRobotModule().new Request();
         request.setUserId(userId);
@@ -30,6 +30,7 @@ public class RegisterPigRepository {
         HashMap<String,String> hearder=new HashMap<>();
         hearder.put("authorization",token);
         hearder.put("X-UBT-AppId",appid);  //
+        hearder.put("product",pId);
         HttpProxy.get().doPost(request, hearder,new ResponseListener<RegisterRobotModule.Response>() {
             @Override
             public void onError(ThrowableWrapper e) {
