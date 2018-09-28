@@ -63,6 +63,7 @@ public class SetRemindRepeatActivity extends BaseNewActivity implements Observer
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        int type = getIntent().getIntExtra("type", 0);
         rl_titlebar.setTitleText("重复");
         rl_titlebar.setLeftOnclickListener(new View.OnClickListener() {
             @Override

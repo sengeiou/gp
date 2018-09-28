@@ -40,6 +40,8 @@ public class StateView extends View {
 
     private OnRetryClickListener mRetryClickListener;
 
+    private OnEmptyClickListener mEmptyClickListener;
+
     private RelativeLayout.LayoutParams mLayoutParams;
 
 
@@ -224,8 +226,15 @@ public class StateView extends View {
     public View showEmpty() {
         if (mEmptyView == null) {
             mEmptyView = inflate(mEmptyResource);
+            mEmptyView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mEmptyClickListener != null) {
+                        mEmptyClickListener.onEmptyClick();
+                    }
+                }
+            });
         }
-
         showView(mEmptyView);
         return mEmptyView;
     }
@@ -248,7 +257,6 @@ public class StateView extends View {
                 }
             });
         }
-
         showView(mRetryView);
         return mRetryView;
     }
@@ -419,9 +427,22 @@ public class StateView extends View {
         this.mRetryClickListener = listener;
     }
 
+    /**
+     * 监听空白
+     *
+     * @param listener {@link OnRetryClickListener}
+     */
+    public void setOnEmptyClickListener(OnEmptyClickListener listener) {
+        this.mEmptyClickListener = listener;
+    }
+
     public interface OnRetryClickListener {
 
         void onRetryClick();
+    }
+
+    public interface OnEmptyClickListener {
+        void onEmptyClick();
     }
 
     @Override

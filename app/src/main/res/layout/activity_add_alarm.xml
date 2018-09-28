@@ -162,6 +162,6 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp_15"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_goto" />
+            android:src="@drawable/ic_go" />
     </RelativeLayout>
 </LinearLayout>
