@@ -30,8 +30,7 @@ def getProps(String env) {
 }
 
 android {
-    compileSdkVersion rootProject.ext.android.compileSdkVersion
-    buildToolsVersion rootProject.ext.android.buildToolsVersion
+    compileSdkVersion COMPILE_SDK_VERSION
     packagingOptions {
         packagingOptions {
             exclude 'assets/xgwifi.xml'
@@ -42,8 +41,8 @@ android {
     }
     publishNonDefault true
     defaultConfig {
-        minSdkVersion rootProject.ext.android.minSdkVersion
-        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        minSdkVersion MIN_SDK_VERSION
+        targetSdkVersion TARGET_SDK_VERSION
         versionCode 1
         versionName "1.0.0"
     }
