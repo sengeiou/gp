@@ -36,9 +36,9 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.Alar
     @Override
     public void onBindViewHolder(final AlarmListHolder holder, final int position) {
         AlarmModel model = mList.get(position);
-        holder.tv_time_state.setText(model.time_state);
+        holder.tv_amorpm.setText(model.amOrpm);
         holder.tv_time.setText(model.time);
-        holder.tv_date.setText(model.date);
+        holder.tv_repeat.setText(model.repeatName);
     }
 
 
@@ -48,13 +48,13 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.Alar
     }
 
     public class AlarmListHolder extends RecyclerView.ViewHolder {
-        private TextView tv_time_state, tv_time, tv_date;
+        private TextView tv_amorpm, tv_time, tv_repeat;
 
         public AlarmListHolder(View itemView) {
             super(itemView);
-            tv_date = (TextView) itemView.findViewById(R.id.tv_date);
+            tv_amorpm = (TextView) itemView.findViewById(R.id.tv_amorpm);
             tv_time = (TextView) itemView.findViewById(R.id.tv_time);
-            tv_time_state = (TextView) itemView.findViewById(R.id.tv_time_state);
+            tv_repeat = (TextView) itemView.findViewById(R.id.tv_repeat);
         }
     }
 }
