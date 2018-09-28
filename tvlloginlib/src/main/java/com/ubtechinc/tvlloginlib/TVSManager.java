@@ -159,6 +159,8 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
 //                        break;
 //                }
                 break;
+            case  MANAGEACCT_TYPE:
+                qqClient.onSuccess(i, var2);
             default:
                 break;
         }
