@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion COMPILE_SDK_VERSION
 
     packagingOptions {
         exclude 'META-INF/DEPENDENCIES.txt'
@@ -18,8 +18,8 @@ android {
     }
 
     defaultConfig {
-        minSdkVersion 15
-        targetSdkVersion 28
+        minSdkVersion MIN_SDK_VERSION
+        targetSdkVersion TARGET_SDK_VERSION
         versionCode 1
         versionName "1.0"
 

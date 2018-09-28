@@ -1,7 +1,6 @@
 package com.ubtechinc.goldenpig.personal.alarm;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -14,25 +13,34 @@ import android.view.ViewGroup;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.ubt.imlibv2.bean.UbtTIMManager;
+import com.tencent.ai.tvs.business.UniAccessInfo;
+import com.tencent.ai.tvs.comm.CommOpInfo;
+import com.tencent.ai.tvs.env.ELoginPlatform;
+import com.tencent.ai.tvs.info.DeviceManager;
+import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
+import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewImg;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
+import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
+import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.model.AlarmModel;
-import com.ubtechinc.goldenpig.personal.DeviceManageActivity;
-import com.ubtechinc.goldenpig.personal.management.AddAndSetContactActivity;
-import com.ubtechinc.goldenpig.pigmanager.mypig.MyPigActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.StateView;
+import com.ubtechinc.tvlloginlib.TVSManager;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -42,7 +50,6 @@ import java.util.Observer;
 
 import butterknife.BindView;
 
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CONTACT_CHECK_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SET_ALARM_SUCCESS;
 
 public class AlarmListActivity extends BaseNewActivity implements OnRefreshListener, Observer {
@@ -76,7 +83,6 @@ public class AlarmListActivity extends BaseNewActivity implements OnRefreshListe
             }
         }
     }
-
 
 
     @Override
@@ -142,6 +148,7 @@ public class AlarmListActivity extends BaseNewActivity implements OnRefreshListe
         }
         mHandler.sendEmptyMessageDelayed(1, 20 * 1000);// 20s 秒后检查加载框是否还在
         //UbtTIMManager.getInstance().queryUser();
+        getAlarmMsg();
 
         mHandler.postDelayed(new Runnable() {
             @Override
@@ -266,5 +273,82 @@ public class AlarmListActivity extends BaseNewActivity implements OnRefreshListe
         if (event.getCode() == SET_ALARM_SUCCESS) {
             refreshLayout.autoRefresh();
         }
+    }
+
+    public void getAlarmMsg() {
+        int acctType = 0;
+        ELoginPlatform platform;
+        if (CookieInterceptor.get().getThridLogin().getLoginType().toLowerCase().equals("wx")) {
+            acctType = 0;
+            platform = ELoginPlatform.WX;
+        } else {
+            acctType = 1;
+            platform = ELoginPlatform.QQOpen;
+        }
+        DeviceManager deviceManager = new DeviceManager();
+        deviceManager.productId = BuildConfig.PRODUCT_ID;
+        deviceManager.dsn = TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig
+                .APP_ID_QQ).getDsn();
+        UniAccessInfo info = new UniAccessInfo();
+        info.domain = "alarm";
+        info.intent = "cloud_manager";
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("eType", 0);
+            JSONObject stCloudAlarmReq = new JSONObject();
+            JSONObject stAccountBaseInfo = new JSONObject();
+            stAccountBaseInfo.put("eAcctType", acctType);
+            stAccountBaseInfo.put("strAcctId", AuthLive.getInstance().getCurrentUser().getUserId());
+            stCloudAlarmReq.put("stAccountBaseInfo", stAccountBaseInfo);
+            stCloudAlarmReq.put("eCloud_type", 0);//0,为查看; 1为添加;2为删除;3为更新
+            stCloudAlarmReq.put("sPushInfo", "推什么");
+            JSONArray vCloudAlarmData = new JSONArray();
+            JSONObject vCloudAlarmData0 = new JSONObject();
+            JSONObject stAIDeviceBaseInfo = new JSONObject();
+            stAIDeviceBaseInfo.put("strGuid", "hhh");//AuthLive.getInstance().getCurrentPig()
+            // .getRobotName()
+            stAIDeviceBaseInfo.put("strAppKey", BuildConfig.APP_KEY);
+            vCloudAlarmData0.put("stAIDeviceBaseInfo", stAIDeviceBaseInfo);
+            vCloudAlarmData0.put("eRepeatType", 1);
+            vCloudAlarmData0.put("lAlarmId", 0);
+            vCloudAlarmData0.put("lStartTimeStamp", 153606960011l);
+            vCloudAlarmData0.put("vRingId", new String[]{"aa.bb$111", "aa.bb$112"});
+            vCloudAlarmData.put(vCloudAlarmData0);
+            stCloudAlarmReq.put("vCloudAlarmData", vCloudAlarmData);
+            obj.put("stCloudAlarmReq", stCloudAlarmReq);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        info.jsonBlobInfo = obj.toString();
+        TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ)
+                .requestTskmUniAccess(platform, deviceManager, info, new TVSManager
+                        .TVSAlarmListener() {
+                    @Override
+                    public void onSuccess(CommOpInfo msg) {
+                        LogUtils.d("hdf", "getAlarmMsg-onSuccess");
+                    }
+
+                    @Override
+                    public void onError(String code) {
+                        ToastUtils.showShortToast(code);
+                        LogUtils.d("code:" + code);
+                    }
+                });
+//        TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ)
+//                .requestTskmUniAccess(acctType, BuildConfig.PRODUCT_ID, AuthLive.getInstance()
+//                        .getCurrentUser().getUserId(), "hhh", BuildConfig.APP_KEY, new TVSManager
+//                        .TVSAlarmListener() {//AuthLive.getInstance().getCurrentPig()
+// .getRobotName()
+//                    @Override
+//                    public void onSuccess(CommOpInfo msg) {
+//                        LogUtils.d("hdf", "getAlarmMsg-onSuccess");
+//                    }
+//
+//                    @Override
+//                    public void onError(String code) {
+//                        ToastUtils.showShortToast(code);
+//                        LogUtils.d("code:" + code);
+//                    }
+//                });
     }
 }

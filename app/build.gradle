@@ -134,7 +134,7 @@ android {
 
 repositories {
     flatDir {
-        dirs 'libs'
+        dirs '../tvlloginlib/libs','libs'
     }
 }
 dependencies {
@@ -143,7 +143,6 @@ dependencies {
     implementation rootProject.ext.deps.constraintlayout
     implementation rootProject.ext.deps.recyclerView
     implementation rootProject.ext.deps.cardviewV7
-    implementation(name: 'tvsloginlib-ubt_goldenpig-release', ext: 'aar')
     implementation rootProject.ext.deps.design
     implementation rootProject.ext.deps.tencentOpenSDK
     //testImplementation 'junit:junit:4.12'
