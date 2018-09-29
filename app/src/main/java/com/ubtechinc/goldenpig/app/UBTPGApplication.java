@@ -10,6 +10,8 @@ import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.protocollibrary.communit.ProtoBufferDisposer;
 import com.ubtechinc.protocollibrary.communit.Utils;
 
+import static qrom.component.wup.base.ContextHolder.getApplicationContext;
+
 /**
  * @des Ubt 金猪applicaption
  * @author  hqt

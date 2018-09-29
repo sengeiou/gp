@@ -28,6 +28,7 @@ public class GetPairPigQRHttpProxy extends BaseHttpProxy {
                 .get()
                 .addHeader("authorization",token)
                 .addHeader("X-UBT-AppId",appId)
+                .addHeader("product",BuildConfig.product)
                 .build();
         Call call = okHttpClient.newCall(okrequest);
         call.enqueue(new Callback() {

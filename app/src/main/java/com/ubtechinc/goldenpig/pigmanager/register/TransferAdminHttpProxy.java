@@ -4,63 +4,65 @@ import com.ubtechinc.goldenpig.net.BaseHttpProxy;
 import com.ubtechinc.nets.BuildConfig;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
  *@auther        :hqt
  *@email         :qiangta.huang@ubtrobot.com
- *@description   :获取生成添加成员的二维码
- *@time          :2018/9/22 14:17
+ *@description   :
+ *@time          :2018/9/28 0:26
  *@change        :
- *@changetime    :2018/9/22 14:17
+ *@changetime    :2018/9/28 0:26
 */
-public class GetAddMemberQRHttpProxy extends BaseHttpProxy {
-    public void getMemberQR(String token,String appId,String pId, final GetMemberQRCallBack callBack){
+public class TransferAdminHttpProxy extends BaseHttpProxy {
+    public void transferAdmin(String token,String pigId,String transUserId,final TransferCallback callback){
         OkHttpClient okHttpClient =getHttpClient();
+        FormBody formBody = new FormBody.Builder()
+                .add("serialNumber", pigId)
+                .add("transUserId", transUserId)
+                .build();
+
 
         final Request okrequest = new Request.Builder()
-                .url(BuildConfig.HOST+"/user-service-rest/v2/goldenPig/getCiphertext")
-                .get()
+                .url(BuildConfig.HOST+"/user-service-rest/v2/robot/common/transferAdmin")
+                .post(formBody)
                 .addHeader("authorization",token)
-                .addHeader("X-UBT-AppId",appId)
-                .addHeader("product",pId)
+                .addHeader("product",BuildConfig.product)
                 .build();
         Call call = okHttpClient.newCall(okrequest);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                if (callBack!=null){
-                    callBack.onError(e.getMessage());
+                if (callback!=null){
+                    callback.onException(e);
                 }
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if (callBack!=null) {
+                if (callback!=null){
+                    String result=response.body().source().readUtf8();
                     if (response.isSuccessful()){
-                        try {
-                            String result = response.body().source().readUtf8();
-                            callBack.onSuccess(result);
-                        } catch (RuntimeException e) {
-                            callBack.onError(e.getMessage());
-                        }
-                    }else {
-                        callBack.onError(response.message());
-                    }
 
+                    }else {
+                         callback.onError(String.valueOf(response.code()));
+                    }
                 }
 
             }
         });
     }
-
-    public interface GetMemberQRCallBack{
+    public interface TransferCallback{
         void onError(String error);
-        void onSuccess(String response);
+        void onException(Exception e);
+        void onSuccess(String msg);
     }
 }

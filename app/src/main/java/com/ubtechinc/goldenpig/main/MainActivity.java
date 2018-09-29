@@ -132,7 +132,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        UbtBluetoothManager.getInstance().closeConnectBle();
+        //UbtBluetoothManager.getInstance().closeConnectBle();
     }
 
     @Override

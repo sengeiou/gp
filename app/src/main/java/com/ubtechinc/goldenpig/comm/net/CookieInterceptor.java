@@ -2,6 +2,7 @@ package com.ubtechinc.goldenpig.comm.net;
 
 import android.text.TextUtils;
 
+import com.ubtechinc.tvlloginlib.BuildConfig;
 import com.ubtechinc.tvlloginlib.entity.LoginInfo;
 
 import java.io.IOException;
@@ -46,6 +47,7 @@ public class CookieInterceptor implements Interceptor {
             if (cookie == null || !cookie.contains(AUTHORIZATION)) {
                 builder.addHeader(COOKIE, AUTHORIZATION + "=" + token);
             }
+            builder.addHeader("product", com.ubtechinc.goldenpig.BuildConfig.product);
             return chain.proceed(builder.build());
         }
         return chain.proceed(request);

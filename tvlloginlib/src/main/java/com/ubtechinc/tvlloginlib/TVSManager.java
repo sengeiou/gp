@@ -8,10 +8,16 @@ import android.util.Log;
 import com.tencent.ai.tvs.AuthorizeListener;
 import com.tencent.ai.tvs.LoginApplication;
 import com.tencent.ai.tvs.LoginProxy;
+import com.tencent.ai.tvs.business.UniAccessInfo;
 import com.tencent.ai.tvs.comm.CommOpInfo;
 import com.tencent.ai.tvs.env.ELoginEnv;
 import com.tencent.ai.tvs.env.ELoginPlatform;
+import com.tencent.ai.tvs.info.DeviceManager;
 import com.ubtechinc.tvlloginlib.entity.LoginInfo;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +31,8 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
 
     public static final String DEVICE_OEM = "wukong_robot";
     public static final String DEVICE_TYPE = "ROBOT";
-    public static final String PRODUCT_ID = "fb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589";
+    public static final String PRODUCT_ID =
+            "fb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589";
 
     private BaseClient wxClient;
     private BaseClient qqClient;
@@ -35,17 +42,19 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
     private volatile static TVSManager instance;
 
     private LoginProxy proxy;
+    private TVSAlarmListener mTVSAlarmListener;
 
-    public static TVSManager getInstance(Context context,String wxId,String qqOpenId) {
+    public static TVSManager getInstance(Context context, String wxId, String qqOpenId) {
         if (instance == null) {
-            instance = new TVSManager(context,wxId,qqOpenId);
+            instance = new TVSManager(context, wxId, qqOpenId);
         }
         return instance;
     }
 
-    private TVSManager(Context context,String wxId,String qqOpenId) {
+    private TVSManager(Context context, String wxId, String qqOpenId) {
         proxy = LoginProxy.getInstance(wxId, qqOpenId, context);
         proxy.setLoginEnv(ELoginEnv.FORMAL);
+
         wxClient = new WXClient(proxy, this);
         qqClient = new QQClient(proxy, this);
         proxy.setAuthorizeListener(this);
@@ -57,16 +66,16 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
         proxy.setOwnActivity(activity);
     }
 
-    public void wxLogin(Activity activity, String pid,String dns,TVSLoginListener listener) {
+    public void wxLogin(Activity activity, String pid, String dns, TVSLoginListener listener) {
         addLoginListener(listener);
-        wxClient.login(activity,  pid,  dns);
+        wxClient.login(activity, pid, dns);
     }
 
-    public void qqLogin(Activity activity, String pid,String dns,TVSLoginListener listener) {
+    public void qqLogin(Activity activity, String pid, String dns, TVSLoginListener listener) {
         proxy.setAuthorizeListener(this);
         qqClient.logout(activity);
         addLoginListener(listener);
-        qqClient.login(activity,pid,dns);
+        qqClient.login(activity, pid, dns);
     }
 
     public void refreshLoginToken(TVSLoginListener listener) {
@@ -106,7 +115,8 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
     }
 
     public ELoginPlatform getELoginPlatform() {
-        return wxClient.isTokenExist(LoginApplication.getInstance()) ? ELoginPlatform.WX : ELoginPlatform.QQOpen;
+        return wxClient.isTokenExist(LoginApplication.getInstance()) ? ELoginPlatform.WX :
+                ELoginPlatform.QQOpen;
     }
 
     public void logout() {
@@ -158,6 +168,13 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
 //                        break;
 //                }
                 break;
+            case UNIACCESS_TYPE:
+                if (mTVSAlarmListener != null) {
+                    mTVSAlarmListener.onSuccess(var2);
+                }
+                break;
+            case  MANAGEACCT_TYPE:
+                qqClient.onSuccess(i, var2);
             default:
                 break;
         }
@@ -184,6 +201,11 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
                 break;
             case MANAGEACCT_TYPE:
                 qqClient.onError(i, var2);
+                break;
+            case UNIACCESS_TYPE:
+                if (mTVSAlarmListener != null) {
+                    mTVSAlarmListener.onError(var2.errMsg);
+                }
                 break;
             default:
                 break;
@@ -307,6 +329,52 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
         }
     }
 
+    public void requestTskmUniAccess(ELoginPlatform platform, DeviceManager deviceManager,
+                                     UniAccessInfo uniAccessInfo, TVSAlarmListener listener) {
+        this.mTVSAlarmListener = listener;
+        proxy.requestTskmUniAccess(platform, deviceManager, uniAccessInfo);
+    }
+
+//    public void requestTskmUniAccess(int acctType, String PRODUCT_ID, String strAcctId, String
+//            strGuid, String strAppKey, TVSAlarmListener listener) {
+//        DeviceManager deviceManager = new DeviceManager();
+//        deviceManager.productId = PRODUCT_ID;
+//        //deviceManager.dsn = ;
+//        UniAccessInfo info = new UniAccessInfo();
+//        info.domain = "alarm";
+//        info.intent = "cloud_manager";
+//        JSONObject obj = new JSONObject();
+//        try {
+//            obj.put("eType", 0);
+//            JSONObject stCloudAlarmReq = new JSONObject();
+//            JSONObject stAccountBaseInfo = new JSONObject();
+//            stAccountBaseInfo.put("eAcctType", acctType);
+//            stAccountBaseInfo.put("strAcctId", strAcctId);
+//            stCloudAlarmReq.put("stAccountBaseInfo", stAccountBaseInfo);
+//            stCloudAlarmReq.put("eCloud_type", 1);
+//            stCloudAlarmReq.put("sPushInfo", "");
+//            JSONArray vCloudAlarmData = new JSONArray();
+//            JSONObject vCloudAlarmData0 = new JSONObject();
+//            JSONObject stAIDeviceBaseInfo = new JSONObject();
+//            stAIDeviceBaseInfo.put("strGuid", strGuid);
+//            stAIDeviceBaseInfo.put("strAppKey", strAppKey);
+//            vCloudAlarmData0.put("stAIDeviceBaseInfo", stAIDeviceBaseInfo);
+//            vCloudAlarmData0.put("eRepeatType", 1);
+//            vCloudAlarmData0.put("lAlarmId", 0);
+//            vCloudAlarmData0.put("lStartTimeStamp", 153606960011l);
+//            vCloudAlarmData0.put("vRingId", new String[]{"aa.bb$111", "aa.bb$112"});
+//            vCloudAlarmData.put(vCloudAlarmData0);
+//            stCloudAlarmReq.put("vCloudAlarmData", vCloudAlarmData);
+//            obj.put("stCloudAlarmReq", stCloudAlarmReq);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        info.jsonBlobInfo = obj.toString();
+//        //Log.d("hdf",obj.toString());
+//        this.mTVSAlarmListener = listener;
+//        proxy.requestTskmUniAccess(ELoginPlatform.WX, deviceManager, info);
+//    }
+
     public interface TVSLoginListener {
 
         public void onSuccess(LoginInfo t);
@@ -321,6 +389,13 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
         public void onSuccess(String clientId);
 
         public void onError(int code);
+    }
+
+    public interface TVSAlarmListener {
+
+        public void onSuccess(CommOpInfo msg);
+
+        public void onError(String str);
     }
 
     public void resetAuthListener(Activity activity) {
@@ -344,4 +419,5 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
             qqClient.unbindRobot(robotId);
         }
     }
+
 }

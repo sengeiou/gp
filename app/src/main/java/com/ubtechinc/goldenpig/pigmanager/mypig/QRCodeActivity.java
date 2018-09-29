@@ -9,7 +9,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.tencent.ai.tvs.zxing.util.ZXingUtil;
+
+import com.ubt.qrcodelib.ZxingUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
@@ -98,7 +99,7 @@ public class QRCodeActivity extends BaseToolBarActivity implements View.OnClickL
     }
     private void createQR() {
         GetAddMemberQRHttpProxy httpProxy = new GetAddMemberQRHttpProxy();
-        httpProxy.getMemberQR(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, new GetAddMemberQRHttpProxy.GetMemberQRCallBack() {
+        httpProxy.getMemberQR(CookieInterceptor.get().getToken(), BuildConfig.APP_ID,BuildConfig.product, new GetAddMemberQRHttpProxy.GetMemberQRCallBack() {
             @Override
             public void onError(String error) {
 
@@ -116,7 +117,7 @@ public class QRCodeActivity extends BaseToolBarActivity implements View.OnClickL
                                 @Override
                                 public void run() {
                                     if (mQRImg != null) {
-                                        mQRImg.setImageBitmap(ZXingUtil.createQRImage(singa, mQRSize, mQRSize));
+                                        mQRImg.setImageBitmap(ZxingUtils.createBitmap(singa, mQRSize, mQRSize));
                                     }
                                 }
                             });

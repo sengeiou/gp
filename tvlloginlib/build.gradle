@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion TARGET_SDK_VERSION
+    compileSdkVersion COMPILE_SDK_VERSION
 
 
 
@@ -40,8 +40,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation(name: 'tvsloginlib-ubt_goldenpig-release', ext: 'aar')
-    implementation(name: 'tvsloginlib-ubt_goldenpig_screenspeaker-release', ext: 'aar')
+    compile(name: 'tvsloginlib-ubt_goldenpig-release', ext: 'aar')
+    //implementation(name: 'tvsloginlib-ubt_goldenpig_screenspeaker-release', ext: 'aar')
     implementation rootProject.ext.deps.appCompatV7
     implementation rootProject.ext.deps.supportV4
     implementation rootProject.ext.deps.tencentOpenSDK

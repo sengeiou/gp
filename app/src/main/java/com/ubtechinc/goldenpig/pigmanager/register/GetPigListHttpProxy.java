@@ -47,6 +47,7 @@ public class GetPigListHttpProxy extends BaseHttpProxy {
                 .get()
                 .addHeader("authorization",token)
                 .addHeader("X-UBT-AppId",appid)
+                .addHeader("product",BuildConfig.product)
                 .build();
         Call call = okHttpClient.newCall(okrequest);
         call.enqueue(new Callback() {

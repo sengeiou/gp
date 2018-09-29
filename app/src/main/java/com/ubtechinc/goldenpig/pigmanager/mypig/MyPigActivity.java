@@ -35,6 +35,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -88,6 +89,20 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer,View.
                                 @Override
                                 public void run() {
                                     ToastUtils.showShortToast(MyPigActivity.this,R.string.ubt_ubbind_success);
+                                    try {
+                                        ArrayList<PigInfo> pigInfos = AuthLive.getInstance().getCurrentPigList();
+                                        int currentIndex = -1;
+                                        for (int index = 0; index < pigInfos.size(); index++) {
+                                            PigInfo pigInfo = pigInfos.get(index);
+                                            if (pigInfo.getRobotName().equals(AuthLive.getInstance().getCurrentPig().getRobotName())) {
+                                                currentIndex = index;
+                                                break;
+                                            }
+                                        }
+                                        AuthLive.getInstance().getCurrentPigList().remove(currentIndex);
+                                    }catch (RuntimeException e){
+                                        e.printStackTrace();
+                                    }
                                     new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "",null);
                                     try {
                                         Thread.sleep(100);

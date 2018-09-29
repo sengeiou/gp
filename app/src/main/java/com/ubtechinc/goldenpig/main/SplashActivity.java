@@ -96,7 +96,7 @@ public class SplashActivity extends BaseActivity {
         super.onDestroy();
         if (mLoginModel!=null){
             mLoginModel.onCancel();
-            mLoginModel.logoutTVS();
+            //mLoginModel.logoutTVS();
         }
     }
 

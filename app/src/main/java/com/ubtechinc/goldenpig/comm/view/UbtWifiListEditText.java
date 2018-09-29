@@ -43,6 +43,8 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
     private RecyclerView mWifiRyc;   //wifi列表
     private UbtWifiListAdapter mWifiListAdapter;
     private PopupWindow window;
+    private String cType; ///保存网络加密方式
+
     public UbtWifiListEditText(Context context) {
         this(context, null);
     }
@@ -126,6 +128,7 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
                     public void onClick(View view, ScanResult result) {
                         if (result!=null){
                             mWifiNameEdt.setText(result.SSID.trim());
+                            cType=result.capabilities;
                             window.dismiss();
                         }
 
@@ -186,5 +189,9 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
         if (mWifiList!=null){
             mWifiList.clear();
         }
+    }
+
+    public String getcType() {
+        return cType;
     }
 }
