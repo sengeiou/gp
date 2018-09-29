@@ -122,8 +122,8 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
                 for (int i = 0; i < 10; i++) {
                     RemindModel mo = new RemindModel();
                     mo.date = "今天";
-                    mo.msg = "提醒事" + i;
-                    mo.time_am = "上午";
+                    mo.sNote = "提醒事" + i;
+                    mo.amOrpm = "上午";
                     mo.time = "9:10";
                     mList.add(mo);
                 }
@@ -139,40 +139,6 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
                 LoadingDialog.getInstance(RemindActivity.this).dismiss();
             }
         }, 2000);
-//        Type type = new TypeToken<List<InterlocutionItemModel>>() {
-//        }.getType();
-//        requestModel.getInterlocutionRequest(new JsonCallback<List<InterlocutionItemModel>>
-// (type) {
-//            @Override
-//            public void onError(String e) {
-//                new Handler(Looper.getMainLooper()).post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        ToastUtils.showShortToast(e);
-//                        LoadingDialog.getInstance(RemindActivity.this).dismiss();
-//                    }
-//                });
-//
-//            }
-//
-//            @Override
-//            public void onSuccess(List<InterlocutionItemModel> reponse) {
-//                new Handler(Looper.getMainLooper()).post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        LoadingDialog.getInstance(RemindActivity.this).dismiss();
-//                        mList.clear();
-//                        if (reponse == null || reponse.size() < 2) {
-//                            InterlocutionItemModel model = new InterlocutionItemModel();
-//                            model.type = 1;
-//                            mList.add(model);
-//                        }
-//                        mList.addAll(reponse);
-//                        adapter.notifyDataSetChanged();
-//                    }
-//                });
-//            }
-//        });
     }
 
     /**
