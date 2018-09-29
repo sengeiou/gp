@@ -35,10 +35,6 @@ public class GetPigListHttpProxy extends BaseHttpProxy {
         if (!TextUtils.isEmpty(serialNumber)) {
           //  request.setSerialNumber(serialNumber);
         }
-        HashMap<String,String> hearder=new HashMap<>();
-        hearder.put("authorization",token);
-        hearder.put("X-UBT-AppId",appid);
-
 
         OkHttpClient okHttpClient =getHttpClient();
 

@@ -5,6 +5,10 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.ubtechinc.commlib.utils.ToastUtils;
+import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
@@ -12,15 +16,20 @@ import com.ubtechinc.goldenpig.comm.view.WrapContentLinearLayoutManager;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.adpater.MemberPermissionAdapter;
+import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.pigmanager.register.CheckUserRepository;
 import com.ubtechinc.goldenpig.pigmanager.register.TransferAdminHttpProxy;
+import com.ubtechinc.nets.http.ThrowableWrapper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TransferAdminActivity extends BaseToolBarActivity implements View.OnClickListener{
     private ArrayList<CheckBindRobotModule.User> mUserList;
     private MemberPermissionAdapter adapter;
     private RecyclerView memberRcy;
-
+    private PigInfo mPig;
+    private boolean isDownloadedUserList;
     @Override
     protected int getConentView() {
         return R.layout.activity_transfer_admin;
@@ -52,6 +61,7 @@ public class TransferAdminActivity extends BaseToolBarActivity implements View.O
         memberRcy.setAdapter(adapter);
 
         adapter.notifyDataSetChanged();
+        mPig=AuthLive.getInstance().getCurrentPig();
     }
     private void getUserList(Intent intent){
         if (intent==null){
@@ -66,9 +76,63 @@ public class TransferAdminActivity extends BaseToolBarActivity implements View.O
                 adapter.notifyDataSetChanged();
             }
         }
+        if (mUserList==null||mUserList.size()==0){
+            mUserList=new ArrayList<>();
+            getMember("1");
+        }
     }
+    private void getMember(String admin){
+        if (isDownloadedUserList)
+            return;
+        if ("0".equals(admin)){
+            isDownloadedUserList=true;
+        }
+        if (mPig==null) {
+            ToastUtils.showShortToast(this, getString(R.string.ubt_no_pigs));
+            return;
+        }
+        if (mUserList==null){
+            mUserList=new ArrayList<>();
+        }else  if ("1".equals(admin)&&mUserList!=null){
+            mUserList.clear();
+        }
+        CheckUserRepository repository=new CheckUserRepository();
+        repository.getRobotBindUsers(mPig.getRobotName(), CookieInterceptor.get().getToken(), BuildConfig.APP_ID,admin, new CheckUserRepository.ICheckBindStateCallBack() {
+            @Override
+            public void onError(ThrowableWrapper e) {
+                ToastUtils.showShortToast(TransferAdminActivity.this, "获取成员列表失败");
+            }
 
+            @Override
+            public void onSuccess(CheckBindRobotModule.Response response) {
 
+            }
+
+            @Override
+            public void onSuccessWithJson(String jsonStr) {
+                final List<CheckBindRobotModule.User> bindUsers = jsonToUserList(jsonStr);
+                if (mUserList!=null) {
+                    mUserList.addAll(bindUsers);
+                    if (adapter!=null) {
+                        adapter.notifyDataSetChanged();
+                    }
+                    mUserList.addAll(bindUsers);
+                }
+                getMember("0");
+            }
+        });
+    }
+    private List<CheckBindRobotModule.User> jsonToUserList(String jsonStr){
+        List<CheckBindRobotModule.User> result=null;
+        Gson gson=new Gson();
+        try {
+            result = gson.fromJson(jsonStr, new TypeToken<List<CheckBindRobotModule.User>>() {
+            }.getType());
+        }catch (RuntimeException e){
+            e.printStackTrace();
+        }
+        return result;
+    }
     @Override
     public void onClick(View v) {
         if (v.getId()==R.id.ubt_tv_set_net_skip){

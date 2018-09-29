@@ -12,6 +12,7 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.personal.management.AddressBookActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.mypig.MyPigActivity;
+import com.ubtechinc.goldenpig.pigmanager.mypig.PairPigActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.PigMemberActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.QRCodeActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
@@ -29,6 +30,7 @@ public class DeviceManageActivity extends BaseNewActivity {
     @BindView(R.id.ubt_tv_member_subtitle)
     TextView memberItemSubTitle;
     private PigInfo mPig;
+
     @Override
     protected int getContentViewId() {
         return R.layout.activity_device_manage;
@@ -44,18 +46,18 @@ public class DeviceManageActivity extends BaseNewActivity {
                 finish();
             }
         });
-        mPig=AuthLive.getInstance().getCurrentPig();
+        mPig = AuthLive.getInstance().getCurrentPig();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (AuthLive.getInstance().getCurrentPig()==null){
+        if (AuthLive.getInstance().getCurrentPig() == null) {
             memberItemSubTitle.setText(R.string.ubt_san_formember);
         }
-        if (mPig!=null &&(mPig.isAdmin||mPig.isMaster())){
+        if (mPig != null && (mPig.isAdmin || mPig.isMaster())) {
             findViewById(R.id.rl_pairing).setVisibility(View.VISIBLE);
-        }else {
+        } else {
             findViewById(R.id.rl_pairing).setVisibility(View.GONE);
         }
     }
@@ -68,14 +70,16 @@ public class DeviceManageActivity extends BaseNewActivity {
                         .class, false);
                 break;
             case R.id.rl_pairing:
-                HashMap<String,Boolean> param=new HashMap<>();
-                param.put("isPair",true);
-                ActivityRoute.toAnotherActivity(this,QRCodeActivity.class,param,false);
+
+                HashMap<String, Boolean> param = new HashMap<>();
+                param.put("isPair", true);
+                ActivityRoute.toAnotherActivity(this, QRCodeActivity.class, param, false);
+
                 break;
             case R.id.rl_member_group:
-                if (AuthLive.getInstance().getCurrentPig()==null) {
+                if (AuthLive.getInstance().getCurrentPig() == null) {
                     ActivityRoute.toAnotherActivity(this, QRScannerActivity.class, false);
-                }else {
+                } else {
                     ActivityRoute.toAnotherActivity(this, PigMemberActivity.class, false);
                 }
                 break;
