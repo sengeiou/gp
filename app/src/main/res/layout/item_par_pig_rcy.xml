@@ -29,7 +29,7 @@
     <Button
         android:id="@+id/ubt_btn_unpair"
         android:layout_width="wrap_content"
-        android:background="null"
+        android:background="@null"
         android:textSize="@dimen/sp_15"
         android:textColor="@color/ubt_dialog_btn_txt_color"
         android:paddingStart="@dimen/dp_14"
