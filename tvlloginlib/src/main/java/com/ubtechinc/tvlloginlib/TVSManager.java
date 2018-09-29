@@ -173,7 +173,7 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
                     mTVSAlarmListener.onSuccess(var2);
                 }
                 break;
-            case  MANAGEACCT_TYPE:
+            case MANAGEACCT_TYPE:
                 qqClient.onSuccess(i, var2);
             default:
                 break;
@@ -204,7 +204,11 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
                 break;
             case UNIACCESS_TYPE:
                 if (mTVSAlarmListener != null) {
-                    mTVSAlarmListener.onError(var2.errMsg);
+                    if (var2 != null) {
+                        mTVSAlarmListener.onError(var2.errMsg);
+                    } else {
+                        mTVSAlarmListener.onError("网络异常请重试");
+                    }
                 }
                 break;
             default:
@@ -334,46 +338,6 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
         this.mTVSAlarmListener = listener;
         proxy.requestTskmUniAccess(platform, deviceManager, uniAccessInfo);
     }
-
-//    public void requestTskmUniAccess(int acctType, String PRODUCT_ID, String strAcctId, String
-//            strGuid, String strAppKey, TVSAlarmListener listener) {
-//        DeviceManager deviceManager = new DeviceManager();
-//        deviceManager.productId = PRODUCT_ID;
-//        //deviceManager.dsn = ;
-//        UniAccessInfo info = new UniAccessInfo();
-//        info.domain = "alarm";
-//        info.intent = "cloud_manager";
-//        JSONObject obj = new JSONObject();
-//        try {
-//            obj.put("eType", 0);
-//            JSONObject stCloudAlarmReq = new JSONObject();
-//            JSONObject stAccountBaseInfo = new JSONObject();
-//            stAccountBaseInfo.put("eAcctType", acctType);
-//            stAccountBaseInfo.put("strAcctId", strAcctId);
-//            stCloudAlarmReq.put("stAccountBaseInfo", stAccountBaseInfo);
-//            stCloudAlarmReq.put("eCloud_type", 1);
-//            stCloudAlarmReq.put("sPushInfo", "");
-//            JSONArray vCloudAlarmData = new JSONArray();
-//            JSONObject vCloudAlarmData0 = new JSONObject();
-//            JSONObject stAIDeviceBaseInfo = new JSONObject();
-//            stAIDeviceBaseInfo.put("strGuid", strGuid);
-//            stAIDeviceBaseInfo.put("strAppKey", strAppKey);
-//            vCloudAlarmData0.put("stAIDeviceBaseInfo", stAIDeviceBaseInfo);
-//            vCloudAlarmData0.put("eRepeatType", 1);
-//            vCloudAlarmData0.put("lAlarmId", 0);
-//            vCloudAlarmData0.put("lStartTimeStamp", 153606960011l);
-//            vCloudAlarmData0.put("vRingId", new String[]{"aa.bb$111", "aa.bb$112"});
-//            vCloudAlarmData.put(vCloudAlarmData0);
-//            stCloudAlarmReq.put("vCloudAlarmData", vCloudAlarmData);
-//            obj.put("stCloudAlarmReq", stCloudAlarmReq);
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        info.jsonBlobInfo = obj.toString();
-//        //Log.d("hdf",obj.toString());
-//        this.mTVSAlarmListener = listener;
-//        proxy.requestTskmUniAccess(ELoginPlatform.WX, deviceManager, info);
-//    }
 
     public interface TVSLoginListener {
 

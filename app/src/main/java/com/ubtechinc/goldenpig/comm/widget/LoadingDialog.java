@@ -10,6 +10,7 @@ import android.os.Message;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
@@ -98,7 +99,8 @@ public class LoadingDialog extends Dialog {
 
     private void initDia() {
 
-        View root = View.inflate(getContext(), R.layout.dialog_loading, null);
+        View root = View.inflate(getContext(), R.layout.dialog_loading, new LinearLayout
+                (getContext()));
 //		txt_dia_msg = (TextView) root.findViewById(R.id.txt_dia_msg);
         this.setContentView(root);
         ColorDrawable colorDrawable = new ColorDrawable(Color.argb(0, 0, 0, 0));
