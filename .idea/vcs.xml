@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="VcsDirectoryMappings">
-    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/app" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/bluetoothlibrary" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/commlib" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/imlibv2" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/improtolib" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/loopview" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/netutils" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/protocollibrary" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/protollib" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/qrcodelib" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/recyclerview-swipe" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/servicemodel" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/tvlloginlib" vcs="svn" />
+    <mapping directory="$PROJECT_DIR$/utilcode" vcs="svn" />
   </component>
 </project>

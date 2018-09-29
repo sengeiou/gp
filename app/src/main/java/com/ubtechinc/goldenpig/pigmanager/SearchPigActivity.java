@@ -277,7 +277,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
                     @Override
                     public void onFailure() {
 
-
+                        
                     }
 
                     @Override

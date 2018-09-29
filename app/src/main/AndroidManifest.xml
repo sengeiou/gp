@@ -108,7 +108,6 @@
         <activity
             android:name=".pigmanager.mypig.DeviceUpdateActivity"
             android:screenOrientation="portrait" />
-        />
         <activity
             android:name=".pigmanager.mypig.TransferAdminActivity"
             android:screenOrientation="portrait" />
