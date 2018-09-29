@@ -115,4 +115,6 @@
     <string name="ubt_confirm_unpair">确认解除配对？</string>
     <string name="ubt_ubpair_success">解除配对成功</string>
     <string name="ubt_ubpair_filure">解除配对失败</string>
+    <string name="ubt_get_qr_pair_pig_fialure">获取配对小猪二维码失败</string>
+    <string name="ubt_get_qr_join_group_fialure">获取加入成员组二维码失败</string>
 </resources>

@@ -134,9 +134,6 @@
             android:name=".pigmanager.mypig.QRCodeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".pigmanager.mypig.QRScanActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".personal.interlocution.InterlocutionActivity"
             android:screenOrientation="portrait" />
         <activity

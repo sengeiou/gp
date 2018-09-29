@@ -78,6 +78,7 @@ public class DeviceManageActivity extends BaseNewActivity {
                 break;
             case R.id.rl_member_group:
                 if (AuthLive.getInstance().getCurrentPig() == null) {
+
                     ActivityRoute.toAnotherActivity(this, QRScannerActivity.class, false);
                 } else {
                     ActivityRoute.toAnotherActivity(this, PigMemberActivity.class, false);

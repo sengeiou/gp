@@ -40,35 +40,49 @@ public class ActivityRoute {
                                            Class<? extends Activity> cls,
                                            HashMap<String, ? extends Object> hashMap,
                                            boolean closeSlf) {
+        toAnotherActivity(activity,cls,hashMap,0,closeSlf);
+    }
+    public static void toAnotherActivity(Activity activity,
+                                         Class<? extends Activity> cls,
+                                         int requestCode,
+                                         boolean closeSlf){
+        toAnotherActivity(activity,cls,null,requestCode,closeSlf);
+    }
+    public static void toAnotherActivity(Activity activity,
+                                         Class<? extends Activity> cls,
+                                         HashMap<String, ? extends Object> hashMap,
+                                         int requestCode,
+                                         boolean closeSlf) {
         Intent intent = new Intent(activity, cls);
-        Iterator<?> iterator = hashMap.entrySet().iterator();
-        while (iterator.hasNext()) {
-            @SuppressWarnings("unchecked")
-            Map.Entry<String, Object> entry = (Map.Entry<String, Object>) iterator
-                    .next();
-            String key = entry.getKey();
-            Object value = entry.getValue();
-            if (value instanceof String) {
-                intent.putExtra(key, (String) value);
-            }else if (value instanceof Boolean) {
-                intent.putExtra(key, (boolean) value);
-            }else if (value instanceof Integer) {
-                intent.putExtra(key, (int) value);
-            }else if (value instanceof Float) {
-                intent.putExtra(key, (float) value);
-            }
-            else if (value instanceof Double) {
-                intent.putExtra(key, (double) value);
-            }else {
-                try {
-                    intent.putExtra(key, (Serializable) value);
-                }catch (Exception e){
+        if (hashMap!=null) {
+            Iterator<?> iterator = hashMap.entrySet().iterator();
+            while (iterator.hasNext()) {
+                @SuppressWarnings("unchecked")
+                Map.Entry<String, Object> entry = (Map.Entry<String, Object>) iterator
+                        .next();
+                String key = entry.getKey();
+                Object value = entry.getValue();
+                if (value instanceof String) {
+                    intent.putExtra(key, (String) value);
+                } else if (value instanceof Boolean) {
+                    intent.putExtra(key, (boolean) value);
+                } else if (value instanceof Integer) {
+                    intent.putExtra(key, (int) value);
+                } else if (value instanceof Float) {
+                    intent.putExtra(key, (float) value);
+                } else if (value instanceof Double) {
+                    intent.putExtra(key, (double) value);
+                } else {
+                    try {
+                        intent.putExtra(key, (Serializable) value);
+                    } catch (Exception e) {
+
+                    }
 
                 }
-
             }
         }
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent,requestCode);
         if (closeSlf){
             activity.finish();
         }

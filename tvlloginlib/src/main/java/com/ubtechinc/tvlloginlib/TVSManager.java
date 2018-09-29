@@ -13,6 +13,7 @@ import com.tencent.ai.tvs.comm.CommOpInfo;
 import com.tencent.ai.tvs.env.ELoginEnv;
 import com.tencent.ai.tvs.env.ELoginPlatform;
 import com.tencent.ai.tvs.info.DeviceManager;
+import com.tencent.ai.tvs.info.UserInfoManager;
 import com.ubtechinc.tvlloginlib.entity.LoginInfo;
 
 import org.json.JSONArray;
@@ -173,8 +174,13 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
                     mTVSAlarmListener.onSuccess(var2);
                 }
                 break;
-            case  MANAGEACCT_TYPE:
-                qqClient.onSuccess(i, var2);
+            case  MANAGEACCT_TYPE://这个类型加上的话可以保证第二次免登陆，但会导致微信第一次登陆也会调用到这里
+                if (UserInfoManager.getInstance().idType==0) {
+                    wxClient.onSuccess(i, var2);
+                }else {
+                    qqClient.onSuccess(i, var2);
+                }
+                break;
             default:
                 break;
         }
