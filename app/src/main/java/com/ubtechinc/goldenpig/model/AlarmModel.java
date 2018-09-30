@@ -9,7 +9,7 @@ public class AlarmModel implements Parcelable{
     public String amOrpm;
     public String time;
     public String repeatDate;
-    public String lAlarmId;
+    public long lAlarmId;
     public int eRepeatType;
     public long lStartTimeStamp;
     public String repeatName;
@@ -20,7 +20,7 @@ public class AlarmModel implements Parcelable{
         amOrpm = in.readString();
         time = in.readString();
         repeatDate = in.readString();
-        lAlarmId = in.readString();
+        lAlarmId = in.readLong();
         repeatName = in.readString();
         eRepeatType = in.readInt();
         lStartTimeStamp = in.readLong();
@@ -31,7 +31,7 @@ public class AlarmModel implements Parcelable{
         dest.writeString(amOrpm);
         dest.writeString(time);
         dest.writeString(repeatDate);
-        dest.writeString(lAlarmId);
+        dest.writeLong(lAlarmId);
         dest.writeString(repeatName);
         dest.writeInt(eRepeatType);
         dest.writeLong(lStartTimeStamp);

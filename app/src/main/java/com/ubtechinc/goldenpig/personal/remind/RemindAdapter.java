@@ -17,7 +17,7 @@ import java.util.List;
  * Created by MQ on 2017/6/9.
  */
 
-public class RemindAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class RemindAdapter extends RecyclerView.Adapter<RemindAdapter.RemindHolder> {
     private Context mContext;
     private List<RemindModel> mList;
 
@@ -27,36 +27,31 @@ public class RemindAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == 0) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout
-                    .adapter_remind, parent, false);
-            return new RemindHolder(view);
-        } else {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout
-                    .adapter_remind_header, parent, false);
-            return new RemindHolder2(view);
-        }
+    public RemindHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout
+                .adapter_remind, parent, false);
+        return new RemindHolder(view);
+//        if (viewType == 0) {
+//        } else {
+//            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout
+//                    .adapter_remind_header, parent, false);
+//            return new RemindHolder2(view);
+//        }
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        if (mList.get(position).type == 0) {
-            RemindHolder aHolder = (RemindHolder) holder;
-            RemindModel model = mList.get(position);
-            aHolder.tv_remind_msg.setText(model.sNote);
-            aHolder.tv_am.setText(model.amOrpm);
-            aHolder.tv_time.setText(model.time);
-            aHolder.tv_date.setText(model.date);
-        } else {
-            RemindHolder2 aHolder = (RemindHolder2) holder;
-            aHolder.tv_add.setText("设置提醒事项");
-        }
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return mList.get(position).type;
+    public void onBindViewHolder(final RemindHolder holder, final int position) {
+        RemindHolder aHolder = (RemindHolder) holder;
+        RemindModel model = mList.get(position);
+        aHolder.tv_remind_msg.setText(model.sNote);
+        aHolder.tv_am.setText(model.amOrpm);
+        aHolder.tv_time.setText(model.time);
+        aHolder.tv_date.setText(model.date);
+//        if (mList.get(position).type == 0) {
+//        } else {
+//            RemindHolder2 aHolder = (RemindHolder2) holder;
+//            aHolder.tv_add.setText("设置提醒事项");
+//        }
     }
 
     @Override

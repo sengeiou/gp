@@ -1185,6 +1185,8 @@ public class TimeUtils {
             "yyyy-MM");
     public static final SimpleDateFormat DATE_FORMAT_ONLY_TIME = new SimpleDateFormat(
             "HH:mm");
+    public static final SimpleDateFormat DATE_FORMAT_MON_TIME = new SimpleDateFormat(
+            "MM-dd-HH-mm");
 
 
     /**
@@ -1788,6 +1790,6 @@ public class TimeUtils {
             case 7:
                 return "周六";
         }
-        return "星期日";
+        return "周日";
     }
 }

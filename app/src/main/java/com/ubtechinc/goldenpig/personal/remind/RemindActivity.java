@@ -1,33 +1,31 @@
 package com.ubtechinc.goldenpig.personal.remind;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.gson.reflect.TypeToken;
+import com.tencent.ai.tvs.comm.CommOpInfo;
+import com.tencent.ai.tvs.env.ELoginPlatform;
 import com.ubtech.utilcode.utils.LogUtils;
+import com.ubtech.utilcode.utils.TimeUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
+import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewImg;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
+import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
-import com.ubtechinc.goldenpig.model.InterlocutionItemModel;
-import com.ubtechinc.goldenpig.model.JsonCallback;
 import com.ubtechinc.goldenpig.model.RemindModel;
-import com.ubtechinc.goldenpig.personal.interlocution.AddInterlocutionActivity;
-import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionAdapter;
-import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionModel;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.StateView;
+import com.ubtechinc.tvlloginlib.TVSManager;
 import com.yanzhenjie.recyclerview.swipe.SwipeItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
@@ -36,13 +34,16 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
-import java.lang.reflect.Type;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_INTERLO_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_REMIND_SUCCESS;
 
 public class RemindActivity extends BaseNewActivity implements SwipeItemClickListener {
@@ -52,11 +53,7 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
     SwipeMenuRecyclerView recycler;
     RemindAdapter adapter;
     private ArrayList<RemindModel> mList;
-    /**
-     *
-     */
-    private Boolean hasLoadMsg = false;
-    InterlocutionModel requestModel;
+    Date today = new Date();
 
     @Override
     protected int getContentViewId() {
@@ -75,7 +72,16 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
         mStateView.setOnRetryClickListener(new StateView.OnRetryClickListener() {
             @Override
             public void onRetryClick() {
+                LoadingDialog.getInstance(RemindActivity.this).show();
                 onRefresh();
+            }
+        });
+        mStateView.setEmptyResource(R.layout.adapter_remind_empty);
+        mStateView.setOnEmptyClickListener(new StateView.OnEmptyClickListener() {
+            @Override
+            public void onEmptyClick() {
+                ActivityRoute.toAnotherActivity(RemindActivity.this, AddRemindActivity
+                        .class, false);
             }
         });
         rl_titlebar.setTitleText("提醒事项");
@@ -86,7 +92,7 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
             }
         });
         rl_titlebar.setIvRight(R.drawable.ic_add);
-        rl_titlebar.getIvRight().setVisibility(View.INVISIBLE);
+        rl_titlebar.getIvRight().setVisibility(View.GONE);
         rl_titlebar.setRightOnclickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,35 +116,123 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
         recycler.setSwipeMenuItemClickListener(mMenuItemClickListener);
         adapter = new RemindAdapter(this, mList);
         recycler.setAdapter(adapter);
-        requestModel = new InterlocutionModel();
+        LoadingDialog.getInstance(this).show();
         onRefresh();
     }
 
     public void onRefresh() {
-        LoadingDialog.getInstance(this).show();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < 10; i++) {
-                    RemindModel mo = new RemindModel();
-                    mo.date = "今天";
-                    mo.sNote = "提醒事" + i;
-                    mo.amOrpm = "上午";
-                    mo.time = "9:10";
-                    mList.add(mo);
-                }
-                if (mList.size() > 0) {
-                    rl_titlebar.getIvRight().setVisibility(View.VISIBLE);
-                } else {
-                    RemindModel mo = new RemindModel();
-                    mo.type = 1;
-                    mList.add(mo);
-                    rl_titlebar.getIvRight().setVisibility(View.INVISIBLE);
-                }
-                adapter.notifyDataSetChanged();
-                LoadingDialog.getInstance(RemindActivity.this).dismiss();
-            }
-        }, 2000);
+        ELoginPlatform platform;
+        if (CookieInterceptor.get().getThridLogin().getLoginType().toLowerCase().equals("wx")) {
+            platform = ELoginPlatform.WX;
+        } else {
+            platform = ELoginPlatform.QQOpen;
+        }
+        TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ)
+                .requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils.getRemindUniAccessinfo
+                        ("", 0, 1, 0, 0), new TVSManager.TVSAlarmListener() {
+                    @Override
+                    public void onSuccess(CommOpInfo msg) {
+                        String str = msg.errMsg;
+                        List<RemindModel> list = new ArrayList<>();
+                        try {
+                            JSONObject obj = new JSONObject(str);
+                            JSONArray narry = obj.getJSONArray("vCloudReminderData");
+                            if (narry == null || narry.length() == 0) {
+                                onRefreshSuccess(list);
+                                return;
+                            }
+                            for (int i = 0; i < narry.length(); i++) {
+                                RemindModel model = new RemindModel();
+                                JSONObject ob = narry.getJSONObject(i);
+                                model.eRepeatType = ob.getInt("eRepeatType");
+                                switch (model.eRepeatType) {//0为异常类型，1为一次性，2为每天，3为每周，4为每月，5为工作日，6为节假日
+                                    case 0:
+                                    case 1:
+                                        model.repeatName = "单次闹钟";
+                                        break;
+                                    case 2:
+                                        model.repeatName = "每天";
+                                        break;
+                                    case 3:
+                                        model.repeatName = "每周";
+                                        break;
+                                    case 4:
+                                        model.repeatName = "每月";
+                                        break;
+                                    case 5:
+                                        model.repeatName = "工作日";
+                                        break;
+                                    case 6:
+                                        model.repeatName = "节假日";
+                                        break;
+                                }
+                                model.lReminderId = ob.getLong("lReminderId");
+                                model.sNote = ob.getString("sNote");
+                                model.lStartTimeStamp = ob.getLong("lStartTimeStamp");
+                                try {
+                                    String time = null;
+                                    String le = System.currentTimeMillis() + "";
+                                    long mins = 0;
+                                    if (le.length() - (model.lStartTimeStamp + "").length() >= 3) {
+                                        mins = model.lStartTimeStamp * 1000;
+                                    } else {
+                                        mins = model.lStartTimeStamp;
+                                    }
+                                    time = TimeUtils.getTime(mins, TimeUtils
+                                            .DATE_FORMAT_MON_TIME);
+                                    String[] times = time.split("-");
+                                    model.date = changeTime(model.eRepeatType, mins);
+                                    int hour = Integer.parseInt(times[2]);
+                                    if (hour >= 19) {
+                                        model.amOrpm = "晚上";
+                                        model.time = (hour - 12) + ":" + times[3];
+                                    } else if (hour >= 13) {
+                                        model.amOrpm = "下午";
+                                        model.time = (hour - 12) + ":" + times[3];
+                                    } else {
+                                        model.amOrpm = "上午";
+                                        model.time = hour + ":" + times[3];
+                                    }
+                                } catch (Exception e) {
+                                }
+                                list.add(model);
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        onRefreshSuccess(list);
+                    }
+
+                    @Override
+                    public void onError(String code) {
+                        LoadingDialog.getInstance(RemindActivity.this).dismiss();
+                        LogUtils.d("code:" + code);
+                        if (code.contains("没有")) {
+                            mStateView.showEmpty();
+                            ToastUtils.showShortToast("没有设置提醒事项");
+                        } else if (mList.size() == 0) {
+                            mStateView.showRetry();
+                            ToastUtils.showShortToast(code);
+                        } else {
+                            mStateView.showContent();
+                            ToastUtils.showShortToast(code);
+                        }
+                    }
+                });
+    }
+
+    public void onRefreshSuccess(List<RemindModel> list) {
+        mList.clear();
+        mList.addAll(list);
+        if (mList.size() == 0) {
+            mStateView.showEmpty();
+            rl_titlebar.getIvRight().setVisibility(View.GONE);
+        } else {
+            rl_titlebar.getIvRight().setVisibility(View.VISIBLE);
+            mStateView.showContent();
+        }
+        adapter.notifyDataSetChanged();
+        LoadingDialog.getInstance(RemindActivity.this).dismiss();
     }
 
     /**
@@ -183,43 +277,7 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
             int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
             if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
                 if (menuPosition == 0) {
-//                    requestModel.deleteInterlocRequest(mList.get(adapterPosition).strDocId, new
-//                            JsonCallback<String>(String.class) {
-//                                @Override
-//                                public void onSuccess(String reponse) {
-//                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            ToastUtils.showShortToast("删除成功");
-//                                            LoadingDialog.getInstance(RemindActivity.this)
-//                                                    .dismiss();
-//                                            mList.remove(adapterPosition);
-//                                            if (mList.size() < 2 && mList.size() > 0 && mList.get
-//                                                    (0).type != 1) {
-//                                                InterlocutionItemModel model = new
-//                                                        InterlocutionItemModel();
-//                                                model.type = 1;
-//                                                mList.add(model);
-//                                            }
-//                                            adapter.notifyDataSetChanged();
-//                                        }
-//                                    });
-//                                }
-//
-//                                @Override
-//                                public void onError(String str) {
-//                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-//                                        @Override
-//                                        public void run() {
-//                                            LoadingDialog.getInstance(RemindActivity.this)
-//                                                    .dismiss();
-//                                            ToastUtils.showShortToast(str);
-//                                        }
-//                                    });
-//                                }
-//                            });
-//                    LoadingDialog.getInstance(RemindActivity.this).setTimeout(20)
-//                            .setShowToast(true).show();
+                    deleteAlarm(adapterPosition);
                 }
             }
         }
@@ -228,23 +286,101 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        requestModel.release();
     }
 
     @Override
     protected void onReceiveEvent(Event event) {
         super.onReceiveEvent(event);
         if (event.getCode() == ADD_REMIND_SUCCESS) {
+            LoadingDialog.getInstance(this).show();
             onRefresh();
         }
     }
 
     @Override
     public void onItemClick(View itemView, int position) {
-        LogUtils.d("hdf", "position:" + position);
-        if (mList.get(position).type == 1) {
-            Intent it = new Intent(RemindActivity.this, AddRemindActivity.class);
-            startActivity(it);
+//        if (mList.get(position).type == 1) {
+//            Intent it = new Intent(RemindActivity.this, AddRemindActivity.class);
+//            startActivity(it);
+//        }
+    }
+
+    public void deleteAlarm(int position) {
+        RemindModel model = mList.get(position);
+        LoadingDialog.getInstance(this).show();
+        ELoginPlatform platform;
+        if (CookieInterceptor.get().getThridLogin().getLoginType().toLowerCase().equals("wx")) {
+            platform = ELoginPlatform.WX;
+        } else {
+            platform = ELoginPlatform.QQOpen;
         }
+        TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ)
+                .requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils.getRemindUniAccessinfo
+                        (model.sNote, 2, model.eRepeatType, model.lReminderId, model.lStartTimeStamp), new TVSManager
+                        .TVSAlarmListener() {
+                    @Override
+                    public void onSuccess(CommOpInfo msg) {
+                        LoadingDialog.getInstance(RemindActivity.this).dismiss();
+                        ToastUtils.showShortToast("删除成功");
+                        mList.remove(position);
+                        adapter.notifyDataSetChanged();
+                        if (mList.size() == 0) {
+                            mStateView.showEmpty();
+                            rl_titlebar.getIvRight().setVisibility(View.GONE);
+                        } else {
+                            rl_titlebar.getIvRight().setVisibility(View.VISIBLE);
+                            mStateView.showContent();
+                        }
+                    }
+
+                    @Override
+                    public void onError(String code) {
+                        LoadingDialog.getInstance(RemindActivity.this).dismiss();
+                        ToastUtils.showShortToast(code);
+                        LogUtils.d("code:" + code);
+                    }
+                });
+    }
+
+    public String changeTime(int eRepeatType, long itemTime) {
+        StringBuffer sb = new StringBuffer();
+        Date da = new Date();
+        da.setTime(itemTime);
+        switch (eRepeatType) {//0为异常类型，1为一次性，2为每天，3为每周，4为每月，5为工作日，6为节假日
+            case 0:
+            case 1:
+                if (TimeUtils.getTime(itemTime, TimeUtils.DATE_FORMAT_DATE).equals(TimeUtils.getTime(System
+                        .currentTimeMillis(), TimeUtils.DATE_FORMAT_DATE))) {
+                    sb.append("今天");
+                } else {
+                    int month = TimeUtils.getMonthFromDate(da);
+                    int day = TimeUtils.getDayFromDate(da);
+                    String sb1 = month + "月" + day + "日";
+                    sb.append(sb1);
+                    sb.append(" " + TimeUtils.getWeekFromIn(TimeUtils.getWeekFromDate(da)));
+                }
+                break;
+            case 2:
+                sb.append("每天");
+                break;
+            case 3:
+                sb.append(" " + TimeUtils.getWeekFromIn(TimeUtils.getWeekFromDate(da)));
+                sb.append(", 每周");
+                break;
+            case 4:
+                int month = TimeUtils.getMonthFromDate(da);
+                int day = TimeUtils.getDayFromDate(da);
+                String sb1 = month + "月" + day + "日";
+                sb.append(sb1);
+                sb.append(", 每月");
+                break;
+            case 5:
+                sb.append("工作日");
+                break;
+            case 6:
+                sb.append("节假日");
+                break;
+        }
+        return sb.toString();
     }
 }
