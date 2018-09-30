@@ -10,6 +10,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -27,10 +29,11 @@ import com.google.zxing.Result;
 import com.ubt.qrcodelib.view.ViewfinderView;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Vector;
 
 
-public class QRScannerActivity extends AppCompatActivity implements SurfaceHolder.Callback {
+public abstract class QRScannerActivity extends AppCompatActivity implements SurfaceHolder.Callback {
     private Toolbar toolbar;
     private TextView tvTitle;
     ViewfinderView viewfinderView;
@@ -44,11 +47,11 @@ public class QRScannerActivity extends AppCompatActivity implements SurfaceHolde
     private boolean playBeep;
     private static final float BEEP_VOLUME = 0.10f;
     private boolean vibrate;
-    private String barTitle;
-    private String errorTips;
+
 
     private TextView errorTv;
-
+    final String[] permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.VIBRATE};
+    ArrayList<String> mPermissionList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,34 +77,34 @@ public class QRScannerActivity extends AppCompatActivity implements SurfaceHolde
         });
         tvTitle = (TextView)findViewById(R.id.ubt_tv_toolbar_title);
 
-        tvTitle.setText(R.string.scan_qr_join);
+        tvTitle.setText(getQrTitle());
         viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
-        viewfinderView.setSubTitle("将二维码放入框内，即可自动扫描");
+        viewfinderView.setSubTitle(getQrSubTitle());
         errorTv=findViewById(R.id.ubt_tv_error);
         init();
-
+        initTips(getIntent());
         if (Build.VERSION.SDK_INT >= 23) {
-            if (checkSelfPermission(Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.CAMERA}, 1);
+            for (int index = 0; index < permissions.length; index++) {
+                if (ContextCompat.checkSelfPermission(this, permissions[index]) !=
+                PackageManager.PERMISSION_GRANTED){
+                    mPermissionList.add(permissions[index]);
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, 1);
+                }
+            }
+            if (mPermissionList!=null&&mPermissionList.size()>0) {
+                String[] permissions = mPermissionList.toArray(new String[mPermissionList.size()]);//将List转为数组   
+                ActivityCompat.requestPermissions(this, permissions, 1);
             }
         }
     }
 
-    private void showError(String errorTips){
-        if (errorTv==null)
-            errorTv=findViewById(R.id.ubt_tv_error);
-        errorTv.setText(errorTips);
-        errorTv.setVisibility(View.VISIBLE);
-    }
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        initTips(intent);
     }
-    private void dealIntent(Intent intent){
-        if (intent==null)
-            return;
 
-    }
 
     private void init() {
         CameraManager.init(getApplication());
@@ -161,8 +164,9 @@ public class QRScannerActivity extends AppCompatActivity implements SurfaceHolde
         if (TextUtils.isEmpty(resultString)) {
             Toast.makeText(QRScannerActivity.this, "Scan failed!", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(QRScannerActivity.this, resultString, Toast.LENGTH_SHORT).show();
-            finish();
+            //Toast.makeText(QRScannerActivity.this, resultString, Toast.LENGTH_SHORT).show();
+            //finish();
+            doSendSign(resultString);
         }
     }
 
@@ -258,4 +262,19 @@ public class QRScannerActivity extends AppCompatActivity implements SurfaceHolde
         }
     };
 
+    private void initTips(Intent intent){
+        if (intent!=null){
+
+        }
+    }
+    protected void setErrorTips(String errorTips){
+        if (errorTv==null)
+            errorTv=findViewById(R.id.ubt_tv_error);
+        errorTv.setText(errorTips);
+        errorTv.setVisibility(View.VISIBLE);
+    }
+    protected abstract String getQrTitle();
+    protected abstract String getQrSubTitle();
+
+    protected abstract void doSendSign(String msg);
 }
