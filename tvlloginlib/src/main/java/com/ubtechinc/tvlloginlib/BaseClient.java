@@ -255,7 +255,7 @@ public abstract class BaseClient implements AuthorizeListener {
         }
     }
 
-    @Override
+    @Override//requestTokenVerify方法的返回值
     public void onSuccess(int i, CommOpInfo var2) {
         doOnSuccess();
     }
