@@ -168,7 +168,7 @@ public class QRCodeActivity extends BaseToolBarActivity implements View.OnClickL
                 break;
             case R.id.ubt_imgbtn_add:
                 if (isPair) {
-                    ActivityRoute.toAnotherActivity(this, QRScannerActivity.class, Constants.QR_PAIR_PIG_REQUEST, false);
+                    ActivityRoute.toAnotherActivity(this, PairQRScannerActivity.class, Constants.QR_PAIR_PIG_REQUEST, false);
                 }
                 break;
         }

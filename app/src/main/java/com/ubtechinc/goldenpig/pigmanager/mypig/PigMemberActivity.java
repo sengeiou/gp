@@ -11,8 +11,6 @@ import android.widget.Button;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.ubt.imlibv2.bean.UbtTIMManager;
-import com.ubt.qrcodelib.QRScannerActivity;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.commlib.view.SpaceItemDecoration;
 import com.ubtechinc.goldenpig.BuildConfig;

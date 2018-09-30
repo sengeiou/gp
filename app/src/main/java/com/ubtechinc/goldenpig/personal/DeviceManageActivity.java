@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
-import com.ubt.qrcodelib.QRScannerActivity;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewTv;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
@@ -79,7 +78,7 @@ public class DeviceManageActivity extends BaseNewActivity {
             case R.id.rl_member_group:
                 if (AuthLive.getInstance().getCurrentPig() == null) {
 
-                    ActivityRoute.toAnotherActivity(this, QRScannerActivity.class, false);
+                    ActivityRoute.toAnotherActivity(this, MemberQRScannerActivity.class, false);
                 } else {
                     ActivityRoute.toAnotherActivity(this, PigMemberActivity.class, false);
                 }
