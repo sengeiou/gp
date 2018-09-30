@@ -159,11 +159,15 @@ public class UbtTIMManager {
                 initUserConfig();
                 TIMUser user=new TIMUser();
                 user.setIdentifier(userId);
-                TIMManager.getInstance().login(
-                        appidAt3rd,
-                        user,
-                        userSig,
-                        timCallBack);
+                try {
+                    TIMManager.getInstance().login(
+                            appidAt3rd,
+                            user,
+                            userSig,
+                            timCallBack);
+                }catch (RuntimeException e){
+                    e.printStackTrace();
+                }
                 isLoginedTIM = true;
                 sendCache();
         }
