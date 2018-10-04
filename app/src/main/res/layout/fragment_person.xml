@@ -87,13 +87,14 @@
                 <Button
                     android:id="@+id/ubt_btn_person_set_wifi"
                     style="@style/UBTMeBtnTheme"
+
                     android:drawableStart="@drawable/ic_wifi"
                     android:text="@string/ubt_bunding_set_net" />
 
                 <Button
                     android:id="@+id/ubt_btn_person_hotspot"
                     style="@style/UBTMeBtnTheme"
-                    android:drawableStart="@drawable/ic_hotspot"
+                     android:drawableStart="@drawable/ic_hotspot"
                     android:text="@string/ubt_person_hotspot" />
 
                 <Button
@@ -106,32 +107,33 @@
                 <Button
                     android:id="@+id/ubt_btn_person_answer"
                     style="@style/UBTMeBtnTheme"
-                    android:drawableStart="@drawable/ic_answer"
+                     android:drawableStart="@drawable/ic_answer"
                     android:text="@string/ubt_custom_answer" />
 
                 <Button
                     android:id="@+id/ubt_btn_person_clock"
                     style="@style/UBTMeBtnTheme"
-                    android:drawableStart="@drawable/ic_clock"
+                     android:drawableStart="@drawable/ic_clock"
                     android:text="@string/ubt_aclock" />
 
                 <Button
                     android:id="@+id/ubt_btn_person_remind"
                     style="@style/UBTMeBtnTheme"
-                    android:drawableStart="@drawable/ic_remind"
+                     android:drawableStart="@drawable/ic_remind"
                     android:text="@string/ubt_remind" />
 
                 <Button
                     android:id="@+id/ubt_btn_person_qq"
                     style="@style/UBTMeBtnTheme"
                     android:layout_marginTop="10dp"
+                    android:visibility="gone"
                     android:drawableStart="@drawable/ic_member"
                     android:text="@string/ubt_qq_music" />
 
                 <Button
                     android:id="@+id/ubt_btn_person_feedback"
                     style="@style/UBTMeBtnTheme"
-                    android:layout_marginTop="10dp"
+                     android:layout_marginTop="10dp"
                     android:drawableStart="@drawable/ic_help"
                     android:text="@string/ubt_help" />
 
@@ -139,7 +141,7 @@
                 <com.ubtechinc.commlib.view.UbtSubTxtButton
                     android:id="@+id/ubt_btn_person_about"
                     style="@style/UBTMeBtnTheme"
-                    android:drawableStart="@drawable/ic_about"
+                     android:drawableStart="@drawable/ic_about"
                     android:text="@string/ubt_about"
                     app:rightText="@string/ubt_version_format"
                     app:rightTextColor="@color/ubt_version_color"

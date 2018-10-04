@@ -123,11 +123,13 @@ class UbtBluetoothConnector {
             if (isNotInConnecting()) {
                 mCurrentDevice = device;
                 mIsShutdown = false;
-                encrypt(device.getSn(), device.needEncrption);
-                connectInner(device.getDevice());
-                IAbstractBleCommandFactory abstractBleCommandFactory =
-                        new JsonAbstractBleCommandFactory(device.getSn(), device.needEncrption);
-                commandEncode = abstractBleCommandFactory.getCommandEncode();
+                if (device!=null) {
+                    encrypt(device.getSn(), device.needEncrption);
+                    connectInner(device.getDevice());
+                    IAbstractBleCommandFactory abstractBleCommandFactory =
+                            new JsonAbstractBleCommandFactory(device.getSn(), device.needEncrption);
+                    commandEncode = abstractBleCommandFactory.getCommandEncode();
+                }
             } else {
                 Log.e(TAG, "Illegal State: 蓝牙正在建立连接...");
             }
@@ -293,7 +295,7 @@ class UbtBluetoothConnector {
             mConnectTime=0;
         } else {
             Log.e(TAG, "Illegal State: 还未与机器人建立服务连接...");
-            if (mConnectTime<6){
+            if (mConnectTime<6&&mCurrentDevice!=null){
                 mConnectTime++;
                 connect(mCurrentDevice);
             }

@@ -92,13 +92,20 @@ public class PigListDialog extends BaseDialog {
         mLecallback = new BluetoothAdapter.LeScanCallback() {
             @Override
             public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
-                 boolean isHasDevice=isHasDevice(device);
 
-                if (!isHasDevice && !TextUtils.isEmpty(device.getName())&& device.getName().startsWith(Constants.ROBOT_TAG)){
+
+                if (!TextUtils.isEmpty(device.getName())&& device.getName().startsWith(Constants.ROBOT_TAG)){
+                    int rawIndex=isHasDevice(device);
                     UbtBluetoothDevice ubtBluetoothDevice=new UbtBluetoothDevice();
                     ubtBluetoothDevice.setDevice(device);
-                    mLeList.add(ubtBluetoothDevice);
-                    mPigAdapter.notifyItemInserted(mLeList.size());
+                    if (rawIndex>=0){
+                        mLeList.remove(rawIndex);
+                        mLeList.add(rawIndex,ubtBluetoothDevice);
+                        mPigAdapter.notifyItemChanged(rawIndex);
+                    }else {
+                        mLeList.add(ubtBluetoothDevice);
+                        mPigAdapter.notifyItemInserted(mLeList.size());
+                    }
                     mPigRycView.setVisibility(View.VISIBLE);
                     if (mLoadingView!=null){
                         mLoadingView.setVisibility(View.GONE);
@@ -110,18 +117,18 @@ public class PigListDialog extends BaseDialog {
         };
         scanLeDevice(true);
     }
-    private boolean isHasDevice(BluetoothDevice device){
+    private int isHasDevice(BluetoothDevice device){
         if (mLeList==null){
-            return false;
+            return -1;
         }
         final int devLen=mLeList.size();
         for (int index = 0; index < devLen; index++) {
             if (mLeList.get(index).getDevice().getAddress().equals(device.getAddress())
                     ||mLeList.get(index).getDevice().getName().equals(device.getName())){
-                return true;
+                return index;
             }
         }
-        return  false;
+        return  -1;
     }
     /***
      * 开启关闭蓝牙扫描

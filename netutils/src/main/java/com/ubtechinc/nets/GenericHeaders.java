@@ -70,6 +70,7 @@ public final class GenericHeaders {
         }else {
             headers.put(DEVICE_INFO,JsonUtil.map2Json(getPhoneDeviceHeaders(context)));
         }
+        headers.put("product",BuildConfig.product);
        return new HeaderInterceptor(headers);
     }
 

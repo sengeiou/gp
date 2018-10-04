@@ -21,13 +21,12 @@ protobuf {
     }
 }
 android {
-    compileSdkVersion rootProject.ext.alphamini.compileSdkVersion
-    buildToolsVersion rootProject.ext.alphamini.buildToolsVersion
+    compileSdkVersion COMPILE_SDK_VERSION
 
 
     defaultConfig {
-        minSdkVersion rootProject.ext.alphamini.minSdkVersion
-        targetSdkVersion rootProject.ext.alphamini.targetSdkVersion
+        minSdkVersion MIN_SDK_VERSION
+        targetSdkVersion TARGET_SDK_VERSION
         versionCode 1
         versionName "1.0"
 

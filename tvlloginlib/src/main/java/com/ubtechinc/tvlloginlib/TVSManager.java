@@ -8,10 +8,17 @@ import android.util.Log;
 import com.tencent.ai.tvs.AuthorizeListener;
 import com.tencent.ai.tvs.LoginApplication;
 import com.tencent.ai.tvs.LoginProxy;
+import com.tencent.ai.tvs.business.UniAccessInfo;
 import com.tencent.ai.tvs.comm.CommOpInfo;
 import com.tencent.ai.tvs.env.ELoginEnv;
 import com.tencent.ai.tvs.env.ELoginPlatform;
+import com.tencent.ai.tvs.info.DeviceManager;
+import com.tencent.ai.tvs.info.UserInfoManager;
 import com.ubtechinc.tvlloginlib.entity.LoginInfo;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +32,8 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
 
     public static final String DEVICE_OEM = "wukong_robot";
     public static final String DEVICE_TYPE = "ROBOT";
-    public static final String PRODUCT_ID = "fb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589";
+    public static final String PRODUCT_ID =
+            "fb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589";
 
     private BaseClient wxClient;
     private BaseClient qqClient;
@@ -35,17 +43,19 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
     private volatile static TVSManager instance;
 
     private LoginProxy proxy;
+    private TVSAlarmListener mTVSAlarmListener;
 
-    public static TVSManager getInstance(Context context,String wxId,String qqOpenId) {
+    public static TVSManager getInstance(Context context, String wxId, String qqOpenId) {
         if (instance == null) {
-            instance = new TVSManager(context,wxId,qqOpenId);
+            instance = new TVSManager(context, wxId, qqOpenId);
         }
         return instance;
     }
 
-    private TVSManager(Context context,String wxId,String qqOpenId) {
+    private TVSManager(Context context, String wxId, String qqOpenId) {
         proxy = LoginProxy.getInstance(wxId, qqOpenId, context);
         proxy.setLoginEnv(ELoginEnv.FORMAL);
+
         wxClient = new WXClient(proxy, this);
         qqClient = new QQClient(proxy, this);
         proxy.setAuthorizeListener(this);
@@ -57,16 +67,16 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
         proxy.setOwnActivity(activity);
     }
 
-    public void wxLogin(Activity activity, String pid,String dns,TVSLoginListener listener) {
+    public void wxLogin(Activity activity, String pid, String dns, TVSLoginListener listener) {
         addLoginListener(listener);
-        wxClient.login(activity,  pid,  dns);
+        wxClient.login(activity, pid, dns);
     }
 
-    public void qqLogin(Activity activity, String pid,String dns,TVSLoginListener listener) {
+    public void qqLogin(Activity activity, String pid, String dns, TVSLoginListener listener) {
         proxy.setAuthorizeListener(this);
         qqClient.logout(activity);
         addLoginListener(listener);
-        qqClient.login(activity,pid,dns);
+        qqClient.login(activity, pid, dns);
     }
 
     public void refreshLoginToken(TVSLoginListener listener) {
@@ -106,7 +116,8 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
     }
 
     public ELoginPlatform getELoginPlatform() {
-        return wxClient.isTokenExist(LoginApplication.getInstance()) ? ELoginPlatform.WX : ELoginPlatform.QQOpen;
+        return wxClient.isTokenExist(LoginApplication.getInstance()) ? ELoginPlatform.WX :
+                ELoginPlatform.QQOpen;
     }
 
     public void logout() {
@@ -158,6 +169,18 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
 //                        break;
 //                }
                 break;
+            case UNIACCESS_TYPE:
+                if (mTVSAlarmListener != null) {
+                    mTVSAlarmListener.onSuccess(var2);
+                }
+                break;
+            case  MANAGEACCT_TYPE://这个类型加上的话可以保证第二次免登陆，但会导致微信第一次登陆也会调用到这里
+                if (UserInfoManager.getInstance().idType==0) {
+                    wxClient.onSuccess(i, var2);
+                }else {
+                    qqClient.onSuccess(i, var2);
+                }
+                break;
             default:
                 break;
         }
@@ -184,6 +207,15 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
                 break;
             case MANAGEACCT_TYPE:
                 qqClient.onError(i, var2);
+                break;
+            case UNIACCESS_TYPE:
+                if (mTVSAlarmListener != null) {
+                    if (var2 != null) {
+                        mTVSAlarmListener.onError(var2.errMsg);
+                    } else {
+                        mTVSAlarmListener.onError("网络异常请重试");
+                    }
+                }
                 break;
             default:
                 break;
@@ -307,6 +339,12 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
         }
     }
 
+    public void requestTskmUniAccess(ELoginPlatform platform, DeviceManager deviceManager,
+                                     UniAccessInfo uniAccessInfo, TVSAlarmListener listener) {
+        this.mTVSAlarmListener = listener;
+        proxy.requestTskmUniAccess(platform, deviceManager, uniAccessInfo);
+    }
+
     public interface TVSLoginListener {
 
         public void onSuccess(LoginInfo t);
@@ -321,6 +359,13 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
         public void onSuccess(String clientId);
 
         public void onError(int code);
+    }
+
+    public interface TVSAlarmListener {
+
+        public void onSuccess(CommOpInfo msg);
+
+        public void onError(String str);
     }
 
     public void resetAuthListener(Activity activity) {
@@ -344,4 +389,5 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
             qqClient.unbindRobot(robotId);
         }
     }
+
 }

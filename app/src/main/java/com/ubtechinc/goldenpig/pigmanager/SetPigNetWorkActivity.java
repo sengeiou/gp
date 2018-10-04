@@ -194,8 +194,9 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
         mSendWifiInfoBtn.setText(R.string.ubt_connecting);
         final String wifiName=mWifiNamEdt.getText();
         final String wifiPwd=mWifiPwdEdt.getPwd();
+        final String wifiCtype=mWifiNamEdt.getcType();
         showLoadingDialog();
-        String message = commandProduce.getWifiPasswdInfo(wifiName, wifiName, wifiPwd);
+        String message = commandProduce.getWifiPasswdInfo(wifiCtype, wifiName, wifiPwd);
         UbtBluetoothManager.getInstance().sendMessageToBle(message);
         showLoadingDialog();
     }

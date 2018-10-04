@@ -1,19 +1,38 @@
 package com.ubtechinc.goldenpig.personal.alarm;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
+import com.tencent.ai.tvs.business.UniAccessInfo;
+import com.tencent.ai.tvs.comm.CommOpInfo;
+import com.tencent.ai.tvs.env.ELoginPlatform;
+import com.tencent.ai.tvs.info.DeviceManager;
+import com.ubtech.utilcode.utils.LogUtils;
+import com.ubtech.utilcode.utils.TimeUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
+import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
+import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
+import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
+import com.ubtechinc.goldenpig.login.observable.AuthLive;
+import com.ubtechinc.goldenpig.model.AlarmModel;
+import com.ubtechinc.goldenpig.personal.remind.SetRemindRepeatActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.utils.PigUtils;
+import com.ubtechinc.tvlloginlib.TVSManager;
 import com.weigan.loopview.LoopView;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -24,6 +43,7 @@ import java.util.Observer;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_REMIND_REPEAT_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SET_ALARM_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SET_REPEAT_SUCCESS;
 
@@ -40,7 +60,8 @@ public class AddAlarmActivity extends BaseNewActivity implements Observer {
     private List<String> dateList;
     private List<String> hourList;
     private List<String> minList;
-    private String repeatType;
+    private String repeatType = "单次";
+    private AlarmModel model;
 
     private class MyHandler extends Handler {
         WeakReference<Activity> mWeakReference;
@@ -52,11 +73,6 @@ public class AddAlarmActivity extends BaseNewActivity implements Observer {
         @Override
         public void handleMessage(android.os.Message msg) {
             super.handleMessage(msg);
-            if (msg.what == 1) {
-                ToastUtils.showShortToast("请求超时，请重试");
-                if (mWeakReference.get() != null) {
-                }
-            }
         }
     }
 
@@ -74,6 +90,7 @@ public class AddAlarmActivity extends BaseNewActivity implements Observer {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mHandler = new MyHandler(this);
+        model = getIntent().getParcelableExtra("item");
         initData();
         loopView_date.setItems(dateList);
         loopView_date.setItemsVisibleCount(0);
@@ -85,6 +102,37 @@ public class AddAlarmActivity extends BaseNewActivity implements Observer {
         loopView_minute.setItems(minList);
         loopView_minute.setItemsVisibleCount(0);
         loopView_minute.setTextSize(18);
+        if (model != null) {
+            if (model.amOrpm.equals("下午")) {
+                loopView_date.setCurrentPosition(1);
+            }
+            String[] str = model.time.split(":");
+            int hour = Integer.parseInt(str[0]);
+            loopView_hour.setCurrentPosition(hour - 1);
+            int minutie = Integer.parseInt(str[1]);
+            loopView_minute.setCurrentPosition(minutie);
+            switch (model.eRepeatType) {
+                case 1:
+                    repeatType = "单次";
+                    break;
+                case 2:
+                    repeatType = "每天";
+                    break;
+                case 3:
+                    repeatType = "每周";
+                    break;
+                case 4:
+                    repeatType = "每月";
+                    break;
+                case 5:
+                    repeatType = "工作日";
+                    break;
+                case 6:
+                    repeatType = "节假日";
+                    break;
+            }
+            tv_cycle.setText(repeatType);
+        }
 
     }
 
@@ -96,17 +144,21 @@ public class AddAlarmActivity extends BaseNewActivity implements Observer {
                 finish();
                 break;
             case R.id.rl_recount:
-                ActivityRoute.toAnotherActivity(this, SetRepeatActivity.class, false);
+                Intent it = new Intent(this, SetRemindRepeatActivity.class);
+                it.putExtra("type", 1);
+                startActivity(it);
+                //ActivityRoute.toAnotherActivity(this, SetRepeatActivity.class, false);
                 break;
             case R.id.tv_right:
                 if (TextUtils.isEmpty(repeatType)) {
                     ToastUtils.showShortToast("请先设置重复模式");
                     return;
                 }
-                ToastUtils.showShortToast("新建闹钟成功");
-                Event<String> event = new Event<>(SET_ALARM_SUCCESS);
-                EventBusUtil.sendEvent(event);
-                finish();
+                if (model == null) {
+                    addAlarm(1, 0);
+                } else {
+                    addAlarm(3, model.lAlarmId);
+                }
                 break;
         }
     }
@@ -148,6 +200,77 @@ public class AddAlarmActivity extends BaseNewActivity implements Observer {
         if (event.getCode() == SET_REPEAT_SUCCESS) {
             repeatType = event.getData().toString();
             tv_cycle.setText(repeatType);
+        } else if (event.getCode() == ADD_REMIND_REPEAT_SUCCESS) {
+            repeatType = event.getData().toString();
+            tv_cycle.setText(repeatType);
         }
+    }
+
+    public void addAlarm(int eCloud_type, long lAlarmId) {
+        LoadingDialog.getInstance(this).show();
+        ELoginPlatform platform;
+        if (CookieInterceptor.get().getThridLogin().getLoginType().toLowerCase().equals("wx")) {
+            platform = ELoginPlatform.WX;
+        } else {
+            platform = ELoginPlatform.QQOpen;
+        }
+        int eRepeatType = 0;
+        switch (repeatType) {
+            case "单次":
+                eRepeatType = 1;
+                break;
+            case "每天":
+                eRepeatType = 2;
+                break;
+            case "每周":
+                eRepeatType = 3;
+                break;
+            case "每月":
+                eRepeatType = 4;
+                break;
+            case "每年":
+                eRepeatType = 1;
+                break;
+            case "工作日":
+                eRepeatType = 5;
+                break;
+            case "节假日":
+                eRepeatType = 6;
+                break;
+            default:
+                eRepeatType = 1;
+                break;
+        }
+        String date = TimeUtils.getTime(System.currentTimeMillis(), TimeUtils.DATE_FORMAT_DATE);
+        int hour = 0;
+        if (loopView_date.getSelectedItem() == 1) {
+            hour += 12;
+        }
+        hour += Integer.parseInt(hourList.get(loopView_hour.getSelectedItem()));
+        date = date + " " + hour + ":" + minList.get(loopView_minute.getSelectedItem()) + ":00";
+        TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ)
+                .requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils
+                        .getAlarmUniAccessinfo(eCloud_type, eRepeatType, lAlarmId, TimeUtils
+                                .string2Millis(date)), new TVSManager
+                        .TVSAlarmListener() {
+                    @Override
+                    public void onSuccess(CommOpInfo msg) {
+                        String str = msg.errMsg;
+                        if (model == null) {
+                            ToastUtils.showShortToast("新建闹钟成功");
+                        } else {
+                            ToastUtils.showShortToast("更新闹钟成功");
+                        }
+                        Event<String> event = new Event<>(SET_ALARM_SUCCESS);
+                        EventBusUtil.sendEvent(event);
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(String code) {
+                        ToastUtils.showShortToast(code);
+                        LogUtils.d("code:" + code);
+                    }
+                });
     }
 }

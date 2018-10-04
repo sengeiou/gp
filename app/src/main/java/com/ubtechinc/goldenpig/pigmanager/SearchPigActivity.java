@@ -221,6 +221,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
                              ToastUtils.showLongToast(SearchPigActivity.this,R.string.ubt_bunding_ping_timeout);
                          }
                          isClicked=false;
+                         UbtBluetoothManager.getInstance().closeConnectBle();
                          pigListDialog.dismiss();
 
                      }
@@ -300,6 +301,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
                 isClicked=true;
                 connectBleDevice(device);
                 startTimer();
+
             }
         });
         pigListDialog.show();
@@ -329,6 +331,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case MSG_WATH_DISCONNECT_SUCCESS:
+                    UbtBluetoothManager.getInstance().closeConnectBle();
                     UbtBluetoothManager.getInstance().connectBluetooth(mBluetoothDevice);
                     break;
                  
@@ -341,7 +344,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         @Override
         public void onFaild(int errorCode) {
             super.onFaild(errorCode);
-            pigListDialog.dismiss();
+
             switch (errorCode){
                 case 2041:
                     if (pigListDialog!=null&&pigListDialog.isShowing()) {
@@ -353,7 +356,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
                     ToastUtils.showShortToast(SearchPigActivity.this, Constants.getErrorMsg(errorCode));
                     break;
             }
-
+            pigListDialog.dismiss();
         }
 
         @Override
@@ -377,13 +380,19 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         public void onMaster() {
             super.onMaster();
             toSetWifi();
+            if (pigListDialog!=null) {
+                pigListDialog.dismiss();
+            }
+            if (mTimer!=null){
+                mTimer.cancel();
+            }
         }
 
         @Override
         public void onUnBind() {
             super.onUnBind();
             //toSetWifi();
-            ToastUtils.showShortToast(SearchPigActivity.this,"用户未绑定");
+            //ToastUtils.showShortToast(SearchPigActivity.this,"用户未绑定");
         }
     };
 

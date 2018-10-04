@@ -6,29 +6,35 @@ import android.os.Parcelable;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 
 public class AlarmModel implements Parcelable{
-    public String time_state;
+    public String amOrpm;
     public String time;
-    public String date;
-    public String id;
-
-
+    public String repeatDate;
+    public long lAlarmId;
+    public int eRepeatType;
+    public long lStartTimeStamp;
+    public String repeatName;
     public AlarmModel() {
     }
 
-
     protected AlarmModel(Parcel in) {
-        time_state = in.readString();
+        amOrpm = in.readString();
         time = in.readString();
-        date = in.readString();
-        id = in.readString();
+        repeatDate = in.readString();
+        lAlarmId = in.readLong();
+        repeatName = in.readString();
+        eRepeatType = in.readInt();
+        lStartTimeStamp = in.readLong();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(time_state);
+        dest.writeString(amOrpm);
         dest.writeString(time);
-        dest.writeString(date);
-        dest.writeString(id);
+        dest.writeString(repeatDate);
+        dest.writeLong(lAlarmId);
+        dest.writeString(repeatName);
+        dest.writeInt(eRepeatType);
+        dest.writeLong(lStartTimeStamp);
     }
 
     @Override

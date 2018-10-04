@@ -1,6 +1,7 @@
 package com.ubtechinc.goldenpig.pigmanager.register;
 
 
+import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
 import com.ubtechinc.nets.CheckBindResponseListener;
 import com.ubtechinc.nets.ResponseListener;
@@ -43,7 +44,7 @@ public class CheckUserRepository {
         request.setIsAdmin(isAdmin);
         HashMap<String,String> headers=new HashMap<>();
         headers.put("authorization",token);
-
+        headers.put("product", BuildConfig.product);
         
         HttpProxy.get().doGet(request, headers,new CheckBindResponseListener<CheckBindRobotModule.Response>() {
 

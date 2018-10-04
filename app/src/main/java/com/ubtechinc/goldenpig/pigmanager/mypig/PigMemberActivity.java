@@ -11,8 +11,6 @@ import android.widget.Button;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.ubt.imlibv2.bean.UbtTIMManager;
-import com.ubt.qrcodelib.QRScannerActivity;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.commlib.view.SpaceItemDecoration;
 import com.ubtechinc.goldenpig.BuildConfig;
@@ -299,16 +297,13 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
             int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
             int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
             if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
-                if (menuPosition==1) {
-                    if (mUsertList != null && adapterPosition > -1 && adapterPosition < mUsertList.size()) {
+                if (mUsertList != null && adapterPosition > -1 && adapterPosition < mUsertList.size()) {
+                    if (menuPosition == 1) {
                         showDeleteMember(String.valueOf(mUsertList.get(adapterPosition).getUserId()));
+                    } else if (menuPosition == 0) {
+                        showTransferAdminDialog(String.valueOf(mUsertList.get(adapterPosition).getUserId()));
                     }
-                }else if (menuPosition==0){
-                    showTransferAdminDialog();
                 }
-
-            }else if (direction == SwipeMenuRecyclerView.LEFT_DIRECTION){
-
             }
         }
     };
@@ -332,7 +327,11 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
 
             @Override
             public void onRightButtonClick(View view) {
-                doUnbind(userId);
+                UnbindPigProxy pigProxy = new UnbindPigProxy();
+                final String serialNo = AuthLive.getInstance().getCurrentPig().getRobotName();
+
+                final String token = CookieInterceptor.get().getToken();
+                pigProxy.unbindPig(serialNo, userId, token, BuildConfig.APP_ID, unBindPigCallback);
             }
         });
         dialog.show();
@@ -341,7 +340,7 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
     /**
      * 显示转让权限确认对话框
      */
-    private void  showTransferAdminDialog(){
+    private void  showTransferAdminDialog(final String userId){
         UBTSubTitleDialog dialog=new UBTSubTitleDialog(this);
         dialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
         dialog.setTips(getString(R.string.ubt_trandfer_admin_tips));
@@ -356,7 +355,7 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
 
             @Override
             public void onRightButtonClick(View view) {
-
+                 
             }
         });
         dialog.show();

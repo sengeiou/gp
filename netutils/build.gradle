@@ -30,8 +30,7 @@ def getProps(String env) {
 }
 
 android {
-    compileSdkVersion rootProject.ext.android.compileSdkVersion
-    buildToolsVersion rootProject.ext.android.buildToolsVersion
+    compileSdkVersion COMPILE_SDK_VERSION
     packagingOptions {
         packagingOptions {
             exclude 'assets/xgwifi.xml'
@@ -42,8 +41,8 @@ android {
     }
     publishNonDefault true
     defaultConfig {
-        minSdkVersion rootProject.ext.android.minSdkVersion
-        targetSdkVersion rootProject.ext.android.targetSdkVersion
+        minSdkVersion MIN_SDK_VERSION
+        targetSdkVersion TARGET_SDK_VERSION
         versionCode 1
         versionName "1.0.0"
     }
@@ -59,6 +58,8 @@ android {
                 buildConfigField 'String', 'USER_HOST', props['user_host']
                 buildConfigField 'String', 'XINGE_HOST', props['xinge_host']
                 buildConfigField 'String', 'UPDATE', props['update']
+                //product   60101 区分产品
+                buildConfigField "String", "product", "\"60101\""
                 buildConfigField 'String', 'EQUIPMENTID_HOST', props['change_equipmentid_host']
                 buildConfigField 'String', 'IM_CHANNEL', props['im_channel']
                 printf('host=%s,im_host=%s ,user_host=%s,xinge_host=%s，im_channel=%s\n', props['host'], props['im_host'], props['user_host'], props['xinge_host'],props['im_channel'])
@@ -74,6 +75,8 @@ android {
                 buildConfigField 'String', 'USER_HOST', props['user_host']
                 buildConfigField 'String', 'XINGE_HOST', props['xinge_host']
                 buildConfigField 'String', 'UPDATE', props['update']
+                //product   60101 区分产品
+                buildConfigField "String", "product", "\"60101\""
                 buildConfigField 'String', 'EQUIPMENTID_HOST', props['change_equipmentid_host']
                 buildConfigField 'String', 'IM_CHANNEL', props['im_channel']
                 printf('host=%s,im_host=%s ,user_host=%s,xinge_host=%s，im_channel=%s, update=%s\n', props['host'], props['im_host'], props['user_host'], props['xinge_host'],props['im_channel'],props['update'])

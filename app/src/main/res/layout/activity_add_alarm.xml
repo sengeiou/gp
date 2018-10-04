@@ -150,7 +150,7 @@
             android:layout_toRightOf="@+id/tv_cycle_status"
             android:gravity="end"
             android:singleLine="true"
-            android:text="永不"
+            android:text="单次"
             android:textColor="@color/ubt_tab_btn_txt_color"
             android:textSize="@dimen/sp_14" />
 
@@ -162,6 +162,6 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/dp_15"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_goto" />
+            android:src="@drawable/ic_go" />
     </RelativeLayout>
 </LinearLayout>
