@@ -1,24 +1,17 @@
 package com.ubtechinc.goldenpig.main.fragment;
 
-import android.app.Activity;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.ubtechinc.commlib.utils.ContextUtils;
-import com.ubtechinc.commlib.view.CircleImageView;
 import com.ubtechinc.commlib.view.UbtSubTxtButton;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.about.UbtAboutActivtiy;
@@ -180,7 +173,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                 ActivityRoute.toAnotherActivity(getActivity(), DeviceManageActivity.class, false);
             }
         });
-        changeItemAlpha();
+//        changeItemAlpha();
     }
 
     private void changeItemAlpha() {
@@ -241,12 +234,13 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
             case R.id.ubt_btn_person_remind:
                 ActivityRoute.toAnotherActivity(getActivity(), RemindActivity.class, false);
                 break;
+                default:
         }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
+        changeItemAlpha();
     }
 }
