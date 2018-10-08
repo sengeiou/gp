@@ -1,15 +1,24 @@
 package com.ubtechinc.goldenpig.personal.alarm;
 
+import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.tencent.TIMCustomElem;
+import com.tencent.TIMMessage;
 import com.tencent.ai.tvs.comm.CommOpInfo;
 import com.tencent.ai.tvs.env.ELoginPlatform;
+import com.ubt.imlibv2.bean.UbtTIMManager;
+import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.TimeUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
@@ -20,12 +29,17 @@ import com.ubtechinc.goldenpig.base.BaseNewActivity;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
+import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.model.AlarmModel;
+import com.ubtechinc.goldenpig.personal.remind.RemindActivity;
+import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.StateView;
 import com.ubtechinc.tvlloginlib.TVSManager;
+import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
+import com.ubtrobot.gold.GPCommons;
 import com.yanzhenjie.recyclerview.swipe.SwipeItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
@@ -38,20 +52,46 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import butterknife.BindView;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SET_ALARM_SUCCESS;
 
-public class AlarmListActivity extends BaseNewActivity implements SwipeItemClickListener {
+public class AlarmListActivity extends BaseNewActivity implements SwipeItemClickListener, Observer {
     @BindView(R.id.rl_titlebar)
     SecondTitleBarViewImg rl_titlebar;
     @BindView(R.id.recycler)
     SwipeMenuRecyclerView recycler;
     AlarmListAdapter adapter;
     private ArrayList<AlarmModel> mList;
+    private MyHandler mHandler;
+
+    private class MyHandler extends Handler {
+        WeakReference<Activity> mWeakReference;
+
+        public MyHandler(Activity activity) {
+            mWeakReference = new WeakReference<Activity>(activity);
+        }
+
+        @Override
+        public void handleMessage(android.os.Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 1) {
+                ToastUtils.showShortToast("请求超时，请重试");
+                if (mWeakReference.get() != null) {
+                    LoadingDialog.getInstance(mWeakReference.get()).dismiss();
+                    if (mList.size() == 0) {
+                        mStateView.showRetry();
+                    }
+                }
+            }
+        }
+    }
 
     @Override
     protected int getContentViewId() {
@@ -66,12 +106,21 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mHandler = new MyHandler(this);
         initStateView(true);
         mStateView.setEmptyResource(R.layout.adapter_alarm_empty);
         mStateView.setOnRetryClickListener(new StateView.OnRetryClickListener() {
             @Override
             public void onRetryClick() {
-                onRefresh();
+                LoadingDialog.getInstance(AlarmListActivity.this).show();
+                if (AuthLive.getInstance().getCurrentPig() == null) {
+                    ToastUtils.showShortToast("请先绑定小猪");
+                    finish();
+                } else if (!TextUtils.isEmpty(AuthLive.getInstance().getCurrentPig().getGuid())) {
+                    onRefresh();
+                } else {
+                    getGUID();
+                }
             }
         });
         mStateView.setOnEmptyClickListener(new StateView.OnEmptyClickListener() {
@@ -114,7 +163,34 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
         adapter = new AlarmListAdapter(this, mList);
         recycler.setAdapter(adapter);
         LoadingDialog.getInstance(this).show();
-        onRefresh();
+        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+        if (pigInfo != null) {
+            UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
+        } else {
+            UbtTIMManager.getInstance().setPigAccount("2cb9b9a3");
+        }
+        UbtTIMManager.getInstance().setMsgObserve(this);
+        UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
+            @Override
+            public void onError(int i, String s) {
+                Log.e("setOnUbtTIMConver", s);
+                LoadingDialog.getInstance(AlarmListActivity.this).dismiss();
+                ToastUtils.showShortToast(s);
+            }
+
+            @Override
+            public void onSuccess() {
+                Log.e("setOnUbtTIMConver", "sss");
+            }
+        });
+        if (AuthLive.getInstance().getCurrentPig() == null) {
+            ToastUtils.showShortToast("请先绑定小猪");
+            finish();
+        } else if (!TextUtils.isEmpty(AuthLive.getInstance().getCurrentPig().getGuid())) {
+            onRefresh();
+        } else {
+            getGUID();
+        }
     }
 
     public void onRefresh() {
@@ -338,5 +414,41 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
                         LogUtils.d("code:" + code);
                     }
                 });
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        TIMMessage msg = (TIMMessage) arg;
+        for (int i = 0; i < msg.getElementCount(); ++i) {
+            TIMCustomElem elem = (TIMCustomElem) msg.getElement(i);
+            try {
+                dealMsg(elem.getData());
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+                ToastUtils.showShortToast("数据异常，请重试");
+                LoadingDialog.getInstance(AlarmListActivity.this).dismiss();
+            }
+        }
+    }
+
+    private void dealMsg(Object arg) throws InvalidProtocolBufferException {
+        ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage
+                .parseFrom((byte[]) arg);
+        String action = msg.getHeader().getAction();
+        switch (action) {
+            case "/im/GUID/Action":
+                String guid = msg.getPayload().unpack(GPCommons.Common.class).getDataValue();
+                AuthLive.getInstance().getCurrentPig().setGuid(guid);
+                onRefresh();
+                break;
+        }
+    }
+
+    public void getGUID() {
+        if (mHandler.hasMessages(1)) {
+            mHandler.removeMessages(1);
+        }
+        mHandler.sendEmptyMessageDelayed(1, 20 * 1000);// 20s 秒后检查加载框是否还在
+        UbtTIMManager.getInstance().getGuid();
     }
 }

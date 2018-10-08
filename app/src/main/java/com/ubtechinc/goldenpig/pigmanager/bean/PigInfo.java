@@ -36,6 +36,15 @@ public class PigInfo implements Serializable {
     private String masterUserName; //主账号昵称
     private String equipmentSeq; //主账号昵称
 
+    private String guid;//闹钟，提醒等需要
+    public String getGuid() {
+        return guid;
+    }
+
+    public void setGuid(String guid) {
+        this.guid = guid;
+    }
+
     public boolean isAdmin;
     private int bindingId;
     private long confirmOffline;

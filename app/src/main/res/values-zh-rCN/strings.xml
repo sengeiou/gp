@@ -121,6 +121,6 @@
     <string name="ubt_pair_pig_fialure">配对失败</string>
     <string name="ubt_add_member_success">添加成员成功</string>
     <string name="ubt_pair_pig_success">小猪配对成功</string>
-
-
+    <string name="alarm">闹钟</string>
+    <string name="record_empty_prompt">没有最近通话</string>
 </resources>

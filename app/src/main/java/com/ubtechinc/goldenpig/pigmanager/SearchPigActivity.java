@@ -379,13 +379,13 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         @Override
         public void onMaster() {
             super.onMaster();
-            toSetWifi();
             if (pigListDialog!=null) {
                 pigListDialog.dismiss();
             }
             if (mTimer!=null){
                 mTimer.cancel();
             }
+            toSetWifi();
         }
 
         @Override

@@ -361,4 +361,10 @@ public class UbtTIMManager {
         TIMMessage msg=creatElem(data);
         sendTIM(msg);
     }
+
+    public void getGuid(){
+        byte[] data = ContactsProtoBuilder.getGuidIM();
+        TIMMessage msg=creatElem(data);
+        sendTIM(msg);
+    }
 }

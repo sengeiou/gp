@@ -22,6 +22,7 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-feature android:name="android.hardware.camera.front" />
+
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
@@ -30,7 +31,7 @@
         android:name=".app.UBTPGApplication"
         android:allowBackup="true"
         android:exported="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/pic_icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -57,7 +58,7 @@
         <activity
             android:name=".pigmanager.SearchPigActivity"
             android:launchMode="singleTask"
-             android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" />
 
         <activity
             android:name=".main.MainActivity"
@@ -151,11 +152,14 @@
         <activity
             android:name=".personal.remind.SetRemindRepeatActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".pigmanager.mypig.PairPigActivity"
+        <activity
+            android:name=".pigmanager.mypig.PairPigActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".pigmanager.mypig.PairQRScannerActivity"
+        <activity
+            android:name=".pigmanager.mypig.PairQRScannerActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".personal.MemberQRScannerActivity"
+        <activity
+            android:name=".personal.MemberQRScannerActivity"
             android:screenOrientation="portrait" />
     </application>
 
