@@ -19,28 +19,28 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
- * @author     : HQT
- * @email      :qiangta.huang@ubtrobot.com
- * @describe   :小猪分页Fragment
- * @time       :2018/8/17 18:00
- * @change     :
- * @changTime  :2018/8/17 18:00
+ * @author : HQT
+ * @email :qiangta.huang@ubtrobot.com
+ * @describe :小猪分页Fragment
+ * @time :2018/8/17 18:00
+ * @change :
+ * @changTime :2018/8/17 18:00
  */
-public class PigFragment extends BaseFragment{
+public class PigFragment extends BaseFragment {
     @BindView(R.id.ubt_layout_tips)
     View mTipsView;
     @BindView(R.id.ubt_bind_tv)
     View mBindClickTv;
-    public PigFragment(){
+
+    public PigFragment() {
         super();
     }
-
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view =inflater.inflate(R.layout.fragment_pig,container,false);
+        View view = inflater.inflate(R.layout.fragment_pig, container, false);
         return view;
     }
 
@@ -75,17 +75,20 @@ public class PigFragment extends BaseFragment{
 
     }
 
-    @OnClick({R.id.ubt_bind_tv,R.id.ll_record})
-    public void Onclick(View view){
-        switch (view.getId()){
+    @OnClick({R.id.ubt_bind_tv, R.id.ll_record})
+    public void Onclick(View view) {
+        switch (view.getId()) {
             case R.id.ubt_bind_tv:
-                ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class,false);
+                ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class, false);
                 break;
             case R.id.ll_record:
-                ActivityRoute.toAnotherActivity(getActivity(), RecordActivity.class,false);
+                if (AuthLive.getInstance().getCurrentPig() != null) {
+                    ActivityRoute.toAnotherActivity(getActivity(), RecordActivity.class, false);
+                }
                 break;
         }
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();

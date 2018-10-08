@@ -112,7 +112,6 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
         mStateView.setOnRetryClickListener(new StateView.OnRetryClickListener() {
             @Override
             public void onRetryClick() {
-                LoadingDialog.getInstance(AlarmListActivity.this).show();
                 if (AuthLive.getInstance().getCurrentPig() == null) {
                     ToastUtils.showShortToast("请先绑定小猪");
                     finish();

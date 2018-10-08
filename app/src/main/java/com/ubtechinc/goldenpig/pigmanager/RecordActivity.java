@@ -177,23 +177,6 @@ public class RecordActivity extends BaseNewActivity implements Observer {
         }
         mHandler.sendEmptyMessageDelayed(1, 20 * 1000);// 20s 秒后检查加载框是否还在
         UbtTIMManager.getInstance().queryRecord();
-//        mHandler.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                List<RecordModel> ss = new ArrayList<>();
-//                for (int j = 0; j < 10; j++) {
-//                    RecordModel mo = new RecordModel();
-//                    mo.name = "测试" + j;
-//                    mo.number = "15911234567";
-//                    mo.id = j;
-//                    mo.type = j % 4;
-//                    mo.dateLong = System.currentTimeMillis() - 1000 * j * 60;
-//                    mo.duration = j % 5;
-//                    ss.add(mo);
-//                }
-//                onRefreshSuccess(ss);
-//            }
-//        }, 2000);
     }
 
     public void onError(String str) {
