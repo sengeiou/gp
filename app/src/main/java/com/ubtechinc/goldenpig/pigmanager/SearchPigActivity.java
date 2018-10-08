@@ -54,7 +54,7 @@ import static com.ubtechinc.bluetooth.Constants.WIFI_LIST_RESLUT_TRANS;
 /**
  * @auther :hqt
  * @email :qiangta.huang@ubtrobot.com
- * @description :搜索音响界面
+ * @description :搜索音箱界面
  * @time :2018/8/23 18:52
  * @change :
  * @changetime :2018/8/23 18:52
@@ -150,7 +150,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         if (isSearched){
             mSearchBtn.setText("重新搜索");
         }else {
-            mSearchBtn.setText("搜索音响");
+            mSearchBtn.setText("搜索音箱");
         }
     }
 
