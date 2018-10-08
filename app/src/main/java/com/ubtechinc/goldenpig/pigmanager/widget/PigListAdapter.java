@@ -19,7 +19,7 @@ import java.util.ArrayList;
 /**
  *@auther        :hqt
  *@email         :qiangta.huang@ubtrobot.com
- *@description   :小猪音响的蓝牙列表
+ *@description   :小猪音箱的蓝牙列表
  *@time          :2018/8/25 14:14
  *@change        :
  *@changetime    :2018/8/25 14:14
