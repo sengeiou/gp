@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">金猪</string>
+    <string name="app_name">小猪音箱</string>
     <string name="ubt_qq_login">QQ登录</string>
     <string name="ubt_wechat_login">微信登录</string>
     <string name="ubt_tab_little_pig">小猪</string>

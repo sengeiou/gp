@@ -33,10 +33,9 @@
         android:exported="true"
         android:icon="@mipmap/pic_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoToolbar"
-        tools:replace="icon,label,theme,roundIcon">
+        tools:replace="icon,label,theme">
         <activity
             android:name=".main.SplashActivity"
             android:launchMode="singleTop"
