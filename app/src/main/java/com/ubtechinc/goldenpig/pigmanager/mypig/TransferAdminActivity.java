@@ -24,12 +24,13 @@ import com.ubtechinc.nets.http.ThrowableWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TransferAdminActivity extends BaseToolBarActivity implements View.OnClickListener{
+public class TransferAdminActivity extends BaseToolBarActivity implements View.OnClickListener {
     private ArrayList<CheckBindRobotModule.User> mUserList;
     private MemberPermissionAdapter adapter;
     private RecyclerView memberRcy;
     private PigInfo mPig;
     private boolean isDownloadedUserList;
+
     @Override
     protected int getConentView() {
         return R.layout.activity_transfer_admin;
@@ -50,54 +51,57 @@ public class TransferAdminActivity extends BaseToolBarActivity implements View.O
         getUserList(intent);
     }
 
-    private void initViews(){
-        mTvSkip=findViewById(R.id.ubt_tv_set_net_skip);
+    private void initViews() {
+        mTvSkip = findViewById(R.id.ubt_tv_set_net_skip);
+        mTvSkip.setVisibility(View.VISIBLE);
         mTvSkip.setText(R.string.ubt_complete);
         mTvSkip.setOnClickListener(this);
 
-        memberRcy=findViewById(R.id.ubt_rcy_permission_member);
-        adapter=new MemberPermissionAdapter(this,mUserList);
+        memberRcy = findViewById(R.id.ubt_rcy_permission_member);
+        adapter = new MemberPermissionAdapter(this, mUserList);
         memberRcy.setLayoutManager(new WrapContentLinearLayoutManager(this));
         memberRcy.setAdapter(adapter);
 
         adapter.notifyDataSetChanged();
-        mPig=AuthLive.getInstance().getCurrentPig();
+        mPig = AuthLive.getInstance().getCurrentPig();
     }
-    private void getUserList(Intent intent){
-        if (intent==null){
+
+    private void getUserList(Intent intent) {
+        if (intent == null) {
             return;
         }
-        if (intent.hasExtra("users")){
-            mUserList=(ArrayList<CheckBindRobotModule.User>)intent.getSerializableExtra("users");
-            if (mUserList!=null){
+        if (intent.hasExtra("users")) {
+            mUserList = (ArrayList<CheckBindRobotModule.User>) intent.getSerializableExtra("users");
+            if (mUserList != null) {
                 mUserList.addAll(mUserList);
             }
-            if (adapter!=null){
+            if (adapter != null) {
                 adapter.notifyDataSetChanged();
             }
         }
-        if (mUserList==null||mUserList.size()==0){
-            mUserList=new ArrayList<>();
+        if (mUserList == null || mUserList.size() == 0) {
+            mUserList = new ArrayList<>();
             getMember("1");
         }
     }
-    private void getMember(String admin){
+
+    private void getMember(String admin) {
         if (isDownloadedUserList)
             return;
-        if ("0".equals(admin)){
-            isDownloadedUserList=true;
+        if ("0".equals(admin)) {
+            isDownloadedUserList = true;
         }
-        if (mPig==null) {
+        if (mPig == null) {
             ToastUtils.showShortToast(this, getString(R.string.ubt_no_pigs));
             return;
         }
-        if (mUserList==null){
-            mUserList=new ArrayList<>();
-        }else  if ("1".equals(admin)&&mUserList!=null){
+        if (mUserList == null) {
+            mUserList = new ArrayList<>();
+        } else if ("1".equals(admin) && mUserList != null) {
             mUserList.clear();
         }
-        CheckUserRepository repository=new CheckUserRepository();
-        repository.getRobotBindUsers(mPig.getRobotName(), CookieInterceptor.get().getToken(), BuildConfig.APP_ID,admin, new CheckUserRepository.ICheckBindStateCallBack() {
+        CheckUserRepository repository = new CheckUserRepository();
+        repository.getRobotBindUsers(mPig.getRobotName(), CookieInterceptor.get().getToken(), BuildConfig.APP_ID, admin, new CheckUserRepository.ICheckBindStateCallBack() {
             @Override
             public void onError(ThrowableWrapper e) {
                 ToastUtils.showShortToast(TransferAdminActivity.this, "获取成员列表失败");
@@ -111,9 +115,9 @@ public class TransferAdminActivity extends BaseToolBarActivity implements View.O
             @Override
             public void onSuccessWithJson(String jsonStr) {
                 final List<CheckBindRobotModule.User> bindUsers = jsonToUserList(jsonStr);
-                if (mUserList!=null) {
+                if (mUserList != null) {
                     mUserList.addAll(bindUsers);
-                    if (adapter!=null) {
+                    if (adapter != null) {
                         adapter.notifyDataSetChanged();
                     }
                     mUserList.addAll(bindUsers);
@@ -122,20 +126,22 @@ public class TransferAdminActivity extends BaseToolBarActivity implements View.O
             }
         });
     }
-    private List<CheckBindRobotModule.User> jsonToUserList(String jsonStr){
-        List<CheckBindRobotModule.User> result=null;
-        Gson gson=new Gson();
+
+    private List<CheckBindRobotModule.User> jsonToUserList(String jsonStr) {
+        List<CheckBindRobotModule.User> result = null;
+        Gson gson = new Gson();
         try {
             result = gson.fromJson(jsonStr, new TypeToken<List<CheckBindRobotModule.User>>() {
             }.getType());
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             e.printStackTrace();
         }
         return result;
     }
+
     @Override
     public void onClick(View v) {
-        if (v.getId()==R.id.ubt_tv_set_net_skip){
+        if (v.getId() == R.id.ubt_tv_set_net_skip) {
             doTransferAdmin();
         }
     }
@@ -143,12 +149,12 @@ public class TransferAdminActivity extends BaseToolBarActivity implements View.O
     /**
      * 执行转让权限操作
      */
-    private void doTransferAdmin(){
-        if (adapter!=null&&mUserList!=null
-                &&adapter.getSelectedIndex()>=0
-                &&mUserList.size()>adapter.getSelectedIndex()){
-            final String userId=String.valueOf(mUserList.get(adapter.getSelectedIndex()).getUserId());
-            TransferAdminHttpProxy httpProxy=new TransferAdminHttpProxy();
+    private void doTransferAdmin() {
+        if (adapter != null && mUserList != null
+                && adapter.getSelectedIndex() >= 0
+                && mUserList.size() > adapter.getSelectedIndex()) {
+            final String userId = String.valueOf(mUserList.get(adapter.getSelectedIndex()).getUserId());
+            TransferAdminHttpProxy httpProxy = new TransferAdminHttpProxy();
             httpProxy.transferAdmin(CookieInterceptor.get().getToken(), AuthLive.getInstance().getCurrentPig().getRobotName(), userId, new TransferAdminHttpProxy.TransferCallback() {
                 @Override
                 public void onError(String error) {

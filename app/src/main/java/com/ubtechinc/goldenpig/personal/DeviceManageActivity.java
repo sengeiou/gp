@@ -11,7 +11,6 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.personal.management.AddressBookActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.mypig.MyPigActivity;
-import com.ubtechinc.goldenpig.pigmanager.mypig.PairPigActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.PigMemberActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.QRCodeActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
@@ -87,6 +86,7 @@ public class DeviceManageActivity extends BaseNewActivity {
                 ActivityRoute.toAnotherActivity(DeviceManageActivity.this, AddressBookActivity
                         .class, false);
                 break;
+                default:
         }
     }
 

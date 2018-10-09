@@ -116,7 +116,6 @@
                 android:id="@+id/ll_record"
                 android:layout_width="match_parent"
                 android:layout_height="130dp"
-                android:alpha="0.5"
                 android:background="@drawable/img_004"
                 android:layout_marginEnd="@dimen/ubt_16dp"
                 android:layout_marginTop="@dimen/ubt_main_item_space"

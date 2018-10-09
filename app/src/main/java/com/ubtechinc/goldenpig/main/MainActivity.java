@@ -6,26 +6,18 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RadioButton;
 
-import com.ubtechinc.bluetooth.UbtBluetoothManager;
-import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseActivity;
-import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
-import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.fragment.HouseFragment;
 import com.ubtechinc.goldenpig.main.fragment.MainFragmentAdpater;
 import com.ubtechinc.goldenpig.main.fragment.PersonalFragment;
 import com.ubtechinc.goldenpig.main.fragment.PigFragment;
-import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
-import com.ubtechinc.goldenpig.route.ActivityRoute;
-
 
 import java.util.ArrayList;
 
