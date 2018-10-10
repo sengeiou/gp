@@ -14,6 +14,7 @@
     <string name="ubt_long_press_pig">请长按电源键，确认音箱已开机</string>
     <string name="ubt_start_set_net">开始配网与绑定</string>
     <string name="ubt_pig_match">音箱配对</string>
+    <string name="ubt_pig_bind">音箱绑定</string>
     <string name="ubt_search_pig">搜索音箱</string>
     <string name="ubt_press_mute_btn_tips">在音箱开机时，长按静音键，至耳朵灯效亮起</string>
     <string name="ubt_bluetooth_none">蓝牙模块不存在，不能使用</string>

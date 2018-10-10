@@ -34,10 +34,10 @@ public class BaseHttpProxy {
                     public Response intercept(Chain chain) throws IOException {
                         Request request = chain.request()
                                 .newBuilder()
-                                .addHeader("X-UBT-AppId", BuildConfig.APP_ID)
-                                .addHeader("X-UBT-Sign", URestSigner.sign())
-                                .addHeader("authorization", CookieInterceptor.get().getToken())
-                                .addHeader("product", BuildConfig.product)
+                                .header("X-UBT-AppId", BuildConfig.APP_ID)
+                                .header("X-UBT-Sign", URestSigner.sign())
+                                .header("authorization", CookieInterceptor.get().getToken())
+                                .header("product", BuildConfig.product)
                                 .build();
                         return chain.proceed(request);
                     }
