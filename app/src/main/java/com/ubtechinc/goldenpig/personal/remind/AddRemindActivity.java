@@ -1,17 +1,13 @@
 package com.ubtechinc.goldenpig.personal.remind;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.tencent.ai.tvs.business.UniAccessInfo;
 import com.tencent.ai.tvs.comm.CommOpInfo;
 import com.tencent.ai.tvs.env.ELoginPlatform;
-import com.tencent.ai.tvs.info.DeviceManager;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.TimeUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
@@ -22,8 +18,6 @@ import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
-import com.ubtechinc.goldenpig.login.observable.AuthLive;
-import com.ubtechinc.goldenpig.model.AlarmModel;
 import com.ubtechinc.goldenpig.model.RemindModel;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PigUtils;
@@ -31,16 +25,9 @@ import com.ubtechinc.tvlloginlib.TVSManager;
 import com.weigan.loopview.LoopView;
 import com.weigan.loopview.OnItemSelectedListener;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -48,10 +35,8 @@ import butterknife.OnClick;
 import static com.ubtech.utilcode.utils.TimeUtils.DATE_FORMAT_DATE;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_REMIND_REPEAT_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_REMIND_SUCCESS;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SET_ALARM_SUCCESS;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SET_REPEAT_SUCCESS;
 
-public class AddRemindActivity extends BaseNewActivity implements Observer {
+public class AddRemindActivity extends BaseNewActivity {
     @BindView(R.id.loopView_date)
     LoopView loopView_date;
     @BindView(R.id.loopView_am)
@@ -207,11 +192,6 @@ public class AddRemindActivity extends BaseNewActivity implements Observer {
         }
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-
-    }
-
     private void initData() {
         dateList = new ArrayList<>();
         dateList2 = new ArrayList<>();
@@ -284,6 +264,42 @@ public class AddRemindActivity extends BaseNewActivity implements Observer {
         } else {
             platform = ELoginPlatform.QQOpen;
         }
+        String ymd = dateList2.get(loopView_date.getSelectedItem());
+        int hour = 0;
+        if (loopView_am.getSelectedItem() == 1) {
+            hour += 12;
+        }
+        hour += Integer.parseInt(hourList.get(loopView_hour.getSelectedItem()));
+        String date = ymd + " " + hour + ":" + minList.get(loopView_minute.getSelectedItem()) + ":00";
+        long timeMill = TimeUtils.string2Millis(date);
+        if (System.currentTimeMillis() > timeMill) {
+            switch (repeatType) {
+                case "单次":
+                    timeMill += 24 * 60 * 60 * 1000;
+                    break;
+                case "每天":
+                    timeMill += 24 * 60 * 60 * 1000;
+                    break;
+                case "每周":
+                    timeMill += 7 * 24 * 60 * 60 * 1000;
+                    break;
+                case "每月":
+                    timeMill += 24 * 60 * 60 * 1000;
+                    break;
+                case "每年":
+                    timeMill += 24 * 60 * 60 * 1000;
+                    break;
+                case "工作日":
+                    timeMill += 24 * 60 * 60 * 1000;
+                    break;
+                case "节假日":
+                    timeMill += 24 * 60 * 60 * 1000;
+                    break;
+                default:
+                    timeMill += 24 * 60 * 60 * 1000;
+                    break;
+            }
+        }
         int eRepeatType = 0;
         switch (repeatType) {
             case "单次":
@@ -311,19 +327,14 @@ public class AddRemindActivity extends BaseNewActivity implements Observer {
                 eRepeatType = 0;
                 break;
         }
-        String ymd = dateList2.get(loopView_date.getSelectedItem());
-        int hour = 0;
-        if (loopView_am.getSelectedItem() == 1) {
-            hour += 12;
-        }
-        hour += Integer.parseInt(hourList.get(loopView_hour.getSelectedItem()));
-        String date = ymd + " " + hour + ":" + minList.get(loopView_minute.getSelectedItem()) + ":00";
+
         TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ)
                 .requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils.getRemindUniAccessinfo
-                        (sNote, eCloud_type, eRepeatType, lReminderId, TimeUtils.string2Millis(date)), new TVSManager
+                        (sNote, eCloud_type, eRepeatType, lReminderId, timeMill), new TVSManager
                         .TVSAlarmListener() {
                     @Override
                     public void onSuccess(CommOpInfo msg) {
+                        LoadingDialog.getInstance(AddRemindActivity.this).dismiss();
                         if (model == null) {
                             ToastUtils.showShortToast("新建提醒成功");
                         } else {
@@ -336,6 +347,7 @@ public class AddRemindActivity extends BaseNewActivity implements Observer {
 
                     @Override
                     public void onError(String code) {
+                        LoadingDialog.getInstance(AddRemindActivity.this).dismiss();
                         ToastUtils.showShortToast(code);
                         LogUtils.d("code:" + code);
                     }

@@ -36,6 +36,7 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -47,7 +48,7 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_REMIND_REPEAT_SU
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SET_ALARM_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SET_REPEAT_SUCCESS;
 
-public class AddAlarmActivity extends BaseNewActivity implements Observer {
+public class AddAlarmActivity extends BaseNewActivity {
     @BindView(R.id.loopView_date)
     LoopView loopView_date;
     @BindView(R.id.loopView_hour)
@@ -62,6 +63,7 @@ public class AddAlarmActivity extends BaseNewActivity implements Observer {
     private List<String> minList;
     private String repeatType = "单次";
     private AlarmModel model;
+    Date today = new Date();
 
     private class MyHandler extends Handler {
         WeakReference<Activity> mWeakReference;
@@ -163,11 +165,6 @@ public class AddAlarmActivity extends BaseNewActivity implements Observer {
         }
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-
-    }
-
     public Handler getHandler() {
         return mHandler;
     }
@@ -214,6 +211,43 @@ public class AddAlarmActivity extends BaseNewActivity implements Observer {
         } else {
             platform = ELoginPlatform.QQOpen;
         }
+
+        String date = TimeUtils.getTime(System.currentTimeMillis(), TimeUtils.DATE_FORMAT_DATE);
+        int hour = 0;
+        if (loopView_date.getSelectedItem() == 1) {
+            hour += 12;
+        }
+        hour += Integer.parseInt(hourList.get(loopView_hour.getSelectedItem()));
+        date = date + " " + hour + ":" + minList.get(loopView_minute.getSelectedItem()) + ":00";
+        long timeMill = TimeUtils.string2Millis(date);
+        if (System.currentTimeMillis() > timeMill) {
+            switch (repeatType) {
+                case "单次":
+                    timeMill += 24 * 60 * 60 * 1000;
+                    break;
+                case "每天":
+                    timeMill += 24 * 60 * 60 * 1000;
+                    break;
+                case "每周":
+                    timeMill += 7 * 24 * 60 * 60 * 1000;
+                    break;
+                case "每月":
+                    timeMill += 24 * 60 * 60 * 1000;
+                    break;
+                case "每年":
+                    timeMill += 24 * 60 * 60 * 1000;
+                    break;
+                case "工作日":
+                    timeMill += 24 * 60 * 60 * 1000;
+                    break;
+                case "节假日":
+                    timeMill += 24 * 60 * 60 * 1000;
+                    break;
+                default:
+                    timeMill += 24 * 60 * 60 * 1000;
+                    break;
+            }
+        }
         int eRepeatType = 0;
         switch (repeatType) {
             case "单次":
@@ -241,21 +275,13 @@ public class AddAlarmActivity extends BaseNewActivity implements Observer {
                 eRepeatType = 1;
                 break;
         }
-        String date = TimeUtils.getTime(System.currentTimeMillis(), TimeUtils.DATE_FORMAT_DATE);
-        int hour = 0;
-        if (loopView_date.getSelectedItem() == 1) {
-            hour += 12;
-        }
-        hour += Integer.parseInt(hourList.get(loopView_hour.getSelectedItem()));
-        date = date + " " + hour + ":" + minList.get(loopView_minute.getSelectedItem()) + ":00";
         TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ)
                 .requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils
-                        .getAlarmUniAccessinfo(eCloud_type, eRepeatType, lAlarmId, TimeUtils
-                                .string2Millis(date)), new TVSManager
+                        .getAlarmUniAccessinfo(eCloud_type, eRepeatType, lAlarmId, timeMill), new TVSManager
                         .TVSAlarmListener() {
                     @Override
                     public void onSuccess(CommOpInfo msg) {
-                        String str = msg.errMsg;
+                        LoadingDialog.getInstance(AddAlarmActivity.this).dismiss();
                         if (model == null) {
                             ToastUtils.showShortToast("新建闹钟成功");
                         } else {
@@ -268,6 +294,7 @@ public class AddAlarmActivity extends BaseNewActivity implements Observer {
 
                     @Override
                     public void onError(String code) {
+                        LoadingDialog.getInstance(AddAlarmActivity.this).dismiss();
                         ToastUtils.showShortToast(code);
                         LogUtils.d("code:" + code);
                     }

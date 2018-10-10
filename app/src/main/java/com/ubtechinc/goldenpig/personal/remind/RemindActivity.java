@@ -7,18 +7,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.tencent.TIMCustomElem;
-import com.tencent.TIMMessage;
 import com.tencent.ai.tvs.comm.CommOpInfo;
 import com.tencent.ai.tvs.env.ELoginPlatform;
-import com.ubt.imlibv2.bean.UbtTIMManager;
-import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.TimeUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
@@ -29,17 +22,12 @@ import com.ubtechinc.goldenpig.base.BaseNewActivity;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
-import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.model.RemindModel;
-import com.ubtechinc.goldenpig.personal.alarm.AlarmListActivity;
-import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.StateView;
 import com.ubtechinc.tvlloginlib.TVSManager;
-import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
-import com.ubtrobot.gold.GPCommons;
 import com.yanzhenjie.recyclerview.swipe.SwipeItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
@@ -56,14 +44,12 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import butterknife.BindView;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_REMIND_SUCCESS;
 
-public class RemindActivity extends BaseNewActivity implements SwipeItemClickListener, Observer {
+public class RemindActivity extends BaseNewActivity implements SwipeItemClickListener {
     @BindView(R.id.rl_titlebar)
     SecondTitleBarViewImg rl_titlebar;
     @BindView(R.id.recycler)
@@ -113,14 +99,15 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
         mStateView.setOnRetryClickListener(new StateView.OnRetryClickListener() {
             @Override
             public void onRetryClick() {
-                if (AuthLive.getInstance().getCurrentPig() == null) {
-                    ToastUtils.showShortToast("请先绑定小猪");
-                    finish();
-                } else if (!TextUtils.isEmpty(AuthLive.getInstance().getCurrentPig().getGuid())) {
-                    onRefresh();
-                } else {
-                    getGUID();
-                }
+                onRefresh();
+//                if (AuthLive.getInstance().getCurrentPig() == null) {
+//                    ToastUtils.showShortToast("请先绑定小猪");
+//                    finish();
+//                } else if (!TextUtils.isEmpty(AuthLive.getInstance().getCurrentPig().getGuid())) {
+//                    onRefresh();
+//                } else {
+//                    getGUID();
+//                }
             }
         });
         mStateView.setEmptyResource(R.layout.adapter_remind_empty);
@@ -164,34 +151,35 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
         adapter = new RemindAdapter(this, mList);
         recycler.setAdapter(adapter);
         LoadingDialog.getInstance(this).show();
-        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
-        if (pigInfo != null) {
-            UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
-        } else {
-            UbtTIMManager.getInstance().setPigAccount("2cb9b9a3");
-        }
-        UbtTIMManager.getInstance().setMsgObserve(this);
-        UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
-            @Override
-            public void onError(int i, String s) {
-                Log.e("setOnUbtTIMConver", s);
-                LoadingDialog.getInstance(RemindActivity.this).dismiss();
-                ToastUtils.showShortToast(s);
-            }
-
-            @Override
-            public void onSuccess() {
-                Log.e("setOnUbtTIMConver", "sss");
-            }
-        });
-        if (AuthLive.getInstance().getCurrentPig() == null) {
-            ToastUtils.showShortToast("请先绑定小猪");
-            finish();
-        } else if (!TextUtils.isEmpty(AuthLive.getInstance().getCurrentPig().getGuid())) {
-            onRefresh();
-        } else {
-            getGUID();
-        }
+//        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+//        if (pigInfo != null) {
+//            UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
+//        } else {
+//            UbtTIMManager.getInstance().setPigAccount("2cb9b9a3");
+//        }
+//        UbtTIMManager.getInstance().setMsgObserve(this);
+//        UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
+//            @Override
+//            public void onError(int i, String s) {
+//                Log.e("setOnUbtTIMConver", s);
+//                LoadingDialog.getInstance(RemindActivity.this).dismiss();
+//                ToastUtils.showShortToast(s);
+//            }
+//
+//            @Override
+//            public void onSuccess() {
+//                Log.e("setOnUbtTIMConver", "sss");
+//            }
+//        });
+//        if (AuthLive.getInstance().getCurrentPig() == null) {
+//            ToastUtils.showShortToast("请先绑定小猪");
+//            finish();
+//        } else if (!TextUtils.isEmpty(AuthLive.getInstance().getCurrentPig().getGuid())) {
+//            onRefresh();
+//        } else {
+//            getGUID();
+//        }
+        onRefresh();
     }
 
     public void onRefresh() {
@@ -458,39 +446,39 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
         return sb.toString();
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        TIMMessage msg = (TIMMessage) arg;
-        for (int i = 0; i < msg.getElementCount(); ++i) {
-            TIMCustomElem elem = (TIMCustomElem) msg.getElement(i);
-            try {
-                dealMsg(elem.getData());
-            } catch (InvalidProtocolBufferException e) {
-                e.printStackTrace();
-                ToastUtils.showShortToast("数据异常，请重试");
-                LoadingDialog.getInstance(RemindActivity.this).dismiss();
-            }
-        }
-    }
+//    @Override
+//    public void update(Observable o, Object arg) {
+//        TIMMessage msg = (TIMMessage) arg;
+//        for (int i = 0; i < msg.getElementCount(); ++i) {
+//            TIMCustomElem elem = (TIMCustomElem) msg.getElement(i);
+//            try {
+//                dealMsg(elem.getData());
+//            } catch (InvalidProtocolBufferException e) {
+//                e.printStackTrace();
+//                ToastUtils.showShortToast("数据异常，请重试");
+//                LoadingDialog.getInstance(RemindActivity.this).dismiss();
+//            }
+//        }
+//    }
 
-    private void dealMsg(Object arg) throws InvalidProtocolBufferException {
-        ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage
-                .parseFrom((byte[]) arg);
-        String action = msg.getHeader().getAction();
-        switch (action) {
-            case "/im/GUID/Action":
-                String guid = msg.getPayload().unpack(GPCommons.Common.class).getDataValue();
-                AuthLive.getInstance().getCurrentPig().setGuid(guid);
-                onRefresh();
-                break;
-        }
-    }
-
-    public void getGUID() {
-        if (mHandler.hasMessages(1)) {
-            mHandler.removeMessages(1);
-        }
-        mHandler.sendEmptyMessageDelayed(1, 20 * 1000);// 20s 秒后检查加载框是否还在
-        UbtTIMManager.getInstance().getGuid();
-    }
+//    private void dealMsg(Object arg) throws InvalidProtocolBufferException {
+//        ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage
+//                .parseFrom((byte[]) arg);
+//        String action = msg.getHeader().getAction();
+//        switch (action) {
+//            case "/im/GUID/Action":
+//                String guid = msg.getPayload().unpack(GPCommons.Common.class).getDataValue();
+//                AuthLive.getInstance().getCurrentPig().setGuid(guid);
+//                onRefresh();
+//                break;
+//        }
+//    }
+//
+//    public void getGUID() {
+//        if (mHandler.hasMessages(1)) {
+//            mHandler.removeMessages(1);
+//        }
+//        mHandler.sendEmptyMessageDelayed(1, 20 * 1000);// 20s 秒后检查加载框是否还在
+//        UbtTIMManager.getInstance().getGuid();
+//    }
 }

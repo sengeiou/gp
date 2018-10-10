@@ -68,8 +68,8 @@ public class PigUtils {
             JSONArray vCloudAlarmData = new JSONArray();
             JSONObject vCloudAlarmData0 = new JSONObject();
             JSONObject stAIDeviceBaseInfo = new JSONObject();
-            stAIDeviceBaseInfo.put("strGuid", AuthLive.getInstance().getCurrentPig() == null ?
-                    "hdfeng" : AuthLive.getInstance().getCurrentPig().getGuid());//AuthLive
+            stAIDeviceBaseInfo.put("strGuid", "");//AuthLive.getInstance().getCurrentPig() == null ?"hdfeng" :
+            // AuthLive.getInstance().getCurrentPig().getGuid()
             stAIDeviceBaseInfo.put("strAppKey", BuildConfig.APP_KEY);
             vCloudAlarmData0.put("stAIDeviceBaseInfo", stAIDeviceBaseInfo);
             vCloudAlarmData0.put("eRepeatType", eRepeatType);
@@ -87,7 +87,7 @@ public class PigUtils {
         return info;
     }
 
-    public static UniAccessInfo getRemindUniAccessinfo(String sNote,int eCloud_type, int eRepeatType, long
+    public static UniAccessInfo getRemindUniAccessinfo(String sNote, int eCloud_type, int eRepeatType, long
             lReminderId, long lStartTimeStamp) {
         UniAccessInfo info = new UniAccessInfo();
         info.domain = "reminder_v2";
@@ -104,11 +104,11 @@ public class PigUtils {
             JSONArray vCloudAlarmData = new JSONArray();
             JSONObject vCloudAlarmData0 = new JSONObject();
             JSONObject stAIDeviceBaseInfo = new JSONObject();
-            stAIDeviceBaseInfo.put("strGuid", AuthLive.getInstance().getCurrentPig() == null ?
-                    "hdfeng" : AuthLive.getInstance().getCurrentPig().getRobotName());//AuthLive
+            stAIDeviceBaseInfo.put("strGuid", "");//AuthLive.getInstance().getCurrentPig() == null ?
+            //"hdfeng" : AuthLive.getInstance().getCurrentPig().getRobotName()
             stAIDeviceBaseInfo.put("strAppKey", BuildConfig.APP_KEY);
             vCloudAlarmData0.put("stAIDeviceBaseInfo", stAIDeviceBaseInfo);
-            stCloudAlarmReq.put("stAIDeviceBaseInfo",stAIDeviceBaseInfo);
+            stCloudAlarmReq.put("stAIDeviceBaseInfo", stAIDeviceBaseInfo);
             vCloudAlarmData0.put("eRepeatType", eRepeatType);
             //0为异常类型，1为一次性，2为每天，3为每周，4为每月，5为工作日，6为节假日
             vCloudAlarmData0.put("lReminderId", lReminderId);

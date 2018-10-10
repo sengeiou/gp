@@ -14,7 +14,6 @@
         android:id="@+id/iv"
         android:layout_width="@dimen/dp_50"
         android:layout_height="@dimen/dp_50"
-        android:layout_below="@+id/view_curline"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/dp_75"
         android:scaleType="centerCrop"

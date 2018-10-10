@@ -31,7 +31,7 @@ import java.util.Observer;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class SetRepeatActivity extends BaseNewActivity implements Observer {
+public class SetRepeatActivity extends BaseNewActivity{
     @BindView(R.id.rl_titlebar)
     SecondTitleBarViewTv rl_titlebar;
     @BindView(R.id.recycler)
@@ -122,13 +122,6 @@ public class SetRepeatActivity extends BaseNewActivity implements Observer {
             }
         });
     }
-
-
-    @Override
-    public void update(Observable o, Object arg) {
-
-    }
-
 
     private void initData() {
         RepeatModel m0 = new RepeatModel();

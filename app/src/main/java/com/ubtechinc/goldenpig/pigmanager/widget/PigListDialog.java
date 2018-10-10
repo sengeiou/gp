@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 
@@ -92,7 +93,6 @@ public class PigListDialog extends BaseDialog {
         mLecallback = new BluetoothAdapter.LeScanCallback() {
             @Override
             public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
-
 
                 if (!TextUtils.isEmpty(device.getName())&& device.getName().startsWith(Constants.ROBOT_TAG)){
                     int rawIndex=isHasDevice(device);
