@@ -25,6 +25,7 @@ import com.ubtechinc.goldenpig.personal.alarm.AlarmListActivity;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionActivity;
 import com.ubtechinc.goldenpig.personal.remind.RemindActivity;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
+import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.hotspot.SetHotSpotActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 
@@ -119,7 +120,55 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle
             savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_person, container, false);
+//        initView(view);
         return view;
+    }
+
+    private void initView(View view) {
+        if (AuthLive.getInstance().getCurrentUser() != null) {
+            mPohtoImg = (ImageView) getActivity().findViewById(R.id.ubt_img_me_photo);
+            Glide.with(getActivity())
+                    .load(AuthLive.getInstance().getCurrentUser().getUserImage())
+                    .asBitmap()
+                    .centerCrop()
+                    .transform(new GlideCircleTransform(getActivity()))
+                    .into(mPohtoImg);
+
+            mNikenameTv = (TextView) getActivity().findViewById(R.id.ubt_tv_me_nikename);
+            mNikenameTv.setText(AuthLive.getInstance().getCurrentUser().getNickName());
+        }
+        mTitle = getActivity().findViewById(R.id.ubt_me_fragment_title);
+        mCyanBg = getActivity().findViewById(R.id.ubt_me_normal_bg);
+        mToUserInfo = getActivity().findViewById(R.id.ubt_btn_go_login);
+        mToUserInfo.setOnClickListener(this);
+
+        mSetNetBtn = getActivity().findViewById(R.id.ubt_btn_person_set_wifi);
+        mSetNetBtn.setOnClickListener(this);
+
+        mFeedBackBtn = getActivity().findViewById(R.id.ubt_btn_person_feedback);
+        mFeedBackBtn.setOnClickListener(this);
+
+        mAboutBtn = (UbtSubTxtButton) getActivity().findViewById(R.id.ubt_btn_person_about);
+        mAboutBtn.setOnClickListener(this);
+
+        getActivity().findViewById(R.id.ubt_btn_person_clock).setOnClickListener(this);
+        getActivity().findViewById(R.id.ubt_btn_person_answer).setOnClickListener(this);
+
+        try {
+            String versionName = String.format(getString(R.string.ubt_version_format),
+                    ContextUtils.getVerName(getContext()));
+            mAboutBtn.setRightText(versionName);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+        getActivity().findViewById(R.id.ubt_btn_device_manager).setOnClickListener(new View
+                .OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ActivityRoute.toAnotherActivity(getActivity(), DeviceManageActivity.class, false);
+            }
+        });
+//        changeItemAlpha();
     }
 
     @Override
@@ -179,10 +228,15 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
     private void changeItemAlpha() {
         float alpha = 1f;
         boolean isEnable = true;
-        if (AuthLive.getInstance().getCurrentPig() == null) {
-            isEnable = false;
+        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+        if (pigInfo != null && pigInfo.isAdmin) {
+            alpha = 1f;
+            isEnable = true;
+        } else {
             alpha = 0.5f;
+            isEnable = false;
         }
+
         mToHospotBtn.setAlpha(alpha);
         mToHospotBtn.setEnabled(isEnable);
         /*mDevMangerBtn.setAlpha(alpha);

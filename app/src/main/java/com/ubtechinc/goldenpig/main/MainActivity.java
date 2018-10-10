@@ -139,6 +139,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.ubt_rbt_me:
                 fragmentPage.setCurrentItem(2);
                 break;
+                default:
         }
     }
 
@@ -161,6 +162,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 case 2:
                     personRbtn.setChecked(true);
                     break;
+                    default:
             }
         }
 

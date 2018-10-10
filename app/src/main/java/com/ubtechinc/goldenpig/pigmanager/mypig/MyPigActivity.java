@@ -166,6 +166,11 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
         UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getPigVersion()));
     }
 
+    private void getPigVersionState() {
+        showLoadingDialog();
+        UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getPigVersionState()));
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -177,7 +182,7 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ubt_btn_dev_update:
-                toDeviceUpdate();
+                getPigVersionState();
                 break;
             case R.id.ubt_btn_unbind:
                 showConfirmDialog();
@@ -252,13 +257,13 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
     }
 
     private void toDeviceUpdate() {
-        // if (mPig!=null &&mPig.isAdmin&&mPig.isMaster()){
+        dismissLoadDialog();
+        isNeedUpdate = true;
         if (isNeedUpdate) {
             ActivityRoute.toAnotherActivity(this, DeviceUpdateActivity.class, false);
         } else {
             ActivityRoute.toAnotherActivity(this, PigLastVersionActivity.class, false);
         }
-        //}
     }
 
     @Override
@@ -286,7 +291,12 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
                 if (mPigVersionTv != null) {
                     mPigVersionTv.setText(String.format(getString(R.string.ubt_pig_version_format), info.getCurrentVersion()));
                 }
+            }
+        } else if (action.equals(ContactsProtoBuilder.GET_VERSION_STATE_ACTION)){
+            VersionInformation.UpgradeInfo info = msg.getPayload().unpack(VersionInformation.UpgradeInfo.class);
+            if (info != null) {
                 isNeedUpdate = info.getStatus() == 1;
+                toDeviceUpdate();
             }
         }
     }
