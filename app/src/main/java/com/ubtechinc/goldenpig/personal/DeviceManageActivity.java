@@ -21,12 +21,28 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class DeviceManageActivity extends BaseNewActivity {
+
     @BindView(R.id.rl_titlebar)
     SecondTitleBarViewTv rl_titlebar;
+
     @BindView(R.id.ubt_tv_member_group)
     TextView memberItemTitle;
+
     @BindView(R.id.ubt_tv_member_subtitle)
     TextView memberItemSubTitle;
+
+    @BindView(R.id.rl_my_pig)
+    View rlMyPig;
+
+    @BindView(R.id.rl_pairing)
+    View rlPairing;
+
+    @BindView(R.id.rl_member_group)
+    View rlMemberGroup;
+
+    @BindView(R.id.rl_addressbook)
+    View rlAddressbook;
+
     private PigInfo mPig;
 
     @Override
@@ -50,13 +66,39 @@ public class DeviceManageActivity extends BaseNewActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (AuthLive.getInstance().getCurrentPig() == null) {
-            memberItemSubTitle.setText(R.string.ubt_san_formember);
-        }
+        updateUI();
+
+    }
+
+    private void updateUI() {
+//        if (AuthLive.getInstance().getCurrentPig() == null) {
+//            memberItemSubTitle.setText(R.string.ubt_san_formember);
+//        }
         if (mPig != null && (mPig.isAdmin || mPig.isMaster())) {
-            findViewById(R.id.rl_pairing).setVisibility(View.VISIBLE);
+            rlMyPig.setAlpha(1.0f);
+            rlPairing.setAlpha(1.0f);
+            rlMemberGroup.setAlpha(1.0f);
+            rlAddressbook.setAlpha(1.0f);
+            memberItemTitle.setText(R.string.member_group);
+            memberItemSubTitle.setVisibility(View.GONE);
+
+            rlMyPig.setEnabled(true);
+            rlPairing.setEnabled(true);
+            rlMemberGroup.setEnabled(true);
+            rlAddressbook.setEnabled(true);
         } else {
-            findViewById(R.id.rl_pairing).setVisibility(View.GONE);
+            rlMyPig.setAlpha(0.5f);
+            rlPairing.setAlpha(0.5f);
+            rlMemberGroup.setAlpha(1.0f);
+            rlAddressbook.setAlpha(0.5f);
+            memberItemTitle.setText(R.string.ubt_join_group);
+            memberItemSubTitle.setVisibility(View.VISIBLE);
+            memberItemSubTitle.setText(R.string.ubt_san_formember);
+
+            rlMyPig.setEnabled(false);
+            rlPairing.setEnabled(false);
+            rlMemberGroup.setEnabled(true);
+            rlAddressbook.setEnabled(false);
         }
     }
 

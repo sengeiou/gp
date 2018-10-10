@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 
-
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.BuildConfig;
@@ -12,9 +11,6 @@ import com.ubtechinc.goldenpig.comm.entity.UserInfo;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.login.repository.UBTAuthRepository;
-import com.ubtechinc.goldenpig.net.GetRobotListModule;
-import com.ubtechinc.goldenpig.net.RegisterRobotModule;
-
 import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.repository.TVSAuthRepository;
 import com.ubtechinc.goldenpig.utils.PigUtils;
@@ -114,6 +110,7 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
     @Override
     public void onCancel() {
         UbtLogger.i(TAG, "cancel");
+        authLive.cancel();
     }
 
     public boolean isWXInstall() {

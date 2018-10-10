@@ -150,7 +150,7 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
             if (actionBar != null) {
 //                Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_back);
 //                drawable.setBounds(0, 0, 40, 40);
-                actionBar.setHomeAsUpIndicator(R.drawable.ic_action_back);
+                actionBar.setHomeAsUpIndicator(R.drawable.ic_return);
                 actionBar.setDisplayHomeAsUpEnabled(true);
             }
         }

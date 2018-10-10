@@ -155,7 +155,7 @@ public class TransferAdminActivity extends BaseToolBarActivity implements View.O
                 && mUserList.size() > adapter.getSelectedIndex()) {
             final String userId = String.valueOf(mUserList.get(adapter.getSelectedIndex()).getUserId());
             TransferAdminHttpProxy httpProxy = new TransferAdminHttpProxy();
-            httpProxy.transferAdmin(CookieInterceptor.get().getToken(), AuthLive.getInstance().getCurrentPig().getRobotName(), userId, new TransferAdminHttpProxy.TransferCallback() {
+            httpProxy.transferAdmin(this, CookieInterceptor.get().getToken(), AuthLive.getInstance().getCurrentPig().getRobotName(), userId, new TransferAdminHttpProxy.TransferCallback() {
                 @Override
                 public void onError(String error) {
 

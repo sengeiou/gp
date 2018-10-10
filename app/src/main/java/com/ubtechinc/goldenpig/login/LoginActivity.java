@@ -11,12 +11,10 @@ import android.view.View;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtechinc.commlib.network.NetworkHelper;
 import com.ubtechinc.commlib.utils.ToastUtils;
-import com.ubtechinc.goldenpig.BuildConfig;
-import com.ubtechinc.goldenpig.main.MainActivity;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
-import com.ubtechinc.goldenpig.pigmanager.SearchPigActivity;
+import com.ubtechinc.goldenpig.main.MainActivity;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 

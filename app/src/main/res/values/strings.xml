@@ -76,6 +76,7 @@
     <string name="alarm">闹钟</string>
     <string name="ubt_ubbind_success">成功解除绑定</string>
     <string name="ubt_transfer_admin_tips">你是管理员，解绑前请先转让管理员权限</string>
+    <string name="ubt_exit_group_tips">你是管理员，退出成员组请先转让管理员权限</string>
     <string name="ubt_pig_unbing">音箱未配绑定</string>
     <string name="ubt_pig_unset_net">音箱未配网</string>
     <string name="ubt_click_for_bind">点击绑定</string>
@@ -103,6 +104,7 @@
     <string name="ubt_pair_pig_desc">·请让配对设备的管理员打开小猪APP-我的-设备管理-小猪配对；\n·点击右上角“扫一扫”，扫描上面的二维码，配对小猪；\n·配对成功的小猪可以相互发送语音留言；</string>
     <string name="ubt_san_formember">扫码进入</string>
     <string name="ubt_drop_up_tips">退出成员组将解绑此设备</string>
+    <string name="exit_group">退出群组</string>
     <string name="ubt_unbind_success">退出群组成功</string>
     <string name="ubt_unbind_fialure">退出群组失败</string>
     <string name="ubt_trans_permission">转让权限</string>

@@ -17,6 +17,7 @@ import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.view.WrapContentLinearLayoutManager;
+import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
@@ -152,8 +153,9 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
     }
 
     private void getMember(String admin) {
-        if (isDownloadedUserList)
+        if (isDownloadedUserList) {
             return;
+        }
         if ("0".equals(admin)) {
             isDownloadedUserList = true;
         }
@@ -175,11 +177,12 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
 
             @Override
             public void onSuccess(CheckBindRobotModule.Response response) {
-
+                ToastUtils.showShortToast(PigMemberActivity.this, "获取成员列表成功");
             }
 
             @Override
             public void onSuccessWithJson(String jsonStr) {
+                LoadingDialog.getInstance(PigMemberActivity.this).dismiss();
                 final List<CheckBindRobotModule.User> bindUsers = jsonToUserList(jsonStr);
                 if (mUsertList != null) {
                     mUsertList.addAll(bindUsers);
@@ -203,14 +206,34 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
     }
 
     private void doUnbind(final String userId) {
-        if (mPig == null)
+        if (mPig == null) {
             return;
+        }
         ///操作用户是唯一或只是一般成员可好直接弹框点击确认退出
         //否则要跳转到权限转让界面操作
         if (mUsertList.size() > 1 && isCurrentAdmin()) {
-            HashMap<String, ArrayList<CheckBindRobotModule.User>> param = new HashMap<>();
-            param.put("users", mUsertList);
-            ActivityRoute.toAnotherActivity(this, TransferAdminActivity.class, param, false);
+//            HashMap<String, ArrayList<CheckBindRobotModule.User>> param = new HashMap<>();
+//            param.put("users", mUsertList);
+//            ActivityRoute.toAnotherActivity(this, TransferAdminActivity.class, param, false);
+
+            UBTSubTitleDialog dialog = new UBTSubTitleDialog(this);
+            dialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
+            dialog.setTips(getString(R.string.ubt_exit_group_tips));
+            dialog.setLeftButtonTxt(getString(R.string.ubt_cancel));
+            dialog.setRightButtonTxt(getString(R.string.ubt_enter));
+            dialog.setSubTips(getString(R.string.ubt_transfer_tips));
+            dialog.setOnUbtDialogClickLinsenter(new UBTSubTitleDialog.OnUbtDialogClickLinsenter() {
+                @Override
+                public void onLeftButtonClick(View view) {
+
+                }
+
+                @Override
+                public void onRightButtonClick(View view) {
+                }
+            });
+            dialog.show();
+
         } else {
             UBTBaseDialog dialog = new UBTBaseDialog(this);
             dialog.setRightButtonTxt(getString(R.string.ubt_enter));
@@ -368,15 +391,18 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
      * 执行转让权限操作
      */
     private void doTransferAdmin(String userId) {
+        LoadingDialog.getInstance(this).show();
         TransferAdminHttpProxy httpProxy = new TransferAdminHttpProxy();
-        httpProxy.transferAdmin(CookieInterceptor.get().getToken(), AuthLive.getInstance().getCurrentPig().getRobotName(), userId, new TransferAdminHttpProxy.TransferCallback() {
+        httpProxy.transferAdmin(this, CookieInterceptor.get().getToken(), AuthLive.getInstance().getCurrentPig().getRobotName(), userId, new TransferAdminHttpProxy.TransferCallback() {
             @Override
             public void onError(String error) {
+                LoadingDialog.getInstance(PigMemberActivity.this).dismiss();
                 com.ubtech.utilcode.utils.ToastUtils.showShortToast("转让失败");
             }
 
             @Override
             public void onException(Exception e) {
+                LoadingDialog.getInstance(PigMemberActivity.this).dismiss();
                 com.ubtech.utilcode.utils.ToastUtils.showShortToast("转让失败");
             }
 
