@@ -6,11 +6,10 @@ import android.text.TextUtils;
 
 import com.ubtech.utilcode.utils.AppUtils;
 import com.ubtech.utilcode.utils.DeviceUtils;
-import com.ubtech.utilcode.utils.PhoneUtils;
 import com.ubtech.utilcode.utils.ScreenUtils;
-
 import com.ubtechinc.nets.http.HeaderInterceptor;
 import com.ubtechinc.nets.utils.JsonUtil;
+import com.ubtechinc.nets.utils.URestSigner;
 
 import java.util.HashMap;
 
@@ -25,11 +24,15 @@ import java.util.HashMap;
 
 public final class GenericHeaders {
 
-    /**==============begin:ubtech 内置应用的包名====================**/
+    /**
+     * ==============begin:ubtech 内置应用的包名====================
+     **/
     public static final String CHAT_PACKAGE_NAME = "com.ubtech.iflytekmix";
     public static final String TRANSLATION_PACKAGE_NAME = "com.ubtechinc.alphatranslation";
     public static final String SMARTCAMERA_PACKAGE_NAME = "om.ubtech.smartcamera";
-    /**==============end:ubtech 内置应用的包名====================**/
+    /**
+     * ==============end:ubtech 内置应用的包名====================
+     **/
     private static final String COMMON_INFO = "common-info";
     private static final String DEVICE_INFO = "device-info";
 
@@ -62,52 +65,57 @@ public final class GenericHeaders {
     public static final String CHANNEL_ID = "channelId";
     public static final String MAC_ADDRESS = "macAddress";
 
-    public static HeaderInterceptor createGenericHeaders(Context context){
-        HashMap<String,String> headers = new HashMap<>();
+    public static HeaderInterceptor createGenericHeaders(Context context) {
+        HashMap<String, String> headers = new HashMap<>();
         headers.put(COMMON_INFO, JsonUtil.map2Json(getCommonHeaders(context)));
         if (isRobot(context)) {
-            headers.put(DEVICE_INFO,JsonUtil.map2Json(getRobotDeviceHeaders(context)));
-        }else {
-            headers.put(DEVICE_INFO,JsonUtil.map2Json(getPhoneDeviceHeaders(context)));
+            headers.put(DEVICE_INFO, JsonUtil.map2Json(getRobotDeviceHeaders(context)));
+        } else {
+            headers.put(DEVICE_INFO, JsonUtil.map2Json(getPhoneDeviceHeaders(context)));
         }
-        headers.put("product",BuildConfig.product);
-       return new HeaderInterceptor(headers);
+
+        headers.put("X-UBT-AppId", BuildConfig.APP_ID);
+        headers.put("X-UBT-Sign", URestSigner.sign());
+        headers.put("authorization", "");
+        headers.put("product", BuildConfig.product);
+
+        return new HeaderInterceptor(headers);
     }
 
     private static boolean isRobot(Context context) {
         final String appName = AppUtils.getAppPackageName(context);
-        return  CHAT_PACKAGE_NAME.equals(appName)
+        return CHAT_PACKAGE_NAME.equals(appName)
                 || TRANSLATION_PACKAGE_NAME.equals(appName)
                 || SMARTCAMERA_PACKAGE_NAME.equals(appName);
     }
 
-    public static HashMap<String ,String > getCommonHeaders(Context context){
+    public static HashMap<String, String> getCommonHeaders(Context context) {
         HashMap<String, String> headers = new HashMap<>();
         headers.put(APP_ID, AppUtils.getAppPackageName(context));
         headers.put(APP_NAME, AppUtils.getAppName(context));
-        headers.put(APP_VERSION_CODE, AppUtils.getAppVersionCode(context)+"");
+        headers.put(APP_VERSION_CODE, AppUtils.getAppVersionCode(context) + "");
         headers.put(APP_VERSION_NAME, AppUtils.getAppVersionName(context));
 
-        headers.put(DEV_TYPE, isRobot(context)? "robot":"android");
+        headers.put(DEV_TYPE, isRobot(context) ? "robot" : "android");
 
         headers.put(PROTOCOL_VERSION_CODE, "1");
         headers.put(SYS_LANGUAGE, context.getResources().getConfiguration().locale.getLanguage());
-        headers.put(SYS_VERSION_CODE, DeviceUtils.getSDKVersion()+"");
+        headers.put(SYS_VERSION_CODE, DeviceUtils.getSDKVersion() + "");
         headers.put(SYS_VERSION_NAME, Build.VERSION.SDK);
         headers.put(CHANNEL_ID, "");
         return headers;
     }
 
-    public static HashMap<String, String>  getPhoneDeviceHeaders(Context context){
+    public static HashMap<String, String> getPhoneDeviceHeaders(Context context) {
         HashMap<String, String> headers = new HashMap<>();
-        final String imei ="" /*PhoneUtils.getIMEI()*/;
+        final String imei = "" /*PhoneUtils.getIMEI()*/;
         if (!TextUtils.isEmpty(imei)) {
             headers.put(IMEI, imei);
         }
         headers.put(DEVICE_MODE, DeviceUtils.getModel());
         headers.put(DEVICE_MANUFACTOR, DeviceUtils.getManufacturer());
-        headers.put(DEVICE_SCREEN_WIDTH, ScreenUtils.getScreenWidth()+"");
-        headers.put(DEVICE_SCREEN_HEIGHT, ScreenUtils.getScreenHeight()+"");
+        headers.put(DEVICE_SCREEN_WIDTH, ScreenUtils.getScreenWidth() + "");
+        headers.put(DEVICE_SCREEN_HEIGHT, ScreenUtils.getScreenHeight() + "");
         final String mac = DeviceUtils.getMacAddress();
         if (!TextUtils.isEmpty(mac)) {
             headers.put(MAC_ADDRESS, mac);
@@ -116,7 +124,7 @@ public final class GenericHeaders {
     }
 
     @Deprecated
-    public static HashMap<String, String> getRobotDeviceHeaders(Context context){
+    public static HashMap<String, String> getRobotDeviceHeaders(Context context) {
         HashMap<String, String> headers = new HashMap<>(0);
         headers.put(ROBOT_SN, "");
         return headers;

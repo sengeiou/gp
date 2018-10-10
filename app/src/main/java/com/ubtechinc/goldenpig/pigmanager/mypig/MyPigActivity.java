@@ -36,9 +36,6 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-import butterknife.OnClick;
-import butterknife.Optional;
-
 /**
  * @auther :hqt
  * @email :qiangta.huang@ubtrobot.com
@@ -176,16 +173,16 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
         showPigNo();
     }
 
-    @Optional
-    @OnClick({R.id.ubt_btn_dev_update, R.id.ubt_btn_unbind})
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ubt_btn_dev_update:
                 toDeviceUpdate();
                 break;
             case R.id.ubt_btn_unbind:
-                showComfireDialog();
+                showConfirmDialog();
                 break;
+            default:
         }
     }
 
@@ -195,8 +192,10 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
         UbtTIMManager.getInstance().deleteMsgObserve(this);
     }
 
-    /*显示确认对转权限话框*/
-    private void showComfireDialog() {
+    /**
+     * 显示确认对转权限话框
+     */
+    private void showConfirmDialog() {
         final boolean isMaster = isSingalOrMaster();
         UBTBaseDialog dialog = new UBTBaseDialog(this);
         if (isMaster) {
@@ -216,13 +215,13 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
             @Override
             public void onRightButtonClick(View view) {
                 if (isMaster) {
+                    ActivityRoute.toAnotherActivity(MyPigActivity.this, TransferAdminActivity.class, false);
+                } else {
                     UnbindPigProxy pigProxy = new UnbindPigProxy();
                     final String serialNo = AuthLive.getInstance().getCurrentPig().getRobotName();
                     final String userId = AuthLive.getInstance().getUserId();
                     final String token = CookieInterceptor.get().getToken();
                     pigProxy.unbindPig(serialNo, userId, token, BuildConfig.APP_ID, unBindPigCallback);
-                } else {
-                    ActivityRoute.toAnotherActivity(MyPigActivity.this, TransferAdminActivity.class, false);
                 }
             }
         });

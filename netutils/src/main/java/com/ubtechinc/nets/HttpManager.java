@@ -81,9 +81,13 @@ public final class HttpManager {
     }
 
     public static HttpManager get(Context context) {
-        if (instance != null) return instance;
+        if (instance != null) {
+            return instance;
+        }
         synchronized (HttpManager.class) {
-            if (instance == null) instance = new HttpManager(context);
+            if (instance == null) {
+                instance = new HttpManager(context);
+            }
         }
         return instance;
     }
@@ -227,7 +231,9 @@ public final class HttpManager {
         public void onSuccess(byte[] rawBytes) {
 
             ResponseListener<T> listener = softListener;
-            if (listener == null) return;
+            if (listener == null) {
+                return;
+            }
             final String jsonStr = new String(rawBytes);
             LogUtils.d(TAG, "onSuccess json = " + jsonStr);
             if (jsonStr.startsWith("[")&&jsonStr.endsWith("]")){

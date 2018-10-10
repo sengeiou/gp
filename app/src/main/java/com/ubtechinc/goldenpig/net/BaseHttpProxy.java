@@ -1,6 +1,7 @@
 package com.ubtechinc.goldenpig.net;
 
 import com.ubtechinc.goldenpig.BuildConfig;
+import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 
 import java.io.IOException;
 import java.security.SecureRandom;
@@ -33,6 +34,9 @@ public class BaseHttpProxy {
                     public Response intercept(Chain chain) throws IOException {
                         Request request = chain.request()
                                 .newBuilder()
+                                .addHeader("X-UBT-AppId", BuildConfig.APP_ID)
+                                .addHeader("X-UBT-Sign", URestSigner.sign())
+                                .addHeader("authorization", CookieInterceptor.get().getToken())
                                 .addHeader("product", BuildConfig.product)
                                 .build();
                         return chain.proceed(request);
@@ -41,7 +45,6 @@ public class BaseHttpProxy {
                 .build();
         return okHttpClient;
     }
-
 
     private static class TrustAllHostnameVerifier implements HostnameVerifier {
         @Override

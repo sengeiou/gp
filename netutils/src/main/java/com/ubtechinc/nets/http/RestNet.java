@@ -27,9 +27,7 @@ import okhttp3.ConnectionPool;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.CallAdapter;
@@ -62,16 +60,19 @@ public final class RestNet {
             cookieMgr = new CookieManager(new CookieCache(mContext));
             clientBuilder.cookieJar(cookieMgr);
         }
-        clientBuilder.addInterceptor(new Interceptor() {
-            @Override
-            public Response intercept(Chain chain) throws IOException {
-                Request request = chain.request()
-                        .newBuilder()
-                        .addHeader("product", "60101")
-                        .build();
-                return chain.proceed(request);
-            }
-        });
+//        clientBuilder.addInterceptor(new Interceptor() {
+//            @Override
+//            public Response intercept(Chain chain) throws IOException {
+//                Request request = chain.request()
+//                        .newBuilder()
+//                        .addHeader("X-UBT-AppId", "100080018")
+//                        .addHeader("X-UBT-Sign", BuildConfig.product)
+//                        .addHeader("authorization", BuildConfig.product)
+//                        .addHeader("product", "60101")
+//                        .build();
+//                return chain.proceed(request);
+//            }
+//        });
         this.client = clientBuilder.build();
         retroBuilder.client(client);
         this.retrofit = retroBuilder.build();

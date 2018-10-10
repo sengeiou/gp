@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -28,6 +29,7 @@ import com.ubtechinc.goldenpig.pigmanager.register.CheckUserRepository;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.pigmanager.register.TransferAdminHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.nets.http.ThrowableWrapper;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
@@ -410,7 +412,28 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
             public void onSuccess(String msg) {
                 com.ubtech.utilcode.utils.ToastUtils.showShortToast("转让成功");
                 isDownloadedUserList = false;
+                updatePigList();
                 getMember("1");
+            }
+        });
+    }
+
+    private void updatePigList() {
+        new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListHttpProxy.OnGetPigListLitener() {
+            @Override
+            public void onError(ThrowableWrapper e) {
+                Log.e("getPigList",e.getMessage());
+            }
+
+            @Override
+            public void onException(Exception e) {
+                Log.e("getPigList",e.getMessage());
+            }
+
+            @Override
+            public void onSuccess(String response) {
+                Log.e("getPigList",response);
+                PigUtils.getPigList(response,AuthLive.getInstance().getUserId(),AuthLive.getInstance().getCurrentPigList());
             }
         });
     }
