@@ -29,8 +29,8 @@ public class RegisterPigRepository {
         request.setSerialNumber(srialNumber);
         HashMap<String,String> hearder=new HashMap<>();
         hearder.put("authorization",token);
-//        hearder.put("X-UBT-AppId",appid);  //
-//        hearder.put("product",pId);
+        hearder.put("X-UBT-AppId",appid);
+        hearder.put("product",pId);
         HttpProxy.get().doPost(request, hearder,new ResponseListener<RegisterRobotModule.Response>() {
             @Override
             public void onError(ThrowableWrapper e) {
