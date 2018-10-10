@@ -60,32 +60,42 @@ public class DeviceManageActivity extends BaseNewActivity {
                 finish();
             }
         });
-        mPig = AuthLive.getInstance().getCurrentPig();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         updateUI();
-
     }
 
     private void updateUI() {
-//        if (AuthLive.getInstance().getCurrentPig() == null) {
-//            memberItemSubTitle.setText(R.string.ubt_san_formember);
-//        }
-        if (mPig != null && (mPig.isAdmin || mPig.isMaster())) {
-            rlMyPig.setAlpha(1.0f);
-            rlPairing.setAlpha(1.0f);
-            rlMemberGroup.setAlpha(1.0f);
-            rlAddressbook.setAlpha(1.0f);
-            memberItemTitle.setText(R.string.member_group);
-            memberItemSubTitle.setVisibility(View.GONE);
+        mPig = AuthLive.getInstance().getCurrentPig();
+        if (mPig != null) {
+            if (mPig.isAdmin) {
+                rlMyPig.setAlpha(1.0f);
+                rlPairing.setAlpha(1.0f);
+                rlMemberGroup.setAlpha(1.0f);
+                rlAddressbook.setAlpha(1.0f);
+                memberItemTitle.setText(R.string.member_group);
+                memberItemSubTitle.setVisibility(View.GONE);
 
-            rlMyPig.setEnabled(true);
-            rlPairing.setEnabled(true);
-            rlMemberGroup.setEnabled(true);
-            rlAddressbook.setEnabled(true);
+                rlMyPig.setEnabled(true);
+                rlPairing.setEnabled(true);
+                rlMemberGroup.setEnabled(true);
+                rlAddressbook.setEnabled(true);
+            } else {
+                rlMyPig.setAlpha(1.0f);
+                rlPairing.setAlpha(0.5f);
+                rlMemberGroup.setAlpha(1.0f);
+                rlAddressbook.setAlpha(0.5f);
+                memberItemTitle.setText(R.string.member_group);
+                memberItemSubTitle.setVisibility(View.GONE);
+
+                rlMyPig.setEnabled(true);
+                rlPairing.setEnabled(false);
+                rlMemberGroup.setEnabled(true);
+                rlAddressbook.setEnabled(false);
+            }
         } else {
             rlMyPig.setAlpha(0.5f);
             rlPairing.setAlpha(0.5f);

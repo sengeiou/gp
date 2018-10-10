@@ -418,6 +418,12 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updatePigList();
+    }
+
     private void updatePigList() {
         if (AuthLive.getInstance().getCurrentPigList() != null) {
             AuthLive.getInstance().getCurrentPigList().clear();
