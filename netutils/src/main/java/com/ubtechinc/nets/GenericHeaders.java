@@ -76,7 +76,7 @@ public final class GenericHeaders {
 
         headers.put("X-UBT-AppId", BuildConfig.APP_ID);
         headers.put("X-UBT-Sign", URestSigner.sign());
-        headers.put("authorization", "");
+//        headers.put("authorization", "");
         headers.put("product", BuildConfig.product);
 
         return new HeaderInterceptor(headers);
