@@ -231,7 +231,7 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
     private boolean isSingalOrMaster() {
         mPig = AuthLive.getInstance().getCurrentPig();
         boolean result = false;
-        if (mPig != null && (mPig.isMaster() || mPig.isAdmin)) {
+        if (mPig != null && (mPig.isAdmin)) {
             result = true;
         }
         return result;
