@@ -25,7 +25,6 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
-
     <application
         android:name=".app.UBTPGApplication"
         android:allowBackup="true"
@@ -66,6 +65,10 @@
 
         <activity
             android:name=".pigmanager.SetPigNetWorkActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".voiceChat.ui.ChatActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity

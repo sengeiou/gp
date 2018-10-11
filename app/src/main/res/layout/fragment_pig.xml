@@ -37,7 +37,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="130dp"
                     android:background="@drawable/img_001"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:id="@+id/ll_voicechat">
 
                     <TextView
                         android:id="@+id/ubt_tv_pig_title"

@@ -19,6 +19,7 @@ import static qrom.component.wup.base.ContextHolder.getApplicationContext;
  */
 public class UBTPGApplication extends LoginApplication {
     private static UBTPGApplication instance;
+    static Context mContext;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -26,7 +27,7 @@ public class UBTPGApplication extends LoginApplication {
         com.ubtech.utilcode.utils.Utils.init(this);
         instance = this;
         Foreground.init(this);
-
+        mContext = this.getApplicationContext();
         Stetho.initializeWithDefaults(this);
         UbtLogger.init(getApplicationContext());
         UbtLogger.i("", ProtoBufferDisposer.TAG);
@@ -47,5 +48,9 @@ public class UBTPGApplication extends LoginApplication {
     }
     public static UBTPGApplication getInstance() {
         return instance;
+    }
+
+    public static Context getContext() {
+        return mContext;
     }
 }

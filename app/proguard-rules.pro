@@ -113,7 +113,5 @@
   **[] $VALUES;
   public *;
 }
--libraryjars libs/zxing.jar
--libraryjars libs/zxing_apply.jar
 -keep class com.google.zxing.** {*;}
 -dontwarn com.google.zxing.*

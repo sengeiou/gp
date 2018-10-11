@@ -6,17 +6,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ubt.qrcodelib.QRScannerActivity;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseFragment;
-import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.RecordActivity;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.voiceChat.ui.ChatActivity;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 /**
  * @author     : HQT
@@ -75,9 +74,15 @@ public class PigFragment extends BaseFragment{
 
     }
 
-    @OnClick({R.id.ubt_bind_tv,R.id.ll_record})
+    @OnClick({R.id.ubt_bind_tv,R.id.ll_record,R.id.ll_voicechat,R.id.ubt_imgbtn_add_pig})
     public void Onclick(View view){
         switch (view.getId()){
+            case R.id.ll_voicechat:
+                ActivityRoute.toAnotherActivity(getActivity(),ChatActivity.class,false);
+                break;
+            case R.id.ubt_imgbtn_add_pig:
+                ActivityRoute.toAnotherActivity(getActivity(),QRScannerActivity.class,false);
+                break;
             case R.id.ubt_bind_tv:
                 ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class,false);
                 break;
