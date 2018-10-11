@@ -12,7 +12,6 @@ import com.tencent.TIMMessage;
 import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
-import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
@@ -68,9 +67,9 @@ public class DeviceUpdateActivity extends BaseToolBarActivity implements Observe
         if (pigInfo != null) {
             UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
         }
-        if (BuildConfig.DEBUG) {
-            UbtTIMManager.getInstance().setPigAccount("84ca93ea6c3fc295"); //
-        }
+//        if (BuildConfig.DEBUG) {
+//            UbtTIMManager.getInstance().setPigAccount("84ca93ea6c3fc295"); //
+//        }
         UbtTIMManager.getInstance().setMsgObserve(this);
         UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
             @Override

@@ -127,4 +127,5 @@
     <string name="ubt_add_member_success">添加成员成功</string>
     <string name="ubt_pair_pig_success">小猪配对成功</string>
     <string name="only_admin_operate">仅管理员可操作</string>
+    <string name="logout_tip">确定退出吗？</string>
 </resources>
