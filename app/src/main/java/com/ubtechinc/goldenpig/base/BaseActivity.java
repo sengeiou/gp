@@ -30,9 +30,16 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         ActivityManager am = ActivityManager.getInstance();
         am.pushActivity(this);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE); //防止截屏
+        if (isForbiddenSnapShot()) {
+            //防止截屏
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        }
         setContentView(getContentViewId());
         unbinder=ButterKnife.bind(this);
+    }
+
+    protected boolean isForbiddenSnapShot() {
+        return false;
     }
 
     @Override

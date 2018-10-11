@@ -54,6 +54,11 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
     }
 
     @Override
+    protected boolean isForbiddenSnapShot() {
+        return true;
+    }
+
+    @Override
     protected void init(Bundle savedInstanceState) {
         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
             requestPermission();
