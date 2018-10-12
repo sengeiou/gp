@@ -67,13 +67,15 @@ public class Utils {
     /**
      * 组装向机器人发送clinetId的指令
      * @param clientId
+     * @param userId
      * @return
      */
-    public static String pactkClientIdCommandToRobot(String clientId){
+    public static String pactkClientIdCommandToRobot(String clientId, String userId){
         try{
             JSONObject jsonObject = new JSONObject();
             jsonObject.put(Constants.DATA_COMMAND,Constants.CLIENT_ID_TRANS);
             jsonObject.put(Constants.CLIENTID,clientId);
+            jsonObject.put(Constants.USERID, userId);
             return jsonObject.toString();
         }catch (Exception e){
             e.printStackTrace();

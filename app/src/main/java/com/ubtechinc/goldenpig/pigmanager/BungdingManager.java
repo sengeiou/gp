@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.ubtech.utilcode.utils.JsonUtils;
-
 import com.ubtechinc.bluetooth.BleConnectAbstract;
 import com.ubtechinc.bluetooth.Constants;
 import com.ubtechinc.bluetooth.UbtBluetoothManager;
@@ -22,20 +21,15 @@ import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
 import com.ubtechinc.goldenpig.net.RegisterRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.bean.UbtScanResult;
 import com.ubtechinc.goldenpig.pigmanager.model.RobotAllAccountViewModel;
-import com.ubtechinc.goldenpig.pigmanager.observeable.MyPigsLive;
 import com.ubtechinc.goldenpig.pigmanager.observeable.RobotBindStateLive;
 import com.ubtechinc.goldenpig.pigmanager.register.RegisterPigRepository;
-import com.ubtechinc.nets.utils.JsonUtil;
 import com.ubtechinc.tvlloginlib.TVSManager;
 
-import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static com.ubtechinc.bluetooth.Constants.CODE_1;
 import static com.ubtechinc.bluetooth.Constants.PIG_REPLY_NET_STATE;
@@ -43,10 +37,6 @@ import static com.ubtechinc.bluetooth.Constants.ROBOT_BANGDING_SUCCESS;
 import static com.ubtechinc.bluetooth.Constants.ROBOT_CONNECT_SUCCESS;
 import static com.ubtechinc.bluetooth.Constants.ROBOT_REPLY_WIFI_IS_OK_TRANS;
 import static com.ubtechinc.bluetooth.Constants.WIFI_LIST_RESLUT_TRANS;
-import static com.ubtechinc.goldenpig.pigmanager.BungdingManager.BindState.HaventBind;
-import static com.ubtechinc.goldenpig.pigmanager.BungdingManager.BindState.MySelf;
-import static com.ubtechinc.goldenpig.pigmanager.BungdingManager.BindState.Networkerror;
-import static com.ubtechinc.goldenpig.pigmanager.BungdingManager.BindState.Others;
 
 
 /**
@@ -314,7 +304,8 @@ public class BungdingManager {
     private void sendClientIdToRobot(String clientId){
         Log.i(TAG, " sendClientIdToRobot clientId : " + clientId);
 //        String clientTrans = Utils.pactkClientIdCommandToRobot(clientId);
-        String clientTrans = commandProduce.getClientId(clientId);
+        final String userId = AuthLive.getInstance().getUserId();
+        String clientTrans = commandProduce.getClientId(clientId, userId);
         if(!TextUtils.isEmpty(clientTrans)){
             UbtBluetoothManager.getInstance().sendMessageToBle(clientTrans);
         }
