@@ -1,6 +1,7 @@
 package com.ubtechinc.goldenpig.voiceChat.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +68,7 @@ public class ChatAdapter extends ArrayAdapter<Message> {
             view.setTag(viewHolder);
         }
         if (position < getCount()){
+            Log.d(TAG,"ChatActivity--->ChatPresenter(send)--->MessageEvent(observable)---->ChatPresenter(observe update)----->ChatView showMessage -->ChatAdapter notify---->--->getView----> VoiceMessage(showMessage)  "+position);
             final Message data = getItem(position);
             data.showMessage(viewHolder, getContext());
         }

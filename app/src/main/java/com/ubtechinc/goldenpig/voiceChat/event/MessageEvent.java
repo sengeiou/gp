@@ -37,7 +37,7 @@ public class MessageEvent extends Observable implements TIMMessageListener {
     @Override
     public boolean onNewMessages(List<TIMMessage> list) {
         for (TIMMessage item:list){
-            Log.d(TAG,"xx onNewMessage  "+list  +item.getElement(0).toString());
+            Log.d(TAG,"MessageEvent(Receive TIMMessageListener)--->ChatPresenter(observe update)----->ChatView showMessage -->ChatAdapter notify---->getView --->VoiceMessage(showMessage)   "+list  +item.getElement(0).toString());
             setChanged();
             notifyObservers(item);
         }

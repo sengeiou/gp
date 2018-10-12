@@ -85,8 +85,10 @@ public class PigFragment extends BaseFragment {
         super.onResume();
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null && pigInfo.isAdmin) {
+            llVoiceChat.setAlpha(1.0f);
             rlPairPig.setAlpha(1.0f);
         } else {
+            llVoiceChat.setAlpha(0.5f);
             rlPairPig.setAlpha(0.5f);
         }
         updatePigPair();
