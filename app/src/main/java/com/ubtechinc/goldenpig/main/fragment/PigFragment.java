@@ -15,6 +15,7 @@ import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseFragment;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
+import com.ubtechinc.goldenpig.main.SkillActivity;
 import com.ubtechinc.goldenpig.personal.MemberQRScannerActivity;
 import com.ubtechinc.goldenpig.pigmanager.RecordActivity;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
@@ -153,7 +154,7 @@ public class PigFragment extends BaseFragment {
 
     }
 
-    @OnClick({R.id.ubt_bind_tv, R.id.ll_record, R.id.ll_voicechat, R.id.view_pig_pair_add, R.id.view_pig_pair_info})
+    @OnClick({R.id.ubt_bind_tv, R.id.ll_record, R.id.ll_voicechat, R.id.view_pig_pair_add, R.id.view_pig_pair_info, R.id.view_skill})
     public void Onclick(View view) {
         switch (view.getId()) {
             case R.id.ll_voicechat:
@@ -182,6 +183,9 @@ public class PigFragment extends BaseFragment {
                 if (AuthLive.getInstance().getCurrentPig() != null) {
                     ActivityRoute.toAnotherActivity(getActivity(), RecordActivity.class, false);
                 }
+                break;
+            case R.id.view_skill:
+                ActivityRoute.toAnotherActivity(getActivity(), SkillActivity.class, false);
                 break;
             default:
         }

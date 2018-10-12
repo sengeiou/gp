@@ -84,6 +84,7 @@
             </RelativeLayout>
 
             <LinearLayout
+                android:id="@+id/view_skill"
                 android:layout_width="match_parent"
                 android:layout_height="130dp"
                 android:layout_marginEnd="@dimen/ubt_16dp"
