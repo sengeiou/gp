@@ -112,7 +112,7 @@ public class ChatActivity extends FragmentActivity implements ChatView {
         identify = getIntent().getStringExtra("identify");
         if (pigInfo != null) {
             identify=pigInfo.getRobotName();
-            UBTLog.d("ChatActivity", "identity  "+identify);
+            UBTLog.d("ChatActivity", "Pig identity  "+identify +"me identity "+UbtTIMManager.userId);
         } else {
            // identify="2cb9b9a3";
            // identify="8989898989880000";
