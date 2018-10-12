@@ -1,7 +1,6 @@
 package com.ubtechinc.commlib.view;
 
 import android.content.Context;
-import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,7 +9,6 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import com.ubtechinc.commlib.R;
-import com.ubtechinc.commlib.log.UbtLogger;
 
 /**
  *@auther        :hqt
@@ -64,6 +62,7 @@ public class UbtSubTxtButton extends android.support.v7.widget.AppCompatButton {
     public void setRightText(String rightText){
         this.mRightText=rightText;
         countTextLocation();
+        invalidate();
     }
 
     public String getRightText() {

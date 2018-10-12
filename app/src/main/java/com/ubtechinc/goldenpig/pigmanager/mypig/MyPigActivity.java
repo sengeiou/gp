@@ -26,6 +26,8 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.utils.PigUtils;
+import com.ubtechinc.nets.http.ThrowableWrapper;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.ubtrobot.upgrade.VersionInformation;
 
@@ -179,6 +181,32 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
         showPigNo();
     }
 
+    private void getPigList() {
+        new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListHttpProxy.OnGetPigListLitener() {
+            @Override
+            public void onError(ThrowableWrapper e) {
+                Log.e("getPigList", e.getMessage());
+            }
+
+            @Override
+            public void onException(Exception e) {
+                Log.e("getPigList", e.getMessage());
+            }
+
+            @Override
+            public void onSuccess(String response) {
+                Log.e("getPigList", response);
+                PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance().getCurrentPigList());
+                ArrayList<PigInfo> currentPigList = AuthLive.getInstance().getCurrentPigList();
+                if (currentPigList != null && currentPigList.size() != 1) {
+                    showConfirmDialog(true);
+                } else {
+                    showConfirmDialog(false);
+                }
+            }
+        });
+    }
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -186,10 +214,20 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
                 getPigVersionState();
                 break;
             case R.id.ubt_btn_unbind:
-                showConfirmDialog();
+                doCheck();
                 break;
             default:
         }
+    }
+
+    private void doCheck() {
+        final boolean isMaster = isSingalOrMaster();
+        if (isMaster) {
+            getPigList();
+        } else {
+            showConfirmDialog(false);
+        }
+
     }
 
     @Override
@@ -199,39 +237,40 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
     }
 
     /**
-     * 显示确认对转权限话框
+     * 显示确认转权限对话框
      */
-    private void showConfirmDialog() {
-        final boolean isMaster = isSingalOrMaster();
-        UBTBaseDialog dialog = new UBTBaseDialog(this);
-        if (isMaster) {
-            dialog.setTips(getString(R.string.ubt_transfer_admin_tips));
-        } else {
-            dialog.setTips(getString(R.string.ubt_unbing_tips));
-        }
-        dialog.setLeftButtonTxt(getString(R.string.ubt_cancel));
-        dialog.setRightButtonTxt(getString(R.string.ubt_enter));
-        dialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
-        dialog.setOnUbtDialogClickLinsenter(new UBTBaseDialog.OnUbtDialogClickLinsenter() {
-            @Override
-            public void onLeftButtonClick(View view) {
-
+    private void showConfirmDialog(boolean needTransfer) {
+        runOnUiThread(() -> {
+            UBTBaseDialog dialog = new UBTBaseDialog(MyPigActivity.this);
+            if (needTransfer) {
+                dialog.setTips(getString(R.string.ubt_transfer_admin_tips));
+            } else {
+                dialog.setTips(getString(R.string.ubt_unbing_tips));
             }
+            dialog.setLeftButtonTxt(getString(R.string.ubt_cancel));
+            dialog.setRightButtonTxt(getString(R.string.ubt_enter));
+            dialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
+            dialog.setOnUbtDialogClickLinsenter(new UBTBaseDialog.OnUbtDialogClickLinsenter() {
+                @Override
+                public void onLeftButtonClick(View view) {
 
-            @Override
-            public void onRightButtonClick(View view) {
-                if (isMaster) {
-                    ActivityRoute.toAnotherActivity(MyPigActivity.this, TransferAdminActivity.class, false);
-                } else {
-                    UnbindPigProxy pigProxy = new UnbindPigProxy();
-                    final String serialNo = AuthLive.getInstance().getCurrentPig().getRobotName();
-                    final String userId = AuthLive.getInstance().getUserId();
-                    final String token = CookieInterceptor.get().getToken();
-                    pigProxy.unbindPig(serialNo, userId, token, BuildConfig.APP_ID, unBindPigCallback);
                 }
-            }
+
+                @Override
+                public void onRightButtonClick(View view) {
+                    if (needTransfer) {
+                        ActivityRoute.toAnotherActivity(MyPigActivity.this, TransferAdminActivity.class, false);
+                    } else {
+                        UnbindPigProxy pigProxy = new UnbindPigProxy();
+                        final String serialNo = AuthLive.getInstance().getCurrentPig().getRobotName();
+                        final String userId = AuthLive.getInstance().getUserId();
+                        final String token = CookieInterceptor.get().getToken();
+                        pigProxy.unbindPig(serialNo, userId, token, BuildConfig.APP_ID, unBindPigCallback);
+                    }
+                }
+            });
+            dialog.show();
         });
-        dialog.show();
     }
 
     private boolean isSingalOrMaster() {
@@ -292,7 +331,7 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
                     mPigVersionTv.setText(String.format(getString(R.string.ubt_pig_version_format), info.getCurrentVersion()));
                 }
             }
-        } else if (action.equals(ContactsProtoBuilder.GET_VERSION_STATE_ACTION)){
+        } else if (action.equals(ContactsProtoBuilder.GET_VERSION_STATE_ACTION)) {
             VersionInformation.UpgradeInfo info = msg.getPayload().unpack(VersionInformation.UpgradeInfo.class);
             if (info != null) {
                 isNeedUpdate = info.getStatus() == 1;

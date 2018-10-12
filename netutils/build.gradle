@@ -60,7 +60,7 @@ android {
                 buildConfigField 'String', 'UPDATE', props['update']
                 //product   60101 区分产品
                 buildConfigField "String", "product", "\"60101\""
-                buildConfigField "String", "APP_ID","\"100080018\""
+                buildConfigField "String", "APP_ID","\"100080014\""
                 buildConfigField "String", "APP_KEY","\"85650f0ffe314beda3b85a9ab626662d\""
                 buildConfigField 'String', 'EQUIPMENTID_HOST', props['change_equipmentid_host']
                 buildConfigField 'String', 'IM_CHANNEL', props['im_channel']
@@ -79,7 +79,7 @@ android {
                 buildConfigField 'String', 'UPDATE', props['update']
                 //product   60101 区分产品
                 buildConfigField "String", "product", "\"60101\""
-                buildConfigField "String", "APP_ID","\"100080018\""
+                buildConfigField "String", "APP_ID","\"100080014\""
                 buildConfigField "String", "APP_KEY","\"85650f0ffe314beda3b85a9ab626662d\""
                 buildConfigField 'String', 'EQUIPMENTID_HOST', props['change_equipmentid_host']
                 buildConfigField 'String', 'IM_CHANNEL', props['im_channel']

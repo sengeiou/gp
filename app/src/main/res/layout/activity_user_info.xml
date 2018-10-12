@@ -41,7 +41,7 @@
         android:paddingStart="@dimen/ubt_16dp"
         android:text="@string/ubt_nikename"
         app:rightTextColor="@color/ubt_version_color"
-        app:rightTextSize="14sp"
+        app:rightTextSize="16sp"
         app:rightTextPadding="@dimen/ubt_16dp"
         style="@style/UBTUserInfoItemThem" />
     <com.ubtechinc.commlib.view.UbtSubTxtButton
@@ -54,7 +54,7 @@
         android:paddingEnd="@dimen/ubt_16dp"
         app:rightText="@string/ubt_associalted_account"
         app:rightTextColor="@color/ubt_version_color"
-        app:rightTextSize="14sp"
+        app:rightTextSize="16sp"
         app:rightTextPadding="32dp"
         style="@style/UBTUserInfoItemThem" />
 

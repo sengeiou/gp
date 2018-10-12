@@ -2,7 +2,6 @@ package com.ubtechinc.goldenpig.base;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -24,6 +23,7 @@ import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.NetUtils;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
 
@@ -106,8 +106,8 @@ public abstract class BaseFragment extends Fragment {
     protected  void tipsClick(){
         if (AuthLive.getInstance().getCurrentPig()==null) {
             HashMap<String,Boolean> params=new HashMap<>();
-            params.put("back",true);
-            params.put("skip",false);
+            params.put("back",false);
+            params.put("skip",true);
             ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class,params,false);
         }
     }
@@ -159,9 +159,15 @@ public abstract class BaseFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(this.getClass().getSimpleName());
+    }
+    @Override
     public void onResume() {
         super.onResume();
         //checkPigWifi();
+        MobclickAgent.onPageStart(this.getClass().getSimpleName()); //统计页面("MainScreen"为页面名称，可自定义)
         showTips();
     }
     private void checkPigWifi(){

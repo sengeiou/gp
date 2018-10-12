@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.ubtechinc.commlib.log.UBTLog;
 import com.ubtechinc.goldenpig.BuildConfig;
@@ -35,16 +36,17 @@ public class SkillActivity extends BaseToolBarActivity {
     protected void init(Bundle savedInstanceState) {
         mWebView = findViewById(R.id.web_common);
 
+        setTitleBack(true);
+        setToolBarTitle(R.string.ubt_skills_manual);
+
         initWebView();
     }
 
     private void initWebView() {
-        String baseUrl = "http://10.10.32.22:8080/small/smallSkill.html?"; //local
-
-//        String baseUrl = "http://10.10.1.14:8090/cloud-ppi/help/small/smallSkill.html?"; //test
+        String baseUrl = BuildConfig.H5_URL + "/small/smallSkill.html?";
 
         URL = baseUrl + "appId=" + BuildConfig.APP_ID + "&sign=" + URestSigner.sign().replace(" ", "%20") + "&authorization=" +
-                CookieInterceptor.get().getToken() + "&product=" + BuildConfig.APP_ID;
+                CookieInterceptor.get().getToken() + "&product=" + BuildConfig.product;
 
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setAllowFileAccess(true);
@@ -58,41 +60,14 @@ public class SkillActivity extends BaseToolBarActivity {
         mWebView.getSettings().setDatabaseEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
 
-//        WebViewClient webViewClient = new WebViewClient() {
-//            @Override
-//            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-//                return true;
-//            }
-//
-//            @Override
-//            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-//                if(HttpAddress.WebServiceAdderss.contains(HttpAddress.WebAddressDevelop)){
-//                    //webview 忽略证书
-//                    handler.proceed();
-//                }else {
-//                    super.onReceivedSslError(view, handler, error);
-//                }
-//            }
-//
-//            @Override
-//            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-//                super.onReceivedError(view, errorCode, description, failingUrl);
-//
-//            }
-//
-//            @Override
-//            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-//                super.onPageStarted(view, url, favicon);
-//            }
-//
-//            @Override
-//            public void onPageFinished(WebView view, String url) {
-//                super.onPageFinished(view, url);
-//
-//            }
-//
-//        };
-//        mWebView.setWebViewClient(webViewClient);
+
+        mWebView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
 
         UBTLog.d("goldPig", "URL:" + URL);
         mWebView.loadUrl(URL);

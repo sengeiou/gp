@@ -8,6 +8,7 @@ import android.view.WindowManager;
 
 import com.ubtechinc.goldenpig.app.ActivityManager;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
+import com.umeng.analytics.MobclickAgent;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -36,6 +37,18 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
         setContentView(getContentViewId());
         unbinder=ButterKnife.bind(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
     }
 
     protected boolean isForbiddenSnapShot() {

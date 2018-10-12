@@ -19,7 +19,6 @@ import com.tencent.TIMMessage;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubt.improtolib.GPResponse;
-import com.ubt.improtolib.UserContacts;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.ScreenUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
@@ -149,7 +148,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
         });
         rl_titlebar.setTvRightName(getString(R.string.complete));
         rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color
-                .ubt_tab_btn_txt_checked_color));
+                .ubt_skip_txt_unenable_color));
         mList = new ArrayList<>();
         initData();
         GridLayoutManager gm = new GridLayoutManager(this, 5);
@@ -191,8 +190,12 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                 strPhone = etPhone.getText().toString().trim();
                 if (TextUtils.isEmpty(strPhone)) {
                     ivPhoneClear.setVisibility(View.INVISIBLE);
+                    rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color
+                            .ubt_skip_txt_unenable_color));
                 } else {
                     ivPhoneClear.setVisibility(View.VISIBLE);
+                    rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color
+                            .ubt_tab_btn_txt_checked_color));
                 }
             }
         });
