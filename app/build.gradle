@@ -75,6 +75,7 @@ android {
             shrinkResources false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "goldpic_test"]
             ndk {
                 // 需要将 x86 架构过滤掉
                 abiFilters "armeabi", "armeabi-v7a", "arm64-v8a"
@@ -110,6 +111,7 @@ android {
             minifyEnabled false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "goldpic_issue"]
             ndk {
                 // 需要将 x86 架构过滤掉
                 abiFilters "armeabi", "armeabi-v7a", "arm64-v8a"
@@ -182,6 +184,7 @@ dependencies {
     implementation project(path: ':recyclerview-swipe')
     implementation project(path: ':loopview')
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.+'
+    implementation 'com.umeng.analytics:analytics:latest.integration'
    // implementation 'com.squareup.picasso:picasso:2.71828'
     //implementation 'com.weigan:loopView:0.1.2'
     //compile 'com.yanzhenjie:recyclerview-swipe:1.1.4'
