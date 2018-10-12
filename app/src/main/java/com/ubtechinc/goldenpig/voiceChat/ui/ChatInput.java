@@ -225,7 +225,8 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
         isSendVisible = s!=null&&s.length()>0;
         setSendBtn();
         if (isSendVisible){
-            chatView.sending();
+            //2018-10-12 PIG PROJECT NOT NEED THE FUNCTION
+           // chatView.sending();
         }
     }
 
