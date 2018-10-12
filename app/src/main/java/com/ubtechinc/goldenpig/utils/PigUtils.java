@@ -3,7 +3,6 @@ package com.ubtechinc.goldenpig.utils;
 import android.text.TextUtils;
 
 import com.tencent.ai.tvs.business.UniAccessInfo;
-import com.tencent.ai.tvs.env.ELoginPlatform;
 import com.tencent.ai.tvs.info.DeviceManager;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
@@ -25,6 +24,7 @@ public class PigUtils {
                 // "relationDate":"2018-09-13 15:10:43","bindingId":4512}]
                 JSONArray jsonArray = new JSONArray(response);
                 if (jsonArray != null) {
+                    pigInfos.clear();
                     int length = jsonArray.length();
                     for (int index = 0; index < length; index++) {
                         JSONObject object = jsonArray.getJSONObject(index);

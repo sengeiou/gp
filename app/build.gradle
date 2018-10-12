@@ -56,7 +56,7 @@ android {
             //金猪productId
             buildConfigField "String", "PRODUCT_ID" , "\"ffb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589\""
             //金猪APPID
-            buildConfigField "String", "APP_ID","\"100080018\"" /// 临时用100080018
+            buildConfigField "String", "APP_ID","\"100080014\""
             //product   60101 区分产品
             buildConfigField "String", "product", "\"60101\""
             //金猪APPKEY
@@ -67,6 +67,9 @@ android {
             buildConfigField "String",  "LOGIN_URL","\"https://testjimu.ubtrobot.com:8443\""
             //IM操作URL域名
             buildConfigField "String", "IM_URL","\"https://10.10.1.43:9080\""
+
+            //H5 URL域名
+            buildConfigField "String", "H5_URL","\"http://10.10.32.22:8080\""
 
             minifyEnabled false
             shrinkResources false
@@ -85,7 +88,7 @@ android {
             //金猪productId
             buildConfigField "String", "PRODUCT_ID" , "\"ffb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589\""
             //金猪APPID
-            buildConfigField "String", "APP_ID","\"100080018\"" /// 临时用 100080018
+            buildConfigField "String", "APP_ID","\"100080014\""
             //product   60101 区分产品
             buildConfigField "String", "product", "\"60101\""
             //金猪APPKEY
@@ -95,6 +98,9 @@ android {
             buildConfigField "String", "LOGIN_URL","\"https://testjimu.ubtrobot.com:8443\""
             //IM操作URL域名
             buildConfigField "String", "IM_URL","\"https://210.75.21.106:9080\""
+
+            //H5 URL域名
+            buildConfigField "String", "H5_URL","\"http://10.10.1.14:8090\""
 
             //是否优化zip
             zipAlignEnabled false
