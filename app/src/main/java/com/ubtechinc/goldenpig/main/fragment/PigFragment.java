@@ -1,25 +1,31 @@
 package com.ubtechinc.goldenpig.main.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.ubtech.utilcode.utils.ToastUtils;
+import com.ubtechinc.commlib.log.UBTLog;
+import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseFragment;
+import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
+import com.ubtechinc.goldenpig.main.SkillActivity;
 import com.ubtechinc.goldenpig.personal.MemberQRScannerActivity;
 import com.ubtechinc.goldenpig.pigmanager.RecordActivity;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
-import com.ubtechinc.goldenpig.pigmanager.mypig.PigLastVersionActivity;
+import com.ubtechinc.goldenpig.pigmanager.register.GetPairPigQRHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.voiceChat.ui.ChatActivity;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -40,13 +46,22 @@ public class PigFragment extends BaseFragment {
     @BindView(R.id.ubt_bind_tv)
     View mBindClickTv;
 
-    @BindView(R.id.ubt_imgbtn_add_pig)
-    View ubtImgbtnAddPig;
+    @BindView(R.id.view_pig_pair_add)
+    View viewPigPairAdd;
 
-    @BindView(R.id.textView4)
-    View textView4;
+    @BindView(R.id.view_pig_pair_info)
+    View viewPigPairInfo;
+
+    @BindView(R.id.rl_pair_pig)
+    View rlPairPig;
+
     @BindView(R.id.ll_voicechat)
     LinearLayout llVoiceChat;
+
+    int pairUserId;
+    String serialNumber;
+    String pairSerialNumber;
+    int userId;
 
     public PigFragment() {
         super();
@@ -71,14 +86,52 @@ public class PigFragment extends BaseFragment {
         super.onResume();
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null && pigInfo.isAdmin) {
-            ubtImgbtnAddPig.setAlpha(1.0f);
-            textView4.setAlpha(1.0f);
             llVoiceChat.setAlpha(1.0f);
+            rlPairPig.setAlpha(1.0f);
         } else {
-            ubtImgbtnAddPig.setAlpha(0.5f);
-            textView4.setAlpha(0.5f);
             llVoiceChat.setAlpha(0.5f);
+            rlPairPig.setAlpha(0.5f);
         }
+        updatePigPair();
+    }
+
+    private void updatePigPair() {
+        new GetPairPigQRHttpProxy().getPairPigQR(getActivity(), CookieInterceptor.get().getToken(), BuildConfig.APP_ID, new GetPairPigQRHttpProxy.GetPairPigQRCallBack() {
+            @Override
+            public void onError(String error) {
+
+                //TODO 获取配对数据失败
+                showPigPair(false);
+            }
+
+            @Override
+            public void onSuccess(String response) {
+
+                //TODO 刷新配对信息
+                if (!TextUtils.isEmpty(response)) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        if (jsonObject != null) {
+                            JSONObject pairData = new JSONObject(jsonObject.optString("pairData"));
+                            if (pairData != null) {
+                                pairUserId = pairData.optInt("pairUserId");
+                                serialNumber = pairData.optString("serialNumber");
+                                pairSerialNumber = pairData.optString("pairSerialNumber");
+                                userId = pairData.optInt("userId");
+                                showPigPair(true);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        UBTLog.e("pig", e.getMessage());
+                    }
+                }
+            }
+        });
+    }
+
+    private void showPigPair(boolean hasPair) {
+        viewPigPairInfo.setVisibility(hasPair ? View.VISIBLE : View.GONE);
+        viewPigPairAdd.setVisibility(!hasPair ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -101,24 +154,27 @@ public class PigFragment extends BaseFragment {
 
     }
 
-    @OnClick({R.id.ubt_bind_tv,R.id.ll_record,R.id.ll_voicechat,R.id.ubt_imgbtn_add_pig})
-    public void Onclick(View view){
-        switch (view.getId()){
+    @OnClick({R.id.ubt_bind_tv, R.id.ll_record, R.id.ll_voicechat, R.id.view_pig_pair_add, R.id.view_pig_pair_info, R.id.view_skill})
+    public void Onclick(View view) {
+        switch (view.getId()) {
             case R.id.ll_voicechat:
                 PigInfo pigInfo0 = AuthLive.getInstance().getCurrentPig();
-                if(pigInfo0!=null && pigInfo0.isAdmin){
+                if (pigInfo0 != null && pigInfo0.isAdmin) {
                     ActivityRoute.toAnotherActivity(getActivity(), ChatActivity.class, false);
                 }
                 ActivityRoute.toAnotherActivity(getActivity(), ChatActivity.class, false);
                 break;
-            case R.id.ubt_imgbtn_add_pig:
+            case R.id.view_pig_pair_add:
                 PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
                 if (pigInfo != null && pigInfo.isAdmin) {
                     //TODO 配对小猪
-                    ActivityRoute.toAnotherActivity(getActivity(),MemberQRScannerActivity.class,false);
+                    ActivityRoute.toAnotherActivity(getActivity(), MemberQRScannerActivity.class, false);
                 } else {
-                   ToastUtils.showShortToast(R.string.only_admin_operate);
+                    ToastUtils.showShortToast(R.string.only_admin_operate);
                 }
+                break;
+            case R.id.view_pig_pair_info:
+                //TODO 解除配对
                 break;
             case R.id.ubt_bind_tv:
                 ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class, false);
@@ -128,6 +184,10 @@ public class PigFragment extends BaseFragment {
                     ActivityRoute.toAnotherActivity(getActivity(), RecordActivity.class, false);
                 }
                 break;
+            case R.id.view_skill:
+                ActivityRoute.toAnotherActivity(getActivity(), SkillActivity.class, false);
+                break;
+            default:
         }
     }
 
