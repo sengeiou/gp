@@ -6,6 +6,7 @@ import android.util.Log;
 import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
 import com.tencent.TIMMessageListener;
+import com.ubt.imlibv2.bean.UbtTIMManager;
 
 import java.util.List;
 import java.util.Observable;

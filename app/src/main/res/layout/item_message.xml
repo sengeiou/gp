@@ -60,6 +60,15 @@
                     android:paddingLeft="10dp"
                     android:paddingRight="5dp"
                     android:paddingTop="5dp" />
+                <TextView
+                    android:id="@+id/left_voice_time_other"
+                    android:layout_width="30dp"
+                    android:layout_height="15dp"
+                    android:layout_marginStart="65dp"
+                    android:layout_marginTop="-20dp"
+                    android:layout_toEndOf="@+id/leftMessage"
+                    android:text="58'"
+                    />
             </LinearLayout>
 
 
@@ -138,17 +147,6 @@
                     android:layout_alignParentTop="true"
                     android:text="59'" />
             </RelativeLayout>
-
-            <TextView
-                android:id="@+id/left_voice_time_other"
-                android:layout_width="30dp"
-                android:layout_height="15dp"
-                android:layout_below="@+id/rightMessage"
-                android:layout_marginStart="115dp"
-                android:layout_toEndOf="@+id/rightDesc"
-                android:visibility="gone"
-                />
-
         </RelativeLayout>
     </RelativeLayout>
 </LinearLayout>

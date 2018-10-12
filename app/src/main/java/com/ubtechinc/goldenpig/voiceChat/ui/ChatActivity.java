@@ -118,9 +118,10 @@ public class ChatActivity extends FragmentActivity implements ChatView {
            // identify="8989898989880000";
            //  identify="89898989898800000";
            // identify="990011998000581";
-            identify="889834038000566";
+          //  identify="889834038000566";
             //identify="809722";
-            UBTLog.d("ChatActivity", "test identity  "+identify);
+            identify="813312";
+            Log.d("ChatActivity", "test identity  "+identify);
         }
        // type = (TIMConversationType) getIntent().getSerializableExtra("type");
         type=TIMConversationType.C2C;

@@ -10,6 +10,9 @@ import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
 import com.tencent.TIMMessageDraft;
 import com.tencent.TIMValueCallBack;
+import com.ubt.imlibv2.bean.UbtTIMManager;
+import com.ubtechinc.goldenpig.login.observable.AuthLive;
+import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.voiceChat.event.MessageEvent;
 import com.ubtechinc.goldenpig.voiceChat.event.RefreshEvent;
 import com.ubtechinc.goldenpig.voiceChat.viewfeatures.ChatView;
@@ -179,8 +182,30 @@ public class ChatPresenter implements Observer {
     public void update(Observable observable, Object data) {
         if (observable instanceof MessageEvent) {
             TIMMessage msg = (TIMMessage) data;
+            //delete other actions event
+            if(msg!=null){
+                try {
+                    TIMCustomElem customElem = (TIMCustomElem) msg.getElement(0);
+                    ChannelMessageContainer.ChannelMessage voicemsg = ChannelMessageContainer.ChannelMessage
+                            .parseFrom((byte[]) customElem.getData());
+                    Log.d("ChatPresenter", "message check " + voicemsg.getHeader().getAction());
+                    if (!voicemsg.getHeader().getAction().equals("/im/voicemail/receiver")) {
+                        return;
+                    }
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
             try {
                 view.showMessage(msg);
+                //msg, sender, read or unread: my pig(me--->pig)  pip group(pig--->pig)
+                if(msg.isSelf()) {
+                    conversation.saveMessage(msg, UbtTIMManager.userId, true);
+                }else {
+                    PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+                    if(pigInfo!=null)
+                    conversation.saveMessage(msg, pigInfo.getRobotName(), true);
+                }
                 //当前聊天界面已读上报，用于多终端登录时未读消息数同步
                 readMessages();
             } catch (Exception e) {
