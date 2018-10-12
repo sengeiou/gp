@@ -44,6 +44,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onResume();
         MobclickAgent.onResume(this);
     }
+
     @Override
     protected void onPause() {
         super.onPause();
