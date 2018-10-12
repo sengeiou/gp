@@ -7,17 +7,27 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RadioButton;
 
+import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseActivity;
+import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
+import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.fragment.HouseFragment;
 import com.ubtechinc.goldenpig.main.fragment.MainFragmentAdpater;
 import com.ubtechinc.goldenpig.main.fragment.PersonalFragment;
 import com.ubtechinc.goldenpig.main.fragment.PigFragment;
+import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
+import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
+import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.utils.PigUtils;
+import com.ubtechinc.nets.http.ThrowableWrapper;
 
 import java.util.ArrayList;
 
@@ -50,28 +60,29 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void inits() {
-        /*if (AuthLive.getInstance().getCurrentPigList()==null||AuthLive.getInstance().getCurrentPigList().size()<0) {
-            GetPigListRepository repository = new GetPigListRepository();
-            repository.getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListRepository.OnGetPigListLitener() {
-                @Override
-                public void onError(ThrowableWrapper e) {
-                    ActivityRoute.toAnotherActivity(MainActivity.this, SetNetWorkEnterActivity.class,false);
-                }
+        new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListHttpProxy.OnGetPigListLitener() {
+            @Override
+            public void onError(ThrowableWrapper e) {
+                ActivityRoute.toAnotherActivity(MainActivity.this, SetNetWorkEnterActivity.class, false);
+                Log.e("getPigList", e.getMessage());
+            }
 
-                @Override
-                public void onException(Exception e) {
-                    ActivityRoute.toAnotherActivity(MainActivity.this, SetNetWorkEnterActivity.class,false);
-                }
+            @Override
+            public void onException(Exception e) {
+                ActivityRoute.toAnotherActivity(MainActivity.this, SetNetWorkEnterActivity.class, false);
+                Log.e("getPigList", e.getMessage());
+            }
 
-                @Override
-                public void onSuccess(String response) {
-                    PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance().getCurrentPigList());*/
-//                    if (AuthLive.getInstance().getCurrentPigList()==null||AuthLive.getInstance().getCurrentPigList().size()<1){
-//                        ActivityRoute.toAnotherActivity(MainActivity.this, SetNetWorkEnterActivity.class,false);
-//                    }
-               /* }
-            });
-        }*/
+            @Override
+            public void onSuccess(String response) {
+                Log.e("getPigList", response);
+                PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance().getCurrentPigList());
+                ArrayList<PigInfo> list = AuthLive.getInstance().getCurrentPigList();
+                if (list == null || list.isEmpty()) {
+                    ActivityRoute.toAnotherActivity(MainActivity.this, SetNetWorkEnterActivity.class, false);
+                }
+            }
+        });
         personRbtn = (RadioButton) findViewById(R.id.ubt_rbt_me);
         personRbtn.setOnClickListener(this);
 
@@ -139,7 +150,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             case R.id.ubt_rbt_me:
                 fragmentPage.setCurrentItem(2);
                 break;
-                default:
+            default:
         }
     }
 
@@ -162,7 +173,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 case 2:
                     personRbtn.setChecked(true);
                     break;
-                    default:
+                default:
             }
         }
 

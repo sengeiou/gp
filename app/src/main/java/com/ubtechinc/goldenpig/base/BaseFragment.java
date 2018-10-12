@@ -2,7 +2,6 @@ package com.ubtechinc.goldenpig.base;
 
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -107,8 +106,8 @@ public abstract class BaseFragment extends Fragment {
     protected  void tipsClick(){
         if (AuthLive.getInstance().getCurrentPig()==null) {
             HashMap<String,Boolean> params=new HashMap<>();
-            params.put("back",true);
-            params.put("skip",false);
+            params.put("back",false);
+            params.put("skip",true);
             ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class,params,false);
         }
     }

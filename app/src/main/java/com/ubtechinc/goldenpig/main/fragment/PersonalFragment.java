@@ -258,8 +258,8 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.ubt_btn_person_set_wifi:
                 HashMap<String, Boolean> params = new HashMap<>();
-                params.put("back", true);
-                params.put("skip", false);
+                params.put("back", false);
+                params.put("skip", true);
                 ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class,
                         params,
                         false);
