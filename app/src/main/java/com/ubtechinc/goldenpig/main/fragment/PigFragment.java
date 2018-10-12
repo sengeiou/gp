@@ -22,6 +22,7 @@ import com.ubtechinc.goldenpig.pigmanager.RecordActivity;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPairPigQRHttpProxy;
+import com.ubtechinc.goldenpig.pigmanager.register.UnpairHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.voiceChat.ui.ChatActivity;
 
@@ -163,7 +164,7 @@ public class PigFragment extends BaseFragment {
                 if (pigInfo0 != null && pigInfo0.isAdmin) {
                     ActivityRoute.toAnotherActivity(getActivity(), ChatActivity.class, false);
                 }
-                if(UBTPGApplication.voiceMail_debug) {
+                if (UBTPGApplication.voiceMail_debug) {
                     ActivityRoute.toAnotherActivity(getActivity(), ChatActivity.class, false);
                 }
                 break;
@@ -178,6 +179,7 @@ public class PigFragment extends BaseFragment {
                 break;
             case R.id.view_pig_pair_info:
                 //TODO 解除配对
+                doUnPair();
                 break;
             case R.id.ubt_bind_tv:
                 ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class, false);
@@ -192,6 +194,34 @@ public class PigFragment extends BaseFragment {
                 break;
             default:
         }
+    }
+
+    private void doUnPair() {
+        UnpairHttpProxy httpProxy = new UnpairHttpProxy();
+        httpProxy.doUnpair(CookieInterceptor.get().getToken(),
+                BuildConfig.APP_ID, String.valueOf(pairUserId), new UnpairHttpProxy.UnpairCallBack() {
+                    @Override
+                    public void onError() {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtils.showShortToast(R.string.ubt_ubpair_filure);
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onSuccess() {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtils.showShortToast(R.string.ubt_ubpair_success);
+                                showPigPair(false);
+                            }
+                        });
+                    }
+                });
     }
 
     @Override
