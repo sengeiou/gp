@@ -73,11 +73,11 @@ public class PigFragment extends BaseFragment {
         if (pigInfo != null && pigInfo.isAdmin) {
             ubtImgbtnAddPig.setAlpha(1.0f);
             textView4.setAlpha(1.0f);
-          //  llVoiceChat.setBackgroundColor(Color.parseColor("#ffffff"));
+            llVoiceChat.setAlpha(1.0f);
         } else {
             ubtImgbtnAddPig.setAlpha(0.5f);
             textView4.setAlpha(0.5f);
-           // llVoiceChat.setBackgroundColor(Color.parseColor("#0000ff"));
+            llVoiceChat.setAlpha(0.5f);
         }
     }
 
