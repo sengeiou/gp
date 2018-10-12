@@ -103,6 +103,7 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
                                     } catch (InterruptedException e) {
                                         e.printStackTrace();
                                     }
+                                    AuthLive.getInstance().getCurrentPigList().clear();
                                     finish();
                                 }
                             });
@@ -273,6 +274,7 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
             case R.id.ubt_btn_unbind_member:
                 doUnbind(AuthLive.getInstance().getUserId());
                 break;
+                default:
         }
 
     }
