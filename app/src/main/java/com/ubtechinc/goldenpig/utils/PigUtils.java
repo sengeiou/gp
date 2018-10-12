@@ -75,7 +75,7 @@ public class PigUtils {
             vCloudAlarmData0.put("eRepeatType", eRepeatType);
             //0为异常类型，1为一次性，2为每天，3为每周，4为每月，5为工作日，6为节假日
             vCloudAlarmData0.put("lAlarmId", lAlarmId);
-            vCloudAlarmData0.put("lStartTimeStamp", lStartTimeStamp);
+            vCloudAlarmData0.put("lStartTimeStamp", (long) (lStartTimeStamp / 1000));
             vCloudAlarmData0.put("vRingId", null);
             vCloudAlarmData.put(vCloudAlarmData0);
             stCloudAlarmReq.put("vCloudAlarmData", vCloudAlarmData);
@@ -104,7 +104,8 @@ public class PigUtils {
             JSONArray vCloudAlarmData = new JSONArray();
             JSONObject vCloudAlarmData0 = new JSONObject();
             JSONObject stAIDeviceBaseInfo = new JSONObject();
-            stAIDeviceBaseInfo.put("strGuid", "");//AuthLive.getInstance().getCurrentPig() == null ?
+            stAIDeviceBaseInfo.put("strGuid", AuthLive.getInstance().getCurrentPig().getRobotName());//AuthLive
+            // .getInstance().getCurrentPig() == null ?
             //"hdfeng" : AuthLive.getInstance().getCurrentPig().getRobotName()
             stAIDeviceBaseInfo.put("strAppKey", BuildConfig.APP_KEY);
             vCloudAlarmData0.put("stAIDeviceBaseInfo", stAIDeviceBaseInfo);
@@ -112,7 +113,7 @@ public class PigUtils {
             vCloudAlarmData0.put("eRepeatType", eRepeatType);
             //0为异常类型，1为一次性，2为每天，3为每周，4为每月，5为工作日，6为节假日
             vCloudAlarmData0.put("lReminderId", lReminderId);
-            vCloudAlarmData0.put("lStartTimeStamp", lStartTimeStamp);
+            vCloudAlarmData0.put("lStartTimeStamp", (long) (lStartTimeStamp / 1000));
             vCloudAlarmData0.put("sNote", sNote);
             vCloudAlarmData0.put("vRingId", null);
             vCloudAlarmData.put(vCloudAlarmData0);
@@ -128,8 +129,7 @@ public class PigUtils {
     public static DeviceManager getAlarmDeviceMManager() {
         DeviceManager deviceManager = new DeviceManager();
         deviceManager.productId = BuildConfig.PRODUCT_ID;
-        deviceManager.dsn = AuthLive.getInstance().getCurrentPig() == null ?
-                "hdfeng" : AuthLive.getInstance().getCurrentPig().getRobotName();
+        deviceManager.dsn = AuthLive.getInstance().getCurrentPig().getRobotName();
         return deviceManager;
     }
 }

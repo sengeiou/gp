@@ -14,6 +14,7 @@ import com.tencent.TIMMessage;
 import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
+import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
@@ -67,7 +68,7 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
         unBindPigCallback = new UnbindPigProxy.UnBindPigCallback() {
             @Override
             public void onError(IOException e) {
-
+                LogUtils.d("onError");
             }
 
             @Override

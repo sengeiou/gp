@@ -4,13 +4,8 @@ import android.content.Context;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-//import com.example.live.LiveHelper;
-//import com.jaronho.sdk.utils.ActivityTracker;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.facebook.stetho.inspector.elements.android.ActivityTracker;
-//import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Picasso;
 import com.tencent.TIMConversationType;
 import com.tencent.TIMFriendshipManager;
 import com.tencent.TIMMessage;
@@ -21,11 +16,15 @@ import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.voiceChat.adapter.ChatAdapter;
-import com.ubtechinc.goldenpig.voiceChat.ui.ChatActivity;
 import com.ubtechinc.goldenpig.voiceChat.util.TimeUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+
+//import com.example.live.LiveHelper;
+//import com.jaronho.sdk.utils.ActivityTracker;
+//import com.squareup.picasso.Picasso;
+//import com.squareup.picasso.Picasso;
 
 /**
  * 消息数据基类
