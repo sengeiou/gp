@@ -12,6 +12,7 @@ import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.commlib.log.UBTLog;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseFragment;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
@@ -162,7 +163,9 @@ public class PigFragment extends BaseFragment {
                 if (pigInfo0 != null && pigInfo0.isAdmin) {
                     ActivityRoute.toAnotherActivity(getActivity(), ChatActivity.class, false);
                 }
-                ActivityRoute.toAnotherActivity(getActivity(), ChatActivity.class, false);
+                if(UBTPGApplication.voiceMail_debug) {
+                    ActivityRoute.toAnotherActivity(getActivity(), ChatActivity.class, false);
+                }
                 break;
             case R.id.view_pig_pair_add:
                 PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();

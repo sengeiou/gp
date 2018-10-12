@@ -20,6 +20,7 @@ import static qrom.component.wup.base.ContextHolder.getApplicationContext;
 public class UBTPGApplication extends LoginApplication {
     private static UBTPGApplication instance;
     static Context mContext;
+    public static boolean voiceMail_debug=false;
     @Override
     public void onCreate() {
         super.onCreate();
