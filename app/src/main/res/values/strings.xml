@@ -114,6 +114,38 @@
     <string name="ubt_trandfer_admin_tips">将管理员权限转让给此账号？</string>
     <string name="ubt_join_group">加入成员组</string>
     <string name="ubt_complete">完成</string>
+
+    <!-- voice recording-->
+    <string name="chat_file">文件</string>
+    <string name="chat_press_talk">按住 说话</string>
+    <string name="chat_image">图片</string>
+    <string name="chat_photo">拍摄</string>
+    <string name="chat_video">小视频</string>
+    <string name="summary_file">[文件]</string>
+    <string name="summary_voice">[语音]</string>
+    <string name="summary_video">[小视频]</string>
+    <string name="save_exist">文件已存在</string>
+    <string name="save_succ">保存成功</string>
+    <string name="save_fail">保存失败</string>
+    <string name="summary_group_admin_change">管理员变更</string>
+    <string name="summary_group_mem_add">加入群</string>
+    <string name="summary_group_mem_kick">被踢出群</string>
+    <string name="summary_group_mem_modify">资料变更</string>
+    <string name="summary_group_mem_quit">退出群</string>
+    <string name="summary_group_info_change">群资料变更</string>
+    <string name="summary_image">[图片]</string>
+    <string name="downloading">正在下载，请稍候</string>
+    <string name="download_fail">下载失败</string>
+    <string name="chat_resend">重新发送</string>
+    <string name="chat_del">删除</string>
+    <string name="chat_save">保存</string>
+    <string name="chat_file_too_large">文件过大，发送失败</string>
+    <string name="chat_file_not_exist">文件不存在，发送失败</string>
+    <string name="chat_release_send">松开 结束</string>
+    <string name="chat_up_finger">手指上滑，取消发送</string>
+    <string name="chat_content_bad">内容含有敏感词</string>
+    <string name="chat_audio_too_short">录音过短，请重试</string>
+    <!-- voice recording-->
     <string name="ubt_unpair">解除绑定</string>
     <string name="ubt_confirm_unpair">确认解除配对？</string>
     <string name="ubt_ubpair_success">解除配对成功</string>

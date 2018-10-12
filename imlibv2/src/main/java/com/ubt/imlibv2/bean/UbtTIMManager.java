@@ -48,7 +48,7 @@ public class UbtTIMManager {
     private TIMRepository repository;
     private TIMPigOnLineRepository onLineRepository;
     private String channel;
-    private String userId;
+    public static  String userId="";
     private UbtIMCallBack ubtCallBack;
     private TIMConversation conversation;
     private final static String TAG = "UbtTIMManager";
@@ -56,6 +56,7 @@ public class UbtTIMManager {
     private String accountType;
     private String userSig;
     private int appidAt3rd;
+    public static String avatarURL;
 
     private OnUbtTIMConverListener onUbtTIMConverListener;
     private ArrayBlockingQueue<UbtTIMMsg> msgQueue=new ArrayBlockingQueue<>(16); //IM信息队列

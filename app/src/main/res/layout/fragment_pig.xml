@@ -32,12 +32,12 @@
                 app:cardCornerRadius="@dimen/ubt_main_item_corner_radius"
                 android:layout_marginStart="@dimen/ubt_16dp"
                 android:layout_marginTop="13dp">
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="130dp"
                     android:background="@drawable/img_001"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:id="@+id/ll_voicechat">
 
                     <TextView
                         android:id="@+id/ubt_tv_pig_title"

@@ -54,7 +54,8 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
     @Override
     public void onSuccess(UserInfo userInfo) {
         authLive.logined(userInfo);
-
+        Log.d(TAG,"onSuccess  "+userInfo.getUserId() +userInfo.getUserImage());
+        UbtTIMManager.avatarURL=userInfo.getUserImage();
         timManager.loginTIM(userInfo.getUserId(), com.ubt.imlibv2.BuildConfig.IM_Channel);
         getPigList();
     }

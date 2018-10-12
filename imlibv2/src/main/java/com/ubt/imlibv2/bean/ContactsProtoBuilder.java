@@ -6,6 +6,7 @@ import com.tencent.TIMMessage;
 import com.ubt.improtolib.UserContacts;
 import com.ubt.improtolib.UserRecords;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
+
 import com.ubtrobot.gold.GPCommons;
 import com.ubtrobot.upgrade.VersionInformation;
 

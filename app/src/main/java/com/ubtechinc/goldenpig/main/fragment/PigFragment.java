@@ -1,19 +1,25 @@
 package com.ubtechinc.goldenpig.main.fragment;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseFragment;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
+import com.ubtechinc.goldenpig.personal.MemberQRScannerActivity;
 import com.ubtechinc.goldenpig.pigmanager.RecordActivity;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.pigmanager.mypig.PigLastVersionActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.voiceChat.ui.ChatActivity;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -39,6 +45,8 @@ public class PigFragment extends BaseFragment {
 
     @BindView(R.id.textView4)
     View textView4;
+    @BindView(R.id.ll_voicechat)
+    LinearLayout llVoiceChat;
 
     public PigFragment() {
         super();
@@ -65,9 +73,11 @@ public class PigFragment extends BaseFragment {
         if (pigInfo != null && pigInfo.isAdmin) {
             ubtImgbtnAddPig.setAlpha(1.0f);
             textView4.setAlpha(1.0f);
+          //  llVoiceChat.setBackgroundColor(Color.parseColor("#ffffff"));
         } else {
             ubtImgbtnAddPig.setAlpha(0.5f);
             textView4.setAlpha(0.5f);
+           // llVoiceChat.setBackgroundColor(Color.parseColor("#0000ff"));
         }
     }
 
@@ -91,9 +101,25 @@ public class PigFragment extends BaseFragment {
 
     }
 
-    @OnClick({R.id.ubt_bind_tv, R.id.ll_record, R.id.ubt_imgbtn_add_pig})
-    public void Onclick(View view) {
-        switch (view.getId()) {
+    @OnClick({R.id.ubt_bind_tv,R.id.ll_record,R.id.ll_voicechat,R.id.ubt_imgbtn_add_pig})
+    public void Onclick(View view){
+        switch (view.getId()){
+            case R.id.ll_voicechat:
+                PigInfo pigInfo0 = AuthLive.getInstance().getCurrentPig();
+                if(pigInfo0!=null && pigInfo0.isAdmin){
+                    ActivityRoute.toAnotherActivity(getActivity(), ChatActivity.class, false);
+                }
+                ActivityRoute.toAnotherActivity(getActivity(), ChatActivity.class, false);
+                break;
+            case R.id.ubt_imgbtn_add_pig:
+                PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+                if (pigInfo != null && pigInfo.isAdmin) {
+                    //TODO 配对小猪
+                    ActivityRoute.toAnotherActivity(getActivity(),MemberQRScannerActivity.class,false);
+                } else {
+                   ToastUtils.showShortToast(R.string.only_admin_operate);
+                }
+                break;
             case R.id.ubt_bind_tv:
                 ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class, false);
                 break;
@@ -102,15 +128,6 @@ public class PigFragment extends BaseFragment {
                     ActivityRoute.toAnotherActivity(getActivity(), RecordActivity.class, false);
                 }
                 break;
-            case R.id.ubt_imgbtn_add_pig:
-                PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
-                if (pigInfo != null && pigInfo.isAdmin) {
-                    //TODO 配对小猪
-                } else {
-                    ToastUtils.showShortToast(R.string.only_admin_operate);
-                }
-                break;
-            default:
         }
     }
 
