@@ -259,7 +259,6 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
 
     private void toDeviceUpdate() {
         dismissLoadDialog();
-        isNeedUpdate = true;
         if (isNeedUpdate) {
             ActivityRoute.toAnotherActivity(this, DeviceUpdateActivity.class, false);
         } else {

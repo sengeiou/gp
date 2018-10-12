@@ -12,7 +12,6 @@ import com.tencent.TIMMessage;
 import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
-import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
@@ -68,9 +67,6 @@ public class DeviceUpdateActivity extends BaseToolBarActivity implements Observe
         if (pigInfo != null) {
             UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
         }
-        if (BuildConfig.DEBUG) {
-            UbtTIMManager.getInstance().setPigAccount("84ca93ea6c3fc295"); //
-        }
         UbtTIMManager.getInstance().setMsgObserve(this);
         UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
             @Override
@@ -89,12 +85,8 @@ public class DeviceUpdateActivity extends BaseToolBarActivity implements Observe
             public void onSuccess() {
             }
         });
-        getPigVersionInfo();
     }
 
-    private void getPigVersionInfo() {
-        UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getPigVersionState()));
-    }
 
     @Override
     public void update(Observable o, Object arg) {
@@ -104,42 +96,23 @@ public class DeviceUpdateActivity extends BaseToolBarActivity implements Observe
             try {
                 dealMsg(elem.getData());
             } catch (InvalidProtocolBufferException e) {
-                e.printStackTrace();
+                Log.e("update", e.getMessage());
                 com.ubtech.utilcode.utils.ToastUtils.showShortToast("数据异常，请重试");
-
             }
         }
-
     }
 
     private void dealMsg(Object arg) throws InvalidProtocolBufferException {
         ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage
                 .parseFrom((byte[]) arg);
         String action = msg.getHeader().getAction();
-        if (action.equals(ContactsProtoBuilder.GET_VERSION_ACTION)) {
-            VersionInformation.UpgradeInfo info = msg.getPayload().unpack(VersionInformation.UpgradeInfo.class);
-            if (info != null) {
-                final int status = info.getStatus();
-                if (status == 3) {
-                    UbtToastUtils.showCustomToast(this, getString(R.string.ubt_pig_updateing));
-                }
-            }
-        } else if (action.equals(ContactsProtoBuilder.UPATE_VERSION_ACTION)) {
+        if (action.equals(ContactsProtoBuilder.UPATE_VERSION_ACTION)) {
             final int result = msg.getPayload().unpack(VersionInformation.UpgradeInfo.class).getStatus();
-            switch (result) {
-                case 4:
-                    UbtToastUtils.showCustomToast(this, getString(R.string.ubt_pig_updateing));
-                    mUpdateBtn.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            finish();
-                        }
-                    }, 3000);
-                    break;
-                case 5:
-                    UbtToastUtils.showCustomToast(this, getString(R.string.ubt_pig_update_failure));
-                    break;
-                    default:
+            Log.e("dealMsg", "result:" + result);
+            if (result == 5) {
+                UbtToastUtils.showCustomToast(this, getString(R.string.ubt_pig_update_failure));
+            } else {
+                UbtToastUtils.showCustomToast(this, getString(R.string.ubt_pig_updateing));
             }
         }
         dismissLoadDialog();
@@ -156,7 +129,7 @@ public class DeviceUpdateActivity extends BaseToolBarActivity implements Observe
                 sendUpdate();
                 showLoadingDialog();
                 break;
-                default:
+            default:
         }
     }
 }

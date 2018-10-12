@@ -31,6 +31,7 @@
 
 
             <RelativeLayout
+                android:id="@+id/rl_login_info"
                 android:layout_marginEnd="@dimen/ubt_16dp"
                 android:layout_marginStart="@dimen/ubt_16dp"
                 android:layout_marginBottom="4dp"
@@ -59,15 +60,13 @@
                     android:textColor="@color/ubt_tips_txt_color"
                     android:textSize="18sp" />
 
-                <ImageButton
+                <ImageView
                     android:id="@+id/ubt_btn_go_login"
-                    android:layout_width="@dimen/ubt_30dp"
-                    android:layout_height="@dimen/ubt_30dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:layout_margin="10dp"
-                    android:background="@null"
-                    android:padding="8dp"
                     android:src="@drawable/ic_goto" />
             </RelativeLayout>
 

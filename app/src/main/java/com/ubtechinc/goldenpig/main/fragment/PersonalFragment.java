@@ -139,8 +139,6 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
         }
         mTitle = getActivity().findViewById(R.id.ubt_me_fragment_title);
         mCyanBg = getActivity().findViewById(R.id.ubt_me_normal_bg);
-        mToUserInfo = getActivity().findViewById(R.id.ubt_btn_go_login);
-        mToUserInfo.setOnClickListener(this);
 
         mSetNetBtn = getActivity().findViewById(R.id.ubt_btn_person_set_wifi);
         mSetNetBtn.setOnClickListener(this);
@@ -194,7 +192,6 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
         mTitle = getActivity().findViewById(R.id.ubt_me_fragment_title);
         mCyanBg = getActivity().findViewById(R.id.ubt_me_normal_bg);
         mToUserInfo = getActivity().findViewById(R.id.ubt_btn_go_login);
-        mToUserInfo.setOnClickListener(this);
 
         mSetNetBtn = getActivity().findViewById(R.id.ubt_btn_person_set_wifi);
         mSetNetBtn.setOnClickListener(this);
@@ -253,10 +250,10 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
     }
 
     @Override
-    @OnClick({R.id.ubt_btn_person_hotspot, R.id.ubt_btn_person_remind})
+    @OnClick({R.id.rl_login_info, R.id.ubt_btn_person_hotspot, R.id.ubt_btn_person_remind})
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ubt_btn_go_login:
+            case R.id.rl_login_info:
                 ActivityRoute.toAnotherActivity(getActivity(), UserInfoActivity.class, false);
                 break;
             case R.id.ubt_btn_person_set_wifi:
