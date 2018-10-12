@@ -216,15 +216,6 @@ public class ChatActivity extends FragmentActivity implements ChatView {
                // LiveHelper.toast("您被取消管理员身份");
                 break;
             case TIM_GROUP_SYSTEM_KICK_OFF_FROM_GROUP_TYPE:
-               // LiveHelper.toast("您被移除聊天室");
-//                if (null != ChatMemberActivity.Instance) {
-//                    ChatMemberActivity.Instance.finish();
-//                    ChatMemberActivity.Instance = null;
-//                }
-//                if (null != ChatInfoActivity.Instance) {
-//                    ChatInfoActivity.Instance.finish();
-//                    ChatInfoActivity.Instance = null;
-//                }
                 finish();
                 Instance = null;
                 break;
@@ -244,24 +235,6 @@ public class ChatActivity extends FragmentActivity implements ChatView {
             if (mMessage != null) {
                 if (mMessage instanceof CustomMessage){
                     Log.d(TAG,"receive the customeMessae");
-//                    try {
-//                        TIMCustomElem customElem = (TIMCustomElem) message.getElement(0);
-//                        ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage
-//                                .parseFrom((byte[]) customElem.getData());
-//                       if(msg.getHeader().getAction().equals("")) {
-//                           VoiceMailContainer.VoiceMail mVoiceData = msg.getPayload().unpack(VoiceMailContainer.VoiceMail.class);
-//                           if (messageList.size()==0){
-//                               mMessage.setHasTime(null);
-//                           }else{
-//                               mMessage.setHasTime(messageList.get(messageList.size()-1).getMessage());
-//                           }
-//                           messageList.add(mMessage);
-//                           adapter.notifyDataSetChanged();
-//                           listView.setSelection(adapter.getCount()-1);
-//                       }
-//                    }catch(Exception e){
-//                        e.printStackTrace();
-//                    }
                 }else{
                     if (messageList.size()==0){
                         mMessage.setHasTime(null);
@@ -346,9 +319,9 @@ public class ChatActivity extends FragmentActivity implements ChatView {
      */
     @Override
     public void sendImage() {
-        Intent intent_album = new Intent("android.intent.action.GET_CONTENT");
-        intent_album.setType("image/*");
-        startActivityForResult(intent_album, IMAGE_STORE);
+//        Intent intent_album = new Intent("android.intent.action.GET_CONTENT");
+//        intent_album.setType("image/*");
+//        startActivityForResult(intent_album, IMAGE_STORE);
     }
 
     /**
@@ -356,27 +329,27 @@ public class ChatActivity extends FragmentActivity implements ChatView {
      */
     @Override
     public void sendPhoto() {
-        DateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmss");
-        String filename = "IMG_" + formatter.format(new Date()) + ".jpg";
-        cameraFile = new File(Environment.getExternalStorageDirectory() + "/DCIM/Camera/", filename);
-        if (!cameraFile.exists() && !cameraFile.isDirectory()) {
-            try {
-                cameraFile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        Intent intent_photo = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            fileUri = Uri.fromFile(cameraFile);
-            intent_photo.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-            startActivityForResult(intent_photo, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-        } else {
-            fileUri = FileProvider.getUriForFile(ChatActivity.this, "com.example.nyapp.fileprovider", cameraFile);
-            intent_photo.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); //添加这一句表示对目标应用临时授权该Uri所代表的文件
-            intent_photo.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);//将拍取的照片保存到指定URI
-            startActivityForResult(intent_photo, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
-        }
+//        DateFormat formatter = new SimpleDateFormat("yyyyMMdd_HHmmss");
+//        String filename = "IMG_" + formatter.format(new Date()) + ".jpg";
+//        cameraFile = new File(Environment.getExternalStorageDirectory() + "/DCIM/Camera/", filename);
+//        if (!cameraFile.exists() && !cameraFile.isDirectory()) {
+//            try {
+//                cameraFile.createNewFile();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        Intent intent_photo = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+//            fileUri = Uri.fromFile(cameraFile);
+//            intent_photo.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
+//            startActivityForResult(intent_photo, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+//        } else {
+//            fileUri = FileProvider.getUriForFile(ChatActivity.this, "com.example.nyapp.fileprovider", cameraFile);
+//            intent_photo.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); //添加这一句表示对目标应用临时授权该Uri所代表的文件
+//            intent_photo.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);//将拍取的照片保存到指定URI
+//            startActivityForResult(intent_photo, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+//        }
     }
 
     /**
@@ -396,9 +369,9 @@ public class ChatActivity extends FragmentActivity implements ChatView {
      */
     @Override
     public void sendFile() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("*/*");
-        startActivityForResult(intent, FILE_CODE);
+//        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//        intent.setType("*/*");
+//        startActivityForResult(intent, FILE_CODE);
     }
 
     /**
@@ -450,11 +423,7 @@ public class ChatActivity extends FragmentActivity implements ChatView {
                 .build();
         ChannelMessageContainer.ChannelMessage message = ChannelMessageContainer.ChannelMessage.newBuilder().setHeader(header).setPayload(Any.pack(voiceMail)).build();
         Message mailMessage;
-       //if(messageType==ChatPresenter.MESSAGE_VOICE) {
-           mailMessage = new VoiceMessage(message.toByteArray(), duration + "");
-      // }else {
-          // mailMessage = new TextMessage(message.toByteArray(), duration + "");
-      // }
+        mailMessage = new VoiceMessage(message.toByteArray(), duration + "");
         presenter.sendMessage(mailMessage.getMessage(),messageType);
     }
 
@@ -465,8 +434,8 @@ public class ChatActivity extends FragmentActivity implements ChatView {
      */
     @Override
     public void sendVideo(String fileName) {
-        Message message = new VideoMessage(fileName);
-        presenter.sendMessage(message.getMessage(),ChatPresenter.MESSAGE_VIDEO);
+//        Message message = new VideoMessage(fileName);
+//        presenter.sendMessage(message.getMessage(),ChatPresenter.MESSAGE_VIDEO);
     }
 
     /**

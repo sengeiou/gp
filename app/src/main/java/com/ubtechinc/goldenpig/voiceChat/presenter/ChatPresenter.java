@@ -181,18 +181,10 @@ public class ChatPresenter implements Observer {
 
             TIMMessage msg = (TIMMessage) data;
             try {
-                TIMCustomElem customElem = (TIMCustomElem) msg.getElement(0);
-                ChannelMessageContainer.ChannelMessage chmsg = ChannelMessageContainer.ChannelMessage
-                        .parseFrom((byte[]) customElem.getData());
-                Log.d("ChatPresenter", "receive message " + chmsg.getHeader().getAction());
-                if (chmsg.getHeader().getAction().equals("/im/voicemail/receiver")) {
-                    view.showMessage(msg);
-                    //当前聊天界面已读上报，用于多终端登录时未读消息数同步
-                    readMessages();
-                }else {
-                    Log.d("ChatPresenter", "receive message action is not correct " );
-                }
-            }catch(Exception e){
+                view.showMessage(msg);
+                //当前聊天界面已读上报，用于多终端登录时未读消息数同步
+                readMessages();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 //            if (msg==null||msg.getConversation().getPeer().equals(conversation.getPeer())&&msg.getConversation().getType()==conversation.getType()){

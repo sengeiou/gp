@@ -72,8 +72,6 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         }
         return view;
     }
-
-
     public class ViewHolder{
         public ImageView leftAvatar;
         public ImageView rightAvatar;
