@@ -109,6 +109,8 @@ public class VoiceMessage extends Message {
      */
     @Override
     public void showMessage(ChatAdapter.ViewHolder viewHolder, Context context) {
+        Exception e1 = new Exception("THIS IS VOICE MESSAGE SHOW MESSAGE ");
+        e1.printStackTrace();
          try {
              TIMCustomElem customElem = (TIMCustomElem) message.getElement(0);
              ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage

@@ -178,7 +178,6 @@ public class ChatPresenter implements Observer {
     @Override
     public void update(Observable observable, Object data) {
         if (observable instanceof MessageEvent) {
-
             TIMMessage msg = (TIMMessage) data;
             try {
                 view.showMessage(msg);
