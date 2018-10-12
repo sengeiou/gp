@@ -1,21 +1,17 @@
 package com.ubtechinc.goldenpig.personal.alarm;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tencent.ai.tvs.business.UniAccessInfo;
 import com.tencent.ai.tvs.comm.CommOpInfo;
 import com.tencent.ai.tvs.env.ELoginPlatform;
-import com.tencent.ai.tvs.info.DeviceManager;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.TimeUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
@@ -26,9 +22,9 @@ import com.ubtechinc.goldenpig.base.BaseNewActivity;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
-import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.model.AlarmModel;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.StateView;
 import com.ubtechinc.tvlloginlib.TVSManager;
@@ -59,7 +55,6 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
     SwipeMenuRecyclerView recycler;
     AlarmListAdapter adapter;
     private ArrayList<AlarmModel> mList;
-
     private MyHandler mHandler;
 
     private class MyHandler extends Handler {
@@ -74,10 +69,15 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
             super.handleMessage(msg);
             if (msg.what == 1) {
                 ToastUtils.showShortToast("请求超时，请重试");
+                if (mWeakReference.get() != null) {
+                    LoadingDialog.getInstance(mWeakReference.get()).dismiss();
+                    if (mList.size() == 0) {
+                        mStateView.showRetry();
+                    }
+                }
             }
         }
     }
-
 
     @Override
     protected int getContentViewId() {
@@ -99,12 +99,21 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
             @Override
             public void onRetryClick() {
                 onRefresh();
+//                if (AuthLive.getInstance().getCurrentPig() == null) {
+//                    ToastUtils.showShortToast("请先绑定小猪");
+//                    finish();
+//                } else if (!TextUtils.isEmpty(AuthLive.getInstance().getCurrentPig().getGuid())) {
+//                    onRefresh();
+//                } else {
+//                    getGUID();
+//                }
             }
         });
         mStateView.setOnEmptyClickListener(new StateView.OnEmptyClickListener() {
             @Override
             public void onEmptyClick() {
-                onRefresh();
+                ActivityRoute.toAnotherActivity(AlarmListActivity.this, AddAlarmActivity
+                        .class, false);
             }
         });
         rl_titlebar.setTitleText(getString(R.string.alarm));
@@ -115,6 +124,7 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
             }
         });
         rl_titlebar.setIvRight(R.drawable.ic_add);
+        rl_titlebar.getIvRight().setVisibility(View.GONE);
         rl_titlebar.setRightOnclickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,60 +148,48 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
         recycler.setSwipeItemClickListener(this);
         adapter = new AlarmListAdapter(this, mList);
         recycler.setAdapter(adapter);
+        LoadingDialog.getInstance(this).show();
+//        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+//        if (pigInfo != null) {
+//            UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
+//        } else {
+//            UbtTIMManager.getInstance().setPigAccount("2cb9b9a3");
+//        }
+//        UbtTIMManager.getInstance().setMsgObserve(this);
+//        UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
+//            @Override
+//            public void onError(int i, String s) {
+//                Log.e("setOnUbtTIMConver", s);
+//                LoadingDialog.getInstance(AlarmListActivity.this).dismiss();
+//                ToastUtils.showShortToast(s);
+//            }
+//
+//            @Override
+//            public void onSuccess() {
+//                Log.e("setOnUbtTIMConver", "sss");
+//            }
+//        });
+//        if (AuthLive.getInstance().getCurrentPig() == null) {
+//            ToastUtils.showShortToast("请先绑定小猪");
+//            finish();
+//        } else if (!TextUtils.isEmpty(AuthLive.getInstance().getCurrentPig().getGuid())) {
+//            onRefresh();
+//        } else {
+//            getGUID();
+//        }
         onRefresh();
     }
 
-
     public void onRefresh() {
-        LoadingDialog.getInstance(this).show();
-        int acctType = 0;
         ELoginPlatform platform;
         if (CookieInterceptor.get().getThridLogin().getLoginType().toLowerCase().equals("wx")) {
-            acctType = 0;
             platform = ELoginPlatform.WX;
         } else {
-            acctType = 1;
             platform = ELoginPlatform.QQOpen;
         }
-        DeviceManager deviceManager = new DeviceManager();
-        deviceManager.productId = BuildConfig.PRODUCT_ID;
-//        deviceManager.dsn = AuthLive.getInstance().getCurrentPig() == null ? "hdfeng" : AuthLive
-//                .getInstance()
-//                .getCurrentPig().getRobotName();
-        UniAccessInfo info = new UniAccessInfo();
-        info.domain = "alarm";
-        info.intent = "cloud_manager";
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("eType", 0);
-            JSONObject stCloudAlarmReq = new JSONObject();
-            JSONObject stAccountBaseInfo = new JSONObject();
-            stAccountBaseInfo.put("eAcctType", acctType);
-            stAccountBaseInfo.put("strAcctId", AuthLive.getInstance().getCurrentUser().getUserId());
-            stCloudAlarmReq.put("stAccountBaseInfo", stAccountBaseInfo);
-            stCloudAlarmReq.put("eCloud_type", 0);//0,为查看; 1为添加;2为删除;3为更新
-            stCloudAlarmReq.put("sPushInfo", "推什么");
-            JSONArray vCloudAlarmData = new JSONArray();
-            JSONObject vCloudAlarmData0 = new JSONObject();
-            JSONObject stAIDeviceBaseInfo = new JSONObject();
-            stAIDeviceBaseInfo.put("strGuid", AuthLive.getInstance()
-                    .getCurrentPig() == null ? "hdfeng" : AuthLive.getInstance()
-                    .getCurrentPig().getRobotName());
-            stAIDeviceBaseInfo.put("strAppKey", BuildConfig.APP_KEY);
-            vCloudAlarmData0.put("stAIDeviceBaseInfo", stAIDeviceBaseInfo);
-            vCloudAlarmData0.put("eRepeatType", 1);//0为异常类型，1为一次性，2为每天，3为每周，4为每月，5为工作日，6为节假日
-            vCloudAlarmData0.put("lAlarmId", 0);
-            vCloudAlarmData0.put("lStartTimeStamp", 0);
-            vCloudAlarmData0.put("vRingId", null);
-            vCloudAlarmData.put(vCloudAlarmData0);
-            stCloudAlarmReq.put("vCloudAlarmData", vCloudAlarmData);
-            obj.put("stCloudAlarmReq", stCloudAlarmReq);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        info.jsonBlobInfo = obj.toString();
         TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ)
-                .requestTskmUniAccess(platform, deviceManager, info, new TVSManager
+                .requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils
+                        .getAlarmUniAccessinfo(0, 1, 0, 0), new TVSManager
                         .TVSAlarmListener() {
                     @Override
                     public void onSuccess(CommOpInfo msg) {
@@ -208,8 +206,7 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
                                 AlarmModel model = new AlarmModel();
                                 JSONObject ob = narry.getJSONObject(i);
                                 model.eRepeatType = ob.getInt("eRepeatType");
-                                switch (model.eRepeatType)
-                                {//0为异常类型，1为一次性，2为每天，3为每周，4为每月，5为工作日，6为节假日
+                                switch (model.eRepeatType) {//0为异常类型，1为一次性，2为每天，3为每周，4为每月，5为工作日，6为节假日
                                     case 0:
                                     case 1:
                                         model.repeatName = "单次闹钟";
@@ -230,11 +227,22 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
                                         model.repeatName = "节假日";
                                         break;
                                 }
-                                model.lAlarmId = ob.getString("lAlarmId");
+                                try {
+                                    model.lAlarmId = ob.getLong("lAlarmId");
+                                } catch (Exception e) {
+                                    model.lAlarmId = 0;
+                                }
                                 model.lStartTimeStamp = ob.getLong("lStartTimeStamp");
                                 try {
-                                    String time = TimeUtils.getTime(model.lStartTimeStamp, TimeUtils
-                                            .DATE_FORMAT_ONLY_TIME);
+                                    String time = null;
+                                    String le = System.currentTimeMillis() + "";
+                                    if (le.length() - (model.lStartTimeStamp + "").length() >= 3) {
+                                        time = TimeUtils.getTime(model.lStartTimeStamp * 1000, TimeUtils
+                                                .DATE_FORMAT_ONLY_TIME);
+                                    } else {
+                                        time = TimeUtils.getTime(model.lStartTimeStamp, TimeUtils
+                                                .DATE_FORMAT_ONLY_TIME);
+                                    }
                                     String[] times = time.split(":");
                                     int hour = Integer.parseInt(times[0]);
                                     if (hour >= 19) {
@@ -259,8 +267,15 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
 
                     @Override
                     public void onError(String code) {
-                        ToastUtils.showShortToast(code);
                         LoadingDialog.getInstance(AlarmListActivity.this).dismiss();
+                        ToastUtils.showShortToast(code);
+                        if (code.contains("没有")) {
+                            mStateView.showEmpty();
+                        } else if (mList.size() == 0) {
+                            mStateView.showRetry();
+                        } else {
+                            mStateView.showContent();
+                        }
                         LogUtils.d("code:" + code);
                     }
                 });
@@ -272,24 +287,12 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
         mList.addAll(list);
         if (mList.size() == 0) {
             mStateView.showEmpty();
+            rl_titlebar.getIvRight().setVisibility(View.GONE);
         } else {
+            rl_titlebar.getIvRight().setVisibility(View.VISIBLE);
             mStateView.showContent();
         }
         adapter.notifyDataSetChanged();
-    }
-
-
-    public void onError(String str) {
-        ToastUtils.showShortToast(str);
-        if (mList.size() == 0) {
-            mStateView.showRetry();
-        } else {
-            mStateView.showContent();
-        }
-    }
-
-    public Handler getHandler() {
-        return mHandler;
     }
 
     /**
@@ -343,22 +346,21 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
 
     @Override
     public void onItemClick(View itemView, int position) {
-        Intent it = new Intent(AlarmListActivity.this, AddAlarmActivity.class);
-        it.putExtra("item", mList.get(position));
-        startActivity(it);
+//        Intent it = new Intent(AlarmListActivity.this, AddAlarmActivity.class);
+//        it.putExtra("item", mList.get(position));
+//        startActivity(it);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mHandler.removeCallbacksAndMessages(null);
-        mHandler = null;
     }
 
     @Override
     protected void onReceiveEvent(Event event) {
         super.onReceiveEvent(event);
         if (event.getCode() == SET_ALARM_SUCCESS) {
+            LoadingDialog.getInstance(this).show();
             onRefresh();
         }
     }
@@ -366,56 +368,16 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
     public void deleteAlarm(int position) {
         AlarmModel model = mList.get(position);
         LoadingDialog.getInstance(this).show();
-        int acctType = 0;
         ELoginPlatform platform;
         if (CookieInterceptor.get().getThridLogin().getLoginType().toLowerCase().equals("wx")) {
-            acctType = 0;
             platform = ELoginPlatform.WX;
         } else {
-            acctType = 1;
             platform = ELoginPlatform.QQOpen;
         }
-        DeviceManager deviceManager = new DeviceManager();
-        deviceManager.productId = BuildConfig.PRODUCT_ID;
-//        deviceManager.dsn = AuthLive.getInstance()
-//                .getCurrentPig() == null ? "hdfeng" : AuthLive.getInstance()
-//                .getCurrentPig().getRobotName();
-        UniAccessInfo info = new UniAccessInfo();
-        info.domain = "alarm";
-        info.intent = "cloud_manager";
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("eType", 1);
-            JSONObject stCloudAlarmReq = new JSONObject();
-            JSONObject stAccountBaseInfo = new JSONObject();
-            stAccountBaseInfo.put("eAcctType", acctType);
-            stAccountBaseInfo.put("strAcctId", AuthLive.getInstance().getCurrentUser().getUserId());
-            stCloudAlarmReq.put("stAccountBaseInfo", stAccountBaseInfo);
-            stCloudAlarmReq.put("eCloud_type", 2);//0,为查看; 1为添加;2为删除;3为更新
-            stCloudAlarmReq.put("sPushInfo", "");
-            JSONArray vCloudAlarmData = new JSONArray();
-            JSONObject vCloudAlarmData0 = new JSONObject();
-            JSONObject stAIDeviceBaseInfo = new JSONObject();
-            stAIDeviceBaseInfo.put("strGuid", AuthLive.getInstance()
-                    .getCurrentPig() == null ? "hdfeng" : AuthLive.getInstance()
-                    .getCurrentPig().getRobotName());
-            stAIDeviceBaseInfo.put("strAppKey", BuildConfig.APP_KEY);
-            vCloudAlarmData0.put("stAIDeviceBaseInfo", stAIDeviceBaseInfo);
-            vCloudAlarmData0.put("eRepeatType", model.eRepeatType);
-            //0为异常类型，1为一次性，2为每天，3为每周，4为每月，5为工作日，6为节假日
-            vCloudAlarmData0.put("lAlarmId", model.lAlarmId);
-            vCloudAlarmData0.put("lStartTimeStamp", model.lStartTimeStamp);
-            vCloudAlarmData0.put("vRingId", null);
-            vCloudAlarmData.put(vCloudAlarmData0);
-            stCloudAlarmReq.put("vCloudAlarmData", vCloudAlarmData);
-            obj.put("stCloudAlarmReq", stCloudAlarmReq);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        info.jsonBlobInfo = obj.toString();
         TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ)
-                .requestTskmUniAccess(platform, deviceManager, info, new TVSManager
-                        .TVSAlarmListener() {
+                .requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils
+                        .getAlarmUniAccessinfo(2, model.eRepeatType, model.lAlarmId, model
+                                .lStartTimeStamp), new TVSManager.TVSAlarmListener() {
                     @Override
                     public void onSuccess(CommOpInfo msg) {
                         LoadingDialog.getInstance(AlarmListActivity.this).dismiss();
@@ -423,6 +385,13 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
                         String str = msg.errMsg;
                         mList.remove(position);
                         adapter.notifyDataSetChanged();
+                        if (mList.size() == 0) {
+                            mStateView.showEmpty();
+                            rl_titlebar.getIvRight().setVisibility(View.GONE);
+                        } else {
+                            rl_titlebar.getIvRight().setVisibility(View.VISIBLE);
+                            mStateView.showContent();
+                        }
                     }
 
                     @Override
@@ -433,4 +402,40 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
                     }
                 });
     }
+
+//    @Override
+//    public void update(Observable o, Object arg) {
+//        TIMMessage msg = (TIMMessage) arg;
+//        for (int i = 0; i < msg.getElementCount(); ++i) {
+//            TIMCustomElem elem = (TIMCustomElem) msg.getElement(i);
+//            try {
+//                dealMsg(elem.getData());
+//            } catch (InvalidProtocolBufferException e) {
+//                e.printStackTrace();
+//                ToastUtils.showShortToast("数据异常，请重试");
+//                LoadingDialog.getInstance(AlarmListActivity.this).dismiss();
+//            }
+//        }
+//    }
+
+//    private void dealMsg(Object arg) throws InvalidProtocolBufferException {
+//        ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage
+//                .parseFrom((byte[]) arg);
+//        String action = msg.getHeader().getAction();
+//        switch (action) {
+//            case "/im/GUID/Action":
+//                String guid = msg.getPayload().unpack(GPCommons.Common.class).getDataValue();
+//                AuthLive.getInstance().getCurrentPig().setGuid(guid);
+//                onRefresh();
+//                break;
+//        }
+//    }
+//
+//    public void getGUID() {
+//        if (mHandler.hasMessages(1)) {
+//            mHandler.removeMessages(1);
+//        }
+//        mHandler.sendEmptyMessageDelayed(1, 20 * 1000);// 20s 秒后检查加载框是否还在
+//        UbtTIMManager.getInstance().getGuid();
+//    }
 }

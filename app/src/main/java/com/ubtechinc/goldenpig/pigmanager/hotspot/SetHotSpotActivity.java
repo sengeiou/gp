@@ -1,8 +1,6 @@
 package com.ubtechinc.goldenpig.pigmanager.hotspot;
 
-import android.os.Binder;
 import android.os.Bundle;
-import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.View;
 
@@ -18,20 +16,14 @@ import com.ubtechinc.commlib.view.UbtSubTxtButton;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
-import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
 import com.ubtechinc.goldenpig.comm.widget.UbtEditDialog;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
-import com.ubtechinc.goldenpig.personal.management.AddressBookActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.ubtrobot.gold.UserContacts;
 
 import java.util.Observable;
 import java.util.Observer;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  *@auther        :hqt
@@ -41,10 +33,10 @@ import butterknife.OnClick;
  *@change        :
  *@changetime    :2018/9/18 11:10
 */
-public class SetHotSpotActivity extends BaseToolBarActivity implements Observer {
-    @BindView(R.id.ubt_btn_hotspot_name)
+public class SetHotSpotActivity extends BaseToolBarActivity implements Observer, View.OnClickListener {
+//    @BindView(R.id.ubt_btn_hotspot_name)
     UbtSubTxtButton mHotspotNameBtn;
-    @BindView(R.id.ubt_btn_hotspot_pwd)
+//    @BindView(R.id.ubt_btn_hotspot_pwd)
     UbtSubTxtButton mHotspotPwdBtn;
 
     private UbtEditDialog dialog;
@@ -59,7 +51,11 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer 
     protected void init(Bundle savedInstanceState) {
         setTitleBack(true);
         setToolBarTitle(R.string.ubt_device_manger);
-        ButterKnife.bind(this);
+//        ButterKnife.bind(this);
+        mHotspotNameBtn = findViewById(R.id.ubt_btn_hotspot_name);
+        mHotspotNameBtn.setOnClickListener(this);
+        mHotspotPwdBtn = findViewById(R.id.ubt_btn_hotspot_pwd);
+        mHotspotPwdBtn.setOnClickListener(this);
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null) {
             UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
@@ -83,8 +79,10 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer 
         });
         UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg( ContactsProtoBuilder.getHotSpot()));
     }
-    @OnClick({R.id.ubt_btn_hotspot_pwd,R.id.ubt_btn_hotspot_name})
-    public void OnClick(View view){
+
+    @Override
+//    @OnClick({R.id.ubt_btn_hotspot_pwd,R.id.ubt_btn_hotspot_name})
+    public void onClick(View view){
         switch (view.getId()){
             case R.id.ubt_btn_hotspot_name:
                 showUpdatNameDialog();
@@ -206,4 +204,5 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer 
             ToastUtils.showLongToast("修改失败");
         }
     }
+
 }

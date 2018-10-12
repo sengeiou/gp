@@ -7,13 +7,12 @@ public class RemindModel implements Parcelable {
     public String amOrpm;
     public String time;
     public String repeatDate;
-    public String lAlarmId;
+    public long lReminderId;
     public int eRepeatType;
     public long lStartTimeStamp;
     public String repeatName;
     public String sNote;
     public String date;
-    public int type = 0;
 
     public RemindModel() {
     }
@@ -22,13 +21,12 @@ public class RemindModel implements Parcelable {
         amOrpm = in.readString();
         time = in.readString();
         repeatDate = in.readString();
-        lAlarmId = in.readString();
+        lReminderId = in.readLong();
         eRepeatType = in.readInt();
         lStartTimeStamp = in.readLong();
         repeatName = in.readString();
         sNote = in.readString();
         date = in.readString();
-        type = in.readInt();
     }
 
     @Override
@@ -36,13 +34,12 @@ public class RemindModel implements Parcelable {
         dest.writeString(amOrpm);
         dest.writeString(time);
         dest.writeString(repeatDate);
-        dest.writeString(lAlarmId);
+        dest.writeLong(lReminderId);
         dest.writeInt(eRepeatType);
         dest.writeLong(lStartTimeStamp);
         dest.writeString(repeatName);
         dest.writeString(sNote);
         dest.writeString(date);
-        dest.writeInt(type);
     }
 
     @Override

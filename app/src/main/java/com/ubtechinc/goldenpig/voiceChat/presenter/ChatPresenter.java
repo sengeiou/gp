@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.tencent.TIMConversation;
 import com.tencent.TIMConversationType;
+import com.tencent.TIMCustomElem;
 import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
 import com.tencent.TIMMessageDraft;
@@ -12,6 +13,7 @@ import com.tencent.TIMValueCallBack;
 import com.ubtechinc.goldenpig.voiceChat.event.MessageEvent;
 import com.ubtechinc.goldenpig.voiceChat.event.RefreshEvent;
 import com.ubtechinc.goldenpig.voiceChat.viewfeatures.ChatView;
+import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 
 import java.util.List;
 import java.util.Observable;
@@ -176,14 +178,30 @@ public class ChatPresenter implements Observer {
     @Override
     public void update(Observable observable, Object data) {
         if (observable instanceof MessageEvent) {
+
             TIMMessage msg = (TIMMessage) data;
-            if (msg==null||msg.getConversation().getPeer().equals(conversation.getPeer())&&msg.getConversation().getType()==conversation.getType()){
-                view.showMessage(msg);
-                //当前聊天界面已读上报，用于多终端登录时未读消息数同步
-                readMessages();
-            } else if (TIMConversationType.System == msg.getConversation().getType()) {  // 系统消息
-                view.handleSystemMessage(msg);
+            try {
+                TIMCustomElem customElem = (TIMCustomElem) msg.getElement(0);
+                ChannelMessageContainer.ChannelMessage chmsg = ChannelMessageContainer.ChannelMessage
+                        .parseFrom((byte[]) customElem.getData());
+                Log.d("ChatPresenter", "receive message " + chmsg.getHeader().getAction());
+                if (chmsg.getHeader().getAction().equals("/im/voicemail/receiver")) {
+                    view.showMessage(msg);
+                    //当前聊天界面已读上报，用于多终端登录时未读消息数同步
+                    readMessages();
+                }else {
+                    Log.d("ChatPresenter", "receive message action is not correct " );
+                }
+            }catch(Exception e){
+                e.printStackTrace();
             }
+//            if (msg==null||msg.getConversation().getPeer().equals(conversation.getPeer())&&msg.getConversation().getType()==conversation.getType()){
+//                view.showMessage(msg);
+//                //当前聊天界面已读上报，用于多终端登录时未读消息数同步
+//                readMessages();
+//            } else if (TIMConversationType.System == msg.getConversation().getType()) {  // 系统消息
+//                view.handleSystemMessage(msg);
+//            }
         } else if (observable instanceof RefreshEvent) {
             view.clearAllMessage();
             getMessage(null);

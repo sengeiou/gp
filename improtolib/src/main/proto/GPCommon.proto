@@ -1,0 +1,8 @@
+syntax = "proto3";
+option java_package = "com.ubtrobot.gold";
+option java_outer_classname="GPCommons";
+
+/*传单值的时候可用此PB*/
+message Common {
+    string dataValue = 1;
+}

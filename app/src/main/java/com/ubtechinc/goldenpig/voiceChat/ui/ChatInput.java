@@ -255,7 +255,7 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
             btnAdd.setVisibility(GONE);
             btnSend.setVisibility(VISIBLE);
         }else{
-            btnAdd.setVisibility(VISIBLE);
+            btnAdd.setVisibility(GONE);
             btnSend.setVisibility(GONE);
         }
     }

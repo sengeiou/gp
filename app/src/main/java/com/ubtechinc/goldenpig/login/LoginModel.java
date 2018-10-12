@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 
-
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.BuildConfig;
@@ -12,9 +11,6 @@ import com.ubtechinc.goldenpig.comm.entity.UserInfo;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.login.repository.UBTAuthRepository;
-import com.ubtechinc.goldenpig.net.GetRobotListModule;
-import com.ubtechinc.goldenpig.net.RegisterRobotModule;
-
 import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.repository.TVSAuthRepository;
 import com.ubtechinc.goldenpig.utils.PigUtils;
@@ -22,26 +18,31 @@ import com.ubtechinc.nets.http.ThrowableWrapper;
 import com.ubtechinc.tvlloginlib.entity.LoginInfo;
 
 /**
- *@auther        :hqt
- *@description   :这是ILoginModel接口定义，登录MVP中Modle定义
- *@time          :2018/8/21 11:14
- *@change        :
- *@changetime    :2018/8/21 11:14
-*/
-public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthRepository.UBTAuthCallBack{
-    private final String TAG="LoginModel";
+ * @auther :hqt
+ * @description :这是ILoginModel接口定义，登录MVP中Modle定义
+ * @time :2018/8/21 11:14
+ * @change :目前的整个登录模式进入SplashActivityr后一层层调用TVSManager的refreshLoginToken方法（主要是先作tvslogin），这步主要是在TVSManager和BaseClient
+ * 类中完成，再层层回调先在TVSManager的onLoginSuccess中知道tvs登陆成功（获取LoginInfo），再回到LoginModel中的onTVSLoginSuccess
+ * ，这时再开始第二步登陆，这步主要在UBTAuthRepository中连接UBT后台登陆，最终返回到LoginModel.onSuccess(UserInfo),在LoginModel.onSuccess(UserInfo)
+ * 中用TIM登陆和获取绑定小猪列表，下一步作TIM登陆，主要是UbtTIMManager类，这个先作TIMRepository登陆获取数据，再调用UbtTIMManager
+ * .dealIMResponse（）方法登陆，LoginModel是总的登陆管理分发类;
+ * @changetime :2018/8/21 11:14
+ */
+public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthRepository.UBTAuthCallBack {
+    private final String TAG = "LoginModel";
     private TVSAuthRepository tvsAuthRepository;
-    private AuthLive authLive ;
+    private AuthLive authLive;
     private UBTAuthRepository ubtAuthRepository;
     private GetPigListHttpProxy getPigListRepository; //获取用户当前小猪列表
     private UbtTIMManager timManager;
     private UbtTIMManager.UbtIMCallBack ubtIMCallBack;
-    public LoginModel(){
-        tvsAuthRepository = new TVSAuthRepository(BuildConfig.APP_ID_WX,BuildConfig.APP_ID_QQ);
+
+    public LoginModel() {
+        tvsAuthRepository = new TVSAuthRepository(BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ);
         ubtAuthRepository = new UBTAuthRepository();
-        getPigListRepository=new GetPigListHttpProxy();
+        getPigListRepository = new GetPigListHttpProxy();
         authLive = AuthLive.getInstance();
-        timManager=UbtTIMManager.getInstance();
+        timManager = UbtTIMManager.getInstance();
     }
 
     @Override
@@ -53,43 +54,48 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
     @Override
     public void onSuccess(UserInfo userInfo) {
         authLive.logined(userInfo);
-
+        Log.d(TAG,"onSuccess  "+userInfo.getUserId() +userInfo.getUserImage());
+        UbtTIMManager.avatarURL=userInfo.getUserImage();
         timManager.loginTIM(userInfo.getUserId(), com.ubt.imlibv2.BuildConfig.IM_Channel);
         getPigList();
     }
+
     ///  获取用户绑定的小猪
-    private void getPigList(){
-        if (AuthLive.getInstance().getCurrentPigList()!=null){
+    private void getPigList() {
+        if (AuthLive.getInstance().getCurrentPigList() != null) {
             AuthLive.getInstance().getCurrentPigList().clear();
         }
-        getPigListRepository.getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListHttpProxy.OnGetPigListLitener() {
-            @Override
-            public void onError(ThrowableWrapper e) {
-                Log.e("getPigList",e.getMessage());
-            }
+        getPigListRepository.getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new
+                GetPigListHttpProxy.OnGetPigListLitener() {
+                    @Override
+                    public void onError(ThrowableWrapper e) {
+                        Log.e("getPigList", e.getMessage());
+                    }
 
-            @Override
-            public void onException(Exception e) {
-                Log.e("getPigList",e.getMessage());
-            }
+                    @Override
+                    public void onException(Exception e) {
+                        Log.e("getPigList", e.getMessage());
+                    }
 
-            @Override
-            public void onSuccess(String response) {
-                Log.e("getPigList",response);
-                PigUtils.getPigList(response,AuthLive.getInstance().getUserId(),AuthLive.getInstance().getCurrentPigList());
-            }
-        });
+                    @Override
+                    public void onSuccess(String response) {
+                        Log.e("getPigList", response);
+                        PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance()
+                                .getCurrentPigList());
+                    }
+                });
     }
+
     @Override
     public void onError() {
-        if (tvsAuthRepository!=null) {
+        if (tvsAuthRepository != null) {
             tvsAuthRepository.logout();
         }
         authLive.error();
-        UbtLogger.i(TAG,"onError");
-       if (ubtIMCallBack!=null){
-           ubtIMCallBack.onError(-1,"IM SDK 登录失败");
-       }
+        UbtLogger.i(TAG, "onError");
+        if (ubtIMCallBack != null) {
+            ubtIMCallBack.onError(-1, "IM SDK 登录失败");
+        }
     }
 
     @Override
@@ -99,18 +105,20 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
 
     @Override
     public void onLogoutError() {
-        UbtLogger.i(TAG,"onLogoutError");
+        UbtLogger.i(TAG, "onLogoutError");
     }
 
     @Override
     public void onCancel() {
-        UbtLogger.i(TAG,"cancel");
+        UbtLogger.i(TAG, "cancel");
+        authLive.cancel();
     }
-    public boolean isWXInstall(){
+
+    public boolean isWXInstall() {
         return tvsAuthRepository.isWXInstall();
     }
 
-    public boolean isWXSupport(){
+    public boolean isWXSupport() {
         return tvsAuthRepository.isWXSupport();
     }
 
@@ -136,19 +144,22 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
         authLive.logining();
         tvsAuthRepository.loginQQ(activity, this);
     }
-    public void logoutTVS(){
+
+    public void logoutTVS() {
         tvsAuthRepository.logout();
     }
+
     public void onResume() {
         tvsAuthRepository.onResume();
     }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         tvsAuthRepository.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void setTIMLoingCallback(UbtTIMManager.UbtIMCallBack callback){
-        this.ubtIMCallBack=callback;
-        if (timManager!=null){
+    public void setTIMLoingCallback(UbtTIMManager.UbtIMCallBack callback) {
+        this.ubtIMCallBack = callback;
+        if (timManager != null) {
             timManager.setUbtCallBack(callback);
         }
     }

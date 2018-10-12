@@ -1,6 +1,8 @@
 package com.ubtechinc.goldenpig.voiceChat.event;
 
 
+import android.util.Log;
+
 import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
 import com.tencent.TIMMessageListener;
@@ -15,7 +17,7 @@ public class MessageEvent extends Observable implements TIMMessageListener {
 
 
     private volatile static MessageEvent instance;
-
+    private String TAG="MessageEvent";
     private MessageEvent(){
         //注册消息监听器
         TIMManager.getInstance().addMessageListener(this);
@@ -35,6 +37,7 @@ public class MessageEvent extends Observable implements TIMMessageListener {
     @Override
     public boolean onNewMessages(List<TIMMessage> list) {
         for (TIMMessage item:list){
+            Log.d(TAG,"xx onNewMessage  "+list  +item.getElement(0).toString());
             setChanged();
             notifyObservers(item);
         }
@@ -45,6 +48,7 @@ public class MessageEvent extends Observable implements TIMMessageListener {
      * 主动通知新消息
      */
     public void onNewMessage(TIMMessage message){
+        Log.d(TAG,"onNewMessage  ");
         setChanged();
         notifyObservers(message);
     }

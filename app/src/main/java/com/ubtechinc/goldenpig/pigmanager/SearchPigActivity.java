@@ -1,7 +1,6 @@
 package com.ubtechinc.goldenpig.pigmanager;
 
 import android.Manifest;
-import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -10,51 +9,34 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-
 import android.support.v4.app.ActivityCompat;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.ubtechinc.bluetooth.BleConnectAbstract;
 import com.ubtechinc.bluetooth.Constants;
 import com.ubtechinc.bluetooth.UbtBluetoothDevice;
 import com.ubtechinc.bluetooth.UbtBluetoothManager;
-import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
-
+import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
 import com.ubtechinc.goldenpig.net.RegisterRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.bean.BundingListenerAbster;
 import com.ubtechinc.goldenpig.pigmanager.bluetooth.BlueToothManager;
-import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
 import com.ubtechinc.goldenpig.pigmanager.widget.OnPigListItemClickListener;
 import com.ubtechinc.goldenpig.pigmanager.widget.PigListDialog;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
-import com.ubtechinc.goldenpig.utils.ImageUtils;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-
 import pl.droidsonroids.gif.GifImageView;
-
-import static com.ubtechinc.bluetooth.Constants.ROBOT_BANGDING_SUCCESS;
-import static com.ubtechinc.bluetooth.Constants.ROBOT_CONNECT_SUCCESS;
-import static com.ubtechinc.bluetooth.Constants.ROBOT_REPLY_WIFI_IS_OK_TRANS;
-import static com.ubtechinc.bluetooth.Constants.WIFI_LIST_RESLUT_TRANS;
 
 
 /**
  * @auther :hqt
  * @email :qiangta.huang@ubtrobot.com
- * @description :搜索音响界面
+ * @description :搜索音箱界面
  * @time :2018/8/23 18:52
  * @change :
  * @changetime :2018/8/23 18:52
@@ -91,7 +73,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        setToolBarTitle(getString(R.string.ubt_pig_match));
+        setToolBarTitle(getString(R.string.ubt_pig_bind));
 
         setTitleBack(true);
         initViews();
@@ -150,7 +132,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         if (isSearched){
             mSearchBtn.setText("重新搜索");
         }else {
-            mSearchBtn.setText("搜索音响");
+            mSearchBtn.setText("搜索音箱");
         }
     }
 
@@ -379,13 +361,13 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         @Override
         public void onMaster() {
             super.onMaster();
-            toSetWifi();
             if (pigListDialog!=null) {
                 pigListDialog.dismiss();
             }
             if (mTimer!=null){
                 mTimer.cancel();
             }
+            toSetWifi();
         }
 
         @Override

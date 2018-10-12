@@ -36,8 +36,8 @@ android {
         applicationId "com.ubtechinc.goldenpig"
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
-        versionCode 3
-        versionName "1.0.0.3"
+        versionCode 9
+        versionName "1.0.0.9"
         multiDexEnabled true
     }
     signingConfigs {
@@ -98,11 +98,11 @@ android {
             buildConfigField "String", "IM_URL","\"https://210.75.21.106:9080\""
 
             //是否优化zip
-            zipAlignEnabled true
+            zipAlignEnabled false
             // 移除无用的resource文件
-            shrinkResources true
+            shrinkResources false
             //启用代码混淆
-            minifyEnabled true
+            minifyEnabled false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             ndk {

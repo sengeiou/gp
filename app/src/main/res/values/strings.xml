@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">goldenpig</string>
+    <string name="app_name">小猪音箱</string>
     <string name="ubt_qq_login">QQ登录</string>
     <string name="ubt_wechat_login">微信登录</string>
     <string name="ubt_tab_little_pig">小猪</string>
     <string name="ubt_tab_house">家居</string>
-    <string name="ubt_tab_person">个人</string>
+    <string name="ubt_tab_person">我的</string>
     <string name="ubt_wx_uninstalled">微信未安装</string>
     <string name="ubt_wx_unspported">微信不支持</string>
     <string name="ubt_login_failure">登录失败</string>
@@ -13,7 +13,8 @@
     <string name="ubt_skip">跳过</string>
     <string name="ubt_long_press_pig">请长按电源键，确认音箱已开机</string>
     <string name="ubt_start_set_net">开始配网与绑定</string>
-    <string name="ubt_pig_match">音响配对</string>
+    <string name="ubt_pig_match">音箱配对</string>
+    <string name="ubt_pig_bind">音箱绑定</string>
     <string name="ubt_search_pig">搜索音箱</string>
     <string name="ubt_press_mute_btn_tips">在音箱开机时，长按静音键，至耳朵灯效亮起</string>
     <string name="ubt_bluetooth_none">蓝牙模块不存在，不能使用</string>
@@ -25,7 +26,7 @@
     <string name="ubt_open_wifif_tips">获取wifi列表需要打开本机wifi开关</string>
     <string name="ubt_enter">确认</string>
     <string name="ubt_wifi_no_pwd_tips">确认此Wi-Fi无密码？</string>
-    <string name="ubt_set_pig_net">音响配网</string>
+    <string name="ubt_set_pig_net">音箱配网</string>
     <string name="ubt_bunding_ping_timeout">绑定小猪超时，请稍后重试</string>
     <string name="ubt_one_user_one_pig">一个账号已被绑定音箱</string>
     <string name="ubt_set_net_success">配网成功</string>
@@ -60,7 +61,7 @@
     <string name="pic_pair">小猪配对</string>
     <string name="member_group">成员组</string>
     <string name="address_book">通讯录</string>
-    <string name="device_manage">设置管理</string>
+    <string name="device_manage">设备管理</string>
     <string name="nickname_call_phone">报昵称打电话</string>
     <string name="ubt_nikename">名字</string>
     <string name="add_contact">添加联系人</string>
@@ -71,11 +72,12 @@
     <string name="ubt_unbind">解除绑定</string>
     <string name="ubt_device_update">设备升级</string>
     <string name="ubt_unbing_tips">解绑后，将不能通过app使用此音箱</string>
-    <string name="ubt_pig_serialno">音响序列号：%1$s</string>
+    <string name="ubt_pig_serialno">音箱序列号：%1$s</string>
     <string name="ubt_pig_version_format">音箱当前版本：%1$s</string>
     <string name="alarm">闹钟</string>
     <string name="ubt_ubbind_success">成功解除绑定</string>
     <string name="ubt_transfer_admin_tips">你是管理员，解绑前请先转让管理员权限</string>
+    <string name="ubt_exit_group_tips">你是管理员，退出成员组请先转让管理员权限</string>
     <string name="ubt_pig_unbing">音箱未配绑定</string>
     <string name="ubt_pig_unset_net">音箱未配网</string>
     <string name="ubt_click_for_bind">点击绑定</string>
@@ -103,6 +105,7 @@
     <string name="ubt_pair_pig_desc">·请让配对设备的管理员打开小猪APP-我的-设备管理-小猪配对；\n·点击右上角“扫一扫”，扫描上面的二维码，配对小猪；\n·配对成功的小猪可以相互发送语音留言；</string>
     <string name="ubt_san_formember">扫码进入</string>
     <string name="ubt_drop_up_tips">退出成员组将解绑此设备</string>
+    <string name="exit_group">退出群组</string>
     <string name="ubt_unbind_success">退出群组成功</string>
     <string name="ubt_unbind_fialure">退出群组失败</string>
     <string name="ubt_trans_permission">转让权限</string>
@@ -142,4 +145,18 @@
     <string name="chat_up_finger">手指上滑，取消发送</string>
     <string name="chat_content_bad">内容含有敏感词</string>
     <string name="chat_audio_too_short">录音过短，请重试</string>
+    <!-- voice recording-->
+    <string name="ubt_unpair">解除绑定</string>
+    <string name="ubt_confirm_unpair">确认解除配对？</string>
+    <string name="ubt_ubpair_success">解除配对成功</string>
+    <string name="ubt_ubpair_filure">解除配对失败</string>
+    <string name="ubt_get_qr_pair_pig_fialure">获取配对小猪二维码失败</string>
+    <string name="ubt_get_qr_join_group_fialure">获取加入成员组二维码失败</string>
+    <string name="ubt_scann_qr_tips">将二维码放入框内，即可自动扫描</string>
+    <string name="ubt_scann_qr_join_group">扫描进群</string>
+    <string name="ubt_scann_qr">扫描二维码</string>
+    <string name="ubt_pair_pig_fialure">配对失败</string>
+    <string name="ubt_add_member_success">添加成员成功</string>
+    <string name="ubt_pair_pig_success">小猪配对成功</string>
+    <string name="only_admin_operate">仅管理员可操作</string>
 </resources>

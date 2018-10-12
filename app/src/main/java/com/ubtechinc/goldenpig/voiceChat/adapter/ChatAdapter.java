@@ -15,6 +15,8 @@ import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.voiceChat.model.Message;
 import com.ubtechinc.goldenpig.voiceChat.ui.CircleImageView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 /**
@@ -55,6 +57,8 @@ public class ChatAdapter extends ArrayAdapter<Message> {
             viewHolder.rightMessage = (RelativeLayout) view.findViewById(R.id.rightMessage);
             viewHolder.leftPanel = (RelativeLayout) view.findViewById(R.id.leftPanel);
             viewHolder.rightPanel = (RelativeLayout) view.findViewById(R.id.rightPanel);
+            viewHolder.right_voice_time_me=(TextView)view.findViewById(R.id.right_voice_time_me);
+            viewHolder.left_voice_time_other=(TextView)view.findViewById(R.id.left_voice_time_other);
             viewHolder.sending = (ProgressBar) view.findViewById(R.id.sending);
             viewHolder.error = (ImageView) view.findViewById(R.id.sendError);
             viewHolder.sender = (TextView) view.findViewById(R.id.sender);
@@ -77,6 +81,8 @@ public class ChatAdapter extends ArrayAdapter<Message> {
         public RelativeLayout rightMessage;
         public RelativeLayout leftPanel;
         public RelativeLayout rightPanel;
+        public TextView right_voice_time_me;
+        public TextView left_voice_time_other;
         public ProgressBar sending;
         public ImageView error;
         public TextView sender;

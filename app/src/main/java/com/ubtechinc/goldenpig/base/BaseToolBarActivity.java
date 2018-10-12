@@ -1,8 +1,6 @@
 package com.ubtechinc.goldenpig.base;
 
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -15,7 +13,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
-
 
 import com.ubtechinc.goldenpig.R;
 
@@ -45,6 +42,7 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
 
         //1、设置支出，并不显示项目的title文字
         toolbar = (Toolbar) findViewById(R.id.ubt_toolbar);
+//        toolbar.setNavigationIcon(R.drawable.ic_back);
         setSupportActionBar(toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,9 +145,12 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
      */
     protected void setTitleBack(boolean visible) {
         if (visible) {
-            //toolbar.setNavigationIcon(R.drawable.dingdang_btn_back_holo_light);//设置返回按钮
+//            toolbar.setNavigationIcon(R.drawable.ic_back);//设置返回按钮
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
+//                Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_back);
+//                drawable.setBounds(0, 0, 40, 40);
+                actionBar.setHomeAsUpIndicator(R.drawable.ic_return);
                 actionBar.setDisplayHomeAsUpEnabled(true);
             }
         }

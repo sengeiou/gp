@@ -56,6 +56,7 @@ public class UbtTIMManager {
     private String accountType;
     private String userSig;
     private int appidAt3rd;
+    public static String avatarURL;
 
     private OnUbtTIMConverListener onUbtTIMConverListener;
     private ArrayBlockingQueue<UbtTIMMsg> msgQueue=new ArrayBlockingQueue<>(16); //IM信息队列
@@ -159,11 +160,15 @@ public class UbtTIMManager {
                 initUserConfig();
                 TIMUser user=new TIMUser();
                 user.setIdentifier(userId);
-                TIMManager.getInstance().login(
-                        appidAt3rd,
-                        user,
-                        userSig,
-                        timCallBack);
+                try {
+                    TIMManager.getInstance().login(
+                            appidAt3rd,
+                            user,
+                            userSig,
+                            timCallBack);
+                }catch (RuntimeException e){
+                    e.printStackTrace();
+                }
                 isLoginedTIM = true;
                 sendCache();
         }
@@ -354,6 +359,12 @@ public class UbtTIMManager {
 
     public void  deleteRecord(List<UserRecords.Record> list) {
         byte[] data = ContactsProtoBuilder.getDeleteRecordInfo(list);
+        TIMMessage msg=creatElem(data);
+        sendTIM(msg);
+    }
+
+    public void getGuid(){
+        byte[] data = ContactsProtoBuilder.getGuidIM();
         TIMMessage msg=creatElem(data);
         sendTIM(msg);
     }

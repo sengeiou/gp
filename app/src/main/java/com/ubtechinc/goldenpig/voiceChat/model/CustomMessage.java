@@ -102,6 +102,8 @@ public class CustomMessage extends Message {
      */
     @Override
     public void showMessage(ChatAdapter.ViewHolder viewHolder, Context context) {
+      //
+
 
     }
 

@@ -1,8 +1,6 @@
 package com.ubtechinc.nets.http;
 
 
-import android.util.Log;
-
 import com.ubtechinc.nets.BuildConfig;
 import com.ubtechinc.nets.HttpManager;
 
@@ -66,7 +64,7 @@ public class HeaderInterceptor implements Interceptor {
         if (headers != null && headers.size() > 0) {
             Set<String> keys = headers.keySet();
             for (String headerKey : keys) {
-                builder.addHeader(headerKey, getValueEncoded(headers.get(headerKey))).build();
+                builder.header(headerKey, getValueEncoded(headers.get(headerKey))).build();
             }
         }
         return chain.proceed(builder.build());

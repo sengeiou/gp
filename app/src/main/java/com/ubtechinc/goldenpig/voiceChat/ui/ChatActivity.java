@@ -29,6 +29,7 @@ import com.google.protobuf.ByteString;
 import com.tencent.TIMCallBack;
 import com.tencent.TIMConversation;
 import com.tencent.TIMConversationType;
+import com.tencent.TIMCustomElem;
 import com.tencent.TIMGroupManager;
 import com.tencent.TIMGroupMemberResult;
 import com.tencent.TIMGroupMemberRoleType;
@@ -90,6 +91,7 @@ public class ChatActivity extends FragmentActivity implements ChatView {
     private RecorderUtil recorder = new RecorderUtil();
     private TIMConversationType type;
     private ChannelInfo info = null;
+    private String TAG="ChatActivity";
 
     public static void navToChat(Context context, String identify, TIMConversationType type, ChannelInfo info){
         Intent intent = new Intent(context, ChatActivity.class);
@@ -117,6 +119,7 @@ public class ChatActivity extends FragmentActivity implements ChatView {
            //  identify="89898989898800000";
            // identify="990011998000581";
             identify="889834038000566";
+            //identify="809722";
             UBTLog.d("ChatActivity", "test identity  "+identify);
         }
        // type = (TIMConversationType) getIntent().getSerializableExtra("type");
@@ -240,6 +243,25 @@ public class ChatActivity extends FragmentActivity implements ChatView {
             Message mMessage = MessageFactory.getMessage(message);
             if (mMessage != null) {
                 if (mMessage instanceof CustomMessage){
+                    Log.d(TAG,"receive the customeMessae");
+//                    try {
+//                        TIMCustomElem customElem = (TIMCustomElem) message.getElement(0);
+//                        ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage
+//                                .parseFrom((byte[]) customElem.getData());
+//                       if(msg.getHeader().getAction().equals("")) {
+//                           VoiceMailContainer.VoiceMail mVoiceData = msg.getPayload().unpack(VoiceMailContainer.VoiceMail.class);
+//                           if (messageList.size()==0){
+//                               mMessage.setHasTime(null);
+//                           }else{
+//                               mMessage.setHasTime(messageList.get(messageList.size()-1).getMessage());
+//                           }
+//                           messageList.add(mMessage);
+//                           adapter.notifyDataSetChanged();
+//                           listView.setSelection(adapter.getCount()-1);
+//                       }
+//                    }catch(Exception e){
+//                        e.printStackTrace();
+//                    }
                 }else{
                     if (messageList.size()==0){
                         mMessage.setHasTime(null);
@@ -266,6 +288,7 @@ public class ChatActivity extends FragmentActivity implements ChatView {
             if (mMessage == null || messages.get(i).status() == TIMMessageStatus.HasDeleted) continue;
             if (mMessage instanceof CustomMessage && (((CustomMessage) mMessage).getType() == CustomMessage.Type.TYPING ||
                     ((CustomMessage) mMessage).getType() == CustomMessage.Type.INVALID)) continue;
+
             ++newMsgNum;
             if (i != messages.size() - 1){
                 mMessage.setHasTime(messages.get(i+1));
@@ -361,9 +384,11 @@ public class ChatActivity extends FragmentActivity implements ChatView {
      */
     @Override
     public void sendText() {
-        Message message = new TextMessage(input.getText());
-        presenter.sendMessage(message.getMessage(),ChatPresenter.MESSAGE_TEXT);
+//        Message message = new TextMessage(input.getText());
+//        presenter.sendMessage(message.getMessage(),ChatPresenter.MESSAGE_TEXT);
+        sendPackMessageUsingProto(ChatPresenter.MESSAGE_TEXT,input.getText().toString().getBytes(),-1,UbtTIMManager.userId);
         input.setText("");
+
     }
 
     /**
@@ -397,21 +422,42 @@ public class ChatActivity extends FragmentActivity implements ChatView {
         if (recorder.getTimeInterval() < 1) {
             Toast.makeText(this, getResources().getString(R.string.chat_audio_too_short), Toast.LENGTH_SHORT).show();
         } else {
-            VoiceMailContainer.VoiceMail voiceMail = VoiceMailContainer.VoiceMail.newBuilder()
-                    .setTime(System.currentTimeMillis()) // 发送时间
-                    .setElapsedMillis((int)recorder.getTimeInterval()*1000) //语音时长
-                    .setMessage(ByteString.copyFrom(recorder.getDate())) //消息内容
-                    .setMsgType(ChatPresenter.MESSAGE_VOICE) //消息类型
-                    .setSender(UbtTIMManager.userId) //发送方
-                    .build();
-            ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setTime(System.currentTimeMillis()).setAction("/im/voicemail/receiver").build();
-            ChannelMessageContainer.ChannelMessage message = ChannelMessageContainer.ChannelMessage.newBuilder().setHeader(header).setPayload(Any.pack(voiceMail)).build();
-            Message voicemessage = new VoiceMessage(message.toByteArray(),recorder.getTimeInterval()+"");
-            presenter.sendMessage(voicemessage.getMessage(),ChatPresenter.MESSAGE_VOICE);
+            sendPackMessageUsingProto(ChatPresenter.MESSAGE_VOICE,recorder.getDate(),(int)recorder.getTimeInterval(),UbtTIMManager.userId);
+//            VoiceMailContainer.VoiceMail voiceMail = VoiceMailContainer.VoiceMail.newBuilder()
+//                    .setTime(System.currentTimeMillis()) // 发送时间
+//                    .setElapsedMillis((int)recorder.getTimeInterval()*1000) //语音时长
+//                    .setMessage(ByteString.copyFrom(recorder.getDate())) //消息内容
+//                    .setMsgType(ChatPresenter.MESSAGE_VOICE) //消息类型
+//                    .setSender(UbtTIMManager.userId) //发送方
+//                    .build();
+//            ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setTime(System.currentTimeMillis()).setAction("/im/voicemail/receiver").build();
+//            ChannelMessageContainer.ChannelMessage message = ChannelMessageContainer.ChannelMessage.newBuilder().setHeader(header).setPayload(Any.pack(voiceMail)).build();
+//            Message voicemessage = new VoiceMessage(message.toByteArray(),recorder.getTimeInterval()+"");
+//            presenter.sendMessage(voicemessage.getMessage(),ChatPresenter.MESSAGE_VOICE);
+              //tencent original example
 //            Message message = new VoiceMessage(recorder.getTimeInterval(), recorder.getFilePath());
 //            presenter.sendMessage(message.getMessage(),ChatPresenter.MESSAGE_VOICE);
         }
     }
+    private void sendPackMessageUsingProto(int messageType, byte[] infoData,int duration,String sender){
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setTime(System.currentTimeMillis()).setAction("/im/voicemail/receiver").build();
+        VoiceMailContainer.VoiceMail voiceMail = VoiceMailContainer.VoiceMail.newBuilder()
+                .setTime(System.currentTimeMillis()) // 发送时间
+                .setElapsedMillis((int)duration*1000) //语音时长
+                .setMessage(ByteString.copyFrom(infoData)) //消息内容
+                .setMsgType(messageType) //消息类型
+                .setSender(sender) //发送方
+                .build();
+        ChannelMessageContainer.ChannelMessage message = ChannelMessageContainer.ChannelMessage.newBuilder().setHeader(header).setPayload(Any.pack(voiceMail)).build();
+        Message mailMessage;
+       //if(messageType==ChatPresenter.MESSAGE_VOICE) {
+           mailMessage = new VoiceMessage(message.toByteArray(), duration + "");
+      // }else {
+          // mailMessage = new TextMessage(message.toByteArray(), duration + "");
+      // }
+        presenter.sendMessage(mailMessage.getMessage(),messageType);
+    }
+
 
     /**
      * 发送小视频消息

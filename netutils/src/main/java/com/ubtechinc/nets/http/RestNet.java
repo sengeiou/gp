@@ -1,14 +1,11 @@
 package com.ubtechinc.nets.http;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.SDCardUtils;
 import com.ubtechinc.nets.http.cookie.CookieCache;
 import com.ubtechinc.nets.http.cookie.CookieManager;
-
-import org.reactivestreams.Subscription;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.Observer;
@@ -37,7 +35,6 @@ import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import io.reactivex.Observable;
 
 /**
  * @desc : 默认Gson+RxJava
@@ -63,6 +60,19 @@ public final class RestNet {
             cookieMgr = new CookieManager(new CookieCache(mContext));
             clientBuilder.cookieJar(cookieMgr);
         }
+//        clientBuilder.addInterceptor(new Interceptor() {
+//            @Override
+//            public Response intercept(Chain chain) throws IOException {
+//                Request request = chain.request()
+//                        .newBuilder()
+//                        .addHeader("X-UBT-AppId", "100080018")
+//                        .addHeader("X-UBT-Sign", BuildConfig.product)
+//                        .addHeader("authorization", BuildConfig.product)
+//                        .addHeader("product", "60101")
+//                        .build();
+//                return chain.proceed(request);
+//            }
+//        });
         this.client = clientBuilder.build();
         retroBuilder.client(client);
         this.retrofit = retroBuilder.build();

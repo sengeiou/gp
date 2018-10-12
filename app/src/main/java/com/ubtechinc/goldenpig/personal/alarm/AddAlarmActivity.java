@@ -26,6 +26,7 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.model.AlarmModel;
 import com.ubtechinc.goldenpig.personal.remind.SetRemindRepeatActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.tvlloginlib.TVSManager;
 import com.weigan.loopview.LoopView;
 
@@ -35,6 +36,7 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -46,7 +48,7 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_REMIND_REPEAT_SU
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SET_ALARM_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SET_REPEAT_SUCCESS;
 
-public class AddAlarmActivity extends BaseNewActivity implements Observer {
+public class AddAlarmActivity extends BaseNewActivity {
     @BindView(R.id.loopView_date)
     LoopView loopView_date;
     @BindView(R.id.loopView_hour)
@@ -59,8 +61,9 @@ public class AddAlarmActivity extends BaseNewActivity implements Observer {
     private List<String> dateList;
     private List<String> hourList;
     private List<String> minList;
-    private String repeatType;
+    private String repeatType = "单次";
     private AlarmModel model;
+    Date today = new Date();
 
     private class MyHandler extends Handler {
         WeakReference<Activity> mWeakReference;
@@ -72,11 +75,6 @@ public class AddAlarmActivity extends BaseNewActivity implements Observer {
         @Override
         public void handleMessage(android.os.Message msg) {
             super.handleMessage(msg);
-            if (msg.what == 1) {
-                ToastUtils.showShortToast("请求超时，请重试");
-                if (mWeakReference.get() != null) {
-                }
-            }
         }
     }
 
@@ -159,17 +157,12 @@ public class AddAlarmActivity extends BaseNewActivity implements Observer {
                     return;
                 }
                 if (model == null) {
-                    addAlarm(1, "0");
+                    addAlarm(1, 0);
                 } else {
                     addAlarm(3, model.lAlarmId);
                 }
                 break;
         }
-    }
-
-    @Override
-    public void update(Observable o, Object arg) {
-
     }
 
     public Handler getHandler() {
@@ -210,92 +203,85 @@ public class AddAlarmActivity extends BaseNewActivity implements Observer {
         }
     }
 
-    public void addAlarm(int eCloud_type, String lAlarmId) {
+    public void addAlarm(int eCloud_type, long lAlarmId) {
         LoadingDialog.getInstance(this).show();
-        int acctType = 0;
         ELoginPlatform platform;
         if (CookieInterceptor.get().getThridLogin().getLoginType().toLowerCase().equals("wx")) {
-            acctType = 0;
             platform = ELoginPlatform.WX;
         } else {
-            acctType = 1;
             platform = ELoginPlatform.QQOpen;
         }
-        DeviceManager deviceManager = new DeviceManager();
-        deviceManager.productId = BuildConfig.PRODUCT_ID;
-//        deviceManager.dsn = AuthLive.getInstance()
-//                .getCurrentPig() == null ? "hdfeng" : AuthLive.getInstance()
-//                .getCurrentPig().getRobotName();
-        UniAccessInfo info = new UniAccessInfo();
-        info.domain = "alarm";
-        info.intent = "cloud_manager";
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("eType", 0);
-            JSONObject stCloudAlarmReq = new JSONObject();
-            JSONObject stAccountBaseInfo = new JSONObject();
-            stAccountBaseInfo.put("eAcctType", acctType);
-            stAccountBaseInfo.put("strAcctId", AuthLive.getInstance().getCurrentUser().getUserId());
-            stCloudAlarmReq.put("stAccountBaseInfo", stAccountBaseInfo);
-            stCloudAlarmReq.put("eCloud_type", eCloud_type);//0,为查看; 1为添加;2为删除;3为更新
-            stCloudAlarmReq.put("sPushInfo", "推什么");
-            JSONArray vCloudAlarmData = new JSONArray();
-            JSONObject vCloudAlarmData0 = new JSONObject();
-            JSONObject stAIDeviceBaseInfo = new JSONObject();
-            stAIDeviceBaseInfo.put("strGuid", AuthLive.getInstance()
-                    .getCurrentPig() == null ? "hdfeng" : AuthLive.getInstance()
-                    .getCurrentPig().getRobotName());
-            stAIDeviceBaseInfo.put("strAppKey", BuildConfig.APP_KEY);
-            vCloudAlarmData0.put("stAIDeviceBaseInfo", stAIDeviceBaseInfo);
+
+        String date = TimeUtils.getTime(System.currentTimeMillis(), TimeUtils.DATE_FORMAT_DATE);
+        int hour = 0;
+        if (loopView_date.getSelectedItem() == 1) {
+            hour += 12;
+        }
+        hour += Integer.parseInt(hourList.get(loopView_hour.getSelectedItem()));
+        date = date + " " + hour + ":" + minList.get(loopView_minute.getSelectedItem()) + ":00";
+        long timeMill = TimeUtils.string2Millis(date);
+        if (System.currentTimeMillis() > timeMill) {
             switch (repeatType) {
                 case "单次":
-                    vCloudAlarmData0.put("eRepeatType", 1);//0为异常类型，1为一次性，2为每天，3为每周，4为每月，5为工作日，6为节假日
+                    timeMill += 24 * 60 * 60 * 1000;
                     break;
                 case "每天":
-                    vCloudAlarmData0.put("eRepeatType", 2);//0为异常类型，1为一次性，2为每天，3为每周，4为每月，5为工作日，6为节假日
+                    timeMill += 24 * 60 * 60 * 1000;
                     break;
                 case "每周":
-                    vCloudAlarmData0.put("eRepeatType", 3);//0为异常类型，1为一次性，2为每天，3为每周，4为每月，5为工作日，6为节假日
+                    timeMill += 7 * 24 * 60 * 60 * 1000;
                     break;
                 case "每月":
-                    vCloudAlarmData0.put("eRepeatType", 4);//0为异常类型，1为一次性，2为每天，3为每周，4为每月，5为工作日，6为节假日
+                    timeMill += 24 * 60 * 60 * 1000;
                     break;
                 case "每年":
-                    vCloudAlarmData0.put("eRepeatType", 1);//0为异常类型，1为一次性，2为每天，3为每周，4为每月，5为工作日，6为节假日
+                    timeMill += 24 * 60 * 60 * 1000;
                     break;
                 case "工作日":
-                    vCloudAlarmData0.put("eRepeatType", 5);//0为异常类型，1为一次性，2为每天，3为每周，4为每月，5为工作日，6为节假日
+                    timeMill += 24 * 60 * 60 * 1000;
                     break;
                 case "节假日":
-                    vCloudAlarmData0.put("eRepeatType", 6);//0为异常类型，1为一次性，2为每天，3为每周，4为每月，5为工作日，6为节假日
+                    timeMill += 24 * 60 * 60 * 1000;
                     break;
                 default:
-                    vCloudAlarmData0.put("eRepeatType", 1);//0为异常类型，1为一次性，2为每天，3为每周，4为每月，5为工作日，6为节假日
+                    timeMill += 24 * 60 * 60 * 1000;
                     break;
             }
-            vCloudAlarmData0.put("lAlarmId", lAlarmId);
-            String date = TimeUtils.getTime(System.currentTimeMillis(), TimeUtils.DATE_FORMAT_DATE);
-            int hour = 0;
-            if (loopView_date.getSelectedItem() == 1) {
-                hour += 12;
-            }
-            hour += Integer.parseInt(hourList.get(loopView_hour.getSelectedItem()));
-            date = date + " " + hour + ":" + minList.get(loopView_minute.getSelectedItem()) + ":00";
-            vCloudAlarmData0.put("lStartTimeStamp", TimeUtils.string2Millis(date));
-            vCloudAlarmData0.put("vRingId", null);
-            vCloudAlarmData.put(vCloudAlarmData0);
-            stCloudAlarmReq.put("vCloudAlarmData", vCloudAlarmData);
-            obj.put("stCloudAlarmReq", stCloudAlarmReq);
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
-        info.jsonBlobInfo = obj.toString();
+        int eRepeatType = 0;
+        switch (repeatType) {
+            case "单次":
+                eRepeatType = 1;
+                break;
+            case "每天":
+                eRepeatType = 2;
+                break;
+            case "每周":
+                eRepeatType = 3;
+                break;
+            case "每月":
+                eRepeatType = 4;
+                break;
+            case "每年":
+                eRepeatType = 1;
+                break;
+            case "工作日":
+                eRepeatType = 5;
+                break;
+            case "节假日":
+                eRepeatType = 6;
+                break;
+            default:
+                eRepeatType = 1;
+                break;
+        }
         TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ)
-                .requestTskmUniAccess(platform, deviceManager, info, new TVSManager
+                .requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils
+                        .getAlarmUniAccessinfo(eCloud_type, eRepeatType, lAlarmId, timeMill), new TVSManager
                         .TVSAlarmListener() {
                     @Override
                     public void onSuccess(CommOpInfo msg) {
-                        String str = msg.errMsg;
+                        LoadingDialog.getInstance(AddAlarmActivity.this).dismiss();
                         if (model == null) {
                             ToastUtils.showShortToast("新建闹钟成功");
                         } else {
@@ -308,6 +294,7 @@ public class AddAlarmActivity extends BaseNewActivity implements Observer {
 
                     @Override
                     public void onError(String code) {
+                        LoadingDialog.getInstance(AddAlarmActivity.this).dismiss();
                         ToastUtils.showShortToast(code);
                         LogUtils.d("code:" + code);
                     }

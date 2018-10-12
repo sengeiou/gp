@@ -106,12 +106,10 @@
 #ZXING过滤
 -dontwarn com.google.zxing.**
 -keep  class com.google.zxing.**{*;}
-
+-dontwarn com.google.zxing.*
 #Glide 过滤
 -keep public class * implements com.bumptech.glide.module.GlideModule
 -keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
   **[] $VALUES;
   public *;
 }
--keep class com.google.zxing.** {*;}
--dontwarn com.google.zxing.*

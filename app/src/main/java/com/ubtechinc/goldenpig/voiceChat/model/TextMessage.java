@@ -13,6 +13,7 @@ import android.util.TypedValue;
 import android.widget.TextView;
 
 
+import com.tencent.TIMCustomElem;
 import com.tencent.TIMElem;
 import com.tencent.TIMElemType;
 import com.tencent.TIMFaceElem;
@@ -45,6 +46,13 @@ public class TextMessage extends Message {
         message = new TIMMessage();
         TIMTextElem elem = new TIMTextElem();
         elem.setText(s);
+        message.addElement(elem);
+    }
+
+    public TextMessage(byte[] data){
+        message = new TIMMessage();
+        TIMCustomElem elem = new TIMCustomElem();
+        elem.setData(data);
         message.addElement(elem);
     }
 

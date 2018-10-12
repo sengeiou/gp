@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 
@@ -29,7 +30,7 @@ import java.util.ArrayList;
 /**
  *@auther        :hqt
  *@email         :qiangta.huang@ubtrobot.com
- *@description   :小猪音响列表
+ *@description   :小猪音箱列表
  *@time          :2018/8/24 20:44
  *@change        :
  *@changetime    :2018/8/24 20:44
@@ -92,7 +93,6 @@ public class PigListDialog extends BaseDialog {
         mLecallback = new BluetoothAdapter.LeScanCallback() {
             @Override
             public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
-
 
                 if (!TextUtils.isEmpty(device.getName())&& device.getName().startsWith(Constants.ROBOT_TAG)){
                     int rawIndex=isHasDevice(device);

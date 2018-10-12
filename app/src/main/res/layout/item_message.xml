@@ -12,111 +12,143 @@
         android:visibility="gone"
         android:textColor="@color/text_gray2"
         android:textSize="12sp" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <RelativeLayout
             android:id="@+id/leftPanel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:layout_marginLeft="10dp">
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp">
+
             <com.ubtechinc.goldenpig.voiceChat.ui.CircleImageView
                 android:id="@+id/leftAvatar"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:src="@drawable/head_other"
-                android:layout_alignParentLeft="true"/>
+                android:layout_width="43dp"
+                android:layout_height="43dp"
+                android:layout_alignParentLeft="true"
+                android:src="@drawable/head_other" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/leftAvatar"
                 android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/sender"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_gray1"
-                    android:layout_marginLeft="6dp"
                     android:layout_marginBottom="3dp"
-                    android:textSize="12sp"
-                    android:text="name"/>
+                    android:layout_marginLeft="6dp"
+                    android:text=""
+                    android:textColor="@color/text_gray1"
+                    android:textSize="12sp" />
+
                 <RelativeLayout
                     android:id="@+id/leftMessage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="5dp"
+                    android:background="@drawable/bubble_gray"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:longClickable="true"
                     android:paddingBottom="5dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="5dp"
-                    android:clickable="true"
-                    android:longClickable="true"
-                    android:gravity="center"
-                    android:background="@drawable/bg_bubble_gray"/>
+                    android:paddingTop="5dp" />
             </LinearLayout>
 
 
         </RelativeLayout>
+
         <RelativeLayout
             android:id="@+id/rightPanel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_alignParentRight="true">
+            android:layout_alignParentStart="true"
+            android:layout_alignTop="@+id/leftPanel">
+
             <com.ubtechinc.goldenpig.voiceChat.ui.CircleImageView
                 android:id="@+id/rightAvatar"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:src="@drawable/head_me"
-                android:layout_alignParentRight="true"/>
+                android:layout_width="43dp"
+                android:layout_height="43dp"
+                android:layout_alignParentRight="true"
+                android:src="@drawable/head_me" />
+
             <RelativeLayout
                 android:id="@+id/rightMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="5dp"
+                android:layout_toLeftOf="@id/rightAvatar"
+                android:background="@drawable/bubble_blue"
+                android:clickable="true"
+                android:gravity="center"
+                android:longClickable="true"
                 android:paddingBottom="5dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="10dp"
-                android:gravity="center"
-                android:clickable="true"
-                android:longClickable="true"
-                android:layout_toLeftOf="@id/rightAvatar"
-                android:background="@drawable/bg_bubble_blue"/>
+                android:paddingTop="5dp" />
+
             <TextView
                 android:id="@+id/rightDesc"
-                android:layout_alignRight="@id/rightMessage"
-                android:layout_below="@id/rightMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignRight="@id/rightMessage"
+                android:layout_below="@id/rightMessage"
                 android:layout_marginRight="3dp"
-                android:textSize="12sp"
                 android:textColor="@color/text_gray1"
-                android:visibility="gone"/>
+                android:textSize="12sp"
+                android:visibility="gone" />
+
             <RelativeLayout
                 android:id="@+id/sendStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@id/rightMessage">
+
                 <ProgressBar
                     android:id="@+id/sending"
                     android:layout_width="15dp"
-                    android:layout_height="15dp"/>
+                    android:layout_height="15dp" />
+
                 <ImageView
                     android:id="@+id/sendError"
                     android:layout_width="15dp"
                     android:layout_height="15dp"
-                    android:visibility="gone"
-                    android:src="@drawable/ic_error"/>
+                    android:src="@drawable/ic_error"
+                    android:visibility="gone" />
 
             </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/right_voice_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/rightMessage">
+                <TextView
+                    android:id="@+id/right_voice_time_me"
+                    android:layout_width="30dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:text="59'" />
+            </RelativeLayout>
 
+            <TextView
+                android:id="@+id/left_voice_time_other"
+                android:layout_width="30dp"
+                android:layout_height="15dp"
+                android:layout_below="@+id/rightMessage"
+                android:layout_marginStart="115dp"
+                android:layout_toEndOf="@+id/rightDesc"
+                android:visibility="gone"
+                />
 
         </RelativeLayout>
     </RelativeLayout>
-
-
 </LinearLayout>

@@ -6,14 +6,19 @@ import android.widget.RelativeLayout;
 
 //import com.example.live.LiveHelper;
 //import com.jaronho.sdk.utils.ActivityTracker;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.facebook.stetho.inspector.elements.android.ActivityTracker;
 //import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Picasso;
 import com.tencent.TIMConversationType;
 import com.tencent.TIMFriendshipManager;
 import com.tencent.TIMMessage;
 import com.tencent.TIMMessageStatus;
 import com.tencent.TIMUserProfile;
 import com.tencent.TIMValueCallBack;
+import com.ubt.imlibv2.bean.UbtTIMManager;
+import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.voiceChat.adapter.ChatAdapter;
 import com.ubtechinc.goldenpig.voiceChat.ui.ChatActivity;
@@ -65,7 +70,10 @@ public abstract class Message {
 //            String avatar = LiveHelper.getUserAvatar();
 //            if (null != avatar && !avatar.isEmpty()) {
 //                Picasso.with(ActivityTracker.getTopActivity()).load(avatar).into(viewHolder.rightAvatar);
+//                Picasso.
 //            }
+            Glide.with(UBTPGApplication.getContext()).load(UbtTIMManager.avatarURL).asBitmap().placeholder(R.drawable.head_me).diskCacheStrategy(DiskCacheStrategy.ALL).into(viewHolder.rightAvatar);
+
             viewHolder.leftPanel.setVisibility(View.GONE);
             viewHolder.rightPanel.setVisibility(View.VISIBLE);
             return viewHolder.rightMessage;
@@ -106,7 +114,8 @@ public abstract class Message {
                 if (message.getSenderGroupMemberProfile()!=null) name = message.getSenderGroupMemberProfile().getNameCard();
                 if (name.equals("")&&message.getSenderProfile()!=null) name = message.getSenderProfile().getNickName();
                 if (name.equals("")) name = message.getSender();
-                viewHolder.sender.setText(name);
+                //viewHolder.sender.setText(name);
+                viewHolder.sender.setText("brian");
             }else{
                 viewHolder.sender.setVisibility(View.GONE);
             }

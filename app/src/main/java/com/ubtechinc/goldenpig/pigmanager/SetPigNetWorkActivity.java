@@ -7,22 +7,20 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.text.TextUtilsCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.ubtechinc.bluetooth.UbtBluetoothManager;
 import com.ubtechinc.bluetooth.command.ICommandProduce;
 import com.ubtechinc.bluetooth.command.JsonCommandProduce;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.commlib.utils.WifiUtils;
-import com.ubtechinc.goldenpig.comm.view.UbtPasswordEditText;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
+import com.ubtechinc.goldenpig.comm.view.UbtPasswordEditText;
 import com.ubtechinc.goldenpig.comm.view.UbtWifiListEditText;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
 import com.ubtechinc.goldenpig.main.MainActivity;
@@ -36,7 +34,7 @@ import org.json.JSONObject;
 /**
  *@auther        :hqt
  *@email         :qiangta.huang@ubtrobot.com
- *@description   :设置小猪音响WIFi及密码
+ *@description   :设置小猪音箱WIFi及密码
  *@time          :2018/8/27 14:32
  *@change        :
  *@changetime    :2018/8/27 14:32
