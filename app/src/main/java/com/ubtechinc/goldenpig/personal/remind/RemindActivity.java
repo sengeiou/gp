@@ -230,20 +230,20 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
                                 }
                                 model.lReminderId = ob.getLong("lReminderId");
                                 model.sNote = ob.getString("sNote");
-                                model.lStartTimeStamp = ob.getLong("lStartTimeStamp");
+                                model.lStartTimeStamp = ob.getLong("lStartTimeStamp")*1000;
                                 try {
-                                    String time = null;
-                                    String le = System.currentTimeMillis() + "";
-                                    long mins = 0;
-                                    if (le.length() - (model.lStartTimeStamp + "").length() >= 3) {
-                                        mins = model.lStartTimeStamp * 1000;
-                                    } else {
-                                        mins = model.lStartTimeStamp;
-                                    }
-                                    time = TimeUtils.getTime(mins, TimeUtils
+//                                    String time = null;
+//                                    String le = System.currentTimeMillis() + "";
+//                                    long mins = 0;
+//                                    if (le.length() - (model.lStartTimeStamp + "").length() >= 3) {
+//                                        mins = model.lStartTimeStamp * 1000;
+//                                    } else {
+//                                        mins = model.lStartTimeStamp;
+//                                    }
+                                    String time = TimeUtils.getTime(model.lStartTimeStamp, TimeUtils
                                             .DATE_FORMAT_MON_TIME);
                                     String[] times = time.split("-");
-                                    model.date = changeTime(model.eRepeatType, mins);
+                                    model.date = changeTime(model.eRepeatType, model.lStartTimeStamp);
                                     int hour = Integer.parseInt(times[2]);
                                     if (hour >= 19) {
                                         model.amOrpm = "晚上";

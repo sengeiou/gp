@@ -232,17 +232,17 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
                                 } catch (Exception e) {
                                     model.lAlarmId = 0;
                                 }
-                                model.lStartTimeStamp = ob.getLong("lStartTimeStamp");
+                                model.lStartTimeStamp = ob.getLong("lStartTimeStamp")*1000;
                                 try {
-                                    String time = null;
-                                    String le = System.currentTimeMillis() + "";
-                                    if (le.length() - (model.lStartTimeStamp + "").length() >= 3) {
-                                        time = TimeUtils.getTime(model.lStartTimeStamp * 1000, TimeUtils
-                                                .DATE_FORMAT_ONLY_TIME);
-                                    } else {
-                                        time = TimeUtils.getTime(model.lStartTimeStamp, TimeUtils
-                                                .DATE_FORMAT_ONLY_TIME);
-                                    }
+//                                    String time = null;
+//                                    String le = System.currentTimeMillis() + "";
+//                                    if (le.length() - (model.lStartTimeStamp + "").length() >= 3) {
+//                                        time = TimeUtils.getTime(model.lStartTimeStamp * 1000, TimeUtils
+//                                                .DATE_FORMAT_ONLY_TIME);
+//                                    } else {
+//                                    }
+                                    String time = TimeUtils.getTime(model.lStartTimeStamp, TimeUtils
+                                            .DATE_FORMAT_ONLY_TIME);
                                     String[] times = time.split(":");
                                     int hour = Integer.parseInt(times[0]);
                                     if (hour >= 19) {
