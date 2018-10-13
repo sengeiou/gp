@@ -37,7 +37,7 @@ public class SkillActivity extends BaseToolBarActivity {
         mWebView = findViewById(R.id.web_common);
 
         setTitleBack(true);
-        setToolBarTitle(R.string.ubt_skills_manual);
+        setToolBarTitle(R.string.ubt_skills_detail);
 
         initWebView();
     }

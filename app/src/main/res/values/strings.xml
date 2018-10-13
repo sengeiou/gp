@@ -38,6 +38,7 @@
     <string name="ubt_send_voice">给自己的音箱发送语音留言</string>
     <string name="ubt_add_pig">添加配对小猪</string>
     <string name="ubt_skills_manual">技能手册</string>
+    <string name="ubt_skills_detail">技能详情</string>
     <string name="ubt_more_funtions">了解更多功能</string>
     <string name="ubt_recent_calls">最近通话</string>
     <string name="ubt_null">无</string>

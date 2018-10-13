@@ -233,9 +233,11 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                     } catch (Exception e) {
                     }
                 }
-                if (!TextUtils.isEmpty(strName))
+                if (!TextUtils.isEmpty(strName)) {
                     etName.setText(strName);
+                }
                 break;
+                default:
         }
     }
 
@@ -246,6 +248,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                 etPhone.setText("");
                 break;
             case R.id.iv_name_clear:
+                etName.setText("");
                 break;
             case R.id.iv_add:
                 if (TextUtils.isEmpty(strPhone) || TextUtils.isEmpty(strName)) {
@@ -268,6 +271,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                     ToastUtils.showShortToast("请求异常，请重试");
                 }
                 break;
+                default:
         }
     }
 
@@ -291,11 +295,11 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                 continue;
             }
             if (oldList.get(i).phone.equals(strPhone)) {
-                ToastUtils.showShortToast("手机号已存在,请重新填写");
+                ToastUtils.showShortToast("存在重复号码");
                 return false;
             }
             if (oldList.get(i).name.equals(strName)) {
-                ToastUtils.showShortToast("昵称已存在,请重新填写");
+                ToastUtils.showShortToast("存在重复昵称");
                 return false;
             }
         }
@@ -354,6 +358,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                     ToastUtils.showShortToast("请求异常，请重试");
                 }
                 break;
+                default:
         }
     }
 }

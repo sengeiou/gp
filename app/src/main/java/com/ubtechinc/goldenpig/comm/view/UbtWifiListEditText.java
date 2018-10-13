@@ -7,7 +7,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.provider.Settings;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -76,6 +75,12 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
             return mWifiNameEdt.getText().toString();
         }
         return "";
+    }
+
+    public void setText(String text) {
+        if (mWifiNameEdt != null && !TextUtils.isEmpty(text)) {
+            mWifiNameEdt.setText(text.replace("\"", ""));
+        }
     }
 
     @Override

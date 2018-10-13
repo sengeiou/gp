@@ -27,6 +27,7 @@ import com.ubtechinc.goldenpig.main.MainActivity;
 import com.ubtechinc.goldenpig.net.RegisterRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.bean.BundingListenerAbster;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.nets.utils.WifiControl;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -69,6 +70,10 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
         mSendWifiInfoBtn=(Button)findViewById(R.id.ubt_btn_connect_wifi);
         mSendWifiInfoBtn.setOnClickListener(this);
         mWifiNamEdt=(UbtWifiListEditText)findViewById(R.id.ubt_edt_wifi_name);
+        String phoneSsid = WifiControl.get(SetPigNetWorkActivity.this).getSSID();
+        if (!TextUtils.isEmpty(phoneSsid)) {
+            mWifiNamEdt.setText(phoneSsid);
+        }
         mWifiPwdEdt=(UbtPasswordEditText) findViewById(R.id.ubt_edt_wifi_password);
         mTvSkip=findViewById(R.id.ubt_tv_set_net_skip);
         mTvSkip.setVisibility(View.VISIBLE);
@@ -251,6 +256,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
             dismissLoadDialog();
             //{"co":120,"wifi_info":"{\"l\":-29,\"s\":\"\\\"alpha-bigbox-5G\\\"\"}"}
             UbtLogger.i("onPigConnected",wifiState);
+            String wifiName = "";
             if (!TextUtils.isEmpty(wifiState)) {
                 try {
 
@@ -264,7 +270,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
                         jsonObject = jsonObject.getJSONObject("wifi_info");
                     }
                     if (jsonObject.has("s")){
-                        final String wifiName = jsonObject.getString("s");
+                        wifiName = jsonObject.getString("s");
                         if (!TextUtils.isEmpty(wifiName)) {
                             showNotify("音箱已连接“" + wifiName + "”无线网络");
                         }
@@ -289,6 +295,21 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
                     e.printStackTrace();
                 }
             }
+
+            //TODO 刷新wifi输入框默认ssid
+            updateDefaultSsid(wifiName);
         }
     };
+
+    private void updateDefaultSsid(String wifiName) {
+        String defaultSsid;
+        if (TextUtils.isEmpty(wifiName)) {
+            defaultSsid = WifiControl.get(SetPigNetWorkActivity.this).getSSID();
+        } else {
+            defaultSsid = wifiName;
+        }
+        if (!TextUtils.isEmpty(defaultSsid)) {
+            mWifiNamEdt.setText(defaultSsid);
+        }
+    }
 }
