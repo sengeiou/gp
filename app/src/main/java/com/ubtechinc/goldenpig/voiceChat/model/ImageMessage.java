@@ -20,7 +20,7 @@ import com.tencent.TIMMessage;
 import com.tencent.TIMValueCallBack;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
-import com.ubtechinc.goldenpig.voiceChat.adapter.ChatAdapter;
+import com.ubtechinc.goldenpig.common.adapter.ViewHolder;
 import com.ubtechinc.goldenpig.voiceChat.ui.ChatActivity;
 import com.ubtechinc.goldenpig.voiceChat.util.FileUtil;
 
@@ -66,7 +66,7 @@ public class ImageMessage extends Message {
      * @param context 显示消息的上下文
      */
     @Override
-    public void showMessage(final ChatAdapter.ViewHolder viewHolder, final Context context) {
+    public void showMessage(final ViewHolder viewHolder, final Context context) {
         clearView(viewHolder);
         TIMImageElem e = (TIMImageElem) message.getElement(0);
         switch (message.status()){
@@ -207,14 +207,14 @@ public class ImageMessage extends Message {
         }
     }
 
-    private void showThumb(final ChatAdapter.ViewHolder viewHolder,String filename){
+    private void showThumb(final ViewHolder viewHolder,String filename){
         Bitmap bitmap = BitmapFactory.decodeFile(FileUtil.getCacheFilePath(filename));
         ImageView imageView = new ImageView(UBTPGApplication.getContext());
         imageView.setImageBitmap(bitmap);
         getBubbleView(viewHolder).addView(imageView);
     }
 
-    private void setImageEvent(final ChatAdapter.ViewHolder viewHolder, final String fileName, final Context context){
+    private void setImageEvent(final ViewHolder viewHolder, final String fileName, final Context context){
         getBubbleView(viewHolder).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

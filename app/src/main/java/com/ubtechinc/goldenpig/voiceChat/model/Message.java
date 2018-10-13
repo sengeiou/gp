@@ -2,6 +2,7 @@ package com.ubtechinc.goldenpig.voiceChat.model;
 
 import android.content.Context;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
@@ -15,7 +16,7 @@ import com.tencent.TIMValueCallBack;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
-import com.ubtechinc.goldenpig.voiceChat.adapter.ChatAdapter;
+import com.ubtechinc.goldenpig.common.adapter.ViewHolder;
 import com.ubtechinc.goldenpig.voiceChat.util.TimeUtil;
 
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ public abstract class Message {
 
     protected final String TAG = "Message";
 
-    TIMMessage message;
+    public TIMMessage message;
 
     private boolean hasTime;
 
@@ -54,16 +55,16 @@ public abstract class Message {
      * @param viewHolder 界面样式
      * @param context 显示消息的上下文
      */
-    public abstract void showMessage(ChatAdapter.ViewHolder viewHolder, Context context);
+    public abstract void showMessage(ViewHolder viewHolder, Context context);
 
     /**
      * 获取显示气泡
      *
      * @param viewHolder 界面样式
      */
-    public RelativeLayout getBubbleView(final ChatAdapter.ViewHolder viewHolder){
-        viewHolder.systemMessage.setVisibility(hasTime? View.VISIBLE: View.GONE);
-        viewHolder.systemMessage.setText(TimeUtil.getChatTimeStr(message.timestamp()));
+    public RelativeLayout getBubbleView(final ViewHolder viewHolder){
+        viewHolder.getView(R.id.systemMessage).setVisibility(hasTime? View.VISIBLE: View.GONE);
+        viewHolder.setText(R.id.systemMessage, TimeUtil.getChatTimeStr(message.timestamp()));
         showDesc(viewHolder);
         if (message.isSelf()){
 //            String avatar = LiveHelper.getUserAvatar();
@@ -71,11 +72,11 @@ public abstract class Message {
 //                Picasso.with(ActivityTracker.getTopActivity()).load(avatar).into(viewHolder.rightAvatar);
 //                Picasso.
 //            }
-            Glide.with(UBTPGApplication.getContext()).load(UbtTIMManager.avatarURL).asBitmap().placeholder(R.drawable.head_me).diskCacheStrategy(DiskCacheStrategy.ALL).into(viewHolder.rightAvatar);
+            Glide.with(UBTPGApplication.getContext()).load(UbtTIMManager.avatarURL).asBitmap().placeholder(R.drawable.head_me).diskCacheStrategy(DiskCacheStrategy.ALL).into((ImageView) viewHolder.getView(R.id.rightAvatar));
 
-            viewHolder.leftPanel.setVisibility(View.GONE);
-            viewHolder.rightPanel.setVisibility(View.VISIBLE);
-            return viewHolder.rightMessage;
+            viewHolder.getView(R.id.leftPanel).setVisibility(View.GONE);
+            viewHolder.getView(R.id.rightPanel).setVisibility(View.VISIBLE);
+            return viewHolder.getView(R.id.rightMessage);
         }else{
             List<String> senders = new ArrayList<>();
             senders.add(getSender());
@@ -93,7 +94,7 @@ public abstract class Message {
                              //   Picasso.with(UBTPGApplication.getContext()).load(avatar).into(viewHolder.leftAvatar);
                             }
                         }
-                        viewHolder.leftAvatar.setOnClickListener(new View.OnClickListener() {
+                        viewHolder.getView(R.id.leftAvatar).setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
 //                                if (null != ChatActivity.Instance && null != info) {
@@ -104,21 +105,27 @@ public abstract class Message {
                     }
                 }
             });
-            viewHolder.leftPanel.setVisibility(View.VISIBLE);
-            viewHolder.rightPanel.setVisibility(View.GONE);
+            viewHolder.getView(R.id.leftPanel).setVisibility(View.VISIBLE);
+            viewHolder.getView(R.id.rightPanel).setVisibility(View.GONE);
             //群聊显示名称，群名片>个人昵称>identify
             if (message.getConversation().getType() == TIMConversationType.Group){
-                viewHolder.sender.setVisibility(View.VISIBLE);
+                viewHolder.getView(R.id.sender).setVisibility(View.VISIBLE);
                 String name = "";
-                if (message.getSenderGroupMemberProfile()!=null) name = message.getSenderGroupMemberProfile().getNameCard();
-                if (name.equals("")&&message.getSenderProfile()!=null) name = message.getSenderProfile().getNickName();
-                if (name.equals("")) name = message.getSender();
+                if (message.getSenderGroupMemberProfile()!=null) {
+                    name = message.getSenderGroupMemberProfile().getNameCard();
+                }
+                if (name.equals("")&&message.getSenderProfile()!=null) {
+                    name = message.getSenderProfile().getNickName();
+                }
+                if (name.equals("")) {
+                    name = message.getSender();
+                }
                 //viewHolder.sender.setText(name);
-                viewHolder.sender.setText("brian");
+                viewHolder.setText(R.id.sender, "brian");
             }else{
-                viewHolder.sender.setVisibility(View.GONE);
+                viewHolder.getView(R.id.sender).setVisibility(View.GONE);
             }
-            return viewHolder.leftMessage;
+            return viewHolder.getView(R.id.leftMessage);
         }
 
     }
@@ -128,21 +135,22 @@ public abstract class Message {
      *
      * @param viewHolder 界面样式
      */
-    public void showStatus(ChatAdapter.ViewHolder viewHolder){
+    public void showStatus(ViewHolder viewHolder){
         switch (message.status()){
             case Sending:
-                viewHolder.error.setVisibility(View.GONE);
-                viewHolder.sending.setVisibility(View.VISIBLE);
+                viewHolder.getView(R.id.sendError).setVisibility(View.GONE);
+                viewHolder.getView(R.id.sending).setVisibility(View.VISIBLE);
                 break;
             case SendSucc:
-                viewHolder.error.setVisibility(View.GONE);
-                viewHolder.sending.setVisibility(View.GONE);
+                viewHolder.getView(R.id.sendError).setVisibility(View.GONE);
+                viewHolder.getView(R.id.sending).setVisibility(View.GONE);
                 break;
             case SendFail:
-                viewHolder.error.setVisibility(View.VISIBLE);
-                viewHolder.sending.setVisibility(View.GONE);
-                viewHolder.leftPanel.setVisibility(View.GONE);
+                viewHolder.getView(R.id.sendError).setVisibility(View.VISIBLE);
+                viewHolder.getView(R.id.sending).setVisibility(View.GONE);
+                viewHolder.getView(R.id.leftPanel).setVisibility(View.GONE);
                 break;
+                default:
         }
     }
 
@@ -214,7 +222,7 @@ public abstract class Message {
      * 清除气泡原有数据
      *
      */
-    protected void clearView(ChatAdapter.ViewHolder viewHolder){
+    protected void clearView(ViewHolder viewHolder){
         getBubbleView(viewHolder).removeAllViews();
         getBubbleView(viewHolder).setOnClickListener(null);
     }
@@ -224,7 +232,9 @@ public abstract class Message {
      *
      */
     public String getSender(){
-        if (message.getSender() == null) return "";
+        if (message.getSender() == null) {
+            return "";
+        }
         return message.getSender();
     }
 
@@ -237,13 +247,13 @@ public abstract class Message {
     }
 
 
-    private void showDesc(ChatAdapter.ViewHolder viewHolder){
+    private void showDesc(ViewHolder viewHolder){
 
         if (desc == null || desc.equals("")){
-            viewHolder.rightDesc.setVisibility(View.GONE);
+            viewHolder.getView(R.id.rightDesc).setVisibility(View.GONE);
         }else{
-            viewHolder.rightDesc.setVisibility(View.VISIBLE);
-            viewHolder.rightDesc.setText(desc);
+            viewHolder.getView(R.id.rightDesc).setVisibility(View.VISIBLE);
+            viewHolder.setText(R.id.rightDesc, desc);
         }
     }
 }

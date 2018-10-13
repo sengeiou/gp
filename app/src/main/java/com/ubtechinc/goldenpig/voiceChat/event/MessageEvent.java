@@ -3,10 +3,11 @@ package com.ubtechinc.goldenpig.voiceChat.event;
 
 import android.util.Log;
 
+import com.tencent.TIMCustomElem;
 import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
 import com.tencent.TIMMessageListener;
-import com.ubt.imlibv2.bean.UbtTIMManager;
+import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 
 import java.util.List;
 import java.util.Observable;
@@ -39,6 +40,19 @@ public class MessageEvent extends Observable implements TIMMessageListener {
     public boolean onNewMessages(List<TIMMessage> list) {
         for (TIMMessage item:list){
             Log.d(TAG,"MessageEvent(Receive TIMMessageListener)--->ChatPresenter(observe update)----->ChatView showMessage -->ChatAdapter notify---->getView --->VoiceMessage(showMessage)   "+list  +item.getElement(0).toString());
+
+            try {
+                TIMCustomElem customElem = (TIMCustomElem) item.getElement(0);
+                ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage
+                        .parseFrom((byte[]) customElem.getData());
+                Log.d(TAG, "MessageEvent " + msg.getHeader().getAction());
+                if (!msg.getHeader().getAction().equals("/im/voicemail/receiver")) {
+                    return false;
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             setChanged();
             notifyObservers(item);
         }

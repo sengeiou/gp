@@ -17,7 +17,7 @@ import com.tencent.TIMVideo;
 import com.tencent.TIMVideoElem;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
-import com.ubtechinc.goldenpig.voiceChat.adapter.ChatAdapter;
+import com.ubtechinc.goldenpig.common.adapter.ViewHolder;
 import com.ubtechinc.goldenpig.voiceChat.ui.ChatActivity;
 import com.ubtechinc.goldenpig.voiceChat.util.FileUtil;
 import com.ubtechinc.goldenpig.voiceChat.util.MediaUtil;
@@ -63,7 +63,7 @@ public class VideoMessage extends Message {
      * @param context 显示消息的上下文
      */
     @Override
-    public void showMessage(final ChatAdapter.ViewHolder viewHolder, final Context context) {
+    public void showMessage(final ViewHolder viewHolder, final Context context) {
         clearView(viewHolder);
         final TIMVideoElem e = (TIMVideoElem) message.getElement(0);
         switch (message.status()){
@@ -129,7 +129,7 @@ public class VideoMessage extends Message {
     /**
      * 显示缩略图
      */
-    private void showSnapshot(final ChatAdapter.ViewHolder viewHolder,final Bitmap bitmap){
+    private void showSnapshot(final ViewHolder viewHolder,final Bitmap bitmap){
         if (bitmap == null) return;
         ImageView imageView = new ImageView(UBTPGApplication.getContext());
         imageView.setImageBitmap(bitmap);
@@ -143,7 +143,7 @@ public class VideoMessage extends Message {
         context.startActivity(intent);
     }
 
-    private void setVideoEvent(final ChatAdapter.ViewHolder viewHolder, final String fileName, final Context context){
+    private void setVideoEvent(final ViewHolder viewHolder, final String fileName, final Context context){
         getBubbleView(viewHolder).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

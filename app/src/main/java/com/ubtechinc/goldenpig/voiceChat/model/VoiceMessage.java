@@ -20,18 +20,14 @@ import android.widget.TextView;
 
 import com.tencent.TIMCustomElem;
 import com.tencent.TIMElem;
-import com.tencent.TIMElemType;
 import com.tencent.TIMFaceElem;
 import com.tencent.TIMMessage;
 import com.tencent.TIMSoundElem;
 import com.tencent.TIMTextElem;
-import com.tencent.TIMValueCallBack;
-import com.tencent.openqq.protocol.imsdk.msg;
-import com.ubt.improtolib.UserRecords;
 import com.ubt.improtolib.VoiceMailContainer;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
-import com.ubtechinc.goldenpig.voiceChat.adapter.ChatAdapter;
+import com.ubtechinc.goldenpig.common.adapter.ViewHolder;
 import com.ubtechinc.goldenpig.voiceChat.presenter.ChatPresenter;
 import com.ubtechinc.goldenpig.voiceChat.util.FileUtil;
 import com.ubtechinc.goldenpig.voiceChat.util.MediaUtil;
@@ -108,7 +104,7 @@ public class VoiceMessage extends Message {
      * @param context 显示消息的上下文
      */
     @Override
-    public void showMessage(ChatAdapter.ViewHolder viewHolder, Context context) {
+    public void showMessage(ViewHolder viewHolder, Context context) {
 //        Exception e1 = new Exception("THIS IS VOICE MESSAGE SHOW MESSAGE ");
 //        e1.printStackTrace();
          try {
@@ -118,6 +114,9 @@ public class VoiceMessage extends Message {
              Log.d(TAG,"message before " +msg.getHeader().getAction());
              if(msg.getHeader().getAction().equals("/im/voicemail/receiver")){
                  VoiceMailContainer.VoiceMail mVoiceData = msg.getPayload().unpack(VoiceMailContainer.VoiceMail.class);
+
+
+                 Log.d(TAG,"message before type " + mVoiceData.getMsgType());
 
                  if(mVoiceData.getMsgType()== ChatPresenter.MESSAGE_TEXT){
                      Log.d(TAG,"message text  "+isSelf());
@@ -139,8 +138,8 @@ public class VoiceMessage extends Message {
 //                     }
                      tv.setText(stringBuilder);
                      getBubbleView(viewHolder).addView(tv);
-                     viewHolder.right_voice_time_me.setVisibility(View.INVISIBLE);
-                     viewHolder.left_voice_time_other.setVisibility(View.INVISIBLE);
+                     viewHolder.getView(R.id.right_voice_time_me).setVisibility(View.INVISIBLE);
+                     viewHolder.getView(R.id.left_voice_time_other).setVisibility(View.INVISIBLE);
                      showStatus(viewHolder);
                  }else if(mVoiceData.getMsgType()==ChatPresenter.MESSAGE_VOICE){
                      Log.d(TAG,"message voice " +isSelf());
@@ -165,16 +164,16 @@ public class VoiceMessage extends Message {
                          imageLp.setMargins(10, 0, 0, 0);
                          voiceIcon.setLayoutParams(imageLp);
                          linearLayout.addView(voiceIcon);
-                         viewHolder.right_voice_time_me.setVisibility(View.VISIBLE);
-                         viewHolder.right_voice_time_me.setText(String.valueOf(((TIMCustomElem) message.getElement(0)).getDesc()) + "\"");
+                         viewHolder.getView(R.id.right_voice_time_me).setVisibility(View.VISIBLE);
+                         viewHolder.setText(R.id.right_voice_time_me, String.valueOf(((TIMCustomElem) message.getElement(0)).getDesc()) + "\"");
                      }else{
                          voiceIcon.setLayoutParams(imageLp);
                          linearLayout.addView(voiceIcon);
                          lp.setMargins(10, 0, 0, 0);
                          tv.setLayoutParams(lp);
                          linearLayout.addView(tv);
-                         viewHolder.left_voice_time_other.setVisibility(View.VISIBLE);
-                         viewHolder.left_voice_time_other.setText(mVoiceData.getElapsedMillis()/1000+"\"");
+                         viewHolder.getView(R.id.left_voice_time_other).setVisibility(View.VISIBLE);
+                         viewHolder.setText(R.id.left_voice_time_other, mVoiceData.getElapsedMillis()/1000+"\"");
                      }
                      clearView(viewHolder);
                      getBubbleView(viewHolder).addView(linearLayout);
@@ -277,7 +276,9 @@ public class VoiceMessage extends Message {
                     try{
                         AssetManager am = context.getAssets();
                         InputStream is = am.open(String.format("emoticon/%d.gif", faceElem.getIndex()));
-                        if (is == null) continue;
+                        if (is == null) {
+                            continue;
+                        }
                         Bitmap bitmap = BitmapFactory.decodeStream(is);
                         Matrix matrix = new Matrix();
                         int width = bitmap.getWidth();

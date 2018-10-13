@@ -1,17 +1,12 @@
 package com.ubtechinc.goldenpig.voiceChat.ui;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.FileProvider;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -26,19 +21,11 @@ import android.widget.Toast;
 
 import com.google.protobuf.Any;
 import com.google.protobuf.ByteString;
-import com.tencent.TIMCallBack;
-import com.tencent.TIMConversation;
 import com.tencent.TIMConversationType;
-import com.tencent.TIMCustomElem;
-import com.tencent.TIMGroupManager;
-import com.tencent.TIMGroupMemberResult;
-import com.tencent.TIMGroupMemberRoleType;
 import com.tencent.TIMGroupSystemElem;
-import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
 import com.tencent.TIMMessageDraft;
 import com.tencent.TIMMessageStatus;
-import com.tencent.TIMValueCallBack;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.improtolib.VoiceMailContainer;
 import com.ubtechinc.commlib.log.UBTLog;
@@ -53,7 +40,6 @@ import com.ubtechinc.goldenpig.voiceChat.model.ImageMessage;
 import com.ubtechinc.goldenpig.voiceChat.model.Message;
 import com.ubtechinc.goldenpig.voiceChat.model.MessageFactory;
 import com.ubtechinc.goldenpig.voiceChat.model.TextMessage;
-import com.ubtechinc.goldenpig.voiceChat.model.VideoMessage;
 import com.ubtechinc.goldenpig.voiceChat.model.VoiceMessage;
 import com.ubtechinc.goldenpig.voiceChat.presenter.ChatPresenter;
 import com.ubtechinc.goldenpig.voiceChat.util.FileUtil;
@@ -62,13 +48,8 @@ import com.ubtechinc.goldenpig.voiceChat.util.RecorderUtil;
 import com.ubtechinc.goldenpig.voiceChat.viewfeatures.ChatView;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 
-
 import java.io.File;
-import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static com.tencent.TIMElemType.GroupSystem;
@@ -132,7 +113,8 @@ public class ChatActivity extends FragmentActivity implements ChatView {
         presenter = new ChatPresenter(this, identify, type);
         input = (ChatInput) findViewById(R.id.input_panel);
         input.setChatView(this);
-        adapter = new ChatAdapter(this, R.layout.item_message, messageList);
+
+        adapter = new ChatAdapter(this, messageList, R.layout.item_message);
         listView = (ListView) findViewById(R.id.list);
         listView.setAdapter(adapter);
         listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
@@ -233,7 +215,7 @@ public class ChatActivity extends FragmentActivity implements ChatView {
     @Override
     public void showMessage(TIMMessage message) {
         if (message == null) {
-            adapter.notifyDataSetChanged();
+            adapter.update(messageList);
         } else {
             Message mMessage = MessageFactory.getMessage(message);
             if (mMessage != null) {
@@ -246,7 +228,7 @@ public class ChatActivity extends FragmentActivity implements ChatView {
                         mMessage.setHasTime(messageList.get(messageList.size()-1).getMessage());
                     }
                     messageList.add(mMessage);
-                    adapter.notifyDataSetChanged();
+                    adapter.update(messageList);
                     listView.setSelection(adapter.getCount()-1);
                 }
             }
@@ -267,6 +249,7 @@ public class ChatActivity extends FragmentActivity implements ChatView {
                     ((CustomMessage) mMessage).getType() == CustomMessage.Type.INVALID)) continue;
 
             ++newMsgNum;
+
             if (i != messages.size() - 1){
                 mMessage.setHasTime(messages.get(i+1));
                 messageList.add(0, mMessage);
@@ -274,8 +257,9 @@ public class ChatActivity extends FragmentActivity implements ChatView {
                 mMessage.setHasTime(null);
                 messageList.add(0, mMessage);
             }
+
         }
-        adapter.notifyDataSetChanged();
+        adapter.update(messageList);
         listView.setSelection(newMsgNum);
     }
 
@@ -311,7 +295,7 @@ public class ChatActivity extends FragmentActivity implements ChatView {
                     case 80001:
                         //发送内容包含敏感词
                         msg.setDesc(getString(R.string.chat_content_bad));
-                        adapter.notifyDataSetChanged();
+                        adapter.update(messageList);
                         break;
                 }
             }
@@ -489,7 +473,7 @@ public class ChatActivity extends FragmentActivity implements ChatView {
             case 1:
                 message.remove();
                 messageList.remove(mi.position);
-                adapter.notifyDataSetChanged();
+                adapter.update(messageList);
                 break;
             case 2:
                 messageList.remove(message);

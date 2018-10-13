@@ -12,7 +12,7 @@ import com.tencent.TIMMessage;
 import com.tencent.TIMValueCallBack;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
-import com.ubtechinc.goldenpig.voiceChat.adapter.ChatAdapter;
+import com.ubtechinc.goldenpig.common.adapter.ViewHolder;
 import com.ubtechinc.goldenpig.voiceChat.util.FileUtil;
 
 /**
@@ -42,7 +42,7 @@ public class FileMessage extends Message {
      * @param context    显示消息的上下文
      */
     @Override
-    public void showMessage(ChatAdapter.ViewHolder viewHolder, Context context) {
+    public void showMessage(ViewHolder viewHolder, Context context) {
         clearView(viewHolder);
         TIMFileElem e = (TIMFileElem) message.getElement(0);
         TextView tv = new TextView(UBTPGApplication.getContext());
