@@ -3,13 +3,12 @@ package com.ubtechinc.goldenpig.voiceChat.model;
 import android.content.Context;
 import android.view.View;
 
-
 import com.tencent.TIMGroupMemberInfo;
 import com.tencent.TIMGroupTipsElem;
 import com.tencent.TIMMessage;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
-import com.ubtechinc.goldenpig.voiceChat.adapter.ChatAdapter;
+import com.ubtechinc.goldenpig.common.adapter.ViewHolder;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -32,11 +31,11 @@ public class GroupTipMessage extends Message {
      * @param context    显示消息的上下文
      */
     @Override
-    public void showMessage(ChatAdapter.ViewHolder viewHolder, Context context) {
-        viewHolder.leftPanel.setVisibility(View.GONE);
-        viewHolder.rightPanel.setVisibility(View.GONE);
-        viewHolder.systemMessage.setVisibility(View.VISIBLE);
-        viewHolder.systemMessage.setText(getSummary());
+    public void showMessage(ViewHolder viewHolder, Context context) {
+        viewHolder.getView(R.id.leftPanel).setVisibility(View.GONE);
+        viewHolder.getView(R.id.rightPanel).setVisibility(View.GONE);
+        viewHolder.getView(R.id.systemMessage).setVisibility(View.VISIBLE);
+        viewHolder.setText(R.id.systemMessage, getSummary());
     }
 
 

@@ -53,6 +53,7 @@ public class MessageEvent extends Observable implements TIMMessageListener {
            }catch(Exception e){
               e.printStackTrace();
            }
+
             setChanged();
             notifyObservers(item);
         }
