@@ -33,6 +33,8 @@ public class SetQuestOrAnswerActivity extends BaseNewActivity {
     EditText etSet;
     @BindView(R.id.tv_center)
     TextView tv_center;
+    @BindView(R.id.tv_right)
+    TextView tv_right;
 
     String str;
     /**
@@ -58,11 +60,13 @@ public class SetQuestOrAnswerActivity extends BaseNewActivity {
                 tv_center.setText("添加问句");
                 maxchineseLength = 20;
                 limitToast = "最大长度为20个汉字";
+                etSet.setHint("请输入问句");
                 break;
             case 1:
                 maxchineseLength = 50;
                 tv_center.setText("添加回复");
                 limitToast = "最大长度为50个汉字或100个字符";
+                etSet.setHint("请输入回答");
                 break;
         }
         if (!TextUtils.isEmpty(str)) {
@@ -73,6 +77,13 @@ public class SetQuestOrAnswerActivity extends BaseNewActivity {
             }
         }
         initLengthLimit();
+        if (TextUtils.isEmpty(etSet.getText())) {
+            tv_right.setEnabled(false);
+            tv_right.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
+        } else {
+            tv_right.setEnabled(true);
+            tv_right.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_checked_color));
+        }
     }
 
     @OnClick({R.id.tv_left, R.id.tv_right})
@@ -172,6 +183,13 @@ public class SetQuestOrAnswerActivity extends BaseNewActivity {
 
                     @Override
                     public void afterTextChanged(Editable s) {
+                        if (TextUtils.isEmpty(etSet.getText())) {
+                            tv_right.setEnabled(false);
+                            tv_right.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
+                        } else {
+                            tv_right.setEnabled(true);
+                            tv_right.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_checked_color));
+                        }
                     }
                 }
         );

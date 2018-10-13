@@ -65,7 +65,7 @@ public class AddInterlocutionActivity extends BaseNewActivity {
     public String strQuest, strAnswer;
     InterlocutionModel requestModel;
     InterlocutionItemModel model;
-
+    Handler mHander = new Handler();
     @Override
     protected int getContentViewId() {
         return R.layout.activity_add_interlocution;
@@ -91,6 +91,13 @@ public class AddInterlocutionActivity extends BaseNewActivity {
             llAnswer.setVisibility(View.VISIBLE);
             tvAnswer.setText("“" + strAnswer + "”");
         }
+        if (TextUtils.isEmpty(strQuest) || TextUtils.isEmpty(strAnswer)) {
+            tvRight.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
+            tvRight.setEnabled(false);
+        } else {
+            tvRight.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_checked_color));
+            tvRight.setEnabled(true);
+        }
     }
 
     @OnClick({R.id.tv_left, R.id.tv_right, R.id.ll_add_question, R.id.ll_question, R.id
@@ -115,7 +122,7 @@ public class AddInterlocutionActivity extends BaseNewActivity {
                             JsonCallback<String>(String.class) {
                                 @Override
                                 public void onSuccess(String reponse) {
-                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    mHander.post(new Runnable() {
                                         @Override
                                         public void run() {
                                             LoadingDialog.getInstance(AddInterlocutionActivity.this)
@@ -130,7 +137,7 @@ public class AddInterlocutionActivity extends BaseNewActivity {
 
                                 @Override
                                 public void onError(String str) {
-                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    mHander.post(new Runnable() {
                                         @Override
                                         public void run() {
                                             LoadingDialog.getInstance(AddInterlocutionActivity.this)
@@ -146,7 +153,7 @@ public class AddInterlocutionActivity extends BaseNewActivity {
                             JsonCallback<String>(String.class) {
                                 @Override
                                 public void onSuccess(String reponse) {
-                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    mHander.post(new Runnable() {
                                         @Override
                                         public void run() {
                                             LoadingDialog.getInstance(AddInterlocutionActivity.this)
@@ -161,7 +168,7 @@ public class AddInterlocutionActivity extends BaseNewActivity {
 
                                 @Override
                                 public void onError(String str) {
-                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    mHander.post(new Runnable() {
                                         @Override
                                         public void run() {
                                             LoadingDialog.getInstance(AddInterlocutionActivity.this)
@@ -217,11 +224,25 @@ public class AddInterlocutionActivity extends BaseNewActivity {
             ll_add_question.setVisibility(View.GONE);
             llQuestion.setVisibility(View.VISIBLE);
             tvQuestion.setText("“" + strQuest + "”");
+            if (TextUtils.isEmpty(strQuest) || TextUtils.isEmpty(strAnswer)) {
+                tvRight.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
+                tvRight.setEnabled(false);
+            } else {
+                tvRight.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_checked_color));
+                tvRight.setEnabled(true);
+            }
         } else if (event.getCode() == SET_ANSWER_SUCCESS) {
             strAnswer = (String) event.getData();
             llAddAnswer.setVisibility(View.GONE);
             llAnswer.setVisibility(View.VISIBLE);
             tvAnswer.setText("“" + strAnswer + "”");
+            if (TextUtils.isEmpty(strQuest) || TextUtils.isEmpty(strAnswer)) {
+                tvRight.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
+                tvRight.setEnabled(false);
+            } else {
+                tvRight.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_checked_color));
+                tvRight.setEnabled(true);
+            }
         }
     }
 }

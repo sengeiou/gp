@@ -59,11 +59,11 @@ public class SecondTitleBarViewTv extends LinearLayout {
             return;
         }
         this.mContext = context;
-        LayoutInflater.from(mContext).inflate(R.layout.second_titlebar_tv, this);
-        ivLeft = (ImageView) findViewById(R.id.iv_left);
-        tv_right = (TextView) findViewById(R.id.tv_right);
-        CenterTitle = (TextView) findViewById(R.id.tv_center);
-        rl_layout = (RelativeLayout) findViewById(R.id.rl_layout);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.second_titlebar_tv, this);
+        ivLeft = view.findViewById(R.id.iv_left);
+        tv_right = view.findViewById(R.id.tv_right);
+        CenterTitle = view.findViewById(R.id.tv_center);
+        rl_layout = view.findViewById(R.id.rl_layout);
         /*AnimationDrawable animDrawable = (AnimationDrawable) ivLeft
                 .getDrawable();
         animDrawable.start();*/
@@ -118,13 +118,14 @@ public class SecondTitleBarViewTv extends LinearLayout {
         ivLeft.setOnClickListener(listener);
     }
 
-    public void setLayoutBackgroundColor(int color){
+    public void setLayoutBackgroundColor(int color) {
         rl_layout.setBackgroundColor(color);
     }
 
-    public void setLayoutBackgroundResource(int resid){
+    public void setLayoutBackgroundResource(int resid) {
         rl_layout.setBackgroundResource(resid);
     }
+
     /**
      * @Description: 右边按钮点击事件
      */
@@ -157,6 +158,14 @@ public class SecondTitleBarViewTv extends LinearLayout {
     }
 
     public void hideTvRight() {
-        tv_right.setVisibility(View.GONE);
+        if (tv_right != null) {
+            tv_right.setVisibility(View.GONE);
+        }
+    }
+
+    public void showTvRight() {
+        if (tv_right != null) {
+            tv_right.setVisibility(View.VISIBLE);
+        }
     }
 }

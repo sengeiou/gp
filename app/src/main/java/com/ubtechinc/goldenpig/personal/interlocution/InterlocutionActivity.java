@@ -1,6 +1,5 @@
 package com.ubtechinc.goldenpig.personal.interlocution;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -35,6 +34,7 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -53,7 +53,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
      */
     private Boolean hasLoadMsg = false;
     InterlocutionModel requestModel;
-
+    Handler mHander = new Handler();
     @Override
     protected int getContentViewId() {
         return R.layout.activity_interlocution;
@@ -82,7 +82,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
             }
         });
         rl_titlebar.setIvRight(R.drawable.ic_add);
-        rl_titlebar.getIvRight().setVisibility(View.GONE);
+        rl_titlebar.hideIvRight();
         rl_titlebar.setRightOnclickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,7 +117,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
         requestModel.getInterlocutionRequest(new JsonCallback<List<InterlocutionItemModel>>(type) {
             @Override
             public void onError(String e) {
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                mHander.post(new Runnable() {
                     @Override
                     public void run() {
                         ToastUtils.showShortToast(e);
@@ -129,7 +129,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
 
             @Override
             public void onSuccess(List<InterlocutionItemModel> reponse) {
-                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                mHander.post(new Runnable() {
                     @Override
                     public void run() {
                         LoadingDialog.getInstance(InterlocutionActivity.this).dismiss();
@@ -138,9 +138,10 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
                             InterlocutionItemModel model = new InterlocutionItemModel();
                             model.type = 1;
                             mList.add(model);
-                            rl_titlebar.getIvRight().setVisibility(View.GONE);
+                            rl_titlebar.hideIvRight();
                         } else {
-                            rl_titlebar.getIvRight().setVisibility(View.VISIBLE);
+                            Collections.reverse(reponse);
+                            rl_titlebar.showIvRight();
                         }
                         mList.addAll(reponse);
                         adapter.notifyDataSetChanged();
@@ -196,7 +197,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
                             JsonCallback<String>(String.class) {
                                 @Override
                                 public void onSuccess(String reponse) {
-                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    mHander.post(new Runnable() {
                                         @Override
                                         public void run() {
                                             ToastUtils.showShortToast("删除成功");
@@ -208,10 +209,9 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
                                                         InterlocutionItemModel();
                                                 model.type = 1;
                                                 mList.add(model);
-                                                rl_titlebar.getIvRight().setVisibility(View.GONE);
+                                                rl_titlebar.hideIvRight();
                                             } else {
-                                                rl_titlebar.getIvRight().setVisibility(View
-                                                        .VISIBLE);
+                                                rl_titlebar.showIvRight();
                                             }
                                             adapter.notifyDataSetChanged();
                                         }
@@ -220,7 +220,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
 
                                 @Override
                                 public void onError(String str) {
-                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    mHander.post(new Runnable() {
                                         @Override
                                         public void run() {
                                             LoadingDialog.getInstance(InterlocutionActivity.this)

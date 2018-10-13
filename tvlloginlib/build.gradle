@@ -27,7 +27,7 @@ android {
             manifestPlaceholders = [
                     "qq_open_app_id": "1106279915"
             ]
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
