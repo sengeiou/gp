@@ -302,12 +302,13 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
     };
 
     private void updateDefaultSsid(String wifiName) {
-        String defaultSsid;
-        if (TextUtils.isEmpty(wifiName)) {
-            defaultSsid = WifiControl.get(SetPigNetWorkActivity.this).getSSID();
-        } else {
-            defaultSsid = wifiName;
-        }
+//        String defaultSsid;
+//        if (TextUtils.isEmpty(wifiName)) {
+//            defaultSsid = WifiControl.get(SetPigNetWorkActivity.this).getSSID();
+//        } else {
+//            defaultSsid = wifiName;
+//        }
+        String defaultSsid = WifiControl.get(SetPigNetWorkActivity.this).getSSID();
         if (!TextUtils.isEmpty(defaultSsid)) {
             mWifiNamEdt.setText(defaultSsid);
         }
