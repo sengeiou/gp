@@ -199,12 +199,14 @@ public class ChatPresenter implements Observer {
             try {
                 view.showMessage(msg);
                 //msg, sender, read or unread: my pig(me--->pig)  pip group(pig--->pig)
-                if(msg.isSelf()) {
-                    conversation.saveMessage(msg, UbtTIMManager.userId, true);
-                }else {
-                    PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
-                    if(pigInfo!=null)
-                    conversation.saveMessage(msg, pigInfo.getRobotName(), true);
+                if(msg!=null) {
+                    if (msg.isSelf()) {
+                        conversation.saveMessage(msg, UbtTIMManager.userId, true);
+                    } else {
+                        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+                        if (pigInfo != null)
+                            conversation.saveMessage(msg, pigInfo.getRobotName(), true);
+                    }
                 }
                 //当前聊天界面已读上报，用于多终端登录时未读消息数同步
                 readMessages();

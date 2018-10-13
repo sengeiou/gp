@@ -121,9 +121,9 @@ public class ChatActivity extends FragmentActivity implements ChatView {
           //  identify="889834038000566";
             //identify="809722";
             //SAMSUNG MACHINE
-            identify="813312";
+            //identify="813312";
             //XIAOMI MACHINE
-            //identify="776322";
+            identify="776322";
             Log.d("ChatActivity", "test identity  "+identify);
         }
        // type = (TIMConversationType) getIntent().getSerializableExtra("type");
