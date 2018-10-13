@@ -12,9 +12,10 @@ public interface ICommandProduce {
     /**
      *  获取ClientId接口
      * @param clientId clientId
+     * @param userId
      * @return 指令
      */
-    String getClientId(String clientId);
+    String getClientId(String clientId, String userId);
 
     /**
      * 获取wifi在线状态

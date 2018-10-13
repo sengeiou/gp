@@ -18,8 +18,8 @@ import org.json.JSONObject;
 
 public class JsonCommandProduce implements ICommandProduce{
     @Override
-    public String getClientId(String clientId) {
-        return Utils.pactkClientIdCommandToRobot(clientId);
+    public String getClientId(String clientId, String userId) {
+        return Utils.pactkClientIdCommandToRobot(clientId, userId);
     }
 
     @Override

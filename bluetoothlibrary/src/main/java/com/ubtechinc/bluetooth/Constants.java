@@ -54,6 +54,8 @@ public class Constants {
 
     public static final String CLIENTID = "cid";
 
+    public static final String USERID = "uid";
+
     /**
      * ping 网址失败的错误码
      */
