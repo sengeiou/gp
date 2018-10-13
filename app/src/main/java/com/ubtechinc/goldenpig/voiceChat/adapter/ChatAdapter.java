@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.Log;
 
 import com.tencent.TIMCustomElem;
-import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.common.adapter.CommonAdaper;
 import com.ubtechinc.goldenpig.voiceChat.model.Message;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
@@ -20,7 +19,7 @@ public class ChatAdapter extends CommonAdaper<Message> {
     private final String TAG = "ChatAdapter";
 
     public ChatAdapter(Context context, List<Message> list, int itemLayoutId) {
-        super(context, list, R.layout.item_message);
+        super(context, list, itemLayoutId);
     }
 
     private void filter(List<Message> messageList) {
