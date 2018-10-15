@@ -19,6 +19,7 @@ import com.tencent.ai.tvs.ui.UserCenterStateListener;
 import com.ubtechinc.tvlloginlib.entity.LoginInfo;
 
 import SmartService.EAIPushIdType;
+import qrom.component.push.base.utils.LogUtil;
 
 import static com.ubtechinc.tvlloginlib.TVSManager.DEVICE_OEM;
 import static com.ubtechinc.tvlloginlib.TVSManager.DEVICE_TYPE;
@@ -61,7 +62,7 @@ public abstract class BaseClient implements AuthorizeListener {
         return proxy.isTokenExist(platform, context);
     }
 
-    public void login(Activity activity,String productId,String dsn) {
+    public void login(Activity activity, String productId, String dsn) {
         Log.i(TAG, "tvs login start platform = " + platform.name());
         proxy.requestLogin(platform, "", "", activity);
     }
@@ -147,7 +148,8 @@ public abstract class BaseClient implements AuthorizeListener {
 //            authSuccess();
 //            return;
 //        } else {
-        robotTvsManager.sendAccessToken(accessToken, refreshToken, expireTime, clientId, new IRobotTvsManager.SendTvsAccessTokenListener() {
+        robotTvsManager.sendAccessToken(accessToken, refreshToken, expireTime, clientId, new IRobotTvsManager
+                .SendTvsAccessTokenListener() {
             @Override
             public void onSuccess() {
                 Log.d(TAG, "send tvs Access Token Data success");
@@ -195,6 +197,7 @@ public abstract class BaseClient implements AuthorizeListener {
         loginInfo.setLoginType(type);
         loginInfo.setOpenId(loginInfoManager.openID);
         loginInfo.setTvsId(loginInfoManager.tvsID);
+        Log.d("hdf", "loginInfoManager.tvsID:" + loginInfoManager.tvsID);
         return loginInfo;
     }
 

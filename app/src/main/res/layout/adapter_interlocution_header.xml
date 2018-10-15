@@ -14,7 +14,6 @@
         android:id="@+id/iv"
         android:layout_width="@dimen/dp_50"
         android:layout_height="@dimen/dp_50"
-        android:layout_below="@+id/view_curline"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/dp_31"
         android:scaleType="centerCrop"
@@ -31,5 +30,115 @@
         android:gravity="center_vertical"
         android:textColor="@color/ubt_tab_btn_txt_checked_color"
         android:textSize="@dimen/sp_18"
-        tools:text="添加问答" />
+        android:text="添加问答" />
+
+    <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/item1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_add"
+        android:layout_centerInParent="true"
+        android:background="@drawable/round_frame_white"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_question"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_47"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:gravity="center_vertical"
+            android:textColor="@color/ubt_tab_btn_txt_checked_color"
+            android:textSize="@dimen/sp_16"
+            android:text="你喜欢我吗" />
+
+        <View
+            android:id="@+id/view_curline"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/ubt_1px"
+            android:layout_below="@+id/tv_question"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:layout_marginRight="@dimen/dp_15"
+            android:background="@color/ubt_wifi_list_divider" />
+
+        <ImageView
+            android:id="@+id/iv_1"
+            android:layout_width="@dimen/dp_31"
+            android:layout_height="@dimen/dp_31"
+            android:layout_below="@+id/view_curline"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:layout_marginTop="@dimen/dp_8"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_xiaozhu" />
+
+        <TextView
+            android:id="@+id/tv_answer"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_47"
+            android:layout_below="@+id/view_curline"
+            android:layout_marginLeft="@dimen/dp_6"
+            android:layout_marginRight="@dimen/dp_15"
+            android:layout_toRightOf="@+id/iv_1"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="你说你喜欢我，我再告诉你答案"
+            android:textColor="@color/ubt_tips_txt_color"
+            android:textSize="@dimen/sp_16" />
+    </RelativeLayout>
+
+    <RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/item1"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="@dimen/dp_10"
+        android:background="@drawable/round_frame_white"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_question2"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dp_47"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:gravity="center_vertical"
+            android:textColor="@color/ubt_tab_btn_txt_checked_color"
+            android:textSize="@dimen/sp_16"
+            android:text="今天的作业是不是抄来的" />
+
+        <View
+            android:id="@+id/view_curline2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/ubt_1px"
+            android:layout_below="@+id/tv_question2"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:layout_marginRight="@dimen/dp_15"
+            android:background="@color/ubt_wifi_list_divider" />
+
+        <ImageView
+            android:id="@+id/iv_2"
+            android:layout_width="@dimen/dp_31"
+            android:layout_height="@dimen/dp_31"
+            android:layout_below="@+id/view_curline2"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:layout_marginTop="@dimen/dp_8"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_xiaozhu" />
+
+        <TextView
+            android:id="@+id/tv_answer2"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_47"
+            android:layout_below="@+id/view_curline2"
+            android:layout_marginLeft="@dimen/dp_6"
+            android:layout_marginRight="@dimen/dp_15"
+            android:layout_toRightOf="@+id/iv_2"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:singleLine="true"
+            android:text="暑假在家我可是很努力的陪小主人学习的啊"
+            android:textColor="@color/ubt_tips_txt_color"
+            android:textSize="@dimen/sp_16" />
+    </RelativeLayout>
 </RelativeLayout>

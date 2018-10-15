@@ -1,12 +1,8 @@
 package com.ubtechinc.goldenpig.personal.interlocution;
 
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.OrientationHelper;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -21,19 +17,11 @@ import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.model.InterlocutionItemModel;
 import com.ubtechinc.goldenpig.model.JsonCallback;
-import com.ubtechinc.goldenpig.view.Divider;
-import com.ubtechinc.goldenpig.view.StateView;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_INTERLO_SUCCESS;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DELETE_RECORD_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SET_ANSWER_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SET_QUESTTION_SUCCESS;
 
@@ -65,7 +53,7 @@ public class AddInterlocutionActivity extends BaseNewActivity {
     public String strQuest, strAnswer;
     InterlocutionModel requestModel;
     InterlocutionItemModel model;
-
+    Handler mHander = new Handler();
     @Override
     protected int getContentViewId() {
         return R.layout.activity_add_interlocution;
@@ -91,6 +79,13 @@ public class AddInterlocutionActivity extends BaseNewActivity {
             llAnswer.setVisibility(View.VISIBLE);
             tvAnswer.setText("“" + strAnswer + "”");
         }
+        if (TextUtils.isEmpty(strQuest) || TextUtils.isEmpty(strAnswer)) {
+            tvRight.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
+            tvRight.setEnabled(false);
+        } else {
+            tvRight.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_checked_color));
+            tvRight.setEnabled(true);
+        }
     }
 
     @OnClick({R.id.tv_left, R.id.tv_right, R.id.ll_add_question, R.id.ll_question, R.id
@@ -115,7 +110,7 @@ public class AddInterlocutionActivity extends BaseNewActivity {
                             JsonCallback<String>(String.class) {
                                 @Override
                                 public void onSuccess(String reponse) {
-                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    mHander.post(new Runnable() {
                                         @Override
                                         public void run() {
                                             LoadingDialog.getInstance(AddInterlocutionActivity.this)
@@ -130,7 +125,7 @@ public class AddInterlocutionActivity extends BaseNewActivity {
 
                                 @Override
                                 public void onError(String str) {
-                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    mHander.post(new Runnable() {
                                         @Override
                                         public void run() {
                                             LoadingDialog.getInstance(AddInterlocutionActivity.this)
@@ -146,7 +141,7 @@ public class AddInterlocutionActivity extends BaseNewActivity {
                             JsonCallback<String>(String.class) {
                                 @Override
                                 public void onSuccess(String reponse) {
-                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    mHander.post(new Runnable() {
                                         @Override
                                         public void run() {
                                             LoadingDialog.getInstance(AddInterlocutionActivity.this)
@@ -161,7 +156,7 @@ public class AddInterlocutionActivity extends BaseNewActivity {
 
                                 @Override
                                 public void onError(String str) {
-                                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    mHander.post(new Runnable() {
                                         @Override
                                         public void run() {
                                             LoadingDialog.getInstance(AddInterlocutionActivity.this)
@@ -217,11 +212,25 @@ public class AddInterlocutionActivity extends BaseNewActivity {
             ll_add_question.setVisibility(View.GONE);
             llQuestion.setVisibility(View.VISIBLE);
             tvQuestion.setText("“" + strQuest + "”");
+            if (TextUtils.isEmpty(strQuest) || TextUtils.isEmpty(strAnswer)) {
+                tvRight.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
+                tvRight.setEnabled(false);
+            } else {
+                tvRight.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_checked_color));
+                tvRight.setEnabled(true);
+            }
         } else if (event.getCode() == SET_ANSWER_SUCCESS) {
             strAnswer = (String) event.getData();
             llAddAnswer.setVisibility(View.GONE);
             llAnswer.setVisibility(View.VISIBLE);
             tvAnswer.setText("“" + strAnswer + "”");
+            if (TextUtils.isEmpty(strQuest) || TextUtils.isEmpty(strAnswer)) {
+                tvRight.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
+                tvRight.setEnabled(false);
+            } else {
+                tvRight.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_checked_color));
+                tvRight.setEnabled(true);
+            }
         }
     }
 }

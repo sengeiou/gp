@@ -1,7 +1,12 @@
 package com.ubtechinc.goldenpig.personal.remind;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Selection;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -20,6 +25,7 @@ import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.model.RemindModel;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.utils.CommendUtil;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.tvlloginlib.TVSManager;
 import com.weigan.loopview.LoopView;
@@ -51,14 +57,17 @@ public class AddRemindActivity extends BaseNewActivity {
     TextView tv_cycle;
     @BindView(R.id.tv_time)
     TextView tv_time;
+    @BindView(R.id.tv_right)
+    TextView tv_right;
     private List<String> dateList;
     private List<String> dateList2;
     private List<String> amList;
     private List<String> hourList;
     private List<String> minList;
-    private String repeatType = "单次";
+    private int repeatType = 1;
     Date today = new Date();
     private RemindModel model;
+    int maxchineseLength = 20;
 
     @Override
     protected boolean isRegisterEventBus() {
@@ -131,40 +140,9 @@ public class AddRemindActivity extends BaseNewActivity {
         sb.append(":");
         sb.append(minList.get(30));
         tv_time.setText(sb.toString());
-
-        if (model != null) {
-            if (model.amOrpm.equals("下午")) {
-                loopView_date.setCurrentPosition(1);
-            }
-            String[] str = model.time.split(":");
-            int hour = Integer.parseInt(str[0]);
-            loopView_hour.setCurrentPosition(hour - 1);
-            int minutie = Integer.parseInt(str[1]);
-            loopView_minute.setCurrentPosition(minutie);
-            switch (model.eRepeatType) {
-                case 1:
-                    repeatType = "单次";
-                    break;
-                case 2:
-                    repeatType = "每天";
-                    break;
-                case 3:
-                    repeatType = "每周";
-                    break;
-                case 4:
-                    repeatType = "每月";
-                    break;
-                case 5:
-                    repeatType = "工作日";
-                    break;
-                case 6:
-                    repeatType = "节假日";
-                    break;
-            }
-            tv_cycle.setText(repeatType);
-            ed_msg.setText(TextUtils.isEmpty(model.sNote) ? "" : model.sNote);
-        }
-
+        tv_right.setEnabled(false);
+        tv_right.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
+        initLengthLimit();
     }
 
 
@@ -251,13 +229,29 @@ public class AddRemindActivity extends BaseNewActivity {
     protected void onReceiveEvent(Event event) {
         super.onReceiveEvent(event);
         if (event.getCode() == ADD_REMIND_REPEAT_SUCCESS) {
-            repeatType = event.getData().toString();
-            tv_cycle.setText(repeatType);
+            repeatType = (int) event.getData();
+            switch (repeatType) {
+                case 1:
+                    tv_cycle.setText("永不");
+                    break;
+                case 2:
+                    tv_cycle.setText("每天");
+                    break;
+                case 3:
+                    tv_cycle.setText("每周");
+                    break;
+                case 4:
+                    tv_cycle.setText("每月");
+                    break;
+                case 5:
+                    tv_cycle.setText("每年");
+                    repeatType = 1;
+                    break;
+            }
         }
     }
 
     public void addRemind(String sNote, int eCloud_type, long lReminderId) {
-        LoadingDialog.getInstance(this).show();
         ELoginPlatform platform;
         if (CookieInterceptor.get().getThridLogin().getLoginType().toLowerCase().equals("wx")) {
             platform = ELoginPlatform.WX;
@@ -273,64 +267,13 @@ public class AddRemindActivity extends BaseNewActivity {
         String date = ymd + " " + hour + ":" + minList.get(loopView_minute.getSelectedItem()) + ":00";
         long timeMill = TimeUtils.string2Millis(date);
         if (System.currentTimeMillis() > timeMill) {
-            switch (repeatType) {
-                case "单次":
-                    timeMill += 24 * 60 * 60 * 1000;
-                    break;
-                case "每天":
-                    timeMill += 24 * 60 * 60 * 1000;
-                    break;
-                case "每周":
-                    timeMill += 7 * 24 * 60 * 60 * 1000;
-                    break;
-                case "每月":
-                    timeMill += 24 * 60 * 60 * 1000;
-                    break;
-                case "每年":
-                    timeMill += 24 * 60 * 60 * 1000;
-                    break;
-                case "工作日":
-                    timeMill += 24 * 60 * 60 * 1000;
-                    break;
-                case "节假日":
-                    timeMill += 24 * 60 * 60 * 1000;
-                    break;
-                default:
-                    timeMill += 24 * 60 * 60 * 1000;
-                    break;
-            }
+            ToastUtils.showShortToast("日程提醒时间必须大于当前时间");
+            return;
         }
-        int eRepeatType = 0;
-        switch (repeatType) {
-            case "单次":
-                eRepeatType = 1;
-                break;
-            case "每天":
-                eRepeatType = 2;
-                break;
-            case "每周":
-                eRepeatType = 3;
-                break;
-            case "每月":
-                eRepeatType = 4;
-                break;
-            case "每年":
-                eRepeatType = 1;
-                break;
-            case "工作日":
-                eRepeatType = 5;
-                break;
-            case "节假日":
-                eRepeatType = 6;
-                break;
-            default:
-                eRepeatType = 0;
-                break;
-        }
-
+        LoadingDialog.getInstance(this).show();
         TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ)
                 .requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils.getRemindUniAccessinfo
-                        (sNote, eCloud_type, eRepeatType, lReminderId, timeMill), new TVSManager
+                        (sNote, eCloud_type, repeatType, lReminderId, timeMill), new TVSManager
                         .TVSAlarmListener() {
                     @Override
                     public void onSuccess(CommOpInfo msg) {
@@ -352,5 +295,84 @@ public class AddRemindActivity extends BaseNewActivity {
                         LogUtils.d("code:" + code);
                     }
                 });
+    }
+
+    public void initLengthLimit() {
+        InputFilter[] FilterArray = new InputFilter[1];
+        FilterArray[0] = new
+
+                InputFilter() {
+                    @Override
+                    public CharSequence filter(CharSequence source, int start, int end,
+                                               Spanned dest, int dstart, int dend) {
+                        boolean bInvlid = false;
+                        int sourceLen = CommendUtil.getMsgLength(source.toString());
+                        int destLen = CommendUtil.getMsgLength(dest.toString());
+                        LogUtils.d("sourceLen:" + sourceLen + ",destLen:" + destLen);
+                        if (sourceLen + destLen > maxchineseLength) {
+                            ToastUtils.showShortToast("提醒内容最多输入20字");
+                            return "";
+                        }
+                        return source;
+                    }
+                };
+        ed_msg.setFilters(FilterArray);
+        ed_msg.addTextChangedListener(
+                new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s,
+                                                  int start, int count, int after) {
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s,
+                                              int start, int before, int count) {
+                        int mMsgMaxLength = 0;
+                        Editable editable = ed_msg.getText();
+                        String str = editable.toString().trim();
+                        //得到最初字段的长度大小，用于光标位置的判断
+                        int selEndIndex = Selection.getSelectionEnd(editable);
+                        // 取出每个字符进行判断，如果是字母数字和标点符号则为一个字符加1，
+                        //如果是汉字则为两个字符
+                        for (int i = 0; i < str.length(); i++) {
+                            char charAt = str.charAt(i);
+                            //32-122包含了空格，大小写字母，数字和一些常用的符号，
+                            //如果在这个范围内则算一个字符，
+                            //如果不在这个范围比如是汉字的话就是两个字符
+                            if (charAt >= 32 && charAt <= 122) {
+                                mMsgMaxLength++;
+                            } else {
+                                mMsgMaxLength += 2;
+                            }
+                            // 当最大字符大于6000时，进行字段的截取，并进行提示字段的大小
+                            if (mMsgMaxLength > maxchineseLength * 2) {
+                                // 截取最大的字段
+                                String newStr = str.substring(0, i);
+                                ed_msg.setText(newStr);
+                                // 得到新字段的长度值
+                                editable = ed_msg.getText();
+                                int newLen = editable.length();
+                                if (selEndIndex > newLen) {
+                                    selEndIndex = editable.length();
+                                }
+                                ToastUtils.showShortToast("提醒内容最多输入20字");
+                            }
+                            // 设置新光标所在的位置
+                            Selection.setSelection(editable, selEndIndex);
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        if (TextUtils.isEmpty(ed_msg.getText())) {
+                            tv_right.setEnabled(false);
+                            tv_right.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
+                        } else {
+                            tv_right.setEnabled(true);
+                            tv_right.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_checked_color));
+                        }
+                    }
+                }
+        );
     }
 }

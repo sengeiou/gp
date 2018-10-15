@@ -4,14 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
-import com.tencent.ai.tvs.business.UniAccessInfo;
 import com.tencent.ai.tvs.comm.CommOpInfo;
 import com.tencent.ai.tvs.env.ELoginPlatform;
-import com.tencent.ai.tvs.info.DeviceManager;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.TimeUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
@@ -22,29 +19,20 @@ import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
-import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.model.AlarmModel;
 import com.ubtechinc.goldenpig.personal.remind.SetRemindRepeatActivity;
-import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.tvlloginlib.TVSManager;
 import com.weigan.loopview.LoopView;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_REMIND_REPEAT_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SET_ALARM_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SET_REPEAT_SUCCESS;
 
@@ -61,7 +49,10 @@ public class AddAlarmActivity extends BaseNewActivity {
     private List<String> dateList;
     private List<String> hourList;
     private List<String> minList;
-    private String repeatType = "单次";
+    /**
+     * 0为单次，1为每周一，2为每周二，3为每周三，4为每周四，5为每周五，6为每周六,7为每周天，8为每天
+     */
+    private int repeatType = 0;
     private AlarmModel model;
     Date today = new Date();
 
@@ -115,25 +106,22 @@ public class AddAlarmActivity extends BaseNewActivity {
             loopView_minute.setCurrentPosition(minutie);
             switch (model.eRepeatType) {
                 case 1:
-                    repeatType = "单次";
+                    repeatType = 0;
+                    tv_cycle.setText("永不");
                     break;
                 case 2:
-                    repeatType = "每天";
+                    repeatType = 8;
+                    tv_cycle.setText("每天");
                     break;
                 case 3:
-                    repeatType = "每周";
+                    long lStartTimeStamp = model.lStartTimeStamp * 1000;
+                    String week = TimeUtils.getWeek(lStartTimeStamp);
                     break;
-                case 4:
-                    repeatType = "每月";
-                    break;
-                case 5:
-                    repeatType = "工作日";
-                    break;
-                case 6:
-                    repeatType = "节假日";
+                default:
+
                     break;
             }
-            tv_cycle.setText(repeatType);
+
         }
 
     }
@@ -146,16 +134,12 @@ public class AddAlarmActivity extends BaseNewActivity {
                 finish();
                 break;
             case R.id.rl_recount:
-                Intent it = new Intent(this, SetRemindRepeatActivity.class);
+                Intent it = new Intent(this, SetRepeatActivity.class);
                 it.putExtra("type", 1);
                 startActivity(it);
                 //ActivityRoute.toAnotherActivity(this, SetRepeatActivity.class, false);
                 break;
             case R.id.tv_right:
-                if (TextUtils.isEmpty(repeatType)) {
-                    ToastUtils.showShortToast("请先设置重复模式");
-                    return;
-                }
                 if (model == null) {
                     addAlarm(1, 0);
                 } else {
@@ -195,12 +179,44 @@ public class AddAlarmActivity extends BaseNewActivity {
     protected void onReceiveEvent(Event event) {
         super.onReceiveEvent(event);
         if (event.getCode() == SET_REPEAT_SUCCESS) {
-            repeatType = event.getData().toString();
-            tv_cycle.setText(repeatType);
-        } else if (event.getCode() == ADD_REMIND_REPEAT_SUCCESS) {
-            repeatType = event.getData().toString();
+            repeatType = (int) event.getData();
+            switch (repeatType) {
+                case 0:
+                    tv_cycle.setText("永不");
+                    break;
+                case 1:
+                    tv_cycle.setText("每周日");
+                    break;
+                case 2:
+                    tv_cycle.setText("每周一");
+                    break;
+                case 3:
+                    tv_cycle.setText("每周二");
+                    break;
+                case 4:
+                    tv_cycle.setText("每周三");
+                    break;
+                case 5:
+                    tv_cycle.setText("每周四");
+                    break;
+                case 6:
+                    tv_cycle.setText("每周五");
+                    break;
+                case 7:
+                    tv_cycle.setText("每周六");
+                    break;
+                case 8:
+                    tv_cycle.setText("每天");
+                    break;
+                default:
+                    break;
+            }
             tv_cycle.setText(repeatType);
         }
+//        else if (event.getCode() == ADD_REMIND_REPEAT_SUCCESS) {
+//            repeatType = event.getData().toString();
+//            tv_cycle.setText(repeatType);
+//        }
     }
 
     public void addAlarm(int eCloud_type, long lAlarmId) {
@@ -212,7 +228,10 @@ public class AddAlarmActivity extends BaseNewActivity {
             platform = ELoginPlatform.QQOpen;
         }
 
-        String date = TimeUtils.getTime(System.currentTimeMillis(), TimeUtils.DATE_FORMAT_DATE);
+        long timnow = System.currentTimeMillis();
+        String date = TimeUtils.getTime(timnow, TimeUtils.DATE_FORMAT_DATE);
+        //当前星期几:周日的Index才是1，周六为7
+        int week = TimeUtils.getWeekIndex(timnow);
         int hour = 0;
         if (loopView_date.getSelectedItem() == 1) {
             hour += 12;
@@ -220,61 +239,56 @@ public class AddAlarmActivity extends BaseNewActivity {
         hour += Integer.parseInt(hourList.get(loopView_hour.getSelectedItem()));
         date = date + " " + hour + ":" + minList.get(loopView_minute.getSelectedItem()) + ":00";
         long timeMill = TimeUtils.string2Millis(date);
-        if (System.currentTimeMillis() > timeMill) {
-            switch (repeatType) {
-                case "单次":
-                    timeMill += 24 * 60 * 60 * 1000;
-                    break;
-                case "每天":
-                    timeMill += 24 * 60 * 60 * 1000;
-                    break;
-                case "每周":
-                    timeMill += 7 * 24 * 60 * 60 * 1000;
-                    break;
-                case "每月":
-                    timeMill += 24 * 60 * 60 * 1000;
-                    break;
-                case "每年":
-                    timeMill += 24 * 60 * 60 * 1000;
-                    break;
-                case "工作日":
-                    timeMill += 24 * 60 * 60 * 1000;
-                    break;
-                case "节假日":
-                    timeMill += 24 * 60 * 60 * 1000;
-                    break;
-                default:
-                    timeMill += 24 * 60 * 60 * 1000;
-                    break;
-            }
-        }
         int eRepeatType = 0;
         switch (repeatType) {
-            case "单次":
-                eRepeatType = 1;
+            case 0://永不
+                if (timnow > timeMill) {
+                    eRepeatType = 1;
+                    timeMill += 24 * 60 * 60 * 1000;
+                }
                 break;
-            case "每天":
-                eRepeatType = 2;
+            case 8://每天
+                if (timnow > timeMill) {
+                    timeMill += 24 * 60 * 60 * 1000;
+                    eRepeatType = 2;
+                }
                 break;
-            case "每周":
+            case 1://每周日
+            case 2://每周一
+            case 3://每周二
+            case 4://每周三
+            case 5://每周四
+            case 6://每周五
+            case 7://每周六
+                if (repeatType - week == 0) {//同一天
+                    if (timnow > timeMill) {
+                        timeMill += 7 * 24 * 60 * 60 * 1000;
+                    }
+                } else {
+                    timeMill += ((repeatType - week + 7) % 7) * 24 * 60 * 60 * 1000;
+                }
                 eRepeatType = 3;
                 break;
-            case "每月":
-                eRepeatType = 4;
-                break;
-            case "每年":
-                eRepeatType = 1;
-                break;
-            case "工作日":
-                eRepeatType = 5;
-                break;
-            case "节假日":
-                eRepeatType = 6;
-                break;
-            default:
-                eRepeatType = 1;
-                break;
+//            case 2://每周一
+//                break;
+//            case 3://每周二
+//                break;
+//            case 4://每周三
+//                break;
+//            case 5://每周四
+//                break;
+//            case 6://每周五
+//                break;
+//            case 7://每周六
+//                timeMill += 7 * 24 * 60 * 60 * 1000;
+//                eRepeatType = 3;
+//                break;
+//            default:
+//                timeMill += 24 * 60 * 60 * 1000;
+//                eRepeatType = 1;
+//                break;
         }
+
         TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ)
                 .requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils
                         .getAlarmUniAccessinfo(eCloud_type, eRepeatType, lAlarmId, timeMill), new TVSManager

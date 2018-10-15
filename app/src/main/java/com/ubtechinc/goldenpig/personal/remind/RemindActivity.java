@@ -426,6 +426,7 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
                 sb.append("每天");
                 break;
             case 3:
+
                 sb.append(" " + TimeUtils.getWeekFromIn(TimeUtils.getWeekFromDate(da)));
                 sb.append(", 每周");
                 break;

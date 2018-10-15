@@ -27,6 +27,7 @@ import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.StateView;
+import com.ubtechinc.goldenpig.voiceChat.util.TimeUtil;
 import com.ubtechinc.tvlloginlib.TVSManager;
 import com.yanzhenjie.recyclerview.swipe.SwipeItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
@@ -206,6 +207,12 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
                                 AlarmModel model = new AlarmModel();
                                 JSONObject ob = narry.getJSONObject(i);
                                 model.eRepeatType = ob.getInt("eRepeatType");
+                                try {
+                                    model.lAlarmId = ob.getLong("lAlarmId");
+                                } catch (Exception e) {
+                                    model.lAlarmId = 0;
+                                }
+                                model.lStartTimeStamp = ob.getLong("lStartTimeStamp") * 1000;
                                 switch (model.eRepeatType) {//0为异常类型，1为一次性，2为每天，3为每周，4为每月，5为工作日，6为节假日
                                     case 0:
                                     case 1:
@@ -215,7 +222,21 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
                                         model.repeatName = "每天";
                                         break;
                                     case 3:
-                                        model.repeatName = "每周";
+                                        if (TimeUtils.getWeekIndex(model.lStartTimeStamp) == 1) {
+                                            model.repeatName = "每周日";
+                                        } else if (TimeUtils.getWeekIndex(model.lStartTimeStamp) == 2) {
+                                            model.repeatName = "每周一";
+                                        } else if (TimeUtils.getWeekIndex(model.lStartTimeStamp) == 3) {
+                                            model.repeatName = "每周二";
+                                        } else if (TimeUtils.getWeekIndex(model.lStartTimeStamp) == 4) {
+                                            model.repeatName = "每周三";
+                                        } else if (TimeUtils.getWeekIndex(model.lStartTimeStamp) == 5) {
+                                            model.repeatName = "每周四";
+                                        } else if (TimeUtils.getWeekIndex(model.lStartTimeStamp) == 6) {
+                                            model.repeatName = "每周五";
+                                        } else if (TimeUtils.getWeekIndex(model.lStartTimeStamp) == 7) {
+                                            model.repeatName = "每周六";
+                                        }
                                         break;
                                     case 4:
                                         model.repeatName = "每月";
@@ -227,12 +248,7 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
                                         model.repeatName = "节假日";
                                         break;
                                 }
-                                try {
-                                    model.lAlarmId = ob.getLong("lAlarmId");
-                                } catch (Exception e) {
-                                    model.lAlarmId = 0;
-                                }
-                                model.lStartTimeStamp = ob.getLong("lStartTimeStamp")*1000;
+//                                model.repeatName += TimeUtils.getTime(model.lStartTimeStamp);
                                 try {
 //                                    String time = null;
 //                                    String le = System.currentTimeMillis() + "";

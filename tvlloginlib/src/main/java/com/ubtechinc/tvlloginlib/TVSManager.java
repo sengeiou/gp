@@ -3,6 +3,7 @@ package com.ubtechinc.tvlloginlib;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.tencent.ai.tvs.AuthorizeListener;
@@ -44,7 +45,8 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
 
     private LoginProxy proxy;
     private TVSAlarmListener mTVSAlarmListener;
-
+    public LoginInfo info;
+    public static ELoginEnv eLoginEnv = ELoginEnv.TEST;
     public static TVSManager getInstance(Context context, String wxId, String qqOpenId) {
         if (instance == null) {
             instance = new TVSManager(context, wxId, qqOpenId);
@@ -54,7 +56,7 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
 
     private TVSManager(Context context, String wxId, String qqOpenId) {
         proxy = LoginProxy.getInstance(wxId, qqOpenId, context);
-        proxy.setLoginEnv(ELoginEnv.TEST);
+        proxy.setLoginEnv(eLoginEnv);
 
         wxClient = new WXClient(proxy, this);
         qqClient = new QQClient(proxy, this);
@@ -175,10 +177,10 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
                     mTVSAlarmListener.onSuccess(var2);
                 }
                 break;
-            case  MANAGEACCT_TYPE://这个类型加上的话可以保证第二次免登陆，但会导致微信第一次登陆也会调用到这里
-                if (UserInfoManager.getInstance().idType==0) {
+            case MANAGEACCT_TYPE://这个类型加上的话可以保证第二次免登陆，但会导致微信第一次登陆也会调用到这里
+                if (UserInfoManager.getInstance().idType == 0) {
                     wxClient.onSuccess(i, var2);
-                }else {
+                } else {
                     qqClient.onSuccess(i, var2);
                 }
                 break;
@@ -232,6 +234,7 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
 
     @Override
     public void onLoginSuccess(LoginInfo info) {
+        this.info = info;
         if (loginListeners != null) {
             for (TVSLoginListener loginListener : loginListeners) {
                 if (loginListener != null) {

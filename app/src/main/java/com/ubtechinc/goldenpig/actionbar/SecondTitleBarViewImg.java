@@ -55,10 +55,10 @@ public class SecondTitleBarViewImg extends LinearLayout {
             return;
         }
         this.mContext = context;
-        LayoutInflater.from(mContext).inflate(R.layout.second_titlebar_img, this);
-        ivLeft = (ImageView) findViewById(R.id.iv_left);
-        ivRight = (ImageView) findViewById(R.id.iv_right);
-        CenterTitle = (TextView) findViewById(R.id.tv_center);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.second_titlebar_img, this);
+        ivLeft = view.findViewById(R.id.iv_left);
+        ivRight = view.findViewById(R.id.iv_right);
+        CenterTitle = view.findViewById(R.id.tv_center);
         /*AnimationDrawable animDrawable = (AnimationDrawable) ivLeft
                 .getDrawable();
         animDrawable.start();*/
@@ -139,6 +139,14 @@ public class SecondTitleBarViewImg extends LinearLayout {
     }
 
     public void hideIvRight() {
-        ivRight.setVisibility(View.GONE);
+        if (ivRight != null) {
+            ivRight.setVisibility(View.GONE);
+        }
+    }
+
+    public void showIvRight() {
+        if (ivRight != null) {
+            ivRight.setVisibility(View.VISIBLE);
+        }
     }
 }
