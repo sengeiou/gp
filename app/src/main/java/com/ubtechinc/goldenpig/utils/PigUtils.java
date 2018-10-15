@@ -104,7 +104,7 @@ public class PigUtils {
             JSONArray vCloudAlarmData = new JSONArray();
             JSONObject vCloudAlarmData0 = new JSONObject();
             JSONObject stAIDeviceBaseInfo = new JSONObject();
-            stAIDeviceBaseInfo.put("strGuid", AuthLive.getInstance().getCurrentPig().getRobotName());//AuthLive
+            stAIDeviceBaseInfo.put("strGuid", "");//AuthLive
             // .getInstance().getCurrentPig() == null ?
             //"hdfeng" : AuthLive.getInstance().getCurrentPig().getRobotName()
             stAIDeviceBaseInfo.put("strAppKey", BuildConfig.APP_KEY);

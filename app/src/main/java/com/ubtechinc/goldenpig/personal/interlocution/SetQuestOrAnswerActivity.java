@@ -35,6 +35,12 @@ public class SetQuestOrAnswerActivity extends BaseNewActivity {
     TextView tv_center;
     @BindView(R.id.tv_right)
     TextView tv_right;
+    @BindView(R.id.tv_hint1)
+    TextView tv_hint1;
+    @BindView(R.id.tv_hint2)
+    TextView tv_hint2;
+    @BindView(R.id.tv_hint3)
+    TextView tv_hint3;
 
     String str;
     /**
@@ -61,6 +67,9 @@ public class SetQuestOrAnswerActivity extends BaseNewActivity {
                 maxchineseLength = 20;
                 limitToast = "最大长度为20个汉字";
                 etSet.setHint("请输入问句");
+                tv_hint1.setText("*仅支持汉字");
+                tv_hint2.setText("*最近输入20个汉字");
+                tv_hint3.setVisibility(View.GONE);
                 break;
             case 1:
                 maxchineseLength = 50;
@@ -124,15 +133,30 @@ public class SetQuestOrAnswerActivity extends BaseNewActivity {
                     @Override
                     public CharSequence filter(CharSequence source, int start, int end,
                                                Spanned dest, int dstart, int dend) {
-                        boolean bInvlid = false;
-                        int sourceLen = CommendUtil.getMsgLength(source.toString());
-                        int destLen = CommendUtil.getMsgLength(dest.toString());
-                        LogUtils.d("sourceLen:" + sourceLen + ",destLen:" + destLen);
-                        if (sourceLen + destLen > maxchineseLength) {
-                            ToastUtils.showShortToast(limitToast);
-                            return "";
+                        if (type == 0) {
+                            for (int i = start; i < end; i++) {
+                                if (!isChinese(source.charAt(i))) {
+                                    return "";
+                                } else {
+                                    if ((source.charAt(i) >= 0x4e00) && (source.charAt(i) <= 0x9fbb)) {
+
+                                    } else {
+                                        return "";
+                                    }
+                                }
+                            }
+                            return source;
+                        } else {
+                            boolean bInvlid = false;
+                            int sourceLen = CommendUtil.getMsgLength(source.toString());
+                            int destLen = CommendUtil.getMsgLength(dest.toString());
+                            LogUtils.d("sourceLen:" + sourceLen + ",destLen:" + destLen);
+                            if (sourceLen + destLen > maxchineseLength) {
+                                ToastUtils.showShortToast(limitToast);
+                                return "";
+                            }
+                            return source;
                         }
-                        return source;
                     }
                 };
         etSet.setFilters(FilterArray);
@@ -198,5 +222,23 @@ public class SetQuestOrAnswerActivity extends BaseNewActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
+
+
+    /**
+     * 判定输入汉字
+     */
+    public boolean isChinese(char c) {
+        Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
+        if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
+                || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
+                || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A
+                || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_B
+                || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
+                || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS
+                || ub == Character.UnicodeBlock.GENERAL_PUNCTUATION) {
+            return true;
+        }
+        return false;
     }
 }

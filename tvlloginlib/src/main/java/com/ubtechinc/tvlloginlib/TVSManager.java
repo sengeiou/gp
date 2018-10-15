@@ -46,7 +46,7 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
     private LoginProxy proxy;
     private TVSAlarmListener mTVSAlarmListener;
     public LoginInfo info;
-
+    public static ELoginEnv eLoginEnv = ELoginEnv.TEST;
     public static TVSManager getInstance(Context context, String wxId, String qqOpenId) {
         if (instance == null) {
             instance = new TVSManager(context, wxId, qqOpenId);
@@ -56,7 +56,7 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
 
     private TVSManager(Context context, String wxId, String qqOpenId) {
         proxy = LoginProxy.getInstance(wxId, qqOpenId, context);
-        proxy.setLoginEnv(ELoginEnv.FORMAL);
+        proxy.setLoginEnv(eLoginEnv);
 
         wxClient = new WXClient(proxy, this);
         qqClient = new QQClient(proxy, this);

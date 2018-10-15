@@ -1,12 +1,8 @@
 package com.ubtechinc.goldenpig.personal.interlocution;
 
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.OrientationHelper;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -21,19 +17,11 @@ import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.model.InterlocutionItemModel;
 import com.ubtechinc.goldenpig.model.JsonCallback;
-import com.ubtechinc.goldenpig.view.Divider;
-import com.ubtechinc.goldenpig.view.StateView;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import okhttp3.Call;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_INTERLO_SUCCESS;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DELETE_RECORD_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SET_ANSWER_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SET_QUESTTION_SUCCESS;
 

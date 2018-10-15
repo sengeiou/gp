@@ -23,19 +23,16 @@ import com.ubtechinc.goldenpig.view.Divider;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import butterknife.BindView;
 
-public class SetRemindRepeatActivity extends BaseNewActivity{
+public class SetRemindRepeatActivity extends BaseNewActivity {
     @BindView(R.id.rl_titlebar)
     SecondTitleBarViewTv rl_titlebar;
     @BindView(R.id.recycler)
     RecyclerView recycler;
     private BaseQuickAdapter<RepeatModel, BaseViewHolder> adapter;
     private List<RepeatModel> mList;
-    private int selestPosition = 0;
 
     private class MyHandler extends Handler {
         WeakReference<Activity> mWeakReference;
@@ -71,21 +68,6 @@ public class SetRemindRepeatActivity extends BaseNewActivity{
                 finish();
             }
         });
-        rl_titlebar.setTvRightName("确定");
-        rl_titlebar.setRightOnclickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Event<String> event = new Event<>(EventBusUtil.ADD_REMIND_REPEAT_SUCCESS);
-                    event.setData(mList.get(selestPosition).name);
-                    EventBusUtil.sendEvent(event);
-                    finish();
-                } catch (Exception e) {
-                    ToastUtils.showShortToast("请先选择重复日期");
-                }
-
-            }
-        });
         mList = new ArrayList<>();
         initData();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -102,32 +84,43 @@ public class SetRemindRepeatActivity extends BaseNewActivity{
             @Override
             protected void convert(BaseViewHolder helper, RepeatModel item) {
                 helper.setText(R.id.tv_name, item.name);
-                helper.setVisible(R.id.iv, selestPosition == helper.getAdapterPosition());
+                helper.setVisible(R.id.iv, false);
             }
         });
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                selestPosition = position;
-                adapter.notifyDataSetChanged();
+                try {
+                    Event<Integer> event = new Event<>(EventBusUtil.ADD_REMIND_REPEAT_SUCCESS);
+                    event.setData(mList.get(position).repeatType);
+                    EventBusUtil.sendEvent(event);
+                    finish();
+                } catch (Exception e) {
+                    ToastUtils.showShortToast("请先选择重复日期");
+                }
             }
         });
     }
 
     private void initData() {
         RepeatModel m0 = new RepeatModel();
-        m0.name = "单次";
+        m0.repeatType = 1;
+        m0.name = "永不";
         mList.add(m0);
         RepeatModel m1 = new RepeatModel();
+        m1.repeatType = 2;
         m1.name = "每天";
         mList.add(m1);
         RepeatModel m2 = new RepeatModel();
+        m2.repeatType = 3;
         m2.name = "每周";
         mList.add(m2);
         RepeatModel m3 = new RepeatModel();
+        m3.repeatType = 4;
         m3.name = "每月";
         mList.add(m3);
         RepeatModel m4 = new RepeatModel();
+        m4.repeatType = 5;
         m4.name = "每年";
         mList.add(m4);
     }

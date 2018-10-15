@@ -54,6 +54,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
     private Boolean hasLoadMsg = false;
     InterlocutionModel requestModel;
     Handler mHander = new Handler();
+
     @Override
     protected int getContentViewId() {
         return R.layout.activity_interlocution;
@@ -241,6 +242,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
     protected void onDestroy() {
         super.onDestroy();
         requestModel.release();
+        mHander.removeCallbacksAndMessages(null);
     }
 
     @Override

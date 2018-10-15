@@ -6,7 +6,8 @@ import android.os.Parcelable;
 public class RepeatModel implements Parcelable {
     public String name;
     public Boolean select = false;
-
+    /***/
+    public int repeatType = 0;
 
     public RepeatModel() {
     }
@@ -16,12 +17,14 @@ public class RepeatModel implements Parcelable {
         name = in.readString();
         byte tmpSelect = in.readByte();
         select = tmpSelect == 0 ? null : tmpSelect == 1;
+        repeatType = in.readInt();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(name);
         dest.writeByte((byte) (select == null ? 0 : select ? 1 : 2));
+        dest.writeInt(repeatType);
     }
 
     @Override

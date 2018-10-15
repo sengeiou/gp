@@ -31,7 +31,7 @@ import java.util.Observer;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class SetRepeatActivity extends BaseNewActivity{
+public class SetRepeatActivity extends BaseNewActivity {
     @BindView(R.id.rl_titlebar)
     SecondTitleBarViewTv rl_titlebar;
     @BindView(R.id.recycler)
@@ -72,29 +72,6 @@ public class SetRepeatActivity extends BaseNewActivity{
                 finish();
             }
         });
-        rl_titlebar.setTvRightName("确定");
-        rl_titlebar.setRightOnclickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Event<String> event = new Event<>(EventBusUtil.SET_REPEAT_SUCCESS);
-                    StringBuilder sb = new StringBuilder();
-                    for (int i = 0; i < mList.size(); i++) {
-                        if (mList.get(i).select) {
-                            sb.append(mList.get(i).name);
-                            sb.append(" ");
-                        }
-                    }
-                    sb.deleteCharAt(sb.length() - 1);
-                    event.setData(sb.toString());
-                    EventBusUtil.sendEvent(event);
-                    finish();
-                } catch (Exception e) {
-                    ToastUtils.showShortToast("请先选择重复日期");
-                }
-
-            }
-        });
         mList = new ArrayList<>();
         initData();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -117,32 +94,49 @@ public class SetRepeatActivity extends BaseNewActivity{
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                mList.get(position).select = !mList.get(position).select;
-                adapter.notifyDataSetChanged();
+                Event<Integer> event = new Event<>(EventBusUtil.SET_REPEAT_SUCCESS);
+                event.setData(mList.get(position).repeatType);
+                EventBusUtil.sendEvent(event);
+                finish();
             }
         });
     }
 
     private void initData() {
+        RepeatModel m8 = new RepeatModel();
+        m8.repeatType = 0;
+        m8.name = "永不";
+        mList.add(m8);
+        RepeatModel m7 = new RepeatModel();
+        m7.repeatType = 8;
+        m7.name = "每天";
+        mList.add(m7);
         RepeatModel m0 = new RepeatModel();
+        m0.repeatType = 1;
         m0.name = "每周日";
         mList.add(m0);
         RepeatModel m1 = new RepeatModel();
+        m1.repeatType = 2;
         m1.name = "每周一";
         mList.add(m1);
         RepeatModel m2 = new RepeatModel();
+        m2.repeatType = 3;
         m2.name = "每周二";
         mList.add(m2);
         RepeatModel m3 = new RepeatModel();
+        m3.repeatType = 4;
         m3.name = "每周三";
         mList.add(m3);
         RepeatModel m4 = new RepeatModel();
+        m4.repeatType = 5;
         m4.name = "每周四";
         mList.add(m4);
         RepeatModel m5 = new RepeatModel();
+        m5.repeatType = 6;
         m5.name = "每周五";
         mList.add(m5);
         RepeatModel m6 = new RepeatModel();
+        m6.repeatType = 7;
         m6.name = "每周六";
         mList.add(m6);
     }
