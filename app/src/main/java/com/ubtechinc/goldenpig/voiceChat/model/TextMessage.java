@@ -10,6 +10,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
 import android.util.TypedValue;
+import android.view.View;
 import android.widget.TextView;
 
 import com.tencent.TIMCustomElem;
@@ -118,10 +119,13 @@ public class TextMessage extends Message {
     @Override
     public void showMessage(ViewHolder viewHolder, Context context) {
         clearView(viewHolder);
+        viewHolder.getView(R.id.right_voice_time_me).setVisibility(View.INVISIBLE);
+        viewHolder.getView(R.id.left_voice_time_other).setVisibility(View.INVISIBLE);
         boolean hasText = false;
         TextView tv = new TextView(UBTPGApplication.getContext());
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         tv.setTextColor(UBTPGApplication.getContext().getResources().getColor(isSelf() ? R.color.white : R.color.black));
+        tv.setLeft(80);
         List<TIMElem> elems = new ArrayList<>();
         for (int i = 0; i < message.getElementCount(); ++i){
             elems.add(message.getElement(i));

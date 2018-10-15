@@ -73,7 +73,6 @@ public abstract class Message {
 //                Picasso.
 //            }
             Glide.with(UBTPGApplication.getContext()).load(UbtTIMManager.avatarURL).asBitmap().placeholder(R.drawable.head_me).diskCacheStrategy(DiskCacheStrategy.ALL).into((ImageView) viewHolder.getView(R.id.rightAvatar));
-
             viewHolder.getView(R.id.leftPanel).setVisibility(View.GONE);
             viewHolder.getView(R.id.rightPanel).setVisibility(View.VISIBLE);
             return viewHolder.getView(R.id.rightMessage);
