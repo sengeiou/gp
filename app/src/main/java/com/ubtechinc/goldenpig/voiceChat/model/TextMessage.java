@@ -9,6 +9,7 @@ import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.TextView;
@@ -124,6 +125,8 @@ public class TextMessage extends Message {
         boolean hasText = false;
         TextView tv = new TextView(UBTPGApplication.getContext());
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        tv.setMaxWidth(displayMetrics.widthPixels * 2 / 3);
         tv.setTextColor(UBTPGApplication.getContext().getResources().getColor(isSelf() ? R.color.white : R.color.black));
         tv.setLeft(80);
         List<TIMElem> elems = new ArrayList<>();
