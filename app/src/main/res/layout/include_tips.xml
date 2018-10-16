@@ -21,7 +21,7 @@
             android:textColor="@color/ubt_dialog_btn_txt_color"
             android:textSize="14sp" />
         <TextView
-            android:text="@string/ubt_click_bind"
+            android:text="@string/ubt_click_for_bind"
             android:id="@+id/ubt_bind_tv"
             android:gravity="center"
             android:textSize="@dimen/sp_14"

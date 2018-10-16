@@ -1,5 +1,6 @@
 package com.ubtechinc.goldenpig.pigmanager.mypig;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
@@ -73,7 +74,6 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
         setTitleBack(true);
         setToolBarTitle(getString(R.string.ubt_menber_group));
         initViews();
-
         getMember("1");
         initData();
     }
@@ -149,7 +149,7 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
         return false;
     }
 
-    private void getMember(String admin) {
+    private synchronized void getMember(String admin) {
         if (isDownloadedUserList) {
             return;
         }
@@ -227,6 +227,8 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
 
                 @Override
                 public void onRightButtonClick(View view) {
+                    ActivityRoute.toAnotherActivity(PigMemberActivity.this, TransferAdminActivity.class,
+                            null, 0x01, false);
                 }
             });
             dialog.show();
@@ -258,6 +260,16 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            //TODO 刷新UI
+            isDownloadedUserList = false;
+            updatePigList();
+            getMember("1");
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ubt_imgbtn_add:
@@ -268,7 +280,7 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
             case R.id.ubt_btn_unbind_member:
                 doUnbind(AuthLive.getInstance().getUserId());
                 break;
-                default:
+            default:
         }
 
     }
@@ -414,12 +426,6 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        updatePigList();
-    }
-
     private void updatePigList() {
         if (AuthLive.getInstance().getCurrentPigList() != null) {
             AuthLive.getInstance().getCurrentPigList().clear();
@@ -427,18 +433,22 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
         new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListHttpProxy.OnGetPigListLitener() {
             @Override
             public void onError(ThrowableWrapper e) {
-                Log.e("getPigList",e.getMessage());
+                Log.e("getPigList", e.getMessage());
             }
 
             @Override
             public void onException(Exception e) {
-                Log.e("getPigList",e.getMessage());
+                Log.e("getPigList", e.getMessage());
             }
 
             @Override
             public void onSuccess(String response) {
-                Log.e("getPigList",response);
-                PigUtils.getPigList(response,AuthLive.getInstance().getUserId(),AuthLive.getInstance().getCurrentPigList());
+                Log.e("getPigList", response);
+                PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance().getCurrentPigList());
+                ArrayList<PigInfo> list = AuthLive.getInstance().getCurrentPigList();
+                if (list == null || list.isEmpty()) {
+                    finish();
+                }
             }
         });
     }

@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.tencent.TIMCustomElem;
 import com.tencent.TIMMessage;
@@ -23,7 +25,9 @@ import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
+import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.pigmanager.register.CheckUserRepository;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PigUtils;
@@ -36,6 +40,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -179,32 +184,73 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
         super.onResume();
         mPig = AuthLive.getInstance().getCurrentPig();
         showPigNo();
+        updatePigList();
     }
 
-    private void getPigList() {
-        new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListHttpProxy.OnGetPigListLitener() {
+    private void getMember() {
+        new CheckUserRepository().getRobotBindUsers(mPig.getRobotName(), CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new CheckUserRepository.ICheckBindStateCallBack() {
             @Override
             public void onError(ThrowableWrapper e) {
-                Log.e("getPigList", e.getMessage());
+//                ToastUtils.showShortToast(MyPigActivity.this, "获取成员列表失败");
             }
 
             @Override
-            public void onException(Exception e) {
-                Log.e("getPigList", e.getMessage());
+            public void onSuccess(CheckBindRobotModule.Response response) {
+//                ToastUtils.showShortToast(MyPigActivity.this, "获取成员列表成功");
             }
 
             @Override
-            public void onSuccess(String response) {
-                Log.e("getPigList", response);
-                PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance().getCurrentPigList());
-                ArrayList<PigInfo> currentPigList = AuthLive.getInstance().getCurrentPigList();
-                if (currentPigList != null && currentPigList.size() != 1) {
+            public void onSuccessWithJson(String jsonStr) {
+                List<CheckBindRobotModule.User> bindUsers = jsonToUserList(jsonStr);
+                if (bindUsers != null && bindUsers.size() > 1) {
                     showConfirmDialog(true);
                 } else {
                     showConfirmDialog(false);
                 }
             }
         });
+    }
+
+    private void updatePigList() {
+        if (AuthLive.getInstance().getCurrentPigList() != null) {
+            AuthLive.getInstance().getCurrentPigList().clear();
+        }
+        new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListHttpProxy.OnGetPigListLitener() {
+            @Override
+            public void onError(ThrowableWrapper e) {
+                Log.e("getPigList",e.getMessage());
+            }
+
+            @Override
+            public void onException(Exception e) {
+                Log.e("getPigList",e.getMessage());
+            }
+
+            @Override
+            public void onSuccess(String response) {
+                Log.e("getPigList",response);
+                PigUtils.getPigList(response,AuthLive.getInstance().getUserId(),AuthLive.getInstance().getCurrentPigList());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPig = AuthLive.getInstance().getCurrentPig();
+                        showPigNo();
+                    }
+                });
+            }
+        });
+    }
+
+    private List<CheckBindRobotModule.User> jsonToUserList(String jsonStr) {
+        List<CheckBindRobotModule.User> result = null;
+        Gson gson = new Gson();
+        try {
+            result = gson.fromJson(jsonStr, new TypeToken<List<CheckBindRobotModule.User>>() {
+            }.getType());
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     @Override
@@ -223,7 +269,7 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
     private void doCheck() {
         final boolean isMaster = isSingalOrMaster();
         if (isMaster) {
-            getPigList();
+            getMember();
         } else {
             showConfirmDialog(false);
         }
@@ -283,17 +329,14 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
     }
 
     private void showPigNo() {
-        if (mPig != null) {
+        if (isSingalOrMaster()) {
             mSearialNoTv.setText(String.format(getString(R.string.ubt_pig_serialno), mPig.getRobotName()));
-            if (mPig.isAdmin /*&& mPig.isMaster()*/) {
-                mPigVersionTv.setVisibility(View.VISIBLE);
-                mDevUpateBtn.setVisibility(View.VISIBLE);
-            } else {
-                mPigVersionTv.setVisibility(View.GONE);
-                mDevUpateBtn.setVisibility(View.GONE);
-            }
+            mPigVersionTv.setVisibility(View.VISIBLE);
+            mDevUpateBtn.setVisibility(View.VISIBLE);
+        } else {
+            mPigVersionTv.setVisibility(View.GONE);
+            mDevUpateBtn.setVisibility(View.GONE);
         }
-
     }
 
     private void toDeviceUpdate() {

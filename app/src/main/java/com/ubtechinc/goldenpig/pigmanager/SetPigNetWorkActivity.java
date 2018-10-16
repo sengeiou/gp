@@ -23,9 +23,11 @@ import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.view.UbtPasswordEditText;
 import com.ubtechinc.goldenpig.comm.view.UbtWifiListEditText;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
+import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.MainActivity;
 import com.ubtechinc.goldenpig.net.RegisterRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.bean.BundingListenerAbster;
+import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.nets.utils.WifiControl;
 
@@ -33,14 +35,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
- *@auther        :hqt
- *@email         :qiangta.huang@ubtrobot.com
- *@description   :设置小猪音箱WIFi及密码
- *@time          :2018/8/27 14:32
- *@change        :
- *@changetime    :2018/8/27 14:32
-*/
-public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.OnClickListener{
+ * @auther :hqt
+ * @email :qiangta.huang@ubtrobot.com
+ * @description :设置小猪音箱WIFi及密码
+ * @time :2018/8/27 14:32
+ * @change :
+ * @changetime :2018/8/27 14:32
+ */
+public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.OnClickListener {
     private Button mSendWifiInfoBtn;
     private UbtWifiListEditText mWifiNamEdt;
     private UbtPasswordEditText mWifiPwdEdt;
@@ -49,6 +51,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
     private String mCap;
     private ICommandProduce commandProduce;
     private BungdingManager bungdingManager;
+
     @Override
     protected int getConentView() {
         return R.layout.activity_set_pig_network;
@@ -61,24 +64,24 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermission();
         }
         setToolBarTitle(getString(R.string.ubt_set_pig_net));
         commandProduce = new JsonCommandProduce();
         setTitleBack(true);
-        mSendWifiInfoBtn=(Button)findViewById(R.id.ubt_btn_connect_wifi);
+        mSendWifiInfoBtn = (Button) findViewById(R.id.ubt_btn_connect_wifi);
         mSendWifiInfoBtn.setOnClickListener(this);
-        mWifiNamEdt=(UbtWifiListEditText)findViewById(R.id.ubt_edt_wifi_name);
+        mWifiNamEdt = (UbtWifiListEditText) findViewById(R.id.ubt_edt_wifi_name);
         String phoneSsid = WifiControl.get(SetPigNetWorkActivity.this).getSSID();
         if (!TextUtils.isEmpty(phoneSsid)) {
             mWifiNamEdt.setText(phoneSsid);
         }
-        mWifiPwdEdt=(UbtPasswordEditText) findViewById(R.id.ubt_edt_wifi_password);
-        mTvSkip=findViewById(R.id.ubt_tv_set_net_skip);
+        mWifiPwdEdt = (UbtPasswordEditText) findViewById(R.id.ubt_edt_wifi_password);
+        mTvSkip = findViewById(R.id.ubt_tv_set_net_skip);
         mTvSkip.setVisibility(View.VISIBLE);
         mTvSkip.setOnClickListener(this);
-        bungdingManager=new BungdingManager(this);
+        bungdingManager = new BungdingManager(this);
         bungdingManager.setBangdingListener(mBandingListenerAbster);
         checkPigWifi();
     }
@@ -91,18 +94,19 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.ubt_btn_connect_wifi:
 
                 checkWifiInfo();
                 break;
             case R.id.ubt_tv_set_net_skip:
-                ActivityRoute.toAnotherActivity(this, MainActivity.class,true);
+                ActivityRoute.toAnotherActivity(this, MainActivity.class, true);
                 break;
             default:
                 break;
         }
     } //权限请求码
+
     private static final int PERMISSION_REQUEST_CODE = 0;
     //两个危险权限需要动态申请
     private static final String[] NEEDED_PERMISSIONS = new String[]{
@@ -113,6 +117,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
 
     /**
      * 检查是否已经授予权限
+     *
      * @return
      */
     private boolean checkPermission() {
@@ -152,10 +157,10 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
             //如果同意权限
             if (hasAllPermission) {
                 mHasPermission = true;
-                if(WifiUtils.isOpenWifi(SetPigNetWorkActivity.this) && mHasPermission){  //如果wifi开关是开 并且 已经获取权限
+                if (WifiUtils.isOpenWifi(SetPigNetWorkActivity.this) && mHasPermission) {  //如果wifi开关是开 并且 已经获取权限
 
-                }else{
-                    Toast.makeText(SetPigNetWorkActivity.this,"WIFI处于关闭状态或权限获取失败", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(SetPigNetWorkActivity.this, "WIFI处于关闭状态或权限获取失败", Toast.LENGTH_SHORT).show();
                 }
 
             } else {  //用户不同意权限
@@ -164,16 +169,19 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
             }
         }
     }
-    /**向本体发送wifi信息*/
-    private void checkWifiInfo(){
-        String wifiName=mWifiNamEdt.getText();
-        if (TextUtils.isEmpty(wifiName)){
-            ToastUtils.showShortToast(this,"请填写WIFI SSID");
+
+    /**
+     * 向本体发送wifi信息
+     */
+    private void checkWifiInfo() {
+        String wifiName = mWifiNamEdt.getText();
+        if (TextUtils.isEmpty(wifiName)) {
+            ToastUtils.showShortToast(this, "请填写WIFI SSID");
             return;
         }
-        final String pwd=mWifiPwdEdt.getPwd();
-        if (TextUtils.isEmpty(pwd)){
-            UBTBaseDialog dialog=new UBTBaseDialog(this);
+        final String pwd = mWifiPwdEdt.getPwd();
+        if (TextUtils.isEmpty(pwd)) {
+            UBTBaseDialog dialog = new UBTBaseDialog(this);
             dialog.setRightButtonTxt(getString(R.string.ubt_enter));
             dialog.setLeftButtonTxt(getString(R.string.ubt_cancel));
             dialog.setTips(getString(R.string.ubt_wifi_no_pwd_tips));
@@ -189,33 +197,37 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
                 }
             });
             dialog.show();
-        }else {
+        } else {
             sendWifiInfo();
         }
 
     }
-    private void checkPigWifi(){
+
+    private void checkPigWifi() {
         String message = commandProduce.getPigNetWorkState();
         UbtBluetoothManager.getInstance().sendMessageToBle(message);
     }
-    private void sendWifiInfo(){
+
+    private void sendWifiInfo() {
         mSendWifiInfoBtn.setText(R.string.ubt_connecting);
-        final String wifiName=mWifiNamEdt.getText();
-        final String wifiPwd=mWifiPwdEdt.getPwd();
-        final String wifiCtype=mWifiNamEdt.getcType();
+        final String wifiName = mWifiNamEdt.getText();
+        final String wifiPwd = mWifiPwdEdt.getPwd();
+        final String wifiCtype = mWifiNamEdt.getcType();
         showLoadingDialog();
         String message = commandProduce.getWifiPasswdInfo(wifiCtype, wifiName, wifiPwd);
         UbtBluetoothManager.getInstance().sendMessageToBle(message);
         showLoadingDialog();
     }
-    BundingListenerAbster mBandingListenerAbster = new BundingListenerAbster(){
+
+    BundingListenerAbster mBandingListenerAbster = new BundingListenerAbster() {
         @Override
         public void onFaild(int errorCode) {
             super.onFaild(errorCode);
-            if (errorCode!=2041) {
+            if (errorCode != 2041) {
                 dismissLoadDialog();
                 mSendWifiInfoBtn.setText(R.string.ubt_connect);
                 showNotify("连接失败");
+                AuthLive.getInstance().getCurrentPig().setOnlineState(PigInfo.ROBOT_STATE_OFFLINE);
             }
         }
 
@@ -244,40 +256,40 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
             mTvSkip.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    ActivityRoute.toAnotherActivity(SetPigNetWorkActivity.this,MainActivity.class,true);
+                    ActivityRoute.toAnotherActivity(SetPigNetWorkActivity.this, MainActivity.class, true);
                 }
-            },2000);
+            }, 2000);
 
         }
 
         @Override
-        public void onPigConnected(String wifiState){
+        public void onPigConnected(String wifiState) {
             super.onPigConnected(wifiState);
             dismissLoadDialog();
             //{"co":120,"wifi_info":"{\"l\":-29,\"s\":\"\\\"alpha-bigbox-5G\\\"\"}"}
-            UbtLogger.i("onPigConnected",wifiState);
+            UbtLogger.i("onPigConnected", wifiState);
             String wifiName = "";
             if (!TextUtils.isEmpty(wifiState)) {
                 try {
 
-
-                    wifiState=wifiState.replace("\\","");
-                    wifiState=wifiState.replace("\"{","{");
-                    wifiState=wifiState.replace("}\"","}");
-                    wifiState=wifiState.replace("\"\"","\"");
+                    wifiState = wifiState.replace("\\", "");
+                    wifiState = wifiState.replace("\"{", "{");
+                    wifiState = wifiState.replace("}\"", "}");
+                    wifiState = wifiState.replace("\"\"", "\"");
                     JSONObject jsonObject = new JSONObject(wifiState);
                     if (jsonObject.has("wifi_info")) {
                         jsonObject = jsonObject.getJSONObject("wifi_info");
                     }
-                    if (jsonObject.has("s")){
+                    if (jsonObject.has("s")) {
                         wifiName = jsonObject.getString("s");
                         if (!TextUtils.isEmpty(wifiName)) {
                             showNotify("音箱已连接“" + wifiName + "”无线网络");
                         }
-                    }else {
+                    } else {
                         ///连接到有道网络是提示
                         showNotify("音箱已连接移动网络");
                     }
+                    AuthLive.getInstance().getCurrentPig().setOnlineState(PigInfo.ROBOT_STATE_ONLINE);
                     /*if (jsonObject.getInt("co") == 120) {
                         JSONObject subJson = jsonObject.getJSONObject("wifi_info");
                         if (jsonObject.has("wifi_info")) {

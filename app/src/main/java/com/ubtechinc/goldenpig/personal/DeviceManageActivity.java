@@ -1,19 +1,25 @@
 package com.ubtechinc.goldenpig.personal;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewTv;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
+import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.personal.management.AddressBookActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.mypig.MyPigActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.PigMemberActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.QRCodeActivity;
+import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.utils.PigUtils;
+import com.ubtechinc.nets.http.ThrowableWrapper;
 
 import java.util.HashMap;
 
@@ -66,6 +72,36 @@ public class DeviceManageActivity extends BaseNewActivity {
     protected void onResume() {
         super.onResume();
         updateUI();
+        updatePigList();
+    }
+
+    private void updatePigList() {
+        if (AuthLive.getInstance().getCurrentPigList() != null) {
+            AuthLive.getInstance().getCurrentPigList().clear();
+        }
+        new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListHttpProxy.OnGetPigListLitener() {
+            @Override
+            public void onError(ThrowableWrapper e) {
+                Log.e("getPigList",e.getMessage());
+            }
+
+            @Override
+            public void onException(Exception e) {
+                Log.e("getPigList",e.getMessage());
+            }
+
+            @Override
+            public void onSuccess(String response) {
+                Log.e("getPigList",response);
+                PigUtils.getPigList(response,AuthLive.getInstance().getUserId(),AuthLive.getInstance().getCurrentPigList());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateUI();
+                    }
+                });
+            }
+        });
     }
 
     private void updateUI() {

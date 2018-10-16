@@ -2,11 +2,13 @@ package com.ubtechinc.goldenpig.main;
 
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -17,6 +19,7 @@ import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseActivity;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
+import com.ubtechinc.goldenpig.login.LoginActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.fragment.HouseFragment;
 import com.ubtechinc.goldenpig.main.fragment.MainFragmentAdpater;
@@ -47,12 +50,34 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private RadioButton houseRbtn;
     private RadioButton personRbtn;
 
+//    @BindView(R.id.ubt_layout_tips)
+//    View ubtLayoutTips;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         inits();
+//        updateTopTip();
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+//        updateTopTip();
+    }
+
+//    private void updateTopTip() {
+//        Intent intent = getIntent();
+//        if (intent != null) {
+//            boolean isPigHasWifi = intent.getBooleanExtra("isPigHasWifi", false);
+//            if (isPigHasWifi) {
+//                ubtLayoutTips.setVisibility(View.GONE);
+//            } else {
+//                ubtLayoutTips.setVisibility(View.VISIBLE);
+//            }
+//        }
+//    }
 
     @Override
     protected int getContentViewId() {
@@ -60,6 +85,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void inits() {
+        if (TextUtils.isEmpty(CookieInterceptor.get().getToken())) {
+            ActivityRoute.toAnotherActivity(MainActivity.this, LoginActivity.class,true);
+            return;
+        }
         new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListHttpProxy.OnGetPigListLitener() {
             @Override
             public void onError(ThrowableWrapper e) {
