@@ -47,7 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * @auther :hqt
+ * @author :hqt
  * @email :qiangta.huang@ubtrobot.com
  * @description :成员组管理
  * @time :2018/9/19 21:11
@@ -96,15 +96,9 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    ToastUtils.showShortToast(PigMemberActivity.this, R.string.ubt_ubbind_success);
-                                    new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", null);
-                                    try {
-                                        Thread.sleep(100);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                    AuthLive.getInstance().getCurrentPigList().clear();
-                                    finish();
+                                    isDownloadedUserList = false;
+                                    updatePigList();
+                                    getMember("1");
                                 }
                             });
                         } else {
