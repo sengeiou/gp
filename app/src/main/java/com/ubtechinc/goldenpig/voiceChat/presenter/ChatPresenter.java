@@ -184,17 +184,17 @@ public class ChatPresenter implements Observer {
             TIMMessage msg = (TIMMessage) data;
             //delete other actions event
             if(msg!=null){
-                try {
-                    TIMCustomElem customElem = (TIMCustomElem) msg.getElement(0);
-                    ChannelMessageContainer.ChannelMessage voicemsg = ChannelMessageContainer.ChannelMessage
-                            .parseFrom((byte[]) customElem.getData());
-                    Log.d("ChatPresenter", "message check " + voicemsg.getHeader().getAction());
-                    if (!voicemsg.getHeader().getAction().equals("/im/voicemail/receiver")) {
-                        return;
-                    }
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
+//                try {
+//                    TIMCustomElem customElem = (TIMCustomElem) msg.getElement(0);
+//                    ChannelMessageContainer.ChannelMessage voicemsg = ChannelMessageContainer.ChannelMessage
+//                            .parseFrom((byte[]) customElem.getData());
+//                    Log.d("ChatPresenter", "message check " + voicemsg.getHeader().getAction());
+//                    if (!voicemsg.getHeader().getAction().equals("/im/voicemail/receiver")) {
+//                        return;
+//                    }
+//                }catch(Exception e){
+//                    e.printStackTrace();
+//                }
             }
             try {
                 view.showMessage(msg);

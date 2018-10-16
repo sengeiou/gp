@@ -116,7 +116,7 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
                 finish();
             }
         });
-        rl_titlebar.setIvRight(R.drawable.ic_add);
+        rl_titlebar.hideIvRight();
         rl_titlebar.setRightOnclickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -198,6 +198,11 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
             AddressBookmodel ab = new AddressBookmodel();
             ab.type = 1;
             mList.add(ab);
+
+            //右上角+置灰
+            updateTitlebarRightIcon(false);
+        } else {
+            updateTitlebarRightIcon(true);
         }
         if (mList.size() == 0) {
             mStateView.showEmpty();
@@ -205,6 +210,10 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
             mStateView.showContent();
         }
         adapter.notifyDataSetChanged();
+    }
+
+    private void updateTitlebarRightIcon(boolean highlight) {
+        rl_titlebar.setIvRight(highlight ? R.drawable.ic_add : R.drawable.ic_add_grey);
     }
 
     @Override
@@ -355,6 +364,7 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
                     if (mList.size() == 0) {
                         mStateView.showEmpty();
                     }
+                    updateTitlebarRightIcon(true);
                     adapter.notifyDataSetChanged();
                 } else {
                     ToastUtils.showShortToast("删除失败，请重试");
@@ -363,6 +373,7 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
             case "/im/mail/update":
                 msg.getPayload().unpack(GPResponse.Response.class).getResult();
                 break;
+                default:
         }
     }
 

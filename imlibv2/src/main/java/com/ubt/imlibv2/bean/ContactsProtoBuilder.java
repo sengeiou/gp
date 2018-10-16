@@ -7,9 +7,6 @@ import com.ubt.improtolib.UserContacts;
 import com.ubt.improtolib.UserRecords;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 
-import com.ubtrobot.gold.GPCommons;
-import com.ubtrobot.upgrade.VersionInformation;
-
 import java.util.List;
 
 
@@ -25,6 +22,11 @@ public class ContactsProtoBuilder {
 
     public static final String UPAT_HOTSPOT = "/im/HotSpot/receiver"; /// 修改热点
     public static final String GET_HOTSPOT = "/im/HotSpot/Account"; ///查询热点
+
+    /** int32 action = 1; //1.配对 2.解除配对
+     * int32 userid =2; //1.发送对象
+     */
+    public static final String IM_ACCOUNT_PAIR = "/im/account/pair";
 
     public static byte[] getAddContactsInfo(String name, String number) {
 
@@ -190,7 +192,7 @@ public class ContactsProtoBuilder {
                 .setTime(System.currentTimeMillis()).build();
         com.ubtrobot.gold.UserContacts.HotSpotMessage.Builder builder = com.ubtrobot.gold.UserContacts.HotSpotMessage
                 .newBuilder();
-        builder.setPassword(hotName);
+        builder.setPassword(hotPwd);
         builder.setSsid(hotName);
         com.ubtrobot.gold.UserContacts.HotSpotMessage message = builder.build();
         ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer.ChannelMessage.newBuilder()

@@ -58,4 +58,7 @@
         android:background="@null"
         android:layout_above="@id/ubt_tab_decoration" />
 
+    <include layout="@layout/include_tips"
+        android:visibility="gone"/>
+
 </RelativeLayout>

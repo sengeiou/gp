@@ -30,7 +30,6 @@ public class GetPigListHttpProxy extends BaseHttpProxy {
         }
 
         OkHttpClient okHttpClient = getHttpClient();
-
         final Request okrequest = new Request.Builder()
                 .url(BuildConfig.HOST + "/user-service-rest/v2/robot/common/queryRobotList")
                 .get()

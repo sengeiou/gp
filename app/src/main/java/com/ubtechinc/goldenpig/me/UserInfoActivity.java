@@ -7,6 +7,8 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.tencent.ai.tvs.ConstantValues;
+import com.tencent.ai.tvs.info.UserInfoManager;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.commlib.view.UbtSubTxtButton;
 import com.ubtechinc.goldenpig.R;
@@ -35,6 +37,7 @@ public class UserInfoActivity extends BaseToolBarActivity implements View.OnClic
     private UserInfo mUser;
     private View mLogoutBtn;
     private UBTAuthRepository ubtAuthRepository;
+    private UbtSubTxtButton mUbtBtnAccount;
 
     @Override
     protected int getConentView() {
@@ -53,6 +56,7 @@ public class UserInfoActivity extends BaseToolBarActivity implements View.OnClic
     private void iniViews() {
         mPhotoImg = (ImageView) findViewById(R.id.ubt_img_photo);
         mUserNameBtn = (UbtSubTxtButton) findViewById(R.id.ubt_btn_user_name);
+        mUbtBtnAccount = findViewById(R.id.ubt_btn_account);
 
         mLogoutBtn = findViewById(R.id.ubt_btn_logout);
         mLogoutBtn.setOnClickListener(this);
@@ -62,11 +66,23 @@ public class UserInfoActivity extends BaseToolBarActivity implements View.OnClic
         if (mUser != null) {
             if (!TextUtils.isEmpty(mUser.getNickName())) {
                 mUserNameBtn.setRightText(mUser.getNickName());
+                mUbtBtnAccount.setRightText(currentPlatform());
             }
             if (!TextUtils.isEmpty(mUser.getUserImage())) {
                 Glide.with(this).load(mUser.getUserImage()).centerCrop().transform(new GlideCircleTransform(this)).into(mPhotoImg);
 
             }
+        }
+    }
+
+    private String currentPlatform() {
+        switch (UserInfoManager.getInstance().idType) {
+            case ConstantValues.PLATFORM_WX:
+                return "微信";
+            case ConstantValues.PLATFORM_QQOPEN:
+                return "QQ";
+            default:
+                return "未知";
         }
     }
 

@@ -73,6 +73,7 @@ public class ChatActivity extends FragmentActivity implements ChatView {
     private TIMConversationType type;
     private ChannelInfo info = null;
     private String TAG="ChatActivity";
+    public static boolean VERSION_BYPASS=true;
 
     public static void navToChat(Context context, String identify, TIMConversationType type, ChannelInfo info){
         Intent intent = new Intent(context, ChatActivity.class);
@@ -101,10 +102,10 @@ public class ChatActivity extends FragmentActivity implements ChatView {
            // identify="990011998000581";
           //  identify="889834038000566";
             //identify="809722";
-            //SAMSUNG MACHINE
-            //identify="813312";
-            //XIAOMI MACHINE
-            identify="776322";
+            //INSTALL XIAOMI MACHINE
+            identify="813312";
+            //INSTALL SAMSUNG MACHINE
+           // identify="776322";
             Log.d("ChatActivity", "test identity  "+identify);
         }
        // type = (TIMConversationType) getIntent().getSerializableExtra("type");
@@ -345,10 +346,14 @@ public class ChatActivity extends FragmentActivity implements ChatView {
      */
     @Override
     public void sendText() {
-//        Message message = new TextMessage(input.getText());
-//        presenter.sendMessage(message.getMessage(),ChatPresenter.MESSAGE_TEXT);
-        sendPackMessageUsingProto(ChatPresenter.MESSAGE_TEXT,input.getText().toString().getBytes(),-1,UbtTIMManager.userId);
-        input.setText("");
+       if(VERSION_BYPASS) {
+           Message message = new TextMessage(input.getText());
+           presenter.sendMessage(message.getMessage(), ChatPresenter.MESSAGE_TEXT);
+           input.setText("");
+       }else {
+           sendPackMessageUsingProto(ChatPresenter.MESSAGE_TEXT, input.getText().toString().getBytes(), -1, UbtTIMManager.userId);
+           input.setText("");
+       }
 
     }
 
@@ -383,21 +388,12 @@ public class ChatActivity extends FragmentActivity implements ChatView {
         if (recorder.getTimeInterval() < 1) {
             Toast.makeText(this, getResources().getString(R.string.chat_audio_too_short), Toast.LENGTH_SHORT).show();
         } else {
-            sendPackMessageUsingProto(ChatPresenter.MESSAGE_VOICE,recorder.getDate(),(int)recorder.getTimeInterval(),UbtTIMManager.userId);
-//            VoiceMailContainer.VoiceMail voiceMail = VoiceMailContainer.VoiceMail.newBuilder()
-//                    .setTime(System.currentTimeMillis()) // 发送时间
-//                    .setElapsedMillis((int)recorder.getTimeInterval()*1000) //语音时长
-//                    .setMessage(ByteString.copyFrom(recorder.getDate())) //消息内容
-//                    .setMsgType(ChatPresenter.MESSAGE_VOICE) //消息类型
-//                    .setSender(UbtTIMManager.userId) //发送方
-//                    .build();
-//            ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setTime(System.currentTimeMillis()).setAction("/im/voicemail/receiver").build();
-//            ChannelMessageContainer.ChannelMessage message = ChannelMessageContainer.ChannelMessage.newBuilder().setHeader(header).setPayload(Any.pack(voiceMail)).build();
-//            Message voicemessage = new VoiceMessage(message.toByteArray(),recorder.getTimeInterval()+"");
-//            presenter.sendMessage(voicemessage.getMessage(),ChatPresenter.MESSAGE_VOICE);
-              //tencent original example
-//            Message message = new VoiceMessage(recorder.getTimeInterval(), recorder.getFilePath());
-//            presenter.sendMessage(message.getMessage(),ChatPresenter.MESSAGE_VOICE);
+            if (VERSION_BYPASS) {
+                Message message = new VoiceMessage(recorder.getTimeInterval(), recorder.getFilePath());
+                presenter.sendMessage(message.getMessage(), ChatPresenter.MESSAGE_VOICE);
+            } else {
+                sendPackMessageUsingProto(ChatPresenter.MESSAGE_VOICE, recorder.getDate(), (int) recorder.getTimeInterval(), UbtTIMManager.userId);
+            }
         }
     }
     private void sendPackMessageUsingProto(int messageType, byte[] infoData,int duration,String sender){

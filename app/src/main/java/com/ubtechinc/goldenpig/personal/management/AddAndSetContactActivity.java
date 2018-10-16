@@ -70,6 +70,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
     private String strName;
     private ArrayList<AddressBookmodel> oldList;
     private int updatePosition = -1;
+    private int curPosition = -1;
 
     @Override
     protected int getContentViewId() {
@@ -115,6 +116,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
             case 1:
                 rl_titlebar.setTitleText(getString(R.string.set_contact));
                 break;
+                default:
         }
         rl_titlebar.setLeftOnclickListener(new View.OnClickListener() {
             @Override
@@ -166,6 +168,16 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
             @Override
             protected void convert(BaseViewHolder helper, String item) {
                 helper.setText(R.id.tv_name, item);
+
+                //TODO
+                if (curPosition >= 0 && curPosition < mList.size()) {
+                    String curText = mList.get(curPosition);
+                    if (curText.equals(item)) {
+                        helper.setBackgroundRes(R.id.tv_name, R.drawable.blue_round_frame);
+                    } else {
+                        helper.setBackgroundRes(R.id.tv_name, R.drawable.gray_round_frame);
+                    }
+                }
             }
         });
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -173,6 +185,11 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 etName.setText(mList.get(position));
                 etName.setSelection(mList.get(position).length());
+
+                //refresh
+                curPosition = position;
+                adapter.notifyDataSetChanged();
+//                adapter.notifyItemChanged(position);
             }
         });
         etPhone.addTextChangedListener(new TextWatcher() {
@@ -220,7 +237,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                 }
             }
         });
-        if (updatePosition > 0 && updatePosition < oldList.size()) {
+        if (updatePosition >= 0 && updatePosition < oldList.size()) {
             strPhone = oldList.get(updatePosition).phone;
             strName = oldList.get(updatePosition).name;
         }

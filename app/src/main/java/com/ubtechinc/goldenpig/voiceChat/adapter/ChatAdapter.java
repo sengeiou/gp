@@ -6,6 +6,7 @@ import android.util.Log;
 import com.tencent.TIMCustomElem;
 import com.ubtechinc.goldenpig.common.adapter.CommonAdaper;
 import com.ubtechinc.goldenpig.voiceChat.model.Message;
+import com.ubtechinc.goldenpig.voiceChat.ui.ChatActivity;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 
 import java.util.Iterator;
@@ -80,7 +81,9 @@ public class ChatAdapter extends CommonAdaper<Message> {
 
     @Override
     public void update(List<Message> items) {
-        filter(items);
+        if(!ChatActivity.VERSION_BYPASS) {
+            filter(items);
+        }
         notifyDataSetChanged();
     }
 

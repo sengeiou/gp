@@ -19,6 +19,7 @@ import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
 import com.ubtechinc.goldenpig.net.RegisterRobotModule;
+import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.bean.UbtScanResult;
 import com.ubtechinc.goldenpig.pigmanager.model.RobotAllAccountViewModel;
 import com.ubtechinc.goldenpig.pigmanager.observeable.RobotBindStateLive;
@@ -283,7 +284,24 @@ public class BungdingManager {
                 Log.i(TAG,"onSuccess======="+clientId);
                 clientIdRecord = clientId;
                 // 先绑定机器人绑定成功再发送clientId
-                mRobotRepository.registerRobot(token, userId,dsn,BuildConfig.APP_ID,BuildConfig.product, mResponseListener);
+                //TODO 校验和当前绑定的是否是同一个
+                PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+                if (pigInfo != null && !TextUtils.isEmpty(pigInfo.getRobotName())) {
+                    String robotDsn = pigInfo.getRobotName();
+                    if(mBanddingListener != null){
+                        if (robotDsn.equals(dsn)) {
+                            //同一个猪
+                            mBanddingListener.onStopBind(true);
+                        } else {
+                            //不同猪
+                            mBanddingListener.onStopBind(false);
+                        }
+                    }
+
+
+                } else {
+                    mRobotRepository.registerRobot(token, userId,dsn,BuildConfig.APP_ID,BuildConfig.product, mResponseListener);
+                }
             }
 
             @Override
@@ -394,6 +412,12 @@ public class BungdingManager {
         void onMaster(); ///用户是管理员
         void onUnBind();
         void onPigConnected(String wifiName);
+
+        /**
+         * 阻止绑定
+         * @param isConflict 是否同一个
+         */
+        void onStopBind(boolean isConflict);
     }
 
     public interface GetWifiListListener{

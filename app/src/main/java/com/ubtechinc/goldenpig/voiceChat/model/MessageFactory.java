@@ -2,6 +2,7 @@ package com.ubtechinc.goldenpig.voiceChat.model;
 
 
 import com.tencent.TIMMessage;
+import com.ubtechinc.goldenpig.voiceChat.ui.ChatActivity;
 
 /**
  * 消息工厂
@@ -28,8 +29,11 @@ public class MessageFactory {
             case File:
                 return new FileMessage(message);
             case Custom:
-                //return new CustomMessage(message);
-                return new VoiceMessage(message);
+                if(ChatActivity.VERSION_BYPASS) {
+                    return new CustomMessage(message);
+                }else {
+                    return new VoiceMessage(message);
+                }
             default:
                 return null;
         }

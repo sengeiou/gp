@@ -74,4 +74,9 @@ public  class BundingListenerAbster implements BungdingManager.BanddingListener 
     public void onPigConnected(String wifiName) {
 
     }
+
+    @Override
+    public void onStopBind(boolean isConflict) {
+
+    }
 }

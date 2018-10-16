@@ -24,11 +24,13 @@ import com.tencent.TIMFaceElem;
 import com.tencent.TIMMessage;
 import com.tencent.TIMSoundElem;
 import com.tencent.TIMTextElem;
+import com.tencent.TIMValueCallBack;
 import com.ubt.improtolib.VoiceMailContainer;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.common.adapter.ViewHolder;
 import com.ubtechinc.goldenpig.voiceChat.presenter.ChatPresenter;
+import com.ubtechinc.goldenpig.voiceChat.ui.ChatActivity;
 import com.ubtechinc.goldenpig.voiceChat.util.FileUtil;
 import com.ubtechinc.goldenpig.voiceChat.util.MediaUtil;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
@@ -107,90 +109,130 @@ public class VoiceMessage extends Message {
     public void showMessage(ViewHolder viewHolder, Context context) {
 //        Exception e1 = new Exception("THIS IS VOICE MESSAGE SHOW MESSAGE ");
 //        e1.printStackTrace();
-         try {
-             TIMCustomElem customElem = (TIMCustomElem) message.getElement(0);
-             ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage
-                     .parseFrom((byte[]) customElem.getData());
-             Log.d(TAG,"message before " +msg.getHeader().getAction());
-             if(msg.getHeader().getAction().equals("/im/voicemail/receiver")){
-                 VoiceMailContainer.VoiceMail mVoiceData = msg.getPayload().unpack(VoiceMailContainer.VoiceMail.class);
+       if(!ChatActivity.VERSION_BYPASS) {
+           try {
+               TIMCustomElem customElem = (TIMCustomElem) message.getElement(0);
+               ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage
+                       .parseFrom((byte[]) customElem.getData());
+               Log.d(TAG, "message before " + msg.getHeader().getAction());
+               if (msg.getHeader().getAction().equals("/im/voicemail/receiver")) {
+                   VoiceMailContainer.VoiceMail mVoiceData = msg.getPayload().unpack(VoiceMailContainer.VoiceMail.class);
+                   Log.d(TAG, "message before type " + mVoiceData.getMsgType());
 
-
-                 Log.d(TAG,"message before type " + mVoiceData.getMsgType());
-
-                 if(mVoiceData.getMsgType()== ChatPresenter.MESSAGE_TEXT){
-                     Log.d(TAG,"message text  "+isSelf());
-                     clearView(viewHolder);
-                     boolean hasText = false;
-                     TextView tv = new TextView(UBTPGApplication.getContext());
-                     tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                     tv.setTextColor(UBTPGApplication.getContext().getResources().getColor(isSelf() ? R.color.white : R.color.black));
-                     List<TIMElem> elems = new ArrayList<>();
-                     for (int i = 0; i < message.getElementCount(); ++i){
-                         elems.add(message.getElement(i));
+                   if (mVoiceData.getMsgType() == ChatPresenter.MESSAGE_TEXT) {
+                       Log.d(TAG, "message text  " + isSelf());
+                       clearView(viewHolder);
+                       boolean hasText = false;
+                       TextView tv = new TextView(UBTPGApplication.getContext());
+                       tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                       tv.setTextColor(UBTPGApplication.getContext().getResources().getColor(isSelf() ? R.color.white : R.color.black));
+                       List<TIMElem> elems = new ArrayList<>();
+                       for (int i = 0; i < message.getElementCount(); ++i) {
+                           elems.add(message.getElement(i));
 //                         if (message.getElement(i).getType() == TIMElemType.Text){
 //                             hasText = true;
 //                         }
-                     }
-                     SpannableStringBuilder stringBuilder = getString(elems, context);
+                       }
+                       SpannableStringBuilder stringBuilder = getString(elems, context);
 //                     if (!hasText){
 //                         stringBuilder.insert(0," ");
 //                     }
-                     tv.setText(stringBuilder);
-                     getBubbleView(viewHolder).addView(tv);
-                     viewHolder.getView(R.id.right_voice_time_me).setVisibility(View.INVISIBLE);
-                     viewHolder.getView(R.id.left_voice_time_other).setVisibility(View.INVISIBLE);
-                     showStatus(viewHolder);
-                 }else if(mVoiceData.getMsgType()==ChatPresenter.MESSAGE_VOICE){
-                     Log.d(TAG,"message voice " +isSelf());
-                     LinearLayout linearLayout = new LinearLayout(UBTPGApplication.getContext());
-                     linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-                     linearLayout.setGravity(Gravity.CENTER);
-                     ImageView voiceIcon = new ImageView(UBTPGApplication.getContext());
-                     voiceIcon.setBackgroundResource(message.isSelf()? R.drawable.right_voice: R.drawable.left_voice);
-                     final AnimationDrawable frameAnimatio = (AnimationDrawable) voiceIcon.getBackground();
+                       tv.setText(stringBuilder);
+                       getBubbleView(viewHolder).addView(tv);
+                       viewHolder.getView(R.id.right_voice_time_me).setVisibility(View.INVISIBLE);
+                       viewHolder.getView(R.id.left_voice_time_other).setVisibility(View.INVISIBLE);
+                       showStatus(viewHolder);
+                   } else if (mVoiceData.getMsgType() == ChatPresenter.MESSAGE_VOICE) {
+                       Log.d(TAG, "message voice " + isSelf());
+                       LinearLayout linearLayout = new LinearLayout(UBTPGApplication.getContext());
+                       linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+                       linearLayout.setGravity(Gravity.CENTER);
+                       ImageView voiceIcon = new ImageView(UBTPGApplication.getContext());
+                       voiceIcon.setBackgroundResource(message.isSelf() ? R.drawable.right_voice : R.drawable.left_voice);
+                       final AnimationDrawable frameAnimatio = (AnimationDrawable) voiceIcon.getBackground();
 
-                     TextView tv = new TextView(UBTPGApplication.getContext());
-                     tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                     tv.setTextColor(UBTPGApplication.getContext().getResources().getColor(isSelf() ? R.color.white : R.color.black));
-                     //RECORD TIME ON THE MESSAGE
-                    // tv.setText(String.valueOf(((TIMCustomElem) message.getElement(0)).getDesc()) + "’");
-                     int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 18, context.getResources().getDisplayMetrics());
-                     int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14, context.getResources().getDisplayMetrics());
-                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                     LinearLayout.LayoutParams imageLp = new LinearLayout.LayoutParams(width, height);
-                     if (message.isSelf()){
-                         linearLayout.addView(tv);
-                         imageLp.setMargins(10, 0, 0, 0);
-                         voiceIcon.setLayoutParams(imageLp);
-                         linearLayout.addView(voiceIcon);
-                         viewHolder.getView(R.id.right_voice_time_me).setVisibility(View.VISIBLE);
-                         viewHolder.setText(R.id.right_voice_time_me, String.valueOf(((TIMCustomElem) message.getElement(0)).getDesc()) + "\"");
-                     }else{
-                         voiceIcon.setLayoutParams(imageLp);
-                         linearLayout.addView(voiceIcon);
-                         lp.setMargins(10, 0, 0, 0);
-                         tv.setLayoutParams(lp);
-                         linearLayout.addView(tv);
-                         viewHolder.getView(R.id.left_voice_time_other).setVisibility(View.VISIBLE);
-                         viewHolder.setText(R.id.left_voice_time_other, mVoiceData.getElapsedMillis()/1000+"\"");
-                     }
-                     clearView(viewHolder);
-                     getBubbleView(viewHolder).addView(linearLayout);
-                     getBubbleView(viewHolder).setOnClickListener(new View.OnClickListener() {
-                         @Override
-                         public void onClick(View v) {
-                             VoiceMessage.this.playAudio(frameAnimatio);
-                         }
-                     });
-                     showStatus(viewHolder);
-                 }
-             }
+                       TextView tv = new TextView(UBTPGApplication.getContext());
+                       tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                       tv.setTextColor(UBTPGApplication.getContext().getResources().getColor(isSelf() ? R.color.white : R.color.black));
+                       //RECORD TIME ON THE MESSAGE
+                       // tv.setText(String.valueOf(((TIMCustomElem) message.getElement(0)).getDesc()) + "’");
+                       int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 18, context.getResources().getDisplayMetrics());
+                       int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14, context.getResources().getDisplayMetrics());
+                       LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                       LinearLayout.LayoutParams imageLp = new LinearLayout.LayoutParams(width, height);
+                       if (message.isSelf()) {
+                           linearLayout.addView(tv);
+                           imageLp.setMargins(10, 0, 0, 0);
+                           voiceIcon.setLayoutParams(imageLp);
+                           linearLayout.addView(voiceIcon);
+                           viewHolder.getView(R.id.right_voice_time_me).setVisibility(View.VISIBLE);
+                           viewHolder.setText(R.id.right_voice_time_me, String.valueOf(((TIMCustomElem) message.getElement(0)).getDesc()) + "\"");
+                       } else {
+                           voiceIcon.setLayoutParams(imageLp);
+                           linearLayout.addView(voiceIcon);
+                           lp.setMargins(10, 0, 0, 0);
+                           tv.setLayoutParams(lp);
+                           linearLayout.addView(tv);
+                           viewHolder.getView(R.id.left_voice_time_other).setVisibility(View.VISIBLE);
+                           viewHolder.setText(R.id.left_voice_time_other, mVoiceData.getElapsedMillis() / 1000 + "\"");
+                       }
+                       clearView(viewHolder);
+                       getBubbleView(viewHolder).addView(linearLayout);
+                       getBubbleView(viewHolder).setOnClickListener(new View.OnClickListener() {
+                           @Override
+                           public void onClick(View v) {
+                               VoiceMessage.this.playAudio(frameAnimatio);
+                           }
+                       });
+                       showStatus(viewHolder);
+                   }
+               }
 
-         }catch(Exception e){
-             e.printStackTrace();
-         }
+           } catch (Exception e) {
+               e.printStackTrace();
+           }
+       }else{
+           LinearLayout linearLayout = new LinearLayout(UBTPGApplication.getContext());
+           linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+           linearLayout.setGravity(Gravity.CENTER);
+           ImageView voiceIcon = new ImageView(UBTPGApplication.getContext());
+           voiceIcon.setBackgroundResource(message.isSelf() ? R.drawable.right_voice : R.drawable.left_voice);
+           final AnimationDrawable frameAnimatio = (AnimationDrawable) voiceIcon.getBackground();
 
+           TextView tv = new TextView(UBTPGApplication.getContext());
+           tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+           tv.setTextColor(UBTPGApplication.getContext().getResources().getColor(isSelf() ? R.color.white : R.color.black));
+          //  tv.setText(String.valueOf(((TIMSoundElem) message.getElement(0)).getDuration()) + "’");
+           int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 18, context.getResources().getDisplayMetrics());
+           int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14, context.getResources().getDisplayMetrics());
+           LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+           LinearLayout.LayoutParams imageLp = new LinearLayout.LayoutParams(width, height);
+           if (message.isSelf()) {
+               linearLayout.addView(tv);
+               imageLp.setMargins(10, 0, 0, 0);
+               voiceIcon.setLayoutParams(imageLp);
+               linearLayout.addView(voiceIcon);
+               viewHolder.getView(R.id.right_voice_time_me).setVisibility(View.VISIBLE);
+               viewHolder.setText(R.id.right_voice_time_me, String.valueOf(((TIMSoundElem) message.getElement(0)).getDuration()) + "\"");
+           } else {
+               voiceIcon.setLayoutParams(imageLp);
+               linearLayout.addView(voiceIcon);
+               lp.setMargins(10, 0, 0, 0);
+               tv.setLayoutParams(lp);
+               linearLayout.addView(tv);
+               viewHolder.getView(R.id.left_voice_time_other).setVisibility(View.VISIBLE);
+               viewHolder.setText(R.id.left_voice_time_other, String.valueOf(((TIMSoundElem) message.getElement(0)).getDuration()) + "\"");
+           }
+           clearView(viewHolder);
+           getBubbleView(viewHolder).addView(linearLayout);
+           getBubbleView(viewHolder).setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
+                   VoiceMessage.this.playAudio(frameAnimatio);
+               }
+           });
+           showStatus(viewHolder);
+       }
     }
 
 
@@ -211,59 +253,63 @@ public class VoiceMessage extends Message {
     }
 
     private void playAudio(final AnimationDrawable frameAnimatio) {
-        TIMCustomElem customElem=(TIMCustomElem)message.getElement(0);
- //        mVoiceMessage=customElem.getData();
-          customElem.getData();
-          try {
-              ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage
-                      .parseFrom((byte[]) customElem.getData());
-              VoiceMailContainer.VoiceMail mVoiceData = msg.getPayload().unpack(VoiceMailContainer.VoiceMail.class);
-              //mVoiceData.getMessage().toByteArray();
-              File tempAudio = FileUtil.getTempFile(FileUtil.FileType.AUDIO);
-              FileOutputStream fos = new FileOutputStream(tempAudio);
-              fos.write(mVoiceData.getMessage().toByteArray());
-              fos.close();
-              FileInputStream fis = new FileInputStream(tempAudio);
-              MediaUtil.getInstance().play(fis);
-              frameAnimatio.start();
-              MediaUtil.getInstance().setEventListener(new MediaUtil.EventListener() {
-                  @Override
-                  public void onStop() {
-                      frameAnimatio.stop();
-                      frameAnimatio.selectDrawable(0);
-                  }
-              });
 
-          }catch(Exception e){
-              e.printStackTrace();
-          }
-//        TIMSoundElem elem = (TIMSoundElem) message.getElement(0);
-//        elem.getSound(new TIMValueCallBack<byte[]>() {
-//            @Override
-//            public void onError(int i, String s) {
-//            }
-//            @Override
-//            public void onSuccess(byte[] bytes) {
-//                try{
-//                    File tempAudio = FileUtil.getTempFile(FileUtil.FileType.AUDIO);
-//                    FileOutputStream fos = new FileOutputStream(tempAudio);
-//                    fos.write(bytes);
-//                    fos.close();
-//                    FileInputStream fis = new FileInputStream(tempAudio);
-//                    MediaUtil.getInstance().play(fis);
-//                    frameAnimatio.start();
-//                    MediaUtil.getInstance().setEventListener(new MediaUtil.EventListener() {
-//                        @Override
-//                        public void onStop() {
-//                            frameAnimatio.stop();
-//                            frameAnimatio.selectDrawable(0);
-//                        }
-//                    });
-//                }catch (IOException e){
-//
-//                }
-//            }
-//        });
+        if(!ChatActivity.VERSION_BYPASS) {
+            TIMCustomElem customElem = (TIMCustomElem) message.getElement(0);
+            customElem.getData();
+            try {
+                ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage
+                        .parseFrom((byte[]) customElem.getData());
+                VoiceMailContainer.VoiceMail mVoiceData = msg.getPayload().unpack(VoiceMailContainer.VoiceMail.class);
+                //mVoiceData.getMessage().toByteArray();
+                File tempAudio = FileUtil.getTempFile(FileUtil.FileType.AUDIO);
+                FileOutputStream fos = new FileOutputStream(tempAudio);
+                fos.write(mVoiceData.getMessage().toByteArray());
+                fos.close();
+                FileInputStream fis = new FileInputStream(tempAudio);
+                MediaUtil.getInstance().play(fis);
+                frameAnimatio.start();
+                MediaUtil.getInstance().setEventListener(new MediaUtil.EventListener() {
+                    @Override
+                    public void onStop() {
+                        frameAnimatio.stop();
+                        frameAnimatio.selectDrawable(0);
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }else {
+            TIMSoundElem elem = (TIMSoundElem) message.getElement(0);
+            elem.getSound(new TIMValueCallBack<byte[]>() {
+                @Override
+                public void onError(int i, String s) {
+                }
+
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    try {
+                        File tempAudio = FileUtil.getTempFile(FileUtil.FileType.AUDIO);
+                        FileOutputStream fos = new FileOutputStream(tempAudio);
+                        fos.write(bytes);
+                        fos.close();
+                        FileInputStream fis = new FileInputStream(tempAudio);
+                        MediaUtil.getInstance().play(fis);
+                        frameAnimatio.start();
+                        MediaUtil.getInstance().setEventListener(new MediaUtil.EventListener() {
+                            @Override
+                            public void onStop() {
+                                frameAnimatio.stop();
+                                frameAnimatio.selectDrawable(0);
+                            }
+                        });
+                    } catch (IOException e) {
+
+                    }
+                }
+            });
+        }
     }
 
     public static SpannableStringBuilder getString(List<TIMElem> elems, Context context){
