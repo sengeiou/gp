@@ -47,7 +47,11 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();//返回
+                if (!isInterceptBack()) {
+                    finish();//返回
+                } else {
+                    onBackPressed();
+                }
             }
         });
         if (getSupportActionBar()!=null) {
@@ -60,9 +64,12 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
         }
         //3、初始化操作（此方法必须放在最后执行位置）
         init(savedInstanceState);
-
-
     }
+
+    protected boolean isInterceptBack() {
+        return false;
+    }
+
     @Override
     protected int getContentViewId() {
         return R.layout.activity_base_toolbar;
@@ -201,6 +208,7 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
                 this.onClickRightListener2.onClick();
 
                 break;
+                default:
         }
         return true;//拦截系统处理事件
     }

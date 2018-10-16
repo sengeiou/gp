@@ -198,6 +198,11 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
             AddressBookmodel ab = new AddressBookmodel();
             ab.type = 1;
             mList.add(ab);
+
+            //右上角+置灰
+            updateTitlebarRightIcon(false);
+        } else {
+            updateTitlebarRightIcon(true);
         }
         if (mList.size() == 0) {
             mStateView.showEmpty();
@@ -205,6 +210,10 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
             mStateView.showContent();
         }
         adapter.notifyDataSetChanged();
+    }
+
+    private void updateTitlebarRightIcon(boolean highlight) {
+        rl_titlebar.setIvRight(highlight ? R.drawable.ic_add : R.drawable.ic_add);
     }
 
     @Override
@@ -363,6 +372,7 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
             case "/im/mail/update":
                 msg.getPayload().unpack(GPResponse.Response.class).getResult();
                 break;
+                default:
         }
     }
 
