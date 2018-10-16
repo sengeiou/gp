@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
+import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.net.RegisterRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.bean.BundingListenerAbster;
 import com.ubtechinc.goldenpig.pigmanager.bluetooth.BlueToothManager;
@@ -56,10 +58,11 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
 
     private UbtBluetoothDevice mBluetoothDevice;
     private BungdingManager mBangdingManager;
-    private String TAG="SearchPigActivity";
+    private String TAG = "SearchPigActivity";
     private PigListDialog pigListDialog;
     private CountDownTimer mTimer;
     private boolean mHasPermission;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,10 +94,11 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         mSearchBtn = (Button) findViewById(R.id.ubt_btn_start_set_net);
         mSearchBtn.setText(R.string.ubt_search_pig);
         mSearchBtn.setOnClickListener(this);
-        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.M){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermission();
         }
     }
+
     /**
      * 申请权限
      */
@@ -106,14 +110,17 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         }
 
     }
+
     private static final int PERMISSION_REQUEST_CODE = 0;
     //两个危险权限需要动态申请
     private static final String[] NEEDED_PERMISSIONS = new String[]{
             Manifest.permission.ACCESS_COARSE_LOCATION,
             Manifest.permission.ACCESS_FINE_LOCATION
     };
+
     /**
      * 检查是否已经授予权限
+     *
      * @return
      */
     private boolean checkPermission() {
@@ -125,13 +132,14 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         }
         return true;
     }
+
     @Override
     protected void onResume() {
         super.onResume();
         closeEnterDialog();
-        if (isSearched){
+        if (isSearched) {
             mSearchBtn.setText("重新搜索");
-        }else {
+        } else {
             mSearchBtn.setText("搜索音箱");
         }
     }
@@ -139,7 +147,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode==BLUETOOTH_REQUESTCODE){
+        if (requestCode == BLUETOOTH_REQUESTCODE) {
             checkBlueTooth();
         }
     }
@@ -161,12 +169,14 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
                 break;
         }
     }
-    private void cancelTimer(){
-        if (mTimer!=null){
+
+    private void cancelTimer() {
+        if (mTimer != null) {
             mTimer.cancel();
-            mTimer=null;
+            mTimer = null;
         }
     }
+
     private void checkBlueTooth() {
         final byte state = BlueToothManager.getBluetoothState();
         switch (state) {
@@ -185,7 +195,8 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
                 break;
         }
     }
-    private void startTimer(){
+
+    private void startTimer() {
         if (mTimer == null) {
             mTimer = new CountDownTimer((long) (60000), 60000) {
 
@@ -196,23 +207,24 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
 
                 @Override
                 public void onFinish() {
-                     if (pigListDialog!=null&&pigListDialog.isShowing()){
-                         if (pigListDialog.getBleCount()<1){
-                             showNotify("未搜到音箱，请确认已按照引导视频正确操作");
-                         }else if (isClicked){
-                             ToastUtils.showLongToast(SearchPigActivity.this,R.string.ubt_bunding_ping_timeout);
-                         }
-                         isClicked=false;
-                         UbtBluetoothManager.getInstance().closeConnectBle();
-                         pigListDialog.dismiss();
+                    if (pigListDialog != null && pigListDialog.isShowing()) {
+                        if (pigListDialog.getBleCount() < 1) {
+                            showNotify("未搜到音箱，请确认已按照引导视频正确操作");
+                        } else if (isClicked) {
+                            ToastUtils.showLongToast(SearchPigActivity.this, R.string.ubt_bunding_ping_timeout);
+                        }
+                        isClicked = false;
+                        UbtBluetoothManager.getInstance().closeConnectBle();
+                        pigListDialog.dismiss();
 
-                     }
-                     mTimer=null;
+                    }
+                    mTimer = null;
                 }
             };
             mTimer.start();
         }
     }
+
     private void openBlueTooth() {
         mEnterDialog = new UBTBaseDialog(this);
         mEnterDialog.setTips(getString(R.string.ubt_want_open_bluetooth));
@@ -227,7 +239,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
             @Override
             public void onRightButtonClick(View view) {
 
-                BlueToothManager.openBlueToothSetting(SearchPigActivity.this,BLUETOOTH_REQUESTCODE);
+                BlueToothManager.openBlueToothSetting(SearchPigActivity.this, BLUETOOTH_REQUESTCODE);
             }
 
         });
@@ -244,7 +256,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
     }
 
     private void startSearchPig() {
-        if (Build.VERSION_CODES.M<=Build.VERSION.SDK_INT) {
+        if (Build.VERSION_CODES.M <= Build.VERSION.SDK_INT) {
             if (AndPermission.hasPermission(SearchPigActivity.this, Permission.LOCATION)) {
                 showPigListDialog();
             } else {
@@ -260,27 +272,27 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
                     @Override
                     public void onFailure() {
 
-
                     }
 
                     @Override
                     public void onRationSetting() {
 
-
                     }
                 });
             }
-        }else {
+        } else {
             showPigListDialog();
         }
     }
+
     private boolean isClicked;
-    private void showPigListDialog(){
+
+    private void showPigListDialog() {
         pigListDialog = new PigListDialog(this);
         pigListDialog.setBluetoothItemClickListener(new OnPigListItemClickListener() {
             @Override
             public void onClick(int pos, UbtBluetoothDevice device) {
-                isClicked=true;
+                isClicked = true;
                 connectBleDevice(device);
                 startTimer();
 
@@ -288,6 +300,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         });
         pigListDialog.show();
     }
+
     private void connectBleDevice(final UbtBluetoothDevice device) {
         if (device != null) {
             mBluetoothDevice = device;
@@ -302,34 +315,35 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         }
     }
 
-    private void toSetWifi(){
+    private void toSetWifi() {
         closeEnterDialog();
         cancelTimer();
 
-        ActivityRoute.toAnotherActivity(SearchPigActivity.this,SetPigNetWorkActivity.class,false);
+        ActivityRoute.toAnotherActivity(SearchPigActivity.this, SetPigNetWorkActivity.class, false);
     }
-    private Handler mHandler = new Handler(){
+
+    private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            switch (msg.what){
+            switch (msg.what) {
                 case MSG_WATH_DISCONNECT_SUCCESS:
                     UbtBluetoothManager.getInstance().closeConnectBle();
                     UbtBluetoothManager.getInstance().connectBluetooth(mBluetoothDevice);
                     break;
-                 
+
                 default:
                     break;
             }
         }
     };
-    BundingListenerAbster mBandingListenerAbster = new BundingListenerAbster(){
+    BundingListenerAbster mBandingListenerAbster = new BundingListenerAbster() {
         @Override
         public void onFaild(int errorCode) {
             super.onFaild(errorCode);
 
-            switch (errorCode){
+            switch (errorCode) {
                 case 2041:
-                    if (pigListDialog!=null&&pigListDialog.isShowing()) {
+                    if (pigListDialog != null && pigListDialog.isShowing()) {
 
                         ToastUtils.showShortToast(SearchPigActivity.this, R.string.ubt_one_user_one_pig);
                     }
@@ -361,10 +375,10 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         @Override
         public void onMaster() {
             super.onMaster();
-            if (pigListDialog!=null) {
+            if (pigListDialog != null) {
                 pigListDialog.dismiss();
             }
-            if (mTimer!=null){
+            if (mTimer != null) {
                 mTimer.cancel();
             }
             toSetWifi();
@@ -376,6 +390,44 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
             //toSetWifi();
             //ToastUtils.showShortToast(SearchPigActivity.this,"用户未绑定");
         }
+
+        @Override
+        public void onStopBind(boolean isConflict) {
+            if (isConflict) {
+                onMaster();
+            } else {
+                showOnBindTipDialog();
+            }
+        }
     };
+
+    /**
+     * 显示解绑对话框
+     */
+    private void showOnBindTipDialog() {
+        if (pigListDialog != null) {
+            pigListDialog.dismiss();
+        }
+        if (mTimer != null) {
+            mTimer.cancel();
+        }
+        UBTSubTitleDialog dialog = new UBTSubTitleDialog(this);
+        dialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
+        dialog.setTips(getString(R.string.unbind_pig_dialog_tip));
+        dialog.setOnlyOneButton();
+        dialog.setRightButtonTxt(getString(R.string.i_know_text));
+        dialog.setSubTips(getString(R.string.unbind_pig_dialog_sub_tip));
+        dialog.setOnUbtDialogClickLinsenter(new UBTSubTitleDialog.OnUbtDialogClickLinsenter() {
+            @Override
+            public void onLeftButtonClick(View view) {
+
+            }
+
+            @Override
+            public void onRightButtonClick(View view) {
+            }
+        });
+        dialog.show();
+    }
 
 }

@@ -164,4 +164,8 @@
     <string name="logout_tip">确定退出吗？</string>
     <string name="pair_pig">配对小猪</string>
     <string name="pair_pig_voice">配对音箱之间的语音留言</string>
+
+    <string name="unbind_pig_dialog_tip">绑定新音箱前，需解绑当前音箱</string>
+    <string name="unbind_pig_dialog_sub_tip">解绑入口：设备管理-我的小猪</string>
+    <string name="i_know_text">我知道了</string>
 </resources>
