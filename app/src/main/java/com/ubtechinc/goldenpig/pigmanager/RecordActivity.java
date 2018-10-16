@@ -150,8 +150,6 @@ public class RecordActivity extends BaseNewActivity implements Observer {
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null) {
             UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
-        } else {
-            UbtTIMManager.getInstance().setPigAccount("2cb9b9a3");
         }
         UbtTIMManager.getInstance().setMsgObserve(this);
         UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
@@ -171,11 +169,11 @@ public class RecordActivity extends BaseNewActivity implements Observer {
     }
 
     public void onRefresh() {
-        LoadingDialog.getInstance(this).setTimeout(20).setShowToast(true).show();
+        LoadingDialog.getInstance(this).setTimeout(10).setShowToast(true).show();
         if (mHandler.hasMessages(1)) {
             mHandler.removeMessages(1);
         }
-        mHandler.sendEmptyMessageDelayed(1, 20 * 1000);// 20s 秒后检查加载框是否还在
+        mHandler.sendEmptyMessageDelayed(1, 10 * 1000);// 20s 秒后检查加载框是否还在
         UbtTIMManager.getInstance().queryRecord();
     }
 

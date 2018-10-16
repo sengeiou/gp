@@ -23,6 +23,8 @@ import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.view.UbtPasswordEditText;
 import com.ubtechinc.goldenpig.comm.view.UbtWifiListEditText;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
+import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
+import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.main.MainActivity;
 import com.ubtechinc.goldenpig.net.RegisterRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.bean.BundingListenerAbster;
@@ -81,6 +83,9 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
         bungdingManager=new BungdingManager(this);
         bungdingManager.setBangdingListener(mBandingListenerAbster);
         checkPigWifi();
+
+        Event<Integer> event = new Event<>(EventBusUtil.CONTACT_PIC_SUCCESS);
+        EventBusUtil.sendEvent(event);
     }
 
     @Override

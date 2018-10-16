@@ -58,6 +58,9 @@ public abstract class BaseNewActivity extends AppCompatActivity {
         if (unbinder != null) {
             unbinder.unbind();
         }
+        if (isRegisterEventBus()) {
+            EventBusUtil.unregister(this);
+        }
     }
 
     @Override

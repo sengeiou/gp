@@ -368,4 +368,10 @@ public class UbtTIMManager {
         TIMMessage msg=creatElem(data);
         sendTIM(msg);
     }
+
+    public void queryLatestRecord() {
+        byte[] data = ContactsProtoBuilder.getLastRecord();
+        TIMMessage msg=creatElem(data);
+        sendTIM(msg);
+    }
 }

@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.tencent.ai.tvs.business.UniAccessInfo;
 import com.tencent.ai.tvs.info.DeviceManager;
+import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
@@ -43,6 +44,10 @@ public class PigUtils {
                             }
 
                         }
+                    }
+                    PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+                    if (pigInfo != null) {
+                        UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
                     }
                 }
             } catch (JSONException e) {

@@ -113,6 +113,16 @@ public class ContactsProtoBuilder {
         return channelMessage.toByteArray();
     }
 
+    public static byte[] getLastRecord() {
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder()
+                .setAction("/im/record/latest").setTime(System.currentTimeMillis()).build();
+        ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer
+                .ChannelMessage.newBuilder()
+                .setHeader(header)
+                .build();
+        return channelMessage.toByteArray();
+    }
+
     public static byte[] getDeleteRecordInfo(List<UserRecords.Record> list) {
         ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder()
                 .setAction("/im/record/delete").setTime(System.currentTimeMillis()).build();
