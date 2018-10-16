@@ -25,6 +25,7 @@ public class UBTSubTitleDialog extends BaseDialog implements View.OnClickListene
     private TextView mTipsTv;  //对话框提示语
     private int mLeftBtnColor=-1,mRightBtnColor=-1;
     private TextView mSubTipsView;
+    private View ubtBtnDecor;
     public UBTSubTitleDialog(@NonNull Context context) {
         this(context,0);
     }
@@ -47,6 +48,7 @@ public class UBTSubTitleDialog extends BaseDialog implements View.OnClickListene
 
 
         this.setContentView(root);
+        ubtBtnDecor = findViewById(R.id.ubt_btn_decor);
         mSubTipsView=findViewById(R.id.ubt_tv_dialog_subtips);
         mLeftBtn=(Button) findViewById(R.id.ubt_dialog_left_btn);
         if (mLeftBtnColor!=-1){
@@ -118,5 +120,14 @@ public class UBTSubTitleDialog extends BaseDialog implements View.OnClickListene
     public interface OnUbtDialogClickLinsenter{
         void onLeftButtonClick(View view);
         void onRightButtonClick(View view);
+    }
+
+    public void setOnlyOneButton() {
+        if (mLeftBtn != null){
+            mLeftBtn.setVisibility(View.GONE);
+        }
+        if (ubtBtnDecor != null) {
+            ubtBtnDecor.setVisibility(View.GONE);
+        }
     }
 }
