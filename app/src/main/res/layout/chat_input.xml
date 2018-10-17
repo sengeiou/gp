@@ -50,6 +50,7 @@
             android:layout_weight="1"
             android:background="@drawable/bg_inputbox"
             android:gravity="center_vertical"
+            android:layout_marginRight="10dp"
             android:orientation="horizontal">
 
             <EditText
