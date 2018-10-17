@@ -22,7 +22,6 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
-import com.ubtechinc.goldenpig.utils.NetUtils;
 import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
@@ -47,6 +46,7 @@ public abstract class BaseFragment extends Fragment {
     protected View mTipsView;
     protected TextView mTipsClickView;
     protected TextView mTipsTv;
+
     public BaseFragment() {
         super();
     }
@@ -62,62 +62,80 @@ public abstract class BaseFragment extends Fragment {
             window.setStatusBarColor(Color.TRANSPARENT);
         }*/
         unbinder = ButterKnife.bind(this, view);
-        mTipsView=view.findViewById(R.id.ubt_layout_tips);
-        mTipsClickView=view.findViewById(R.id.ubt_bind_tv);
-        mTipsTv=view.findViewById(R.id.ubt_tv_main_tips);
+        mTipsView = view.findViewById(R.id.ubt_layout_tips);
+        mTipsClickView = view.findViewById(R.id.ubt_bind_tv);
+        mTipsTv = view.findViewById(R.id.ubt_tv_main_tips);
 
     }
 
-    protected   void showTips(){
-        if (mTipsView!=null) {
-            final PigInfo pigInfo=AuthLive.getInstance().getCurrentPig();
+    protected void showTips() {
+        if (mTipsView != null) {
+            final PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
             mTipsView.setVisibility(View.VISIBLE);
-            if (pigInfo==null) {
+            if (pigInfo == null) {
                 onNoPig();
-                mTipsTv.setText(R.string.ubt_pig_unbing);
-                if (mTipsClickView!=null){
+                mTipsTv.setText(R.string.ubt_unbund_pig);
+                if (mTipsClickView != null) {
                     mTipsClickView.setText(R.string.ubt_click_for_bind);
                 }
-            } /*else if (!pigInfo.isOnline()){
+                if (mTipsClickView != null) {
+                    mTipsClickView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            tipsClickForBind();
+                        }
+                    });
+                }
+            } else if (!pigInfo.isOnline()) {
+                onNoSetNet();
                 mTipsTv.setText(R.string.ubt_pig_unset_net);
-                 mTipsClickView.setText(R.string.ubt_click_for_bind);
-                 onNoSetNet();
-                 onSetedNet();
-            }*/else {
+                mTipsClickView.setText(R.string.ubt_click_for_net);
+                if (mTipsClickView != null) {
+                    mTipsClickView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            tipsClickForNet();
+                        }
+                    });
+                }
+            } else {
                 mTipsView.setVisibility(View.GONE);
                 onHasPig();
-
             }
         }
-        if (mTipsClickView!=null){
-            mTipsClickView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    tipsClick();
-                }
-            });
-        }
     }
-    /**获取用户是否绑定小猪或小猪是否有联网*/
-    protected int getUsetPigState(){
+
+    /**
+     * 获取用户是否绑定小猪或小猪是否有联网
+     */
+    protected int getUsetPigState() {
 
         return 0;
     }
-    protected  void tipsClick(){
-        if (AuthLive.getInstance().getCurrentPig()==null) {
-            HashMap<String,Boolean> params=new HashMap<>();
-            params.put("back",false);
-            params.put("skip",true);
-            ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class,params,false);
+
+    protected void tipsClickForBind() {
+        if (AuthLive.getInstance().getCurrentPig() == null) {
+            HashMap<String, Boolean> params = new HashMap<>();
+            params.put("back", false);
+            params.put("skip", true);
+            ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class, params, false);
         }
     }
+
+    protected void tipsClickForNet() {
+        HashMap<String, Boolean> params = new HashMap<>();
+        params.put("back", false);
+        params.put("skip", true);
+        ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class, params, false);
+    }
+
     /**
-     *@auther        :hqt
-     *@description   :设置状态栏背景色
-     *@parma         :
-     *@return        :
-     *@exception     :  
-    */
+     * @return :
+     * @throws :
+     * @auther :hqt
+     * @description :设置状态栏背景色
+     * @parma :
+     */
     protected void translucentStatusBar(Activity activity, boolean hideStatusBarBackground) {
         Window window = activity.getWindow();
         //添加Flag把状态栏设为可绘制模式
@@ -145,6 +163,7 @@ public abstract class BaseFragment extends Fragment {
             ViewCompat.requestApplyInsets(mChildView);
         }
     }
+
     protected void addStatusBar() {
         if (mStatusBarView == null) {
             mStatusBarView = new View(getContext());
@@ -153,8 +172,9 @@ public abstract class BaseFragment extends Fragment {
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(screenWidth, statusBarHeight);
             mStatusBarView.setLayoutParams(params);
             mStatusBarView.requestLayout();
-            if (mView != null)
+            if (mView != null) {
                 mView.addView(mStatusBarView, 0);
+            }
         }
     }
 
@@ -163,6 +183,7 @@ public abstract class BaseFragment extends Fragment {
         super.onPause();
         MobclickAgent.onPageEnd(this.getClass().getSimpleName());
     }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -170,19 +191,25 @@ public abstract class BaseFragment extends Fragment {
         MobclickAgent.onPageStart(this.getClass().getSimpleName()); //统计页面("MainScreen"为页面名称，可自定义)
         showTips();
     }
-    private void checkPigWifi(){
+
+    private void checkPigWifi() {
         String message = new JsonCommandProduce().getPigNetWorkState();
         UbtBluetoothManager.getInstance().sendMessageToBle(message);
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (unbinder!=null) {
+        if (unbinder != null) {
             unbinder.unbind();
         }
     }
-    protected  abstract void onNoPig();
-    protected  abstract void onNoSetNet();
-    protected  abstract void onHasPig();
-    protected  abstract void onSetedNet();
+
+    protected abstract void onNoPig();
+
+    protected abstract void onNoSetNet();
+
+    protected abstract void onHasPig();
+
+    protected abstract void onSetedNet();
 }

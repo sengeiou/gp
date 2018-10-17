@@ -11,6 +11,7 @@ import com.ubtechinc.goldenpig.comm.entity.UserInfo;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.login.repository.UBTAuthRepository;
+import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.repository.TVSAuthRepository;
 import com.ubtechinc.goldenpig.utils.PigUtils;
@@ -82,6 +83,10 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
                         Log.e("getPigList", response);
                         PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance()
                                 .getCurrentPigList());
+                        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+                        if (pigInfo != null) {
+                            UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
+                        }
                     }
                 });
     }

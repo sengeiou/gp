@@ -1,6 +1,5 @@
 package com.ubtechinc.goldenpig.pigmanager.mypig;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -8,9 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import com.ubt.qrcodelib.Constants;
-import com.ubt.qrcodelib.QRScannerActivity;
 import com.ubt.qrcodelib.ZxingUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
@@ -78,7 +75,7 @@ public class QRCodeActivity extends BaseToolBarActivity implements View.OnClickL
             ((TextView) findViewById(R.id.ubt_tv_qrcode_sub_title)).setText(R.string.ubt_pair_pig);
             ((TextView) findViewById(R.id.ubt_tv_qrcode_desc)).setText(R.string.ubt_pair_pig_desc);
             mToolbarRightBtn = findViewById(R.id.ubt_imgbtn_add);
-            mToolbarRightBtn.setImageResource(R.drawable.ic_add); ///暂时使用这个图标，目前还没有图标
+            mToolbarRightBtn.setImageResource(R.drawable.ic_shaoyishao); ///暂时使用这个图标，目前还没有图标
             mToolbarRightBtn.setVisibility(View.VISIBLE);
             mToolbarRightBtn.setOnClickListener(this);
 
@@ -171,6 +168,7 @@ public class QRCodeActivity extends BaseToolBarActivity implements View.OnClickL
                     ActivityRoute.toAnotherActivity(this, PairQRScannerActivity.class, Constants.QR_PAIR_PIG_REQUEST, false);
                 }
                 break;
+                default:
         }
 
     }

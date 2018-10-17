@@ -24,8 +24,11 @@ import com.ubtechinc.nets.http.ThrowableWrapper;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author ubt
+ */
 public class TransferAdminActivity extends BaseToolBarActivity implements View.OnClickListener {
-    private ArrayList<CheckBindRobotModule.User> mUserList;
+    private ArrayList<CheckBindRobotModule.User> mUserList = new ArrayList<>();
     private MemberPermissionAdapter adapter;
     private RecyclerView memberRcy;
     private PigInfo mPig;
@@ -41,8 +44,8 @@ public class TransferAdminActivity extends BaseToolBarActivity implements View.O
         setTitleBack(true);
         setToolBarTitle(R.string.ubt_trans_permission);
         setSkipEnable(true);
-        getUserList(getIntent());
         initViews();
+        getUserList(getIntent());
     }
 
     @Override
@@ -62,7 +65,6 @@ public class TransferAdminActivity extends BaseToolBarActivity implements View.O
         memberRcy.setLayoutManager(new WrapContentLinearLayoutManager(this));
         memberRcy.setAdapter(adapter);
 
-        adapter.notifyDataSetChanged();
         mPig = AuthLive.getInstance().getCurrentPig();
     }
 
@@ -81,13 +83,14 @@ public class TransferAdminActivity extends BaseToolBarActivity implements View.O
         }
         if (mUserList == null || mUserList.size() == 0) {
             mUserList = new ArrayList<>();
-            getMember("1");
+            getMember("0");
         }
     }
 
     private void getMember(String admin) {
-        if (isDownloadedUserList)
+        if (isDownloadedUserList) {
             return;
+        }
         if ("0".equals(admin)) {
             isDownloadedUserList = true;
         }
@@ -118,9 +121,9 @@ public class TransferAdminActivity extends BaseToolBarActivity implements View.O
                 if (mUserList != null) {
                     mUserList.addAll(bindUsers);
                     if (adapter != null) {
-                        adapter.notifyDataSetChanged();
+                        adapter.update(mUserList);
+//                        adapter.notifyDataSetChanged();
                     }
-                    mUserList.addAll(bindUsers);
                 }
                 getMember("0");
             }
@@ -158,17 +161,19 @@ public class TransferAdminActivity extends BaseToolBarActivity implements View.O
             httpProxy.transferAdmin(this, CookieInterceptor.get().getToken(), AuthLive.getInstance().getCurrentPig().getRobotName(), userId, new TransferAdminHttpProxy.TransferCallback() {
                 @Override
                 public void onError(String error) {
-
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("转让失败");
                 }
 
                 @Override
                 public void onException(Exception e) {
-
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("转让失败");
                 }
 
                 @Override
                 public void onSuccess(String msg) {
-
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("转让成功");
+                    setResult(RESULT_OK);
+                    finish();
                 }
             });
         }

@@ -50,7 +50,6 @@
         android:gravity="center_vertical|start"
         android:paddingStart="@dimen/ubt_16dp"
         android:text="@string/ubt_account"
-        android:drawableEnd="@drawable/ic_goto"
         android:paddingEnd="@dimen/ubt_16dp"
         app:rightText="@string/ubt_associalted_account"
         app:rightTextColor="@color/ubt_version_color"

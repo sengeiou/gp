@@ -61,6 +61,7 @@ public abstract class QRScannerActivity extends AppCompatActivity implements Sur
         setContentView(R.layout.activity_qrscanner);
 
         toolbar = (Toolbar) findViewById(R.id.ubt_qr_toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_return);
         setSupportActionBar(toolbar);
         if (getSupportActionBar()!=null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -257,6 +258,7 @@ public abstract class QRScannerActivity extends AppCompatActivity implements Sur
      * When the beep has finished playing, rewind to queue up another one.
      */
     private final MediaPlayer.OnCompletionListener beepListener = new MediaPlayer.OnCompletionListener() {
+        @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
             mediaPlayer.seekTo(0);
         }
@@ -268,8 +270,9 @@ public abstract class QRScannerActivity extends AppCompatActivity implements Sur
         }
     }
     protected void setErrorTips(String errorTips){
-        if (errorTv==null)
-            errorTv=findViewById(R.id.ubt_tv_error);
+        if (errorTv==null) {
+            errorTv = findViewById(R.id.ubt_tv_error);
+        }
         errorTv.setText(errorTips);
         errorTv.setVisibility(View.VISIBLE);
     }

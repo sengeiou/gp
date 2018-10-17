@@ -3,11 +3,20 @@ package com.ubtechinc.goldenpig.main.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+import com.tencent.TIMCustomElem;
+import com.tencent.TIMMessage;
+import com.ubt.imlibv2.bean.UbtTIMManager;
+import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
+import com.ubt.improtolib.GPResponse;
+import com.ubt.improtolib.UserRecords;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.commlib.log.UBTLog;
 import com.ubtechinc.goldenpig.BuildConfig;
@@ -15,22 +24,36 @@ import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseFragment;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
+import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
+import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
+import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.SkillActivity;
 import com.ubtechinc.goldenpig.personal.MemberQRScannerActivity;
 import com.ubtechinc.goldenpig.pigmanager.RecordActivity;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.pigmanager.bean.RecordModel;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPairPigQRHttpProxy;
 import com.ubtechinc.goldenpig.pigmanager.register.UnpairHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.voiceChat.ui.ChatActivity;
+import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+
 import butterknife.BindView;
 import butterknife.OnClick;
+
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CONTACT_PIC_SUCCESS;
 
 /**
  * @author : HQT
@@ -40,7 +63,7 @@ import butterknife.OnClick;
  * @change :
  * @changTime :2018/8/17 18:00
  */
-public class PigFragment extends BaseFragment {
+public class PigFragment extends BaseFragment implements Observer {
 
     @BindView(R.id.ubt_layout_tips)
     View mTipsView;
@@ -59,6 +82,8 @@ public class PigFragment extends BaseFragment {
 
     @BindView(R.id.ll_voicechat)
     LinearLayout llVoiceChat;
+    @BindView(R.id.ubt_tv_call_sub_title)
+    TextView ubt_tv_call_sub_title;
 
     int pairUserId;
     String serialNumber;
@@ -74,6 +99,24 @@ public class PigFragment extends BaseFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pig, container, false);
+        EventBusUtil.register(this);
+        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+        if (pigInfo != null) {
+            UbtTIMManager.getInstance().setMsgObserve(this);
+            UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
+                @Override
+                public void onError(int i, String s) {
+                    Log.e("setOnUbtTIMConver", s);
+                    ToastUtils.showShortToast(s);
+                }
+
+                @Override
+                public void onSuccess() {
+                    Log.e("setOnUbtTIMConver", "sss");
+                }
+            });
+            UbtTIMManager.getInstance().queryLatestRecord();
+        }
         return view;
     }
 
@@ -98,7 +141,8 @@ public class PigFragment extends BaseFragment {
     }
 
     private void updatePigPair() {
-        new GetPairPigQRHttpProxy().getPairPigQR(getActivity(), CookieInterceptor.get().getToken(), BuildConfig.APP_ID, new GetPairPigQRHttpProxy.GetPairPigQRCallBack() {
+        new GetPairPigQRHttpProxy().getPairPigQR(getActivity(), CookieInterceptor.get().getToken(), BuildConfig
+                .APP_ID, new GetPairPigQRHttpProxy.GetPairPigQRCallBack() {
             @Override
             public void onError(String error) {
 
@@ -156,7 +200,8 @@ public class PigFragment extends BaseFragment {
 
     }
 
-    @OnClick({R.id.ubt_bind_tv, R.id.ll_record, R.id.ll_voicechat, R.id.view_pig_pair_add, R.id.view_pig_pair_info, R.id.view_skill})
+    @OnClick({R.id.ubt_bind_tv, R.id.ll_record, R.id.ll_voicechat, R.id.view_pig_pair_add, R.id.view_pig_pair_info, R
+            .id.view_skill})
     public void Onclick(View view) {
         switch (view.getId()) {
             case R.id.ll_voicechat:
@@ -227,6 +272,70 @@ public class PigFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        EventBusUtil.unregister(this);
+    }
 
+    @Override
+    public void update(Observable o, Object arg) {
+        TIMMessage msg = (TIMMessage) arg;
+        for (int i = 0; i < msg.getElementCount(); ++i) {
+            TIMCustomElem elem = (TIMCustomElem) msg.getElement(i);
+            try {
+                dealMsg(elem.getData());
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void dealMsg(Object arg) throws InvalidProtocolBufferException {
+        ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage
+                .parseFrom((byte[]) arg);
+        String action = msg.getHeader().getAction();
+        switch (action) {
+            case "/im/record/latest":
+                List<UserRecords.Record> list = msg.getPayload().unpack(UserRecords.UserRecord
+                        .class).getRecordList();
+                List<RecordModel> ss = new ArrayList<>();
+                for (int j = 0; j < list.size(); j++) {
+                    RecordModel mo = new RecordModel();
+                    mo.name = list.get(j).getName();
+                    mo.number = list.get(j).getNumber();
+                    mo.id = list.get(j).getId();
+                    mo.type = list.get(j).getType();
+                    mo.dateLong = list.get(j).getDateLong() * 1000;
+                    mo.duration = list.get(j).getDuration();
+                    ss.add(mo);
+                }
+                if (ss.size() == 0) {
+                    ubt_tv_call_sub_title.setText("无");
+                } else {
+                    ubt_tv_call_sub_title.setText(ss.get(0).number);
+                }
+                break;
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(Event event) {
+        if (event != null && event.getCode() == CONTACT_PIC_SUCCESS) {
+            PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+            if (pigInfo != null) {
+                UbtTIMManager.getInstance().setMsgObserve(this);
+                UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
+                    @Override
+                    public void onError(int i, String s) {
+                        Log.e("setOnUbtTIMConver", s);
+                        ToastUtils.showShortToast(s);
+                    }
+
+                    @Override
+                    public void onSuccess() {
+                        Log.e("setOnUbtTIMConver", "sss");
+                    }
+                });
+                UbtTIMManager.getInstance().queryLatestRecord();
+            }
+        }
     }
 }

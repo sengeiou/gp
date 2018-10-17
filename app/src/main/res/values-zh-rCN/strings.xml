@@ -54,7 +54,7 @@
     <string name="ubt_feedback">意见反馈</string>
     <string name="ubt_about">关于</string>
     <string name="ubt_version_format">版本%1$s</string>
-    <string name="ubt_account">账号关联</string>
+    <string name="ubt_account">账号类型</string>
     <string name="ubt_associalted_account">关联QQ或微信</string>
     <string name="ubt_user_info">个人信息</string>
     <string name="ubt_photo">头像</string>
@@ -70,9 +70,9 @@
     <string name="ubt_transfer_admin_tips">你是管理员，解绑前请先转让管理员权限</string>
     <string name="ubt_exit_group_tips">你是管理员，退出成员组请先转让管理员权限</string>
     <string name="ubt_pig_unbing">音箱未绑定，</string>
-    <string name="ubt_pig_unset_net">音箱未配网</string>
+    <string name="ubt_pig_unset_net">音箱未配网，</string>
     <string name="ubt_click_for_bind">点击绑定</string>
-    <string name="ubt_click_bind">点击绑定</string>
+    <string name="ubt_click_for_net">点击配网</string>
     <string name="ubt_hotspot_name">热点名称</string>
     <string name="ubt_device_version_update">设备版本升级</string>
     <string name="ubt_upgrade_now">立即升级</string>

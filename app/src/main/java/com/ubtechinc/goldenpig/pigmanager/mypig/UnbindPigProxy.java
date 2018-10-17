@@ -40,19 +40,10 @@ public class UnbindPigProxy extends BaseHttpProxy {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                // if (loginListener!=null) {
-                if (response.isSuccessful()) {
-
-                    if (callback != null) {
-                        String result = response.body().source().readUtf8();
-                        callback.onSuccess(result);
-                    }
-
-                    //IM通知小猪解绑成功
-
+                if (callback != null) {
+                    String result = response.body().source().readUtf8();
+                    callback.onSuccess(result);
                 }
-                //}
-
             }
         });
 
