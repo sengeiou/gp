@@ -1,11 +1,10 @@
 package com.ubtechinc.goldenpig.login.repository;
 
 
+import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.comm.entity.UserInfo;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.login.ThirdPartLoginModule;
-
-import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.logout.LoginoutModule;
 import com.ubtechinc.nets.ResponseListener;
 import com.ubtechinc.nets.http.HttpProxy;
@@ -21,8 +20,6 @@ import java.util.HashMap;
 public class UBTAuthRepository {
     public static final String TAG = "UBTAuthRepository";
 
-    public static final int UBT_APP_ID = 100020012;//为了后台统计不同产品的注册数据，增肌一个字段ubtAppId
-
     public void login(LoginInfo info, final UBTAuthCallBack callback) {
         final ThirdPartLoginModule.LoginRequest loginRequest = new ThirdPartLoginModule().new LoginRequest();
         loginRequest.setOpenId(info.getOpenId());
@@ -30,7 +27,9 @@ public class UBTAuthRepository {
         loginRequest.setMiniTvsId(info.getMiniTvsId());
         loginRequest.setAccessToken(info.getAccessToken());
         loginRequest.setAppId(info.getAppId());
-        loginRequest.setUbtAppId(UBT_APP_ID);//为了后台统计不同产品的注册数据，增肌一个字段ubtAppId
+
+        //为了后台统计不同产品的注册数据，增肌一个字段ubtAppId
+        loginRequest.setUbtAppId(Integer.parseInt(BuildConfig.APP_ID));
         CookieInterceptor.get().setLoginInfo(info);
         HttpProxy.get().doPut(loginRequest, new ResponseListener<ThirdPartLoginModule.Response>() {
 

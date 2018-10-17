@@ -4,9 +4,7 @@ package com.ubt.imlibv2.bean;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.tencent.TIMConversation;
 import com.tencent.TIMCallBack;
-import com.tencent.TIMConnListener;
 import com.tencent.TIMConversation;
 import com.tencent.TIMConversationType;
 import com.tencent.TIMCustomElem;
@@ -14,15 +12,12 @@ import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
 import com.tencent.TIMTextElem;
 import com.tencent.TIMUser;
-import com.tencent.TIMUserStatusListener;
 import com.tencent.TIMValueCallBack;
-
 import com.ubt.imlibv2.BuildConfig;
 import com.ubt.imlibv2.bean.event.MessageEvent;
 import com.ubt.imlibv2.bean.listener.OnPigOnlineStateListener;
 import com.ubt.imlibv2.bean.listener.OnTIMLoginListener;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
-import com.ubt.improtolib.UserContacts;
 import com.ubt.improtolib.UserRecords;
 import com.ubtechinc.commlib.log.UbtLogger;
 
@@ -48,7 +43,7 @@ public class UbtTIMManager {
     private TIMRepository repository;
     private TIMPigOnLineRepository onLineRepository;
     private String channel;
-    public static  String userId="";
+    public static String userId = "";
     private UbtIMCallBack ubtCallBack;
     private TIMConversation conversation;
     private final static String TAG = "UbtTIMManager";
@@ -59,12 +54,12 @@ public class UbtTIMManager {
     public static String avatarURL;
 
     private OnUbtTIMConverListener onUbtTIMConverListener;
-    private ArrayBlockingQueue<UbtTIMMsg> msgQueue=new ArrayBlockingQueue<>(16); //IM信息队列
+    private ArrayBlockingQueue<UbtTIMMsg> msgQueue = new ArrayBlockingQueue<>(16); //IM信息队列
 
 
     private UbtTIMManager() {
         repository = new TIMRepository();
-        onLineRepository=new TIMPigOnLineRepository();
+        onLineRepository = new TIMPigOnLineRepository();
         onLineRepository.setLoginListener(new OnPigOnlineStateListener() {
             @Override
             public void onFailure(String erroe) {
@@ -72,24 +67,26 @@ public class UbtTIMManager {
             }
 
             @Override
-            public void OnSuccess(String account,String state,String msg) {
+            public void OnSuccess(String account, String state, String msg) {
                 //sendTIMMsg( msg);
             }
         });
-        doTIMLogin();
+        setTIMLoginListener();
     }
 
     public static UbtTIMManager getInstance() {
-        if (instance == null)
+        if (instance == null) {
             synchronized (UbtTIMManager.class) {
                 if (instance == null) {
                     instance = new UbtTIMManager();
                 }
             }
+        }
         return instance;
     }
-    private void sendTIMMsg(String msg){
-        if (conversation!=null&&!TextUtils.isEmpty(msg)){
+
+    private void sendTIMMsg(String msg) {
+        if (conversation != null && !TextUtils.isEmpty(msg)) {
             //构造一条消息
             TIMMessage timmsg = new TIMMessage();
             //添加文本内容
@@ -110,6 +107,7 @@ public class UbtTIMManager {
             });
         }
     }
+
     public void loginTIM(String userId, String channel) {
         this.userId = userId;
         this.channel = channel;
@@ -119,13 +117,15 @@ public class UbtTIMManager {
             repository.login(singa, String.valueOf(time), userId, channel);
         }
     }
-    public void setPigAccount(String account){
-        conversation=TIMManager.getInstance().getConversation(
+
+    public void setPigAccount(String account) {
+        conversation = TIMManager.getInstance().getConversation(
                 TIMConversationType.C2C,    //会话类型：单聊
                 account);                      //会话对方用户帐号//对方ID
 
     }
-    public void doTIMLogin() {
+
+    public void setTIMLoginListener() {
         if (repository != null) {
             repository.setLoginListener(new OnTIMLoginListener() {
                 @Override
@@ -155,52 +155,67 @@ public class UbtTIMManager {
                 accountType = jsonObject.getString("accountType");
                 userSig = jsonObject.getString("userSig");
                 appidAt3rd = jsonObject.getInt("appidAt3rd");
-                final int type = Integer.valueOf(accountType);
-                InitBusiness.start(com.ubtech.utilcode.utils.Utils.getContext(), 0, type);
-                initUserConfig();
-                TIMUser user=new TIMUser();
-                user.setIdentifier(userId);
-                try {
-                    TIMManager.getInstance().login(
-                            appidAt3rd,
-                            user,
-                            userSig,
-                            timCallBack);
-                }catch (RuntimeException e){
-                    e.printStackTrace();
-                }
-                isLoginedTIM = true;
-                sendCache();
-        }
-        }
-    }
-    public void setMsgObserve(Observer observe){
-        MessageEvent.getInstance().addObserver(observe);
-    }
-    public void deleteMsgObserve(Observer observer){
-        MessageEvent.getInstance().deleteObserver(observer);
-    }
-    private void sendCache(){
-        if (msgQueue!=null&&msgQueue.size()>0){
-            while (msgQueue.peek() != null ) {
-                UbtTIMMsg msg=msgQueue.poll();
-                send(msg.account,msg.msg);
+                doTIMLogin();
             }
         }
     }
-    public void send(String account,String msg) {
+
+    public void doTIMLogin() {
+        final int type = Integer.valueOf(accountType);
+        InitBusiness.start(com.ubtech.utilcode.utils.Utils.getContext(), 0, type);
+        initUserConfig();
+        TIMUser user = new TIMUser();
+        user.setIdentifier(userId);
+        try {
+            TIMManager.getInstance().login(
+                    appidAt3rd,
+                    user,
+                    userSig,
+                    timCallBack);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+        isLoginedTIM = true;
+        sendCache();
+    }
+
+    /**
+     * TIM登出
+     */
+    public void doTIMLogout() {
+        TIMManager.getInstance().logout(timCallBack);
+    }
+
+    public void setMsgObserve(Observer observe) {
+        MessageEvent.getInstance().addObserver(observe);
+    }
+
+    public void deleteMsgObserve(Observer observer) {
+        MessageEvent.getInstance().deleteObserver(observer);
+    }
+
+    private void sendCache() {
+        if (msgQueue != null && msgQueue.size() > 0) {
+            while (msgQueue.peek() != null) {
+                UbtTIMMsg msg = msgQueue.poll();
+                send(msg.account, msg.msg);
+            }
+        }
+    }
+
+    public void send(String account, String msg) {
         if (!isLoginedTIM) {//
-            UbtTIMMsg ubtMsg=new UbtTIMMsg();
-            ubtMsg.msg=msg;
-            ubtMsg.account=account;
+            UbtTIMMsg ubtMsg = new UbtTIMMsg();
+            ubtMsg.msg = msg;
+            ubtMsg.account = account;
             msgQueue.add(ubtMsg);
             loginTIM(userId, channel);
         } else {
             //检验小猪是否在线
 
             long time = System.currentTimeMillis();
-            String singa= Utils.getSingal(time);
-            onLineRepository.getPligOnLineState(singa,String.valueOf(time),account, BuildConfig.IM_Channel,msg);
+            String singa = Utils.getSingal(time);
+            onLineRepository.getPligOnLineState(singa, String.valueOf(time), account, BuildConfig.IM_Channel, msg);
         }
     }
 
@@ -212,9 +227,11 @@ public class UbtTIMManager {
     public void setUbtCallBack(UbtIMCallBack callBack) {
         this.ubtCallBack = callBack;
     }
+
     public void removeUbtCallBack() {
         this.ubtCallBack = null;
     }
+
     private TIMCallBack timCallBack = new TIMCallBack() {
         @Override
         public void onError(int i, String s) {
@@ -268,61 +285,82 @@ public class UbtTIMManager {
         //RefreshEvent.getInstance().init(userConfig);
        /* userConfig = FriendshipEvent.getInstance().init(userConfig);
         userConfig = GroupEvent.getInstance().init(userConfig);*/
-       // userConfig = MessageEvent.getInstance().init(userConfig);
+        // userConfig = MessageEvent.getInstance().init(userConfig);
         //TIMManager.getInstance().setUserConfig(userConfig);
     }
-    public void  addUser(String nikeName,String number) {
 
+    public void addUser(String nikeName, String number) {
 
         byte[] data = ContactsProtoBuilder.getAddContactsInfo(nikeName, number);
-        TIMMessage msg=creatElem(data);
+        TIMMessage msg = creatElem(data);
         sendTIM(msg);
     }
-    public void  deleteUser(String nikeName,String number,String userId) {
 
+    public void deleteUser(String nikeName, String number, String userId) {
 
-        byte[] data = ContactsProtoBuilder.getDeleteContactsInfo(nikeName, number,userId);
-        TIMMessage msg=creatElem(data);
+        byte[] data = ContactsProtoBuilder.getDeleteContactsInfo(nikeName, number, userId);
+        TIMMessage msg = creatElem(data);
         sendTIM(msg);
     }
-    public void updateUser(String nikeName,String number,String userId) {
 
+    public void updateUser(String nikeName, String number, String userId) {
 
-        byte[] data = ContactsProtoBuilder.getUpdateContactsInfo(nikeName, number,userId);
-        TIMMessage msg=creatElem(data);
+        byte[] data = ContactsProtoBuilder.getUpdateContactsInfo(nikeName, number, userId);
+        TIMMessage msg = creatElem(data);
         sendTIM(msg);
     }
+
     public void queryUser() {
         byte[] data = ContactsProtoBuilder.getQueryData();
-        TIMMessage msg=creatElem(data);
+        TIMMessage msg = creatElem(data);
         sendTIM(msg);
     }
-    public void sendTIM(TIMMessage msg){
-        if (conversation==null){
-            if (onUbtTIMConverListener!=null){
-                onUbtTIMConverListener.onError(0,"TIMConversation 未初始化");
+
+    public void sendTIM(TIMMessage msg) {
+        if (conversation == null) {
+            if (onUbtTIMConverListener != null) {
+                onUbtTIMConverListener.onError(0, "TIMConversation 未初始化");
             }
             return;
         }
-        conversation.sendMessage(msg,new TIMValueCallBack<TIMMessage>(){
+        conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {
 
             @Override
             public void onError(int i, String s) {
-                if (onUbtTIMConverListener!=null){
-                    onUbtTIMConverListener.onError(i,s);
+                if (onUbtTIMConverListener != null) {
+                    onUbtTIMConverListener.onError(i, s);
                 }
             }
 
             @Override
             public void onSuccess(TIMMessage timMessage) {
-                if (onUbtTIMConverListener!=null){
+                if (onUbtTIMConverListener != null) {
                     onUbtTIMConverListener.onSuccess();
                 }
             }
         });
     }
 
-    private TIMMessage creatElem(byte[] data){
+    public void sendTIM(TIMMessage msg, TIMConversation conversation) {
+        conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {
+
+            @Override
+            public void onError(int i, String s) {
+                if (onUbtTIMConverListener != null) {
+                    onUbtTIMConverListener.onError(i, s);
+                }
+            }
+
+            @Override
+            public void onSuccess(TIMMessage timMessage) {
+                if (onUbtTIMConverListener != null) {
+                    onUbtTIMConverListener.onSuccess();
+                }
+            }
+        });
+    }
+
+    private TIMMessage creatElem(byte[] data) {
         //构造一条消息
         TIMMessage msg = new TIMMessage();
         TIMCustomElem elem = new TIMCustomElem();
@@ -339,10 +377,10 @@ public class UbtTIMManager {
     public void setOnUbtTIMConverListener(OnUbtTIMConverListener onUbtTIMConverListener) {
         this.onUbtTIMConverListener = onUbtTIMConverListener;
     }
-    public void removeOnUbtTIMConverListener(){
-        this.onUbtTIMConverListener=null;
-    }
 
+    public void removeOnUbtTIMConverListener() {
+        this.onUbtTIMConverListener = null;
+    }
 
 
     public interface UbtIMCallBack {
@@ -353,25 +391,25 @@ public class UbtTIMManager {
 
     public void queryRecord() {
         byte[] data = ContactsProtoBuilder.getQueryRecord();
-        TIMMessage msg=creatElem(data);
+        TIMMessage msg = creatElem(data);
         sendTIM(msg);
     }
 
-    public void  deleteRecord(List<UserRecords.Record> list) {
+    public void deleteRecord(List<UserRecords.Record> list) {
         byte[] data = ContactsProtoBuilder.getDeleteRecordInfo(list);
-        TIMMessage msg=creatElem(data);
+        TIMMessage msg = creatElem(data);
         sendTIM(msg);
     }
 
-    public void getGuid(){
+    public void getGuid() {
         byte[] data = ContactsProtoBuilder.getGuidIM();
-        TIMMessage msg=creatElem(data);
+        TIMMessage msg = creatElem(data);
         sendTIM(msg);
     }
 
     public void queryLatestRecord() {
         byte[] data = ContactsProtoBuilder.getLastRecord();
-        TIMMessage msg=creatElem(data);
+        TIMMessage msg = creatElem(data);
         sendTIM(msg);
     }
 }

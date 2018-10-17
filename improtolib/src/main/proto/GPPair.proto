@@ -1,0 +1,9 @@
+syntax = "proto3";
+option java_package="com.ubt.improtolib";
+option java_outer_classname="GPPair";
+
+//热点账号信息
+message Pair {
+    int32 action = 1; //1.配对 2.解除配对
+    string userid = 2; //发送对象
+}

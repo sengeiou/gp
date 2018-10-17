@@ -16,6 +16,7 @@ import android.view.WindowManager;
 import android.widget.RadioButton;
 
 import com.ubt.imlibv2.bean.UbtTIMManager;
+import com.ubtechinc.bluetooth.UbtBluetoothManager;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseActivity;
@@ -72,6 +73,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 //        updateTopTip();
+        disConnectBle();
+    }
+
+    private void disConnectBle() {
+        UbtBluetoothManager.getInstance().closeConnectBle();
     }
 
 //    private void updateTopTip() {
