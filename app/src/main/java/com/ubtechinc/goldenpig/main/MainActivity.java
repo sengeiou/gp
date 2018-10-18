@@ -15,14 +15,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RadioButton;
 
-import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtechinc.bluetooth.UbtBluetoothManager;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseActivity;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
-import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
-import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.LoginActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.fragment.HouseFragment;
@@ -36,12 +33,7 @@ import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.nets.http.ThrowableWrapper;
 
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-
 import java.util.ArrayList;
-
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CONTACT_PIC_SUCCESS;
 
 /**
  * @author : HQT
@@ -135,6 +127,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         houseRbtn.setOnClickListener(this);
 
         fragmentPage = (ViewPager) findViewById(R.id.ubt_pg_main_pager);
+        fragmentPage.setOffscreenPageLimit(2);
 
         fragments = new ArrayList<>();
         fragments.add(new PigFragment());

@@ -275,14 +275,14 @@ public class PigFragment extends BaseFragment implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        TIMMessage msg = (TIMMessage) arg;
-        for (int i = 0; i < msg.getElementCount(); ++i) {
-            TIMCustomElem elem = (TIMCustomElem) msg.getElement(i);
-            try {
+        try {
+            TIMMessage msg = (TIMMessage) arg;
+            for (int i = 0; i < msg.getElementCount(); ++i) {
+                TIMCustomElem elem = (TIMCustomElem) msg.getElement(i);
                 dealMsg(elem.getData());
-            } catch (InvalidProtocolBufferException e) {
-                e.printStackTrace();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

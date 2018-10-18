@@ -183,7 +183,9 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
     protected void onResume() {
         super.onResume();
         mPig = AuthLive.getInstance().getCurrentPig();
-        mSearialNoTv.setText(String.format(getString(R.string.ubt_pig_serialno), mPig.getRobotName()));
+        if (mPig != null) {
+            mSearialNoTv.setText(String.format(getString(R.string.ubt_pig_serialno), mPig.getRobotName()));
+        }
         showPigNo();
         updatePigList();
     }
