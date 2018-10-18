@@ -3,6 +3,7 @@ package com.ubt.imlibv2.bean;
 import com.google.protobuf.Any;
 import com.tencent.TIMCustomElem;
 import com.tencent.TIMMessage;
+import com.ubt.improtolib.GPPair;
 import com.ubt.improtolib.UserContacts;
 import com.ubt.improtolib.UserRecords;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
@@ -181,6 +182,24 @@ public class ContactsProtoBuilder {
         elem.setData(data);
         msg.addElement(elem);
         return msg;
+    }
+
+    public static TIMMessage createTIMMsg(String action) {
+        return createTIMMsg(createBaseData(action));
+    }
+
+    public static byte[] syncPairInfo(int action, String userid) {
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction(IM_ACCOUNT_PAIR)
+                .setTime(System.currentTimeMillis()).build();
+        GPPair.Pair.Builder builder = com.ubt.improtolib.GPPair.Pair.newBuilder();
+        builder.setAction(action);
+        builder.setUserid(userid);
+        GPPair.Pair message = builder.build();
+        ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer.ChannelMessage.newBuilder()
+                .setHeader(header)
+                .setPayload(Any.pack(message))
+                .build();
+        return channelMessage.toByteArray();
     }
 
     public static byte[] getHotSpot() {

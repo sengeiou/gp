@@ -109,7 +109,7 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer,
         dialog.show();
     }
 
-    /*
+    /**
     * 显示修改热点密码对话框
     * */
     private void showUpdatePwdDialog() {

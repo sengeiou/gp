@@ -3,7 +3,6 @@ package com.ubtechinc.tvlloginlib;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.tencent.ai.tvs.AuthorizeListener;
@@ -16,10 +15,6 @@ import com.tencent.ai.tvs.env.ELoginPlatform;
 import com.tencent.ai.tvs.info.DeviceManager;
 import com.tencent.ai.tvs.info.UserInfoManager;
 import com.ubtechinc.tvlloginlib.entity.LoginInfo;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +41,7 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
     private LoginProxy proxy;
     private TVSAlarmListener mTVSAlarmListener;
     public LoginInfo info;
-    public static ELoginEnv eLoginEnv = ELoginEnv.TEST;
+    public static ELoginEnv eLoginEnv = ELoginEnv.FORMAL;
     public static TVSManager getInstance(Context context, String wxId, String qqOpenId) {
         if (instance == null) {
             instance = new TVSManager(context, wxId, qqOpenId);

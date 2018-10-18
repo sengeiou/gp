@@ -1,6 +1,5 @@
 package com.ubtechinc.goldenpig.app;
 
-import android.app.Application;
 import android.content.Context;
 import android.support.multidex.MultiDex;
 
@@ -10,10 +9,8 @@ import com.tencent.ai.tvs.env.ELoginEnv;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.nets.BuildConfig;
 import com.ubtechinc.protocollibrary.communit.ProtoBufferDisposer;
-import com.ubtechinc.protocollibrary.communit.Utils;
 
 import static com.ubtechinc.tvlloginlib.TVSManager.eLoginEnv;
-import static qrom.component.wup.base.ContextHolder.getApplicationContext;
 
 /**
  * @author hqt
@@ -24,6 +21,8 @@ public class UBTPGApplication extends LoginApplication {
     private static UBTPGApplication instance;
     static Context mContext;
     public static boolean voiceMail_debug = false;
+
+    public static boolean pig_net_status = false;
 
     @Override
     public void onCreate() {
