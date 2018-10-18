@@ -410,6 +410,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
      * 显示解绑对话框
      */
     private void showOnBindTipDialog() {
+        dismissLoadDialog();
         if (pigListDialog != null) {
             pigListDialog.dismiss();
         }
