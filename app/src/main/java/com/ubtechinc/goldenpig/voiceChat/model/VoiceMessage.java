@@ -210,11 +210,17 @@ public class VoiceMessage extends Message {
             //VOICE LENGTH IS NOT SAME
            long voicetime=((TIMSoundElem) message.getElement(0)).getDuration();
            if(5<voicetime&&voicetime<10){
-               tv.setText(" ");
-           }else if(10<voicetime&&voicetime<20){
                tv.setText("     ");
-           }else if(20<voicetime&&voicetime<30){
+           }else if(10<voicetime&&voicetime<15){
                tv.setText("         ");
+           }else if(15<voicetime&&voicetime<20){
+               tv.setText("             ");
+           }else if(20<voicetime&&voicetime<25){
+               tv.setText("                 ");
+           }else if(25<voicetime&&voicetime<30){
+               tv.setText("                     ");
+           }else if(voicetime>30){
+               tv.setText("                         ");
            }
            if (message.isSelf()) {
                linearLayout.addView(tv);

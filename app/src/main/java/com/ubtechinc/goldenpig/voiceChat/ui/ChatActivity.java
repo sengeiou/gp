@@ -29,6 +29,7 @@ import com.tencent.TIMMessageStatus;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.improtolib.VoiceMailContainer;
 import com.ubtechinc.commlib.log.UBTLog;
+import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
@@ -95,7 +96,7 @@ public class ChatActivity extends FragmentActivity implements ChatView {
         identify = getIntent().getStringExtra("identify");
         if (pigInfo != null) {
             identify=pigInfo.getRobotName();
-            UBTLog.d("ChatActivity", "Pig identity  "+identify +"me identity "+UbtTIMManager.userId);
+            UbtLogger.d("ChatActivity", "Pig identity  "+identify +"me identity "+UbtTIMManager.userId);
         } else {
            // identify="2cb9b9a3";
            // identify="8989898989880000";
