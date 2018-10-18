@@ -34,5 +34,6 @@ public class EventBusUtil {
     public static final int ADD_REMIND_SUCCESS = 10009;
     public static final int ADD_REMIND_REPEAT_SUCCESS = 10010;
     public static final int CONTACT_PIC_SUCCESS = 10011;
+    public static final int EDIT_RECORD_CALLBACK = 10012;
 
 }

@@ -22,7 +22,7 @@
             android:paddingLeft="@dimen/dp_15"
             android:paddingRight="@dimen/dp_15"
             android:text="删除"
-            android:textColor="@color/ubt_tips_txt_color"
+            android:textColor="@color/ubt_tab_btn_txt_color"
             android:textSize="@dimen/sp_15"
             android:visibility="visible" />
 

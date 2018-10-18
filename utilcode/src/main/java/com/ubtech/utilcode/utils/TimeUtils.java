@@ -1734,8 +1734,11 @@ public class TimeUtils {
 //            return "昨天";
 //        }
         if (delta < 30L * ONE_DAY) {
-            long days = toDays(delta);
-            return (days <= 0 ? 1 : days) + ONE_DAY_AGO;
+            long days = toDay(timenow) - toDay(date.getTime());
+            if(days <= 1){
+                return "昨天";
+            }
+            return days + ONE_DAY_AGO;
         }
         if (delta < 12L * 4L * ONE_WEEK) {
             long months = toMonths(delta);

@@ -48,6 +48,8 @@ import java.util.Observer;
 import butterknife.BindView;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DELETE_RECORD_SUCCESS;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.EDIT_RECORD_CALLBACK;
+import static com.ubtechinc.goldenpig.utils.CommendUtil.TIMEOUT;
 
 public class RecordActivity extends BaseNewActivity implements Observer {
     @BindView(R.id.rl_titlebar)
@@ -109,7 +111,7 @@ public class RecordActivity extends BaseNewActivity implements Observer {
                 if (mHandler.hasMessages(1)) {
                     mHandler.removeMessages(1);
                 }
-                mHandler.sendEmptyMessageDelayed(1, 10 * 1000);// 20s 秒后检查加载框是否还在
+                mHandler.sendEmptyMessageDelayed(1, TIMEOUT * 1000);// 20s 秒后检查加载框是否还在
                 UbtTIMManager.getInstance().queryRecord();
             }
         });
@@ -168,15 +170,17 @@ public class RecordActivity extends BaseNewActivity implements Observer {
                 Log.e("setOnUbtTIMConver", "sss");
             }
         });
+        rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
+        rl_titlebar.getTvRight().setEnabled(false);
         onRefresh();
     }
 
     public void onRefresh() {
-        LoadingDialog.getInstance(this).setTimeout(10).setShowToast(true).show();
+        LoadingDialog.getInstance(this).setTimeout(TIMEOUT).setShowToast(true).show();
         if (mHandler.hasMessages(1)) {
             mHandler.removeMessages(1);
         }
-        mHandler.sendEmptyMessageDelayed(1, 10 * 1000);// 20s 秒后检查加载框是否还在
+        mHandler.sendEmptyMessageDelayed(1, TIMEOUT * 1000);// 20s 秒后检查加载框是否还在
         UbtTIMManager.getInstance().queryRecord();
     }
 
@@ -254,7 +258,7 @@ public class RecordActivity extends BaseNewActivity implements Observer {
                     }
                     UbtTIMManager.getInstance().deleteRecord(list);
                     deletePosition = adapterPosition;
-                    LoadingDialog.getInstance(RecordActivity.this).setTimeout(20)
+                    LoadingDialog.getInstance(RecordActivity.this).setTimeout(TIMEOUT)
                             .setShowToast(true).show();
                 }
             }
@@ -334,6 +338,12 @@ public class RecordActivity extends BaseNewActivity implements Observer {
                     if (mList.size() == 0) {
                         mStateView.showEmpty();
                         mStateView.setEmptyViewMSG("无最近通话");
+                        rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
+                        rl_titlebar.getTvRight().setEnabled(false);
+                    } else {
+                        mStateView.showContent();
+                        rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_checked_color));
+                        rl_titlebar.getTvRight().setEnabled(true);
                     }
                     adapter.notifyDataSetChanged();
                 } else {
@@ -348,6 +358,23 @@ public class RecordActivity extends BaseNewActivity implements Observer {
         super.onReceiveEvent(event);
         if (event.getCode() == DELETE_RECORD_SUCCESS) {
             onRefresh();
+        } else if (event.getCode() == EDIT_RECORD_CALLBACK) {
+            List<RecordModel> li = (List<RecordModel>) event.getData();
+            if (li != null) {
+                mList.clear();
+                mList.addAll(li);
+                adapter.notifyDataSetChanged();
+                if (mList.size() == 0) {
+                    mStateView.showEmpty();
+                    mStateView.setEmptyViewMSG("无最近通话");
+                    rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
+                    rl_titlebar.getTvRight().setEnabled(false);
+                } else {
+                    mStateView.showContent();
+                    rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_checked_color));
+                    rl_titlebar.getTvRight().setEnabled(true);
+                }
+            }
         }
     }
 
@@ -362,8 +389,12 @@ public class RecordActivity extends BaseNewActivity implements Observer {
         if (mList.size() == 0) {
             mStateView.showEmpty();
             mStateView.setEmptyViewMSG("无最近通话");
+            rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
+            rl_titlebar.getTvRight().setEnabled(false);
         } else {
             mStateView.showContent();
+            rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_checked_color));
+            rl_titlebar.getTvRight().setEnabled(true);
         }
         adapter.notifyDataSetChanged();
     }

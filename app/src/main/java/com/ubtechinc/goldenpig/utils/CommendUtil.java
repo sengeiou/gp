@@ -109,4 +109,5 @@ public class CommendUtil {
         return (millis + TimeZone.getDefault().getOffset(millis)) / MILLIS_IN_DAY;
     }
 
+    public static final int TIMEOUT = 15;
 }
