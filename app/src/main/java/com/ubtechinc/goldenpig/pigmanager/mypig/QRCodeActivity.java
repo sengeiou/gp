@@ -145,7 +145,7 @@ public class QRCodeActivity extends BaseToolBarActivity implements View.OnClickL
                 if (resultCode == Constants.QR_PAIR_PIG_SUCCESS && data != null) {
                     doPairPig(data.getDataString());
                 } else {
-                    ToastUtils.showShortToast(R.string.ubt_get_qr_pair_pig_fialure);
+//                    ToastUtils.showShortToast(R.string.ubt_get_qr_pair_pig_fialure);
                 }
                 break;
         }
