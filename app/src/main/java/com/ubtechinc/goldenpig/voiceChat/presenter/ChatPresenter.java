@@ -29,7 +29,7 @@ public class ChatPresenter implements Observer {
     private ChatView view;
     private TIMConversation conversation;
     private boolean isGetingMessage = false;
-    private final int LAST_MESSAGE_NUM = 20;
+    private final int LAST_MESSAGE_NUM = 200;
     public static int MESSAGE_TEXT=0;
     public static int MESSAGE_VOICE=1;
     public static int MESSAGE_VIDEO=2;
@@ -243,7 +243,7 @@ public class ChatPresenter implements Observer {
 
                 @Override
                 public void onSuccess(List<TIMMessage> timMessages) {
-                    Log.e("NYLive","get message success");
+                    Log.e("NYLive","get message success" +timMessages.size());
                     isGetingMessage = false;
                     view.showMessage(timMessages);
                 }

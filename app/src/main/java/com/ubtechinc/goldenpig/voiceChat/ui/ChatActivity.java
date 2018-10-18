@@ -104,9 +104,9 @@ public class ChatActivity extends FragmentActivity implements ChatView {
           //  identify="889834038000566";
             //identify="809722";
             //INSTALL XIAOMI MACHINE
-            identify="813312";
+            //identify="813312";
             //INSTALL SAMSUNG MACHINE
-           // identify="776322";
+           identify="776322";
             Log.d("ChatActivity", "test identity  "+identify);
         }
        // type = (TIMConversationType) getIntent().getSerializableExtra("type");
@@ -249,9 +249,7 @@ public class ChatActivity extends FragmentActivity implements ChatView {
             if (mMessage == null || messages.get(i).status() == TIMMessageStatus.HasDeleted) continue;
             if (mMessage instanceof CustomMessage && (((CustomMessage) mMessage).getType() == CustomMessage.Type.TYPING ||
                     ((CustomMessage) mMessage).getType() == CustomMessage.Type.INVALID)) continue;
-
             ++newMsgNum;
-
             if (i != messages.size() - 1){
                 mMessage.setHasTime(messages.get(i+1));
                 messageList.add(0, mMessage);
