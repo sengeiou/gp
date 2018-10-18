@@ -30,6 +30,7 @@ import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.improtolib.VoiceMailContainer;
 import com.ubtechinc.commlib.log.UBTLog;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.voiceChat.ChannelInfo;
@@ -297,6 +298,15 @@ public class ChatActivity extends FragmentActivity implements ChatView {
                         //发送内容包含敏感词
                         msg.setDesc(getString(R.string.chat_content_bad));
                         adapter.update(messageList);
+                        if(UBTPGApplication.voiceMail_debug) {
+                            Toast.makeText(this, "内容含有敏感词", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case 6011:
+                        adapter.update(messageList);
+                        if(UBTPGApplication.voiceMail_debug) {
+                            Toast.makeText(this, "接收方不存在(desc: to user invalid)", Toast.LENGTH_SHORT).show();
+                        }
                         break;
                 }
             }
