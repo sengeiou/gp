@@ -1,6 +1,16 @@
 package com.ubtechinc.goldenpig.personal.management;
 
+import android.content.ContentResolver;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +20,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -25,6 +36,7 @@ import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewTv;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
+import com.ubtechinc.goldenpig.comm.GlobalVariable;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
@@ -71,6 +83,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
     private ArrayList<AddressBookmodel> oldList;
     private int updatePosition = -1;
     private int curPosition = -1;
+    private String TAG = AddAndSetContactActivity.class.getSimpleName();
 
     @Override
     protected int getContentViewId() {
@@ -90,9 +103,9 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
         UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
             @Override
             public void onError(int i, String s) {
-                if (AuthLive.getInstance().getCurrentPig()!=null) {
+                if (AuthLive.getInstance().getCurrentPig() != null) {
                     com.ubtech.utilcode.utils.ToastUtils.showShortToast("小猪未登录");
-                }else{
+                } else {
                     com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定小猪");
                 }
                 LoadingDialog.getInstance(AddAndSetContactActivity.this).dismiss();
@@ -108,6 +121,8 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
         oldList = getIntent().getParcelableArrayListExtra("list");
         if (oldList == null) {
             oldList = new ArrayList<>();
+        } else {
+            oldList.remove(oldList.size() - 1);
         }
         switch (type) {
             case 0:
@@ -116,7 +131,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
             case 1:
                 rl_titlebar.setTitleText(getString(R.string.set_contact));
                 break;
-                default:
+            default:
         }
         rl_titlebar.setLeftOnclickListener(new View.OnClickListener() {
             @Override
@@ -254,7 +269,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                     etName.setText(strName);
                 }
                 break;
-                default:
+            default:
         }
     }
 
@@ -268,27 +283,107 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                 etName.setText("");
                 break;
             case R.id.iv_add:
-                if (TextUtils.isEmpty(strPhone) || TextUtils.isEmpty(strName)) {
-                    ToastUtils.showShortToast("电话或昵称不能为空");
-                    break;
-                }
-                if (!checkOldList()) {
-                    break;
-                }
-                try {
-                    if (type == 0) {
-                        UbtTIMManager.getInstance().addUser(strName, strPhone);
-                    } else {
-                        UbtTIMManager.getInstance().updateUser(strName, strPhone, oldList.get
-                                (updatePosition).id + "");
-                    }
-                    LoadingDialog.getInstance(AddAndSetContactActivity.this).setTimeout(20)
-                            .setShowToast(true).show();
-                } catch (Exception e) {
-                    ToastUtils.showShortToast("请求异常，请重试");
-                }
+                importContact();
+//                if (TextUtils.isEmpty(strPhone) || TextUtils.isEmpty(strName)) {
+//                    ToastUtils.showShortToast("电话或昵称不能为空");
+//                    break;
+//                }
+//                if (!checkOldList()) {
+//                    break;
+//                }
+//                try {
+//                    if (type == 0) {
+//                        UbtTIMManager.getInstance().addUser(strName, strPhone);
+//                    } else {
+//                        UbtTIMManager.getInstance().updateUser(strName, strPhone, oldList.get
+//                                (updatePosition).id + "");
+//                    }
+//                    LoadingDialog.getInstance(AddAndSetContactActivity.this).setTimeout(20)
+//                            .setShowToast(true).show();
+//                } catch (Exception e) {
+//                    ToastUtils.showShortToast("请求异常，请重试");
+//                }
                 break;
-                default:
+            default:
+        }
+    }
+
+    /**
+     * 导入联系人
+     */
+    private void importContact() {
+        //**版本判断。当手机系统大于 23 时，才有必要去判断权限是否获取**
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //ContextCompat.checkSelfPermission() 方法 指定context和某个权限 返回PackageManager.PERMISSION_DENIED或者PackageManager.PERMISSION_GRANTED
+            if (ContextCompat.checkSelfPermission(AddAndSetContactActivity.this, android.Manifest.permission.READ_CONTACTS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                // 若不为GRANTED(即为DENIED)则要申请权限了
+                // 申请权限 第一个为context 第二个可以指定多个请求的权限 第三个参数为请求码
+                ActivityCompat.requestPermissions(AddAndSetContactActivity.this,
+                        new String[]{android.Manifest.permission.READ_CONTACTS},
+                        GlobalVariable.REQUEST_CONTACTS_READ_PERMISSON);
+            } else {
+                //权限已经被授予，在这里直接写要执行的相应方法即可
+                intentToContact();
+            }
+        } else {
+            // 低于6.0的手机直接访问
+            intentToContact();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == GlobalVariable.REQUEST_CONTACTS_READ_PERMISSON) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                intentToContact();
+            } else {
+                Toast.makeText(AddAndSetContactActivity.this, "授权被禁止", Toast.LENGTH_SHORT).show();
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions,
+                grantResults);
+    }
+
+    private void intentToContact() {
+        // 跳转到联系人界面
+        Intent intent = new Intent();
+        intent.setAction("android.intent.action.PICK");
+        intent.addCategory("android.intent.category.DEFAULT");
+        intent.setType("vnd.android.cursor.dir/phone_v2");
+        startActivityForResult(intent, GlobalVariable.REQUEST_CONTACTS_READ_RESULT);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == GlobalVariable.REQUEST_CONTACTS_READ_RESULT) {
+            if (data != null) {
+                Uri uri = data.getData();
+                String phoneNum = null;
+                String contactName = null;
+                // 创建内容解析者
+                ContentResolver contentResolver = getContentResolver();
+                Cursor cursor = null;
+                if (uri != null) {
+                    cursor = contentResolver.query(uri,
+                            new String[]{"display_name", "data1"}, null, null, null);
+                }
+                while (cursor.moveToNext()) {
+                    contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                    phoneNum = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                }
+                cursor.close();
+                //  把电话号码中的  -  符号 替换成空格
+                if (phoneNum != null) {
+                    phoneNum = phoneNum.replaceAll("-", " ");
+                    // 空格去掉  为什么不直接-替换成"" 因为测试的时候发现还是会有空格 只能这么处理
+                    phoneNum = phoneNum.replaceAll(" ", "");
+                }
+
+                etName.setText(contactName);
+                etPhone.setText(phoneNum);
+            }
         }
     }
 
@@ -375,7 +470,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                     ToastUtils.showShortToast("请求异常，请重试");
                 }
                 break;
-                default:
+            default:
         }
     }
 }

@@ -12,6 +12,7 @@
     <!--透明-->
     <color name="ubt_transparent">#0000</color>
     <color name="ubt_tips_txt_color">#454B59</color>
+    <color name="ubt_tips_txt_color_cc">#CC454B59</color>
     <color name="ubt_mian_tab_decore_color">#1A000000</color>
     <color name="ubt_dilog_decore_color">#CDCED2</color>
     <color name="ubt_dialog_btn_txt_color">#FE4C4C</color>
@@ -42,4 +43,7 @@
     <color name="btn_blue_hover">#1E86E4</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+
+    <!-- common rule -->
+    <color name="ubt_color_c1">#FFEAF2F6</color>
 </resources>
