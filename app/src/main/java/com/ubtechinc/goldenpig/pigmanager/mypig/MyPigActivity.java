@@ -23,7 +23,7 @@ import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
-import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
+import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
@@ -183,6 +183,7 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
     protected void onResume() {
         super.onResume();
         mPig = AuthLive.getInstance().getCurrentPig();
+        mSearialNoTv.setText(String.format(getString(R.string.ubt_pig_serialno), mPig.getRobotName()));
         showPigNo();
         updatePigList();
     }
@@ -287,16 +288,17 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
      */
     private void showConfirmDialog(boolean needTransfer) {
         runOnUiThread(() -> {
-            UBTBaseDialog dialog = new UBTBaseDialog(MyPigActivity.this);
+            UBTSubTitleDialog dialog = new UBTSubTitleDialog(MyPigActivity.this);
             if (needTransfer) {
                 dialog.setTips(getString(R.string.ubt_transfer_admin_tips));
             } else {
                 dialog.setTips(getString(R.string.ubt_unbing_tips));
+                dialog.setSubTips(getString(R.string.ubt_transfer_tips));
             }
             dialog.setLeftButtonTxt(getString(R.string.ubt_cancel));
             dialog.setRightButtonTxt(getString(R.string.ubt_enter));
             dialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
-            dialog.setOnUbtDialogClickLinsenter(new UBTBaseDialog.OnUbtDialogClickLinsenter() {
+            dialog.setOnUbtDialogClickLinsenter(new UBTSubTitleDialog.OnUbtDialogClickLinsenter() {
                 @Override
                 public void onLeftButtonClick(View view) {
 
@@ -330,7 +332,6 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
 
     private void showPigNo() {
         if (isSingalOrMaster()) {
-            mSearialNoTv.setText(String.format(getString(R.string.ubt_pig_serialno), mPig.getRobotName()));
             mPigVersionTv.setVisibility(View.VISIBLE);
             mDevUpateBtn.setVisibility(View.VISIBLE);
         } else {

@@ -87,6 +87,10 @@ public class PigListAdapter extends RecyclerView.Adapter<PigListAdapter.PigHolde
         this.mItemClickListener = onPigListItemClickListener;
     }
 
+    public OnPigListItemClickListener getItemClickListener() {
+        return mItemClickListener;
+    }
+
     protected static class PigHolder extends RecyclerView.ViewHolder {
         public TextView pigNameTv;
         public View pigPressor;
