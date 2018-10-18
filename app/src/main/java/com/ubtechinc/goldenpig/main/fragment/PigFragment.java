@@ -15,7 +15,6 @@ import com.tencent.TIMCustomElem;
 import com.tencent.TIMMessage;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
-import com.ubt.improtolib.GPResponse;
 import com.ubt.improtolib.UserRecords;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.commlib.log.UBTLog;
@@ -24,16 +23,15 @@ import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseFragment;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
-import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.SkillActivity;
-import com.ubtechinc.goldenpig.personal.MemberQRScannerActivity;
 import com.ubtechinc.goldenpig.pigmanager.RecordActivity;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.bean.RecordModel;
+import com.ubtechinc.goldenpig.pigmanager.mypig.PairQRScannerActivity;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPairPigQRHttpProxy;
 import com.ubtechinc.goldenpig.pigmanager.register.UnpairHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
@@ -217,7 +215,7 @@ public class PigFragment extends BaseFragment implements Observer {
                 PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
                 if (pigInfo != null && pigInfo.isAdmin) {
                     //TODO 配对小猪
-                    ActivityRoute.toAnotherActivity(getActivity(), MemberQRScannerActivity.class, false);
+                    ActivityRoute.toAnotherActivity(getActivity(), PairQRScannerActivity.class, false);
                 } else {
                     ToastUtils.showShortToast(R.string.only_admin_operate);
                 }
@@ -277,14 +275,14 @@ public class PigFragment extends BaseFragment implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        TIMMessage msg = (TIMMessage) arg;
-        for (int i = 0; i < msg.getElementCount(); ++i) {
-            TIMCustomElem elem = (TIMCustomElem) msg.getElement(i);
-            try {
+        try {
+            TIMMessage msg = (TIMMessage) arg;
+            for (int i = 0; i < msg.getElementCount(); ++i) {
+                TIMCustomElem elem = (TIMCustomElem) msg.getElement(i);
                 dealMsg(elem.getData());
-            } catch (InvalidProtocolBufferException e) {
-                e.printStackTrace();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

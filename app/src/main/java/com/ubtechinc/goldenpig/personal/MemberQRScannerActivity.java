@@ -28,7 +28,7 @@ public class MemberQRScannerActivity extends QRScannerActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                setErrorTips(getString(R.string.ubt_pair_pig_fialure));
+                                setErrorTips(getString(R.string.ubt_add_member_failure));
                             }
                         });
 

@@ -318,6 +318,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
     private void toSetWifi() {
         closeEnterDialog();
         cancelTimer();
+        dismissLoadDialog();
 
         ActivityRoute.toAnotherActivity(SearchPigActivity.this, SetPigNetWorkActivity.class, false);
     }
@@ -327,6 +328,10 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_WATH_DISCONNECT_SUCCESS:
+                    if (pigListDialog != null) {
+                        pigListDialog.dismiss();
+                    }
+                    showLoadingDialog();
                     UbtBluetoothManager.getInstance().closeConnectBle();
                     UbtBluetoothManager.getInstance().connectBluetooth(mBluetoothDevice);
                     break;

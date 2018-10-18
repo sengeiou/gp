@@ -19,6 +19,7 @@ import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.commlib.utils.WifiUtils;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.view.UbtPasswordEditText;
 import com.ubtechinc.goldenpig.comm.view.UbtWifiListEditText;
@@ -233,6 +234,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
                 mSendWifiInfoBtn.setText(R.string.ubt_connect);
                 showNotify("连接失败");
                 AuthLive.getInstance().getCurrentPig().setOnlineState(PigInfo.ROBOT_STATE_OFFLINE);
+                UBTPGApplication.pig_net_status = false;
             }
         }
 
@@ -295,6 +297,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
                         showNotify("音箱已连接移动网络");
                     }
                     AuthLive.getInstance().getCurrentPig().setOnlineState(PigInfo.ROBOT_STATE_ONLINE);
+                    UBTPGApplication.pig_net_status = true;
                     /*if (jsonObject.getInt("co") == 120) {
                         JSONObject subJson = jsonObject.getJSONObject("wifi_info");
                         if (jsonObject.has("wifi_info")) {

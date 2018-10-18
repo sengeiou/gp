@@ -124,6 +124,9 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
         mUnbindBtn = findViewById(R.id.ubt_btn_unbind_member);
         mUnbindBtn.setOnClickListener(this);
 
+        mToolbarRightBtn = findViewById(R.id.ubt_imgbtn_add);
+        mToolbarRightBtn.setOnClickListener(this);
+
         mPig = AuthLive.getInstance().getCurrentPig();
 
         adapter = new PigMemberAdapter(this, mUsertList);
@@ -151,6 +154,7 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
 
     private synchronized void getMember(String admin) {
         if (isDownloadedUserList) {
+            setAddBtnEnable(isCurrentAdmin());
             return;
         }
         if ("0".equals(admin)) {

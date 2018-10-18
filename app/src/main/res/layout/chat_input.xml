@@ -33,6 +33,7 @@
             android:id="@+id/voice_panel"
             android:layout_width="0dp"
             android:layout_height="40dp"
+            android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:visibility="gone"
             android:text="@string/chat_press_talk"
@@ -40,6 +41,7 @@
             android:textColor="@color/text_gray1"
             android:textSize="16sp"
             android:clickable="true"
+
             android:background="@drawable/btn_voice_normal">
 
         </TextView>
@@ -50,6 +52,7 @@
             android:layout_weight="1"
             android:background="@drawable/bg_inputbox"
             android:gravity="center_vertical"
+            android:layout_marginRight="10dp"
             android:orientation="horizontal">
 
             <EditText

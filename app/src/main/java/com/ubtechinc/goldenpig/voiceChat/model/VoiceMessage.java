@@ -207,6 +207,21 @@ public class VoiceMessage extends Message {
            int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14, context.getResources().getDisplayMetrics());
            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
            LinearLayout.LayoutParams imageLp = new LinearLayout.LayoutParams(width, height);
+            //VOICE LENGTH IS NOT SAME
+           long voicetime=((TIMSoundElem) message.getElement(0)).getDuration();
+           if(5<voicetime&&voicetime<10){
+               tv.setText("     ");
+           }else if(10<voicetime&&voicetime<15){
+               tv.setText("         ");
+           }else if(15<voicetime&&voicetime<20){
+               tv.setText("             ");
+           }else if(20<voicetime&&voicetime<25){
+               tv.setText("                 ");
+           }else if(25<voicetime&&voicetime<30){
+               tv.setText("                     ");
+           }else if(voicetime>30){
+               tv.setText("                         ");
+           }
            if (message.isSelf()) {
                linearLayout.addView(tv);
                imageLp.setMargins(10, 0, 0, 0);
@@ -214,6 +229,7 @@ public class VoiceMessage extends Message {
                linearLayout.addView(voiceIcon);
                viewHolder.getView(R.id.right_voice_time_me).setVisibility(View.VISIBLE);
                viewHolder.setText(R.id.right_voice_time_me, String.valueOf(((TIMSoundElem) message.getElement(0)).getDuration()) + "\"");
+
            } else {
                voiceIcon.setLayoutParams(imageLp);
                linearLayout.addView(voiceIcon);
@@ -234,7 +250,6 @@ public class VoiceMessage extends Message {
            showStatus(viewHolder);
        }
     }
-
 
     /**
      * 获取消息摘要

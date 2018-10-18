@@ -1,10 +1,8 @@
 package com.ubt.imlibv2.bean;
 
 import android.content.Context;
-import android.os.Environment;
 import android.util.Log;
 
-import com.tencent.TIMLogLevel;
 import com.tencent.TIMManager;
 
 

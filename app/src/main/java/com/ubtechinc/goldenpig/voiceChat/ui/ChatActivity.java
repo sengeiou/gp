@@ -29,7 +29,9 @@ import com.tencent.TIMMessageStatus;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.improtolib.VoiceMailContainer;
 import com.ubtechinc.commlib.log.UBTLog;
+import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.voiceChat.ChannelInfo;
@@ -94,7 +96,7 @@ public class ChatActivity extends FragmentActivity implements ChatView {
         identify = getIntent().getStringExtra("identify");
         if (pigInfo != null) {
             identify=pigInfo.getRobotName();
-            UBTLog.d("ChatActivity", "Pig identity  "+identify +"me identity "+UbtTIMManager.userId);
+            UbtLogger.d("ChatActivity", "Pig identity  "+identify +"me identity "+UbtTIMManager.userId);
         } else {
            // identify="2cb9b9a3";
            // identify="8989898989880000";
@@ -103,9 +105,9 @@ public class ChatActivity extends FragmentActivity implements ChatView {
           //  identify="889834038000566";
             //identify="809722";
             //INSTALL XIAOMI MACHINE
-            identify="813312";
+            //identify="813312";
             //INSTALL SAMSUNG MACHINE
-           // identify="776322";
+           identify="776322";
             Log.d("ChatActivity", "test identity  "+identify);
         }
        // type = (TIMConversationType) getIntent().getSerializableExtra("type");
@@ -248,9 +250,7 @@ public class ChatActivity extends FragmentActivity implements ChatView {
             if (mMessage == null || messages.get(i).status() == TIMMessageStatus.HasDeleted) continue;
             if (mMessage instanceof CustomMessage && (((CustomMessage) mMessage).getType() == CustomMessage.Type.TYPING ||
                     ((CustomMessage) mMessage).getType() == CustomMessage.Type.INVALID)) continue;
-
             ++newMsgNum;
-
             if (i != messages.size() - 1){
                 mMessage.setHasTime(messages.get(i+1));
                 messageList.add(0, mMessage);
@@ -297,6 +297,15 @@ public class ChatActivity extends FragmentActivity implements ChatView {
                         //发送内容包含敏感词
                         msg.setDesc(getString(R.string.chat_content_bad));
                         adapter.update(messageList);
+                        if(UBTPGApplication.voiceMail_debug) {
+                            Toast.makeText(this, "内容含有敏感词", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case 6011:
+                        adapter.update(messageList);
+                        if(UBTPGApplication.voiceMail_debug) {
+                            Toast.makeText(this, "接收方不存在(desc: to user invalid)", Toast.LENGTH_SHORT).show();
+                        }
                         break;
                 }
             }
