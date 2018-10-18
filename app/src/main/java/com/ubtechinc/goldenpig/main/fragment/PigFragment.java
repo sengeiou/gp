@@ -31,6 +31,7 @@ import com.ubtechinc.goldenpig.pigmanager.RecordActivity;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.bean.RecordModel;
+import com.ubtechinc.goldenpig.pigmanager.mypig.PairPigActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.PairQRScannerActivity;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPairPigQRHttpProxy;
 import com.ubtechinc.goldenpig.pigmanager.register.UnpairHttpProxy;
@@ -44,6 +45,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -105,7 +107,7 @@ public class PigFragment extends BaseFragment implements Observer {
                 @Override
                 public void onError(int i, String s) {
                     Log.e("setOnUbtTIMConver", s);
-                    ToastUtils.showShortToast(s);
+//                    ToastUtils.showShortToast(s);
                 }
 
                 @Override
@@ -222,7 +224,10 @@ public class PigFragment extends BaseFragment implements Observer {
                 break;
             case R.id.view_pig_pair_info:
                 //TODO 解除配对
-                doUnPair();
+//                doUnPair();
+                HashMap<String, String> map = new HashMap<>();
+                map.put("unPairUserId", String.valueOf(pairUserId));
+                ActivityRoute.toAnotherActivity(getActivity(), PairPigActivity.class, map, false);
                 break;
             case R.id.ubt_bind_tv:
                 ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class, false);

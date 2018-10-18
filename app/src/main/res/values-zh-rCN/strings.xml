@@ -114,7 +114,7 @@
     <string name="ubt_trandfer_admin_tips">将管理员权限转让给此账号？</string>
     <string name="ubt_join_group">加入成员组</string>
     <string name="ubt_complete">完成</string>
-    <string name="ubt_unpair">解除绑定</string>
+    <string name="ubt_unpair">解除配对</string>
     <string name="ubt_confirm_unpair">确认解除配对？</string>
     <string name="ubt_ubpair_success">解除配对成功</string>
     <string name="ubt_ubpair_filure">解除配对失败</string>

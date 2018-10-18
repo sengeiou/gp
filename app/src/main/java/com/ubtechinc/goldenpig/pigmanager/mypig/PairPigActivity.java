@@ -1,5 +1,6 @@
 package com.ubtechinc.goldenpig.pigmanager.mypig;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
@@ -20,8 +21,6 @@ import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.adpater.PairPigAdapter;
-import com.ubtechinc.goldenpig.pigmanager.register.GePairMemberHttpProxy;
-import com.ubtechinc.goldenpig.pigmanager.register.GetPairPigQRHttpProxy;
 import com.ubtechinc.goldenpig.pigmanager.register.UnpairHttpProxy;
 
 import java.util.ArrayList;
@@ -96,17 +95,24 @@ public class PairPigActivity extends BaseToolBarActivity implements View.OnClick
                 unPair();
             }
         });
+        ubtBaseDialog.show();
     }
 
     /**
      * 初始化与小猪配对的用户列表
      */
     private void initData() {
-        final UserInfo userInfo= AuthLive.getInstance().getCurrentUser();
-        if (userInfo==null){
+        final UserInfo userInfo = AuthLive.getInstance().getCurrentUser();
+        if (userInfo == null) {
             return;
         }
-        if (userPotoImg!=null) {
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            unPairUserId = intent.getStringExtra("unPairUserId");
+        }
+
+        if (userPotoImg != null) {
             Glide.with(this)
                     .load(userInfo.getUserImage())
                     .asBitmap()
@@ -114,7 +120,7 @@ public class PairPigActivity extends BaseToolBarActivity implements View.OnClick
                     .transform(new GlideCircleTransform(this))
                     .into(userPotoImg);
         }
-        if (userNameTv!=null){
+        if (userNameTv != null) {
             userNameTv.setText(userInfo.getNickName());
         }
         /*new GePairMemberHttpProxy().getPairMember(CookieInterceptor.get().getToken(),
@@ -138,13 +144,23 @@ public class PairPigActivity extends BaseToolBarActivity implements View.OnClick
                 BuildConfig.APP_ID, unPairUserId, new UnpairHttpProxy.UnpairCallBack() {
                     @Override
                     public void onError() {
-                        ToastUtils.showShortToast(R.string.ubt_ubpair_filure);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtils.showShortToast(R.string.ubt_ubpair_filure);
+                            }
+                        });
                     }
 
                     @Override
                     public void onSuccess() {
-                        ToastUtils.showShortToast(R.string.ubt_ubpair_success);
-                        finish();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtils.showShortToast(R.string.ubt_ubpair_success);
+                                finish();
+                            }
+                        });
                     }
                 });
     }
