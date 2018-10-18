@@ -17,7 +17,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/dp_31"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_add_grey" />
+        android:src="@drawable/ic_add_empty" />
 
     <TextView
         android:id="@+id/tv_add"

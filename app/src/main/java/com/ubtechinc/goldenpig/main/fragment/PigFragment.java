@@ -309,6 +309,8 @@ public class PigFragment extends BaseFragment implements Observer {
                 }
                 if (ss.size() == 0) {
                     ubt_tv_call_sub_title.setText("无");
+                } else if (!TextUtils.isEmpty(ss.get(0).name)) {
+                    ubt_tv_call_sub_title.setText(ss.get(0).name);
                 } else {
                     ubt_tv_call_sub_title.setText(ss.get(0).number);
                 }

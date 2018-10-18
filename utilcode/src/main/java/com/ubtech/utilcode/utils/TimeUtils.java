@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 /**
  * @author: logic.peng
@@ -1708,7 +1709,8 @@ public class TimeUtils {
     private static final String ONE_YEAR_AGO = "年前";
 
     public static String format(Date date) {
-        long delta = new Date().getTime() - date.getTime();
+        long timenow = new Date().getTime();
+        long delta = timenow - date.getTime();
         if (delta < 1L * ONE_MINUTE) {
             long seconds = toSeconds(delta);
             return (seconds <= 0 ? 1 : seconds) + ONE_SECOND_AGO;
@@ -1717,13 +1719,20 @@ public class TimeUtils {
             long minutes = toMinutes(delta);
             return (minutes <= 0 ? 1 : minutes) + ONE_MINUTE_AGO;
         }
-        if (delta < 24L * ONE_HOUR) {
+        if (isSameDayOfMillis(timenow, date.getTime())) {
             long hours = toHours(delta);
             return (hours <= 0 ? 1 : hours) + ONE_HOUR_AGO;
         }
-        if (delta < 48L * ONE_HOUR) {
+        if (delta < 24L * ONE_HOUR) {
             return "昨天";
         }
+//        if (delta < 24L * ONE_HOUR) {
+//            long hours = toHours(delta);
+//            return (hours <= 0 ? 1 : hours) + ONE_HOUR_AGO;
+//        }
+//        if (delta < 48L * ONE_HOUR) {
+//            return "昨天";
+//        }
         if (delta < 30L * ONE_DAY) {
             long days = toDays(delta);
             return (days <= 0 ? 1 : days) + ONE_DAY_AGO;
@@ -1791,5 +1800,17 @@ public class TimeUtils {
                 return "周六";
         }
         return "周日";
+    }
+
+
+    public static boolean isSameDayOfMillis(final long ms1, final long ms2) {
+        final long interval = ms1 - ms2;
+        return interval < ONE_DAY
+                && interval > -1L * ONE_DAY
+                && toDay(ms1) == toDay(ms2);
+    }
+
+    private static long toDay(long millis) {
+        return (millis + TimeZone.getDefault().getOffset(millis)) / ONE_DAY;
     }
 }

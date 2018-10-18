@@ -8,21 +8,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.tencent.TIMCustomElem;
 import com.tencent.TIMMessage;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubt.improtolib.GPResponse;
-import com.ubt.improtolib.UserContacts;
 import com.ubt.improtolib.UserRecords;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
@@ -33,6 +28,7 @@ import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.bean.RecordModel;
+import com.ubtechinc.goldenpig.utils.CommendUtil;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.StateView;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
@@ -67,6 +63,8 @@ public class RecordActivity extends BaseNewActivity implements Observer {
     private Boolean hasLoadMsg = false;
 
     private MyHandler mHandler;
+
+    private ArrayList<RecordModel> allList = new ArrayList<>();
 
     private class MyHandler extends Handler {
         WeakReference<Activity> mWeakReference;
@@ -108,7 +106,11 @@ public class RecordActivity extends BaseNewActivity implements Observer {
         mStateView.setOnRetryClickListener(new StateView.OnRetryClickListener() {
             @Override
             public void onRetryClick() {
-
+                if (mHandler.hasMessages(1)) {
+                    mHandler.removeMessages(1);
+                }
+                mHandler.sendEmptyMessageDelayed(1, 10 * 1000);// 20s 秒后检查加载框是否还在
+                UbtTIMManager.getInstance().queryRecord();
             }
         });
         rl_titlebar.setTitleText(getString(R.string.ubt_recent_calls));
@@ -127,6 +129,7 @@ public class RecordActivity extends BaseNewActivity implements Observer {
                 if (mList.size() > 0) {
                     Intent it = new Intent(RecordActivity.this, EditRecordActivity.class);
                     it.putParcelableArrayListExtra("list", mList);
+                    it.putParcelableArrayListExtra("allList", allList);
                     startActivity(it);
                 } else {
                     ToastUtils.showShortToast(getString(R.string.record_empty_prompt));
@@ -233,15 +236,22 @@ public class RecordActivity extends BaseNewActivity implements Observer {
             int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
             if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
                 if (menuPosition == 0) {
-                    UserRecords.Record.Builder recordBuild =  UserRecords.Record.newBuilder();
-                    recordBuild.setName(mList.get(adapterPosition).name);
-                    recordBuild.setNumber(mList.get(adapterPosition).number);
-                    recordBuild.setDateLong(mList.get(adapterPosition).dateLong);
-                    recordBuild.setDuration(mList.get(adapterPosition).duration);
-                    recordBuild.setType(mList.get(adapterPosition).type);
-                    recordBuild.setId(mList.get(adapterPosition).id);
                     List<UserRecords.Record> list = new ArrayList();
-                    list.add(recordBuild.build());
+                    for (int i = 0; i < allList.size(); i++) {
+                        if (allList.get(i).number.equals(mList.get(adapterPosition).number)
+                                && allList.get(i).type == mList.get(adapterPosition).type
+                                && CommendUtil.isSameDayOfMillis(allList.get(i).dateLong, mList.get(adapterPosition)
+                                .dateLong)) {
+                            UserRecords.Record.Builder recordBuild = UserRecords.Record.newBuilder();
+                            recordBuild.setName(allList.get(i).name);
+                            recordBuild.setNumber(allList.get(i).number);
+                            recordBuild.setDateLong(allList.get(i).dateLong);
+                            recordBuild.setDuration(allList.get(i).duration);
+                            recordBuild.setType(allList.get(i).type);
+                            recordBuild.setId(allList.get(i).id);
+                            list.add(recordBuild.build());
+                        }
+                    }
                     UbtTIMManager.getInstance().deleteRecord(list);
                     deletePosition = adapterPosition;
                     LoadingDialog.getInstance(RecordActivity.this).setTimeout(20)
@@ -268,6 +278,9 @@ public class RecordActivity extends BaseNewActivity implements Observer {
                 dealMsg(elem.getData());
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
+                if (mHandler.hasMessages(1)) {
+                    mHandler.removeMessages(1);
+                }
                 ToastUtils.showShortToast("数据异常，请重试");
                 LoadingDialog.getInstance(RecordActivity.this).dismiss();
             }
@@ -292,12 +305,20 @@ public class RecordActivity extends BaseNewActivity implements Observer {
                     mo.name = list.get(j).getName();
                     mo.number = list.get(j).getNumber();
                     mo.id = list.get(j).getId();
-                    mo.type = list.get(j).getType();
+                    if (list.get(j).getType() == 4) {
+                        mo.type = list.get(j).getType();
+                    } else if (list.get(j).getType() == 5) {
+                        mo.type = 2;
+                    } else {
+                        mo.type = list.get(j).getType();
+                    }
                     mo.dateLong = list.get(j).getDateLong() * 1000;
                     mo.duration = list.get(j).getDuration();
                     ss.add(mo);
                 }
-                onRefreshSuccess(ss);
+                allList.clear();
+                allList.addAll(ss);
+                onRefreshSuccess(CommendUtil.checkRecord(ss));
                 break;
             case "/im/record/delete":
                 Boolean flag = msg.getPayload().unpack(GPResponse.Response.class).getResult();

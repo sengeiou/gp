@@ -44,12 +44,19 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordHold
             holder.tv_content.setText(model.name);
         }
         holder.iv.setVisibility(model.type == 2 ? View.VISIBLE : View.INVISIBLE);
-        holder.tv_count.setText("(" + model.duration + ")");
-//        if (model.duration > 1) {
-//            holder.tv_count.setVisibility(View.VISIBLE);
-//        } else {
-//            holder.tv_count.setVisibility(View.INVISIBLE);
-//        }
+        if (model.type == 3) {
+            holder.tv_content.setTextColor(mContext.getResources().getColor(R.color.ubt_dialog_btn_txt_color));
+            holder.tv_count.setTextColor(mContext.getResources().getColor(R.color.ubt_dialog_btn_txt_color));
+        } else {
+            holder.tv_content.setTextColor(mContext.getResources().getColor(R.color.ubt_tips_txt_color));
+            holder.tv_count.setTextColor(mContext.getResources().getColor(R.color.ubt_tips_txt_color));
+        }
+        holder.tv_count.setText("(" + model.count + ")");
+        if (model.count > 1) {
+            holder.tv_count.setVisibility(View.VISIBLE);
+        } else {
+            holder.tv_count.setVisibility(View.INVISIBLE);
+        }
         holder.tv_date.setText(TimeUtils.format(TimeUtils.millis2Date(model.dateLong)));
     }
 

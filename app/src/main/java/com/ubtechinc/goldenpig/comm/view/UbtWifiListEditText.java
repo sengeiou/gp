@@ -173,7 +173,21 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
         } else {
             mWifiList.clear();
         }
-        mWifiList.addAll(results);
+        if (results == null || results.size() == 0) {
+            return;
+        }
+        mWifiList.add(results.get(0));
+        for (int i = 1; i < results.size(); i++) {
+            for (int j = 0; j < mWifiList.size(); j++) {
+                if (mWifiList.get(j).SSID.equals(results.get(i).SSID)) {
+                    break;
+                }
+                if (j == mWifiList.size() - 1) {
+                    mWifiList.add(results.get(i));
+                    break;
+                }
+            }
+        }
         if (mWifiListAdapter != null) {
             mWifiListAdapter.notifyItemRangeInserted(mWifiList.size() - results.size(), results.size());
         }

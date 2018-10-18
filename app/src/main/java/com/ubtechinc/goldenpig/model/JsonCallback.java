@@ -1,6 +1,6 @@
 package com.ubtechinc.goldenpig.model;
 
-import android.os.Handler;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.ubtech.utilcode.utils.LogUtils;
@@ -39,8 +39,17 @@ public abstract class JsonCallback<T> implements Callback {
         try {
             jsonObject = new JSONObject(result);
             int code = jsonObject.getInt("code");
-            if (code != 0) {
-                onError("数据异常，请重试");
+            if (code == 207 || code == 505) {
+                onError("问句重复，请重新输入");
+                return;
+            } else if (code == 504) {
+                onError("问答中包容敏感词，请重新输入");
+            } else if (code != 0) {
+                if (TextUtils.isEmpty(jsonObject.getString("errMsg"))) {
+                    onError("数据异常，请重试");
+                } else {
+                    onError(jsonObject.getString("errMsg"));
+                }
                 return;
             }
             if (clazz == String.class) {

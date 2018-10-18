@@ -141,7 +141,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
                             mList.add(model);
                             rl_titlebar.hideIvRight();
                         } else {
-                            Collections.reverse(reponse);
+                            //Collections.reverse(reponse);
                             rl_titlebar.showIvRight();
                         }
                         mList.addAll(reponse);

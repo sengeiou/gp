@@ -35,6 +35,8 @@ public class RecordModel implements Parcelable {
      */
     public Boolean select = false;
 
+    public int count = 1;
+
     public RecordModel() {
     }
 
@@ -44,6 +46,7 @@ public class RecordModel implements Parcelable {
         id = in.readLong();
         dateLong = in.readLong();
         type = in.readInt();
+        count = in.readInt();
         duration = in.readLong();
         byte tmpSelect = in.readByte();
         select = tmpSelect == 0 ? null : tmpSelect == 1;
@@ -56,6 +59,7 @@ public class RecordModel implements Parcelable {
         dest.writeLong(id);
         dest.writeLong(dateLong);
         dest.writeInt(type);
+        dest.writeInt(count);
         dest.writeLong(duration);
         dest.writeByte((byte) (select == null ? 0 : select ? 1 : 2));
     }
