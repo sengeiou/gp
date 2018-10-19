@@ -1,8 +1,10 @@
 package com.ubtechinc.goldenpig.pigmanager;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -14,6 +16,7 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ubtechinc.bluetooth.Constants;
 import com.ubtechinc.bluetooth.UbtBluetoothDevice;
@@ -32,6 +35,11 @@ import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import pl.droidsonroids.gif.GifImageView;
 
 
@@ -62,6 +70,10 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
     private PigListDialog pigListDialog;
     private CountDownTimer mTimer;
     private boolean mHasPermission;
+
+    private UBTSubTitleDialog mUnBindTipDialog;
+
+    private Disposable disposable;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -157,6 +169,9 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         super.onDestroy();
         closeEnterDialog();
         cancelTimer();
+        if (disposable != null) {
+            disposable.dispose();
+        }
     }
 
     @Override
@@ -299,6 +314,19 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
             }
         });
         pigListDialog.show();
+
+        //添加部分手机因为gps定位未开导致ble设备获取不到
+        disposable = Observable.timer(15, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> {
+                    //TODO 获取不到蓝牙设备后响应
+                    if (pigListDialog.getLeList() == null || pigListDialog.getLeList().isEmpty()) {
+                        LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                        if (locManager == null || !locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                            Toast.makeText(this, "无法扫描到蓝牙设备，请打开GPS定位", Toast.LENGTH_SHORT).show();
+                        }
+                        pigListDialog.dismiss();
+                    }
+                });
     }
 
     private void connectBleDevice(final UbtBluetoothDevice device) {
@@ -417,23 +445,27 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         if (mTimer != null) {
             mTimer.cancel();
         }
-        UBTSubTitleDialog dialog = new UBTSubTitleDialog(this);
-        dialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
-        dialog.setTips(getString(R.string.unbind_pig_dialog_tip));
-        dialog.setOnlyOneButton();
-        dialog.setRightButtonTxt(getString(R.string.i_know_text));
-        dialog.setSubTips(getString(R.string.unbind_pig_dialog_sub_tip));
-        dialog.setOnUbtDialogClickLinsenter(new UBTSubTitleDialog.OnUbtDialogClickLinsenter() {
-            @Override
-            public void onLeftButtonClick(View view) {
+        if (mUnBindTipDialog == null) {
+            mUnBindTipDialog = new UBTSubTitleDialog(this);
+            mUnBindTipDialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
+            mUnBindTipDialog.setTips(getString(R.string.unbind_pig_dialog_tip));
+            mUnBindTipDialog.setOnlyOneButton();
+            mUnBindTipDialog.setRightButtonTxt(getString(R.string.i_know_text));
+            mUnBindTipDialog.setSubTips(getString(R.string.unbind_pig_dialog_sub_tip));
+            mUnBindTipDialog.setOnUbtDialogClickLinsenter(new UBTSubTitleDialog.OnUbtDialogClickLinsenter() {
+                @Override
+                public void onLeftButtonClick(View view) {
 
-            }
+                }
 
-            @Override
-            public void onRightButtonClick(View view) {
-            }
-        });
-        dialog.show();
+                @Override
+                public void onRightButtonClick(View view) {
+                }
+            });
+        }
+        if (!mUnBindTipDialog.isShowing()) {
+            mUnBindTipDialog.show();
+        }
     }
 
 }

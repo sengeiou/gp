@@ -176,6 +176,10 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
         if (results == null || results.size() == 0) {
             return;
         }
+
+//        Set<ScanResult> set = new TreeSet<>((o1, o2) -> o1.SSID.compareTo(o2.SSID));
+//        set.addAll(results);
+//        mWifiList.addAll(set);
         mWifiList.add(results.get(0));
         for (int i = 1; i < results.size(); i++) {
             for (int j = 0; j < mWifiList.size(); j++) {

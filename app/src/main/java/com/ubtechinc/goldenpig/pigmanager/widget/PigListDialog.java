@@ -54,7 +54,6 @@ public class PigListDialog extends BaseDialog {
         inits();
     }
 
-
     private void inits() {
         View root = View.inflate(getContext(), R.layout.dialog_pig_list, null);
 
@@ -96,7 +95,7 @@ public class PigListDialog extends BaseDialog {
 
                     //近场连接
                     float distance = getDistance(rssi);
-                    if(distance < 0.8 ){
+                    if (distance < 0.8) {
                         scanLeDevice(false);
                         mPigAdapter.getItemClickListener().onClick(rawIndex, ubtBluetoothDevice);
                         return;
@@ -122,7 +121,7 @@ public class PigListDialog extends BaseDialog {
     }
 
     /**
-     * 更加rssi信号转换成距离
+     * 根据rssi信号转换成距离
      * d=10^((ABS(RSSI)-A)/(10*n))、A 代表在距离一米时的信号强度(45 ~ 49), n 代表环境对信号的衰减系数(3.25 ~ 4.5)
      *
      * @param rssi
@@ -165,7 +164,9 @@ public class PigListDialog extends BaseDialog {
                 }
             }, SCANTIME);
             isScan = true;
+
             mBluetoothadapter.startLeScan(mLecallback);
+
 
         } else {
             isScan = false;
@@ -179,5 +180,9 @@ public class PigListDialog extends BaseDialog {
         } else {
             return 0;
         }
+    }
+
+    public ArrayList<UbtBluetoothDevice> getLeList() {
+        return mLeList;
     }
 }
