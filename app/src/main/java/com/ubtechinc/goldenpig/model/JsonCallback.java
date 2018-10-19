@@ -39,11 +39,12 @@ public abstract class JsonCallback<T> implements Callback {
         try {
             jsonObject = new JSONObject(result);
             int code = jsonObject.getInt("code");
-            if (code == 207 || code == 505 || code == -505) {
+            if (code == -505) {
                 onError("问句重复，请重新输入");
                 return;
-            } else if (code == 504 || code == -504) {
+            } else if ( code == -504) {
                 onError("问答中包容敏感词，请重新输入");
+                return;
             } else if (code != 0) {
                 if (TextUtils.isEmpty(jsonObject.getString("errMsg"))) {
                     onError("数据异常，请重试");
