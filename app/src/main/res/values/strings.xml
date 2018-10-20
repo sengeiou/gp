@@ -91,6 +91,7 @@
     <string name="ubt_pig_update_failure">异常错误，请重试</string>
     <string name="ubt_pig_is_last_version">当前设备已是最新版本</string>
     <string name="ubt_unbind_member">解除绑定</string>
+    <string name="ubt_service_policy">优必选服务协议</string>
     <string name="ubt_privacy_policy">隐私协议</string>
     <string name="ubt_pig_voice_box">小猪音箱</string>
     <string name="ubt_no_pigs">没有绑定小猪</string>
@@ -170,4 +171,8 @@
     <string name="unbind_pig_dialog_sub_tip">解绑入口：设备管理-我的小猪</string>
     <string name="i_know_text">我知道了</string>
     <string name="close_pig_tip">将手机靠近音箱，可快速绑定</string>
+
+    <string name="ubt_page_bottom">优必选科技有限公司   版权所有</string>
+    <string name="ubt_page_bottom_sub">Copyright © 2018 Ubtech Robotics Corp.All rights reserved</string>
+
 </resources>

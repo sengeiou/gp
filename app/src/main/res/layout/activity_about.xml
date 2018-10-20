@@ -1,50 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:background="@color/ubt_global_bg_color"
-    android:gravity="center_horizontal"
-    android:layout_height="match_parent">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="@dimen/dp_90"
-        android:background="@null"
-        android:layout_marginTop="@dimen/dp_80"
-        android:layout_height="@dimen/dp_90"
-        app:srcCompat="@drawable/ic_pig_about" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_marginTop="@dimen/dp_14"
-        android:layout_width="wrap_content"
-        android:textColor="@color/ubt_tips_txt_color"
-        android:textSize="@dimen/sp_20"
-        android:layout_height="wrap_content"
-        android:text="@string/ubt_pig_voice_box" />
-
-    <TextView
-        android:layout_marginTop="@dimen/dp_20"
-        android:id="@+id/ubt_tv_about_version"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/sp_14"
-        android:textColor="@color/ubt_version_color"
-         />
-
-    <Button
-        style="@style/UBTMeBtnTheme"
-        android:layout_marginTop="@dimen/dp_44"
-        android:id="@+id/ubt_btn_privacy_policy"
+    <LinearLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:paddingStart="@dimen/dp_16"
-        android:paddingEnd="@dimen/dp_16"
-        android:textSize="@dimen/sp_15"
-        android:textColor="@color/ubt_tips_txt_color"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|left"
-        android:drawableRight="@drawable/ic_goto_gray"
-        android:background="@drawable/selector_ubt_me_item_bg"
-        android:text="@string/ubt_privacy_policy" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/ubt_global_bg_color"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="@dimen/dp_90"
+            android:layout_height="@dimen/dp_90"
+            android:layout_marginTop="@dimen/dp_80"
+            android:background="@null"
+            app:srcCompat="@drawable/ic_pig_about"/>
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_14"
+            android:text="@string/ubt_pig_voice_box"
+            android:textColor="@color/ubt_tips_txt_color"
+            android:textSize="@dimen/sp_20"/>
+
+        <TextView
+            android:id="@+id/ubt_tv_about_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_20"
+            android:textColor="@color/ubt_version_color"
+            android:textSize="@dimen/sp_14"
+            />
+
+        <Button
+            android:id="@+id/ubt_btn_service_policy"
+            style="@style/UBTMeBtnTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_44"
+            android:background="@drawable/selector_ubt_me_item_bg"
+            android:drawableRight="@drawable/ic_goto_gray"
+            android:gravity="center_vertical|left"
+            android:paddingEnd="@dimen/dp_16"
+            android:paddingStart="@dimen/dp_16"
+            android:text="@string/ubt_service_policy"
+            android:textColor="@color/ubt_tips_txt_color"
+            android:textSize="@dimen/sp_15"/>
+
+        <Button
+            android:id="@+id/ubt_btn_privacy_policy"
+            style="@style/UBTMeBtnTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_10"
+            android:background="@drawable/selector_ubt_me_item_bg"
+            android:drawableRight="@drawable/ic_goto_gray"
+            android:gravity="center_vertical|left"
+            android:paddingEnd="@dimen/dp_16"
+            android:paddingStart="@dimen/dp_16"
+            android:text="@string/ubt_privacy_policy"
+            android:textColor="@color/ubt_tips_txt_color"
+            android:textSize="@dimen/sp_15"/>
+
+    </LinearLayout>
+
+    <include
+        layout="@layout/ubt_page_bottom"
+        android:baselineAligned="true"/>
+
 </LinearLayout>

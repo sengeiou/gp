@@ -175,6 +175,7 @@
             android:name=".personal.MemberQRScannerActivity"
             android:screenOrientation="portrait" />
         <activity android:name=".main.SkillActivity"/>
+        <activity android:name=".about.ServicePolicyActivity"/>
     </application>
 
 </manifest>

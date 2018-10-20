@@ -50,6 +50,7 @@ public class PigMemberAdapter extends RecyclerView.Adapter<PigMemberAdapter.Memb
                             .asBitmap()
                             .centerCrop()
                             .transform(new GlideCircleTransform(activityRefer.get()))
+                            .placeholder(R.drawable.ic_sign_in)
                             .into(holder.userPoto);
                 }
                 if (user.getIsAdmin() == 1) {

@@ -253,6 +253,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
         @Override
         public void connWifiSuccess() {
             super.connWifiSuccess();
+            UBTPGApplication.pig_net_status = true;
             mSendWifiInfoBtn.setText(R.string.ubt_connect);
             dismissLoadDialog();
             hideNotify();

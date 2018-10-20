@@ -184,6 +184,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                     .asBitmap()
                     .centerCrop()
                     .transform(new GlideCircleTransform(getActivity()))
+                    .placeholder(R.drawable.ic_sign_in)
                     .into(mPohtoImg);
 
             mNikenameTv = (TextView) getActivity().findViewById(R.id.ubt_tv_me_nikename);

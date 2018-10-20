@@ -44,7 +44,11 @@ public class PairQRScannerActivity extends QRScannerActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                setErrorTips(getString(R.string.ubt_pair_pig_fialure));
+                                if (!TextUtils.isEmpty(error)) {
+                                    setErrorTips(error);
+                                } else {
+                                    setErrorTips(getString(R.string.ubt_pair_pig_fialure));
+                                }
                             }
                         });
 

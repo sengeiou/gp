@@ -1,12 +1,13 @@
 package com.ubtechinc.goldenpig.personal;
 
+import android.text.TextUtils;
+
 import com.ubt.qrcodelib.QRScannerActivity;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.pigmanager.register.AddMemberHttpProxy;
-import com.ubtechinc.goldenpig.pigmanager.register.PairPigHttpProxy;
 
 public class MemberQRScannerActivity extends QRScannerActivity {
     @Override
@@ -28,7 +29,11 @@ public class MemberQRScannerActivity extends QRScannerActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                setErrorTips(getString(R.string.ubt_add_member_failure));
+                                if (TextUtils.isEmpty(error)) {
+                                    setErrorTips(getString(R.string.ubt_add_member_failure));
+                                } else {
+                                    setErrorTips(error);
+                                }
                             }
                         });
 

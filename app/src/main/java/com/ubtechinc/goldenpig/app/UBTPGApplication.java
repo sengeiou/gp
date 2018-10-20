@@ -22,7 +22,7 @@ public class UBTPGApplication extends LoginApplication {
     static Context mContext;
     public static boolean voiceMail_debug = false;
 
-    public static boolean pig_net_status = false;
+    public static boolean pig_net_status = true;
 
     @Override
     public void onCreate() {
