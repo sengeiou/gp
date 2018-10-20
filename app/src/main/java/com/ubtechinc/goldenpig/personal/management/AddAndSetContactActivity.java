@@ -121,7 +121,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
         oldList = getIntent().getParcelableArrayListExtra("list");
         if (oldList == null) {
             oldList = new ArrayList<>();
-        } else {
+        } else if (oldList.size() == 11){
             oldList.remove(oldList.size() - 1);
         }
         switch (type) {
