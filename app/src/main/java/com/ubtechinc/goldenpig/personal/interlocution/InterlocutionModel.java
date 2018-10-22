@@ -115,6 +115,7 @@ public class InterlocutionModel extends BaseHttpProxy {
                 .get()
                 .addHeader("dd-auth", sb.toString())
                 .addHeader("product", BuildConfig.product)
+                .addHeader("device-info","ffb54fb08efe11e8a377658d0db82adb|cdc9a089b0b94747ae60d97f01310589")
                 .build();
         Call call = okHttpClient.newCall(okrequest);
         call.enqueue(callback);
@@ -171,6 +172,7 @@ public class InterlocutionModel extends BaseHttpProxy {
                     .addHeader("dd-auth", sb.toString())
                     .addHeader("Content-Type", "application/json")
                     .addHeader("product", BuildConfig.product)
+                    .addHeader("device-info","ffb54fb08efe11e8a377658d0db82adb|cdc9a089b0b94747ae60d97f01310589")
                     .build();
             Call call = okHttpClient.newCall(okrequest);
             call.enqueue(callback);
@@ -207,6 +209,7 @@ public class InterlocutionModel extends BaseHttpProxy {
                 .delete()
                 .addHeader("dd-auth", sb.toString())
                 .addHeader("product", BuildConfig.product)
+                .addHeader("device-info","ffb54fb08efe11e8a377658d0db82adb|cdc9a089b0b94747ae60d97f01310589")
                 .build();
         Call call = okHttpClient.newCall(okrequest);
         call.enqueue(callback);
@@ -265,6 +268,7 @@ public class InterlocutionModel extends BaseHttpProxy {
                     .addHeader("dd-auth", sb.toString())
                     .addHeader("Content-Type", "application/json")
                     .addHeader("product", BuildConfig.product)
+                    .addHeader("device-info","ffb54fb08efe11e8a377658d0db82adb|cdc9a089b0b94747ae60d97f01310589")
                     .build();
             Call call = okHttpClient.newCall(okrequest);
             call.enqueue(callback);
