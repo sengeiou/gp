@@ -13,7 +13,7 @@
     <string name="ubt_net_error_tips">网络不给力，请稍后重试</string>
     <string name="ubt_skip">跳过</string>
     <string name="ubt_long_press_pig">请长按电源键，确认音箱已开机</string>
-    <string name="ubt_start_set_net">开始配网与绑定</string>
+    <string name="ubt_start_set_net">开始绑定与配网</string>
     <string name="ubt_pig_match">音箱配对</string>
     <string name="ubt_pig_bind">音箱绑定</string>
     <string name="ubt_search_pig">搜索音箱</string>

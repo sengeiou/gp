@@ -83,6 +83,11 @@ public class PigFragment extends BaseFragment implements Observer {
     View rlPairPig;
 
     @BindView(R.id.ll_voicechat)
+    LinearLayout llVoiceChat;
+
+    @BindView(R.id.ll_record)
+    View llRecord;
+
     RelativeLayout llVoiceChat;
     @BindView(R.id.ubt_tv_call_sub_title)
     TextView ubt_tv_call_sub_title;
@@ -145,13 +150,15 @@ public class PigFragment extends BaseFragment implements Observer {
     public void onResume() {
         super.onResume();
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
-        if (pigInfo != null && pigInfo.isAdmin) {
+        if (pigInfo != null && pigInfo.isAdmin && pigInfo.isOnline()) {
             llVoiceChat.setAlpha(1.0f);
             rlPairPig.setAlpha(1.0f);
             unReadVoiceMail("setOnUbtTIMConver-DEBUG");
+            llRecord.setAlpha(1.0f);
         } else {
             llVoiceChat.setAlpha(0.5f);
             rlPairPig.setAlpha(0.5f);
+            llRecord.setAlpha(0.5f);
         }
         updatePigPair();
     }
@@ -249,9 +256,15 @@ public class PigFragment extends BaseFragment implements Observer {
                 ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class, false);
                 break;
             case R.id.ll_record:
-                if (AuthLive.getInstance().getCurrentPig() != null) {
+            {
+                PigInfo myPig = AuthLive.getInstance().getCurrentPig();
+                if (myPig != null && myPig.isAdmin) {
                     ActivityRoute.toAnotherActivity(getActivity(), RecordActivity.class, false);
+                } else {
+                    ToastUtils.showShortToast(R.string.only_admin_operate);
                 }
+
+            }
                 break;
             case R.id.view_skill:
                 ActivityRoute.toAnotherActivity(getActivity(), SkillActivity.class, false);

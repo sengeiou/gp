@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 
@@ -95,7 +96,10 @@ public class PigListDialog extends BaseDialog {
 
                     //近场连接
                     float distance = getDistance(rssi);
-                    if (distance < 0.8) {
+                    String name = device.getName();
+                    String tag = name.substring(0, name.indexOf("_") + 1) + name.substring(name.length() - 4, name.length());
+                    Log.e("pigList", tag + "_ble_distance:" + distance);
+                    if (distance < 2.0) {
                         scanLeDevice(false);
                         mPigAdapter.getItemClickListener().onClick(rawIndex, ubtBluetoothDevice);
                         return;
