@@ -306,7 +306,7 @@ public class BungdingManager {
 
             @Override
             public void onError(int code) {
-                Log.i(TAG,"onError======="+code);
+                Log.i(TAG,"onError========="+code);
                 //UbtBluetoothManager.getInstance().closeConnectBle();
                 if(mBanddingListener != null){
                     mBanddingListener.onFaild(Constants.GET_CLIENT_ID_ERROR_CODE);
