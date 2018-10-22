@@ -1,6 +1,7 @@
 package com.ubtechinc.goldenpig.base;
 
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+//        StatusBarUtil.setStatusBarColor(this, ContextCompat.getColor(this, R.color.ubt_global_bg_color));
         getWindow().setBackgroundDrawable(null);   ///减少过度绘制
 
         ActivityManager am = ActivityManager.getInstance();
