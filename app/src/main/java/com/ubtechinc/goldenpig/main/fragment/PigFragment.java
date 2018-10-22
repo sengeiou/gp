@@ -88,6 +88,7 @@ public class PigFragment extends BaseFragment implements Observer {
 
     @BindView(R.id.ubt_tv_call_sub_title)
     TextView ubt_tv_call_sub_title;
+
     @BindView(R.id.iv_unreadvoice)
     ImageView mVoiceUnRead;
 
