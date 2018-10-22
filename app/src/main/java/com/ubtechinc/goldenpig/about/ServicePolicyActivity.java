@@ -17,7 +17,7 @@ public class ServicePolicyActivity extends BaseWebActivity {
     @Override
     protected String getURL() {
 
-        return BuildConfig.H5_URL + "/small/smallProcy.html";
+        return BuildConfig.H5_URL + "/small/smallService.html";
     }
 
     @Override
