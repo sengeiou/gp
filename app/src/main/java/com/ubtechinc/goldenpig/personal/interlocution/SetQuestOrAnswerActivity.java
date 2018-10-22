@@ -68,7 +68,7 @@ public class SetQuestOrAnswerActivity extends BaseNewActivity {
                 limitToast = "最大长度为20个汉字";
                 etSet.setHint("请输入问句");
                 tv_hint1.setText("*仅支持汉字");
-                tv_hint2.setText("*最近输入20个汉字");
+                tv_hint2.setText("*最多输入20个汉字");
                 tv_hint3.setVisibility(View.GONE);
                 break;
             case 1:

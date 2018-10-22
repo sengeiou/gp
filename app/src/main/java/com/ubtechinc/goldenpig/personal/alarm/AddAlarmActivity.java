@@ -135,7 +135,7 @@ public class AddAlarmActivity extends BaseNewActivity {
                 break;
             case R.id.rl_recount:
                 Intent it = new Intent(this, SetRepeatActivity.class);
-                it.putExtra("type", 1);
+                it.putExtra("repeatType", repeatType);
                 startActivity(it);
                 //ActivityRoute.toAnotherActivity(this, SetRepeatActivity.class, false);
                 break;

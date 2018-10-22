@@ -1,5 +1,6 @@
 package com.ubtechinc.goldenpig.personal.remind;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -153,7 +154,9 @@ public class AddRemindActivity extends BaseNewActivity {
                 finish();
                 break;
             case R.id.rl_recount:
-                ActivityRoute.toAnotherActivity(this, SetRemindRepeatActivity.class, false);
+                Intent it =new Intent(this, SetRemindRepeatActivity.class);
+                it.putExtra("repeatType",repeatType);
+                startActivity(it);
                 break;
             case R.id.tv_right:
                 String sNote = ed_msg.getText().toString();

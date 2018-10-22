@@ -33,6 +33,7 @@ public class SetRemindRepeatActivity extends BaseNewActivity {
     RecyclerView recycler;
     private BaseQuickAdapter<RepeatModel, BaseViewHolder> adapter;
     private List<RepeatModel> mList;
+    private int repeatType = 1;
 
     private class MyHandler extends Handler {
         WeakReference<Activity> mWeakReference;
@@ -60,7 +61,7 @@ public class SetRemindRepeatActivity extends BaseNewActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        int type = getIntent().getIntExtra("type", 0);
+        repeatType = getIntent().getIntExtra("repeatType", 1);
         rl_titlebar.setTitleText("重复");
         rl_titlebar.setLeftOnclickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +85,7 @@ public class SetRemindRepeatActivity extends BaseNewActivity {
             @Override
             protected void convert(BaseViewHolder helper, RepeatModel item) {
                 helper.setText(R.id.tv_name, item.name);
-                helper.setVisible(R.id.iv, false);
+                helper.setVisible(R.id.iv, repeatType == item.repeatType);
             }
         });
         adapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
