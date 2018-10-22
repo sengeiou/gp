@@ -243,7 +243,7 @@ public class VoiceMessage extends Message {
                tv.setLayoutParams(lp);
                linearLayout.addView(tv);
                viewHolder.getView(R.id.left_voice_time_other).setVisibility(View.VISIBLE);
-               viewHolder.setText(R.id.left_voice_time_other, String.valueOf(((TIMSoundElem) message.getElement(0)).getDuration()%1000) + "\"");
+               viewHolder.setText(R.id.left_voice_time_other, String.valueOf(((TIMSoundElem) message.getElement(0)).getDuration()/1000) + "\"");
            }
            clearView(viewHolder);
            getBubbleView(viewHolder).addView(linearLayout);
