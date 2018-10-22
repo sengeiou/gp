@@ -1,5 +1,7 @@
 package com.ubtechinc.goldenpig.base;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.view.View;
@@ -68,8 +70,12 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                onGoNextWeb();
+                if (url.startsWith("tel:")) {
+                    startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(url)));
+                } else {
+                    view.loadUrl(url);
+                    onGoNextWeb();
+                }
                 return true;
             }
         });
