@@ -8,8 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -83,12 +81,11 @@ public class PigFragment extends BaseFragment implements Observer {
     View rlPairPig;
 
     @BindView(R.id.ll_voicechat)
-    LinearLayout llVoiceChat;
+    View llVoiceChat;
 
     @BindView(R.id.ll_record)
     View llRecord;
 
-    RelativeLayout llVoiceChat;
     @BindView(R.id.ubt_tv_call_sub_title)
     TextView ubt_tv_call_sub_title;
     @BindView(R.id.iv_unreadvoice)
