@@ -121,7 +121,12 @@ public class RecorderUtil {
             f.close();
         }
     }
-
+/**
+ *
+ */
+public boolean isRecording(){
+    return  isRecording;
+}
 
 
 }

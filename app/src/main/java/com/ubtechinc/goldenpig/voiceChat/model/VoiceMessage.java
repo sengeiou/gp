@@ -208,7 +208,13 @@ public class VoiceMessage extends Message {
            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
            LinearLayout.LayoutParams imageLp = new LinearLayout.LayoutParams(width, height);
             //VOICE LENGTH IS NOT SAME
-           long voicetime=((TIMSoundElem) message.getElement(0)).getDuration();
+           long voicetime=0;
+           if(message.isSelf()) {
+               voicetime = ((TIMSoundElem) message.getElement(0)).getDuration();
+           }else {
+               //milliseconds
+              voicetime = ((TIMSoundElem) message.getElement(0)).getDuration()%1000;
+           }
            if(5<voicetime&&voicetime<10){
                tv.setText("     ");
            }else if(10<voicetime&&voicetime<15){
@@ -237,7 +243,7 @@ public class VoiceMessage extends Message {
                tv.setLayoutParams(lp);
                linearLayout.addView(tv);
                viewHolder.getView(R.id.left_voice_time_other).setVisibility(View.VISIBLE);
-               viewHolder.setText(R.id.left_voice_time_other, String.valueOf(((TIMSoundElem) message.getElement(0)).getDuration()) + "\"");
+               viewHolder.setText(R.id.left_voice_time_other, String.valueOf(((TIMSoundElem) message.getElement(0)).getDuration()%1000) + "\"");
            }
            clearView(viewHolder);
            getBubbleView(viewHolder).addView(linearLayout);
@@ -250,6 +256,8 @@ public class VoiceMessage extends Message {
            showStatus(viewHolder);
        }
     }
+
+
 
     /**
      * 获取消息摘要

@@ -7,7 +7,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -81,9 +83,11 @@ public class PigFragment extends BaseFragment implements Observer {
     View rlPairPig;
 
     @BindView(R.id.ll_voicechat)
-    LinearLayout llVoiceChat;
+    RelativeLayout llVoiceChat;
     @BindView(R.id.ubt_tv_call_sub_title)
     TextView ubt_tv_call_sub_title;
+    @BindView(R.id.iv_unreadvoice)
+    ImageView mVoiceUnRead;
 
     int pairUserId;
     String serialNumber;
@@ -116,8 +120,19 @@ public class PigFragment extends BaseFragment implements Observer {
                 }
             });
             UbtTIMManager.getInstance().queryLatestRecord();
+            //unReadVoiceMail("setOnUbtTIMConver");
         }
         return view;
+    }
+
+    private void unReadVoiceMail(String setOnUbtTIMConver) {
+        Log.e(setOnUbtTIMConver, "unRead message " + UbtTIMManager.getInstance().unReadVoiceMailMessage());
+        if (UbtTIMManager.getInstance().unReadVoiceMailMessage() >= 1) {
+            Log.e(setOnUbtTIMConver, "unRead message " + UbtTIMManager.getInstance().unReadVoiceMailMessage());
+            mVoiceUnRead.setVisibility(View.VISIBLE);
+        }else{
+            mVoiceUnRead.setVisibility(View.INVISIBLE);
+        }
     }
 
     @Override
@@ -133,6 +148,7 @@ public class PigFragment extends BaseFragment implements Observer {
         if (pigInfo != null && pigInfo.isAdmin) {
             llVoiceChat.setAlpha(1.0f);
             rlPairPig.setAlpha(1.0f);
+            unReadVoiceMail("setOnUbtTIMConver-DEBUG");
         } else {
             llVoiceChat.setAlpha(0.5f);
             rlPairPig.setAlpha(0.5f);

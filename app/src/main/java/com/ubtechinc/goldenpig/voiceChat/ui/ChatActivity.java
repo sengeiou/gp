@@ -53,6 +53,8 @@ import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static com.tencent.TIMElemType.GroupSystem;
 
@@ -76,6 +78,9 @@ public class ChatActivity extends FragmentActivity implements ChatView {
     private ChannelInfo info = null;
     private String TAG="ChatActivity";
     public static boolean VERSION_BYPASS=true;
+    private Timer mVoiceRecordTimer;
+    private TimerTask mVoiceRecordTimeOutTask;
+    long mVoiceRecordingTimeout=60*1000;
 
     public static void navToChat(Context context, String identify, TIMConversationType type, ChannelInfo info){
         Intent intent = new Intent(context, ChatActivity.class);
@@ -375,7 +380,31 @@ public class ChatActivity extends FragmentActivity implements ChatView {
 //        intent.setType("*/*");
 //        startActivityForResult(intent, FILE_CODE);
     }
+    public void startVoiceRecordingTask() {
+        stopVoiceRecordingTask();
+        mVoiceRecordTimer = new Timer();
+        mVoiceRecordTimeOutTask = new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        endSendVoice();
+                    }
+                });
+            }
+        };
+       mVoiceRecordTimer.schedule(mVoiceRecordTimeOutTask, mVoiceRecordingTimeout);
+    }
 
+    private void stopVoiceRecordingTask() {
+        if (mVoiceRecordTimeOutTask != null) {
+            mVoiceRecordTimeOutTask.cancel();
+            mVoiceRecordTimeOutTask = null;
+            mVoiceRecordTimer.purge();
+            mVoiceRecordTimer = null;
+        }
+    }
     /**
      * 开始发送语音消息
      */
@@ -384,6 +413,7 @@ public class ChatActivity extends FragmentActivity implements ChatView {
         voiceSendingView.setVisibility(View.VISIBLE);
         voiceSendingView.showRecording();
         recorder.startRecording();
+        startVoiceRecordingTask();
     }
 
     /**
@@ -391,12 +421,19 @@ public class ChatActivity extends FragmentActivity implements ChatView {
      */
     @Override
     public void endSendVoice() {
+        if(!recorder.isRecording()){
+            return;
+        }
+        stopVoiceRecordingTask();
         voiceSendingView.release();
         voiceSendingView.setVisibility(View.GONE);
         recorder.stopRecording();
         if (recorder.getTimeInterval() < 1) {
             Toast.makeText(this, getResources().getString(R.string.chat_audio_too_short), Toast.LENGTH_SHORT).show();
         } else {
+            if(recorder.getTimeInterval()==mVoiceRecordingTimeout){
+                Toast.makeText(this, getResources().getString(R.string.chat_audio_too_long), Toast.LENGTH_SHORT).show();
+            }
             if (VERSION_BYPASS) {
                 Message message = new VoiceMessage(recorder.getTimeInterval(), recorder.getFilePath());
                 presenter.sendMessage(message.getMessage(), ChatPresenter.MESSAGE_VOICE);

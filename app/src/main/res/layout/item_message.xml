@@ -34,7 +34,7 @@
                 android:layout_alignParentLeft="true"
                 android:src="@drawable/head_other" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/leftAvatar"
@@ -64,12 +64,12 @@
                     android:id="@+id/left_voice_time_other"
                     android:layout_width="30dp"
                     android:layout_height="15dp"
-                    android:layout_marginStart="65dp"
-                    android:layout_marginTop="-20dp"
+                    android:layout_marginLeft="5dp"
+                    android:layout_toRightOf="@+id/leftMessage"
                     android:layout_toEndOf="@+id/leftMessage"
                     android:text="58'" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
 
         </RelativeLayout>

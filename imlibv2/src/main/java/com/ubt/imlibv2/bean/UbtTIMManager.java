@@ -412,4 +412,11 @@ public class UbtTIMManager {
         TIMMessage msg = creatElem(data);
         sendTIM(msg);
     }
+    public long unReadVoiceMailMessage(){
+        if(conversation==null){
+            return -1;
+        }
+        return conversation.getUnreadMessageNum();
+    }
+
 }
