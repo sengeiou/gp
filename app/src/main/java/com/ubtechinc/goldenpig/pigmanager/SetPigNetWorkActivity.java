@@ -220,13 +220,13 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
         final String wifiPwd = mWifiPwdEdt.getPwd();
         final String wifiCtype = mWifiNamEdt.getcType();
         if (TextUtils.isEmpty(wifiCtype)) {
-            ToastUtils.showShortToast(this, "正在获取Wi-Fi加密类型，请稍后尝试");
+            ToastUtils.showShortToast(this, "正在获取Wi-Fi加密方式，请稍后尝试");
             return;
         }
         showLoadingDialog();
         String message = commandProduce.getWifiPasswdInfo(wifiCtype, wifiName, wifiPwd);
         UbtBluetoothManager.getInstance().sendMessageToBle(message);
-        showLoadingDialog();
+//        showLoadingDialog();
     }
 
     BundingListenerAbster mBandingListenerAbster = new BundingListenerAbster() {
