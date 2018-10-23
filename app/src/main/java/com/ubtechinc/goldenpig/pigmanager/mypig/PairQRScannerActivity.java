@@ -21,6 +21,8 @@ import com.ubtechinc.goldenpig.route.ActivityRoute;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+
 /**
  * @author ubt
  */
@@ -60,7 +62,6 @@ public class PairQRScannerActivity extends QRScannerActivity {
                             @Override
                             public void run() {
                                 ToastUtils.showShortToast(R.string.ubt_pair_pig_success);
-                                ActivityRoute.toAnotherActivity(PairQRScannerActivity.this, PairPigActivity.class, false);
 
                                 //TODO 小猪配对或解除配对后需要通过IM通知小猪本体功能
                                 getPigPair();
@@ -106,6 +107,10 @@ public class PairQRScannerActivity extends QRScannerActivity {
     }
 
     private void sendPairInfo(int userId, String serialNumber, int pairUserId, String pairSerialNumber) {
+        HashMap<String, String> map = new HashMap<>();
+        map.put("pairSerialNumber", pairSerialNumber);
+        ActivityRoute.toAnotherActivity(PairQRScannerActivity.this, PairPigActivity.class, map, false);
+
         //TODO 给自己的猪发
         TIMConversation selfConversation = TIMManager.getInstance().getConversation(
                 TIMConversationType.C2C, serialNumber);

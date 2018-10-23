@@ -13,7 +13,7 @@
         android:id="@+id/ubt_img_member_photo"
         android:layout_width="@dimen/dp_40"
         android:layout_height="@dimen/dp_40"
-        app:srcCompat="@drawable/ic_logo" />
+        app:srcCompat="@drawable/ic_pig" />
 
     <TextView
         android:layout_marginStart="@dimen/dp_15"

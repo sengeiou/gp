@@ -258,7 +258,7 @@ public class PigFragment extends BaseFragment implements Observer {
                 //TODO 解除配对
 //                doUnPair();
                 HashMap<String, String> map = new HashMap<>();
-                map.put("unPairUserId", String.valueOf(pairUserId));
+                map.put("pairSerialNumber", String.valueOf(pairSerialNumber));
                 ActivityRoute.toAnotherActivity(getActivity(), PairPigActivity.class, map, false);
                 break;
             case R.id.ubt_bind_tv:
@@ -285,7 +285,7 @@ public class PigFragment extends BaseFragment implements Observer {
     private void doUnPair() {
         UnpairHttpProxy httpProxy = new UnpairHttpProxy();
         httpProxy.doUnpair(CookieInterceptor.get().getToken(),
-                BuildConfig.APP_ID, String.valueOf(pairUserId), new UnpairHttpProxy.UnpairCallBack() {
+                BuildConfig.APP_ID, new UnpairHttpProxy.UnpairCallBack() {
                     @Override
                     public void onError() {
                         getActivity().runOnUiThread(new Runnable() {

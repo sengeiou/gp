@@ -13,7 +13,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class UnpairHttpProxy extends BaseHttpProxy {
-    public void doUnpair(String token, String appId, String userId, final UnpairCallBack callBack) {
+    public void doUnpair(String token, String appId, final UnpairCallBack callBack) {
         OkHttpClient okHttpClient = getHttpClient();
 
         FormBody formBody = new FormBody.Builder()

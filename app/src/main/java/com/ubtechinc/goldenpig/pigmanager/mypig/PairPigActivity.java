@@ -34,14 +34,9 @@ import java.util.ArrayList;
  * @changetime :2018/9/28 19:18
  */
 public class PairPigActivity extends BaseToolBarActivity implements View.OnClickListener {
-    private RecyclerView mMemberRcy; ///与小猪配对的成员列表
-    private PairPigAdapter adapter;
-    private ArrayList<CheckBindRobotModule.User> mUserList;
-    private String unPairUserId;
-    private View reflashMemberView; //刷新成员列表
+    private String pairSerialNumber;
     private View unPairBtn; ///解除绑定按钮
-    private ImageView userPotoImg;
-    private TextView userNameTv;
+    private TextView memberNameTv;
 
     @Override
     protected int getConentView() {
@@ -57,25 +52,9 @@ public class PairPigActivity extends BaseToolBarActivity implements View.OnClick
     }
 
     private void initViews() {
-        mMemberRcy = findViewById(R.id.ubt_pair_pig_rcy);
-        mMemberRcy.setLayoutManager(new WrapContentLinearLayoutManager(this));
-        adapter = new PairPigAdapter(this, mUserList);
-        adapter.setListener(new PairPigAdapter.OnUnpairClickListener() {
-            @Override
-            public void onClick(String userId) {
-                unPairUserId = userId;
-                showUnpairDialog();
-            }
-        });
-        mMemberRcy.setAdapter(adapter);
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-        }
         unPairBtn = findViewById(R.id.ubt_btn_unpair);
         unPairBtn.setOnClickListener(this);
-
-        userPotoImg = findViewById(R.id.ubt_img_member_photo);
-        userNameTv = findViewById(R.id.ubt_tv_member_name);
+        memberNameTv = findViewById(R.id.ubt_tv_member_name);
     }
 
     private void showUnpairDialog() {
@@ -102,46 +81,17 @@ public class PairPigActivity extends BaseToolBarActivity implements View.OnClick
      * 初始化与小猪配对的用户列表
      */
     private void initData() {
-        final UserInfo userInfo = AuthLive.getInstance().getCurrentUser();
-        if (userInfo == null) {
-            return;
-        }
-
         Intent intent = getIntent();
         if (intent != null) {
-            unPairUserId = intent.getStringExtra("unPairUserId");
+            pairSerialNumber = intent.getStringExtra("pairSerialNumber");
+            memberNameTv.setText(pairSerialNumber);
         }
-
-        if (userPotoImg != null) {
-            Glide.with(this)
-                    .load(userInfo.getUserImage())
-                    .asBitmap()
-                    .centerCrop()
-                    .transform(new GlideCircleTransform(this))
-                    .into(userPotoImg);
-        }
-        if (userNameTv != null) {
-            userNameTv.setText(userInfo.getNickName());
-        }
-        /*new GePairMemberHttpProxy().getPairMember(CookieInterceptor.get().getToken(),
-                BuildConfig.APP_ID,
-                new GePairMemberHttpProxy.GetPairMemberCallback() {
-                    @Override
-                    public void onError() {
-
-                    }
-
-                    @Override
-                    public void onSuccess() {
-
-                    }
-                });*/
     }
 
     private void unPair() {
         UnpairHttpProxy httpProxy = new UnpairHttpProxy();
         httpProxy.doUnpair(CookieInterceptor.get().getToken(),
-                BuildConfig.APP_ID, unPairUserId, new UnpairHttpProxy.UnpairCallBack() {
+                BuildConfig.APP_ID, new UnpairHttpProxy.UnpairCallBack() {
                     @Override
                     public void onError() {
                         runOnUiThread(new Runnable() {
