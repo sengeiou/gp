@@ -129,6 +129,7 @@ public class PigFragment extends BaseFragment implements Observer {
     }
 
     private void unReadVoiceMail(String setOnUbtTIMConver) {
+        if (mVoiceUnRead == null) return;
         Log.e(setOnUbtTIMConver, "unRead message " + UbtTIMManager.getInstance().unReadVoiceMailMessage());
         if (UbtTIMManager.getInstance().unReadVoiceMailMessage() >= 1) {
             Log.e(setOnUbtTIMConver, "unRead message " + UbtTIMManager.getInstance().unReadVoiceMailMessage());
@@ -159,6 +160,16 @@ public class PigFragment extends BaseFragment implements Observer {
             llRecord.setAlpha(0.5f);
         }
         updatePigPair();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (isVisibleToUser) {
+            PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+            if (pigInfo != null && pigInfo.isAdmin && pigInfo.isOnline()) {
+                unReadVoiceMail("setOnUbtTIMConver-DEBUG");
+            }
+        }
     }
 
     private void updatePigPair() {

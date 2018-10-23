@@ -219,6 +219,10 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
         final String wifiName = mWifiNamEdt.getText();
         final String wifiPwd = mWifiPwdEdt.getPwd();
         final String wifiCtype = mWifiNamEdt.getcType();
+        if (TextUtils.isEmpty(wifiCtype)) {
+            ToastUtils.showShortToast(this, "正在获取Wi-Fi加密类型，请稍后尝试");
+            return;
+        }
         showLoadingDialog();
         String message = commandProduce.getWifiPasswdInfo(wifiCtype, wifiName, wifiPwd);
         UbtBluetoothManager.getInstance().sendMessageToBle(message);

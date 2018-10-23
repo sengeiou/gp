@@ -21,10 +21,14 @@ import android.widget.Toast;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.commlib.view.UbtClearableEditText;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.pigmanager.SetPigNetWorkActivity;
 import com.ubtechinc.nets.utils.WifiControl;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static android.content.Context.WIFI_SERVICE;
 
@@ -82,6 +86,7 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
     public void setText(String text) {
         if (mWifiNameEdt != null && !TextUtils.isEmpty(text)) {
             mWifiNameEdt.setText(text.replace("\"", ""));
+            scanWifiInfo();
         }
     }
 
@@ -177,21 +182,23 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
             return;
         }
 
-//        Set<ScanResult> set = new TreeSet<>((o1, o2) -> o1.SSID.compareTo(o2.SSID));
-//        set.addAll(results);
-//        mWifiList.addAll(set);
-        mWifiList.add(results.get(0));
-        for (int i = 1; i < results.size(); i++) {
-            for (int j = 0; j < mWifiList.size(); j++) {
-                if (mWifiList.get(j).SSID.equals(results.get(i).SSID)) {
-                    break;
-                }
-                if (j == mWifiList.size() - 1) {
-                    mWifiList.add(results.get(i));
-                    break;
-                }
-            }
-        }
+        //TODO 去重
+        Set<ScanResult> set = new TreeSet<>((o1, o2) -> o1.SSID.compareTo(o2.SSID));
+        set.addAll(results);
+        mWifiList.addAll(set);
+
+//        mWifiList.add(results.get(0));
+//        for (int i = 1; i < results.size(); i++) {
+//            for (int j = 0; j < mWifiList.size(); j++) {
+//                if (mWifiList.get(j).SSID.equals(results.get(i).SSID)) {
+//                    break;
+//                }
+//                if (j == mWifiList.size() - 1) {
+//                    mWifiList.add(results.get(i));
+//                    break;
+//                }
+//            }
+//        }
         if (mWifiListAdapter != null) {
             mWifiListAdapter.notifyItemRangeInserted(mWifiList.size() - results.size(), results.size());
         }
@@ -201,12 +208,24 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
         WifiManager wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(WIFI_SERVICE);
         wifiManager.startScan(); //启动扫描
         List<ScanResult> scanResults = wifiManager.getScanResults();//搜索到的设备列表
-        final int size = scanResults.size();
-        for (int index = size - 1; index >= 0; index--) {
-            if (TextUtils.isEmpty(scanResults.get(index).SSID)) {
-                scanResults.remove(scanResults.get(index));
+        Iterator<ScanResult> iterator = scanResults.iterator();
+        String phoneSsid = wifiManager.getConnectionInfo().getSSID().replace("\"", "");
+        while (iterator.hasNext()) {
+            ScanResult scanResult = iterator.next();
+            String ssid = scanResult.SSID.replace("\"", "");
+            if (TextUtils.isEmpty(ssid)) {
+                iterator.remove();
+            }
+            if (!TextUtils.isEmpty(ssid) && ssid.equals(phoneSsid)) {
+                cType = scanResult.capabilities;
             }
         }
+//        final int size = scanResults.size();
+//        for (int index = size - 1; index >= 0; index--) {
+//            if (TextUtils.isEmpty(scanResults.get(index).SSID)) {
+//                scanResults.remove(scanResults.get(index));
+//            }
+//        }
         if (scanResults == null || scanResults.isEmpty()) {
             LocationManager locManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
             if (!locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
