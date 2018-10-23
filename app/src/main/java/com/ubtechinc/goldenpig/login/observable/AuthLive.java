@@ -54,12 +54,12 @@ public class AuthLive extends LiveData<AuthLive> {
 
     public void logined(UserInfo userInfo) {
         currentUser = userInfo;
-        this.state = AuthState.LOGINED;
-        if(isMainThread()){
-            setValue(this);
-        }else {
-            postValue(this);
-        }
+//        this.state = AuthState.LOGINED;
+////        if(isMainThread()){
+////            setValue(this);
+////        }else {
+////            postValue(this);
+////        }
     }
     public void timLogined(){
         this.state = AuthState.LOGINED;

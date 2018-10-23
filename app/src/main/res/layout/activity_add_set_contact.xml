@@ -37,8 +37,8 @@
             android:layout_weight="1"
             android:background="@null"
             android:gravity="center_vertical"
-            android:inputType="phone"
-            android:maxLength="11"
+            android:inputType="number"
+            android:maxLength="20"
             android:singleLine="true"
             android:textColor="@color/ubt_tips_txt_color"
             android:textSize="@dimen/sp_16" />
