@@ -15,6 +15,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Selection;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
@@ -43,6 +46,7 @@ import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.model.AddressBookmodel;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.utils.CommendUtil;
 import com.ubtechinc.goldenpig.view.GridSpacingItemDecoration;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 
@@ -116,12 +120,13 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
 
             }
         });
+        initLengthLimit();
         type = getIntent().getIntExtra("type", 0);
         updatePosition = getIntent().getIntExtra("position", -1);
         oldList = getIntent().getParcelableArrayListExtra("list");
         if (oldList == null) {
             oldList = new ArrayList<>();
-        } else if (oldList.size() == 11){
+        } else if (oldList.size() == 11) {
             oldList.remove(oldList.size() - 1);
         }
         switch (type) {
@@ -271,6 +276,49 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                 break;
             default:
         }
+    }
+
+    /**
+     * 判定输入汉字
+     */
+    public boolean isChinese(char c) {
+        Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
+        if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
+                || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
+                || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A
+                || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_B
+                || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
+                || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS
+                || ub == Character.UnicodeBlock.GENERAL_PUNCTUATION) {
+            return true;
+        }
+        return false;
+    }
+
+    public void initLengthLimit() {
+        InputFilter[] FilterArray = new InputFilter[1];
+        FilterArray[0] = (source, start, end, dest, dstart, dend) -> {
+            for (int i = start; i < end; i++) {
+                if (!isChinese(source.charAt(i))) {
+                    return "";
+                } else {
+                    if ((source.charAt(i) >= 0x4e00) && (source.charAt(i) <= 0x9fbb)) {
+
+                    } else {
+                        return "";
+                    }
+                }
+            }
+            int sourceLen = CommendUtil.getMsgLength(source.toString());
+            int destLen = CommendUtil.getMsgLength(dest.toString());
+            LogUtils.d("sourceLen:" + sourceLen + ",destLen:" + destLen);
+            if (sourceLen + destLen > 6) {
+                ToastUtils.showShortToast("最大长度为6个汉字");
+                return "";
+            }
+            return source;
+        };
+        etName.setFilters(FilterArray);
     }
 
     @OnClick({R.id.iv_phone_clear, R.id.iv_name_clear, R.id.iv_add})
