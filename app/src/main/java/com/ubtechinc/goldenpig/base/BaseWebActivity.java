@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
-import android.view.View;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -28,6 +26,10 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
     private WebView mWebView;
 
     private String URL;
+
+    private int scrollX;
+
+    private int scrollY;
 
     @Override
     protected int getConentView() {
@@ -57,22 +59,26 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setAllowFileAccess(true);
         //开发稳定后需去掉该行代码
-        mWebView.getSettings().setCacheMode(WebSettings.LOAD_NO_CACHE);
-        mWebView.getSettings().setUseWideViewPort(true);  //将图片调整到适合webview的大小
-        mWebView.getSettings().setLoadWithOverviewMode(true); // 缩放至屏幕的大小
-        mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+//        mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+//        mWebView.getSettings().setUseWideViewPort(true);  //将图片调整到适合webview的大小
+//        mWebView.getSettings().setLoadWithOverviewMode(true); // 缩放至屏幕的大小
+//        mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
-        mWebView.getSettings().setAllowContentAccess(true);
-        mWebView.getSettings().setDatabaseEnabled(true);
+//        mWebView.getSettings().setAllowContentAccess(true);
+//        mWebView.getSettings().setDatabaseEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
+//        mWebView.getSettings().setAppCacheEnabled(true);
 
 
         mWebView.setWebViewClient(new WebViewClient() {
+
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url.startsWith("tel:")) {
                     startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(url)));
                 } else {
+                    scrollY = view.getScrollY();
+                    scrollX = view.getScrollX();
                     view.loadUrl(url);
                     onGoNextWeb();
                 }
@@ -88,6 +94,7 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
     public void onBackPressed() {
         if (mWebView.canGoBack()) {
             mWebView.goBack();
+            mWebView.scrollTo(scrollX, scrollY);
             onGoBackWeb();
         } else {
             super.onBackPressed();
