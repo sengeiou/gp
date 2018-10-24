@@ -411,7 +411,7 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
             @Override
             public void onError(String error) {
                 LoadingDialog.getInstance(PigMemberActivity.this).dismiss();
-                com.ubtech.utilcode.utils.ToastUtils.showShortToast("转让失败");
+                com.ubtech.utilcode.utils.ToastUtils.showShortToast(error);
             }
 
             @Override

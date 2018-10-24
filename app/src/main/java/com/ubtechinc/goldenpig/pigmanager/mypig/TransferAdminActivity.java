@@ -161,7 +161,7 @@ public class TransferAdminActivity extends BaseToolBarActivity implements View.O
             httpProxy.transferAdmin(this, CookieInterceptor.get().getToken(), AuthLive.getInstance().getCurrentPig().getRobotName(), userId, new TransferAdminHttpProxy.TransferCallback() {
                 @Override
                 public void onError(String error) {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("转让失败");
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast(error);
                 }
 
                 @Override

@@ -3,8 +3,11 @@ package com.ubtechinc.goldenpig.pigmanager.register;
 import android.content.Context;
 import android.os.Handler;
 
+import com.ubtechinc.commlib.log.UBTLog;
 import com.ubtechinc.goldenpig.net.BaseHttpProxy;
 import com.ubtechinc.nets.BuildConfig;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -53,16 +56,18 @@ public class TransferAdminHttpProxy extends BaseHttpProxy {
             public void onResponse(Call call, Response response) {
                 if (callback != null) {
                     mainHandler.post(() -> {
-                        if (response.isSuccessful()) {
-                            try {
-                                String result = response.body().source().readUtf8();
+                        try {
+                            String result = response.body().source().readUtf8();
+                            if (response.isSuccessful()) {
                                 callback.onSuccess(result);
-                            } catch (IOException e) {
-                                callback.onException(e);
+                            } else {
+                                UBTLog.d("TransferAdminHttpProxy", result);
+                                JSONObject jsonObject = new JSONObject(result);
+                                String message = jsonObject.optString("message");
+                                callback.onError(message);
                             }
-
-                        } else {
-                            callback.onError(String.valueOf(response.code()));
+                        } catch (Exception e) {
+                            callback.onException(e);
                         }
                     });
                 }

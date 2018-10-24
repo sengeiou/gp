@@ -1,6 +1,7 @@
 package com.ubtechinc.goldenpig.personal;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -8,12 +9,14 @@ import android.widget.TextView;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewTv;
+import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.personal.management.AddressBookActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.mypig.MyPigActivity;
+import com.ubtechinc.goldenpig.pigmanager.mypig.PairPigActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.PigMemberActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.QRCodeActivity;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
@@ -82,18 +85,18 @@ public class DeviceManageActivity extends BaseNewActivity {
         new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListHttpProxy.OnGetPigListLitener() {
             @Override
             public void onError(ThrowableWrapper e) {
-                Log.e("getPigList",e.getMessage());
+                Log.e("getPigList", e.getMessage());
             }
 
             @Override
             public void onException(Exception e) {
-                Log.e("getPigList",e.getMessage());
+                Log.e("getPigList", e.getMessage());
             }
 
             @Override
             public void onSuccess(String response) {
-                Log.e("getPigList",response);
-                PigUtils.getPigList(response,AuthLive.getInstance().getUserId(),AuthLive.getInstance().getCurrentPigList());
+                Log.e("getPigList", response);
+                PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance().getCurrentPigList());
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -156,11 +159,17 @@ public class DeviceManageActivity extends BaseNewActivity {
                         .class, false);
                 break;
             case R.id.rl_pairing:
-
-                HashMap<String, Boolean> param = new HashMap<>();
-                param.put("isPair", true);
-                ActivityRoute.toAnotherActivity(this, QRCodeActivity.class, param, false);
-
+                String pairSerialNumber = UBTPGApplication.mPairSerialNumber;
+                if (!TextUtils.isEmpty(pairSerialNumber)) {
+                    //TODO 配对列表
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put("pairSerialNumber", String.valueOf(pairSerialNumber));
+                    ActivityRoute.toAnotherActivity(this, PairPigActivity.class, map, false);
+                } else {
+                    HashMap<String, Boolean> param = new HashMap<>();
+                    param.put("isPair", true);
+                    ActivityRoute.toAnotherActivity(this, QRCodeActivity.class, param, false);
+                }
                 break;
             case R.id.rl_member_group:
                 if (AuthLive.getInstance().getCurrentPig() == null) {
@@ -174,7 +183,7 @@ public class DeviceManageActivity extends BaseNewActivity {
                 ActivityRoute.toAnotherActivity(DeviceManageActivity.this, AddressBookActivity
                         .class, false);
                 break;
-                default:
+            default:
         }
     }
 

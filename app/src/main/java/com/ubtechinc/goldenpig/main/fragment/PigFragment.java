@@ -34,7 +34,6 @@ import com.ubtechinc.goldenpig.pigmanager.bean.RecordModel;
 import com.ubtechinc.goldenpig.pigmanager.mypig.PairPigActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.PairQRScannerActivity;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPairPigQRHttpProxy;
-import com.ubtechinc.goldenpig.pigmanager.register.UnpairHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.voiceChat.ui.ChatActivity;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
@@ -208,6 +207,11 @@ public class PigFragment extends BaseFragment implements Observer {
     }
 
     private void showPigPair(boolean hasPair) {
+        if (hasPair) {
+            UBTPGApplication.mPairSerialNumber = pairSerialNumber;
+        } else {
+            UBTPGApplication.mPairSerialNumber = null;
+        }
         viewPigPairInfo.setVisibility(hasPair ? View.VISIBLE : View.GONE);
         viewPigPairAdd.setVisibility(!hasPair ? View.VISIBLE : View.GONE);
     }
@@ -255,8 +259,7 @@ public class PigFragment extends BaseFragment implements Observer {
                 }
                 break;
             case R.id.view_pig_pair_info:
-                //TODO 解除配对
-//                doUnPair();
+                //TODO 配对列表
                 HashMap<String, String> map = new HashMap<>();
                 map.put("pairSerialNumber", String.valueOf(pairSerialNumber));
                 ActivityRoute.toAnotherActivity(getActivity(), PairPigActivity.class, map, false);
@@ -280,34 +283,6 @@ public class PigFragment extends BaseFragment implements Observer {
                 break;
             default:
         }
-    }
-
-    private void doUnPair() {
-        UnpairHttpProxy httpProxy = new UnpairHttpProxy();
-        httpProxy.doUnpair(CookieInterceptor.get().getToken(),
-                BuildConfig.APP_ID, new UnpairHttpProxy.UnpairCallBack() {
-                    @Override
-                    public void onError() {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                ToastUtils.showShortToast(R.string.ubt_ubpair_filure);
-                            }
-                        });
-
-                    }
-
-                    @Override
-                    public void onSuccess() {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                ToastUtils.showShortToast(R.string.ubt_ubpair_success);
-                                showPigPair(false);
-                            }
-                        });
-                    }
-                });
     }
 
     @Override
