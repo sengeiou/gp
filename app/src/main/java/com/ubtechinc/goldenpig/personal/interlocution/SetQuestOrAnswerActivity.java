@@ -20,6 +20,9 @@ import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.model.JsonCallback;
 import com.ubtechinc.goldenpig.utils.CommendUtil;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -72,9 +75,9 @@ public class SetQuestOrAnswerActivity extends BaseNewActivity {
                 tv_hint3.setVisibility(View.GONE);
                 break;
             case 1:
-                maxchineseLength = 50;
+                maxchineseLength = 100;
                 tv_center.setText("添加回复");
-                limitToast = "最大长度为50个汉字或100个字符";
+                limitToast = "最大长度为100个字";
                 etSet.setHint("请输入回答");
                 break;
         }
@@ -127,38 +130,42 @@ public class SetQuestOrAnswerActivity extends BaseNewActivity {
 
     public void initLengthLimit() {
         InputFilter[] FilterArray = new InputFilter[1];
-        FilterArray[0] = new
-
-                InputFilter() {
-                    @Override
-                    public CharSequence filter(CharSequence source, int start, int end,
-                                               Spanned dest, int dstart, int dend) {
-                        if (type == 0) {
-                            for (int i = start; i < end; i++) {
-                                if (!isChinese(source.charAt(i))) {
-                                    return "";
-                                } else {
-                                    if ((source.charAt(i) >= 0x4e00) && (source.charAt(i) <= 0x9fbb)) {
-
-                                    } else {
-                                        return "";
-                                    }
-                                }
-                            }
-                            return source;
+        FilterArray[0] = new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end,
+                                       Spanned dest, int dstart, int dend) {
+                if (type == 0) {
+                    for (int i = start; i < end; i++) {
+                        if (!isChinese(source.charAt(i))) {
+                            return "";
                         } else {
-                            boolean bInvlid = false;
-                            int sourceLen = CommendUtil.getMsgLength(source.toString());
-                            int destLen = CommendUtil.getMsgLength(dest.toString());
-                            LogUtils.d("sourceLen:" + sourceLen + ",destLen:" + destLen);
-                            if (sourceLen + destLen > maxchineseLength) {
-                                ToastUtils.showShortToast(limitToast);
+                            if ((source.charAt(i) >= 0x4e00) && (source.charAt(i) <= 0x9fbb)) {
+
+                            } else {
                                 return "";
                             }
-                            return source;
                         }
                     }
-                };
+                    return source;
+                } else {
+                    if (source.equals(" ")) return "";
+                    String speChat = "[`~@#$%^&*()+=|{}':'\\[\\]<>@#￥%……&*（）——+|{}【】‘”“]";
+                    Pattern pattern = Pattern.compile(speChat);
+                    Matcher matcher = pattern.matcher(source.toString());
+                    if (matcher.find()) return "";
+
+//                    boolean bInvlid = false;
+//                    int sourceLen = CommendUtil.getMsgLength(source.toString());
+//                    int destLen = CommendUtil.getMsgLength(dest.toString());
+//                    LogUtils.d("sourceLen:" + sourceLen + ",destLen:" + destLen);
+//                    if (sourceLen + destLen > maxchineseLength) {
+//                        ToastUtils.showShortToast(limitToast);
+//                        return "";
+//                    }
+                    return source;
+                }
+            }
+        };
         etSet.setFilters(FilterArray);
         etSet.addTextChangedListener(
                 new TextWatcher() {
@@ -185,10 +192,10 @@ public class SetQuestOrAnswerActivity extends BaseNewActivity {
                             if (charAt >= 32 && charAt <= 122) {
                                 mMsgMaxLength++;
                             } else {
-                                mMsgMaxLength += 2;
+                                mMsgMaxLength += 1;
                             }
                             // 当最大字符大于6000时，进行字段的截取，并进行提示字段的大小
-                            if (mMsgMaxLength > maxchineseLength * 2) {
+                            if (mMsgMaxLength > maxchineseLength) {
                                 // 截取最大的字段
                                 String newStr = str.substring(0, i);
                                 etSet.setText(newStr);

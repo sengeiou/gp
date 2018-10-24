@@ -72,7 +72,7 @@
             android:background="@null"
             android:gravity="center_vertical"
             android:hint="提醒内容最多输入20字"
-            android:maxLength="40"
+            android:maxLength="20"
             android:paddingLeft="@dimen/dp_20"
             android:paddingRight="@dimen/dp_20"
             android:singleLine="true"

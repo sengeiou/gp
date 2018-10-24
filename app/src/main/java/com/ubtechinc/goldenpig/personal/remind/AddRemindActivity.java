@@ -302,23 +302,24 @@ public class AddRemindActivity extends BaseNewActivity {
 
     public void initLengthLimit() {
         InputFilter[] FilterArray = new InputFilter[1];
-        FilterArray[0] = new
+        FilterArray[0] = new InputFilter() {
+            @Override
+            public CharSequence filter(CharSequence source, int start, int end,
+                                       Spanned dest, int dstart, int dend) {
+                for (int i = start; i < end; i++) {
+                    if (!isChinese(source.charAt(i))) {
+                        return "";
+                    } else {
+                        if ((source.charAt(i) >= 0x4e00) && (source.charAt(i) <= 0x9fbb)) {
 
-                InputFilter() {
-                    @Override
-                    public CharSequence filter(CharSequence source, int start, int end,
-                                               Spanned dest, int dstart, int dend) {
-                        boolean bInvlid = false;
-                        int sourceLen = CommendUtil.getMsgLength(source.toString());
-                        int destLen = CommendUtil.getMsgLength(dest.toString());
-                        LogUtils.d("sourceLen:" + sourceLen + ",destLen:" + destLen);
-                        if (sourceLen + destLen > maxchineseLength) {
-                            ToastUtils.showShortToast("提醒内容最多输入20字");
+                        } else {
                             return "";
                         }
-                        return source;
                     }
-                };
+                }
+                return source;
+            }
+        };
         ed_msg.setFilters(FilterArray);
         ed_msg.addTextChangedListener(
                 new TextWatcher() {
@@ -377,5 +378,22 @@ public class AddRemindActivity extends BaseNewActivity {
                     }
                 }
         );
+    }
+
+    /**
+     * 判定输入汉字
+     */
+    public boolean isChinese(char c) {
+        Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
+        if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
+                || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
+                || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A
+                || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_B
+                || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
+                || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS
+                || ub == Character.UnicodeBlock.GENERAL_PUNCTUATION) {
+            return true;
+        }
+        return false;
     }
 }
