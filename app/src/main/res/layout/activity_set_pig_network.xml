@@ -38,6 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:layout_marginTop="@dimen/ubt_edt_wifi_psd_margintop"
+            android:gravity="center_vertical"
             android:ems="10"
             android:hint="@string/ubt_password"
             android:inputType="textPassword"
@@ -50,7 +51,6 @@
             android:layout_height="@dimen/ubt_1px"
             android:layout_marginEnd="@dimen/ubt_edt_marginstart"
             android:layout_marginStart="@dimen/ubt_edt_marginstart"
-            android:layout_marginTop="@dimen/ubt_8dp"
             android:background="@color/ubt_dilog_decore_color" />
 
         <Button

@@ -421,9 +421,11 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
                     break;
                 default:
                     ToastUtils.showShortToast(SearchPigActivity.this, Constants.getErrorMsg(errorCode));
+
                     break;
             }
             pigListDialog.dismiss();
+            dismissLoadDialog();
         }
 
         @Override

@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent" android:layout_height="wrap_content">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
     <com.ubtechinc.commlib.view.UbtClearableEditText
         android:id="@+id/ubt_clearedt_wifi_pwd"
         android:layout_width="match_parent"
-        android:ems="10"
-        android:lines="1"
-        android:drawablePadding="2dp"
-        app:defaultIcon="@drawable/ic_close"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:inputType="textPassword"
         android:layout_toStartOf="@+id/ubt_btn_pwd_visual"
-         />
+        android:layout_alignTop="@+id/ubt_btn_pwd_visual"
+        android:layout_alignBottom="@+id/ubt_btn_pwd_visual"
+        android:gravity="bottom"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:lines="1"
+        android:textSize="@dimen/sp_15"
+        app:defaultIcon="@drawable/ic_close" />
 
-    <ImageButton
+    <ImageView
         android:id="@+id/ubt_btn_pwd_visual"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:padding="10dp"
-        android:button="@null"
-        android:background="@null"
-        android:src="@drawable/ic_closeeyes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-         />
+        android:padding="@dimen/dp_5"
+        android:src="@drawable/ic_closeeyes" />
 </RelativeLayout>
