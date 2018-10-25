@@ -81,7 +81,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
 
     private DrawableTextView dtvTopPig;
 
-    public static final int CONNECT_TIMEOUT = 60;
+    public static final int CONNECT_TIMEOUT = 30;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -329,8 +329,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
             public void onClick(int pos, UbtBluetoothDevice device) {
                 isClicked = true;
                 connectBleDevice(device);
-                startTimer();
-
+//                startTimer();
             }
         });
         pigListDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
