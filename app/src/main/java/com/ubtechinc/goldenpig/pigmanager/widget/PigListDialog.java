@@ -105,7 +105,7 @@ public class PigListDialog extends BaseDialog {
                     Log.e("pigList", tag + "_ble_distance:" + distance);
                     if (distance < 2.0) {
                         scanLeDevice(false);
-//                        mPigAdapter.getItemClickListener().onClick(rawIndex, ubtBluetoothDevice);
+                        mPigAdapter.getItemClickListener().onClick(rawIndex, ubtBluetoothDevice);
                         return;
                     }
                     if (rawIndex >= 0) {

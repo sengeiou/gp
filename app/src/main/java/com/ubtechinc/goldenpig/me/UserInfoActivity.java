@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.tencent.ai.tvs.ConstantValues;
 import com.tencent.ai.tvs.info.UserInfoManager;
-import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.commlib.view.UbtSubTxtButton;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.ActivityManager;
@@ -117,6 +116,12 @@ public class UserInfoActivity extends BaseToolBarActivity implements View.OnClic
         dialog.show();
     }
 
+    private void doLogout() {
+        new LoginModel().logoutTVS();
+        AuthLive.getInstance().logout();
+        ActivityManager.getInstance().popAllActivity();
+        ActivityRoute.toAnotherActivity(this, LoginActivity.class, true);
+    }
 
 
     @Override
@@ -131,14 +136,12 @@ public class UserInfoActivity extends BaseToolBarActivity implements View.OnClic
 
     @Override
     public void onLogout() {
-        new LoginModel().logoutTVS();
-        AuthLive.getInstance().logout();
-        ActivityManager.getInstance().popAllActivity();
-        ActivityRoute.toAnotherActivity(this, LoginActivity.class, true);
+        doLogout();
     }
 
     @Override
     public void onLogoutError() {
-        ToastUtils.showShortToast(this, "退出登录失败");
+        doLogout();
+//        ToastUtils.showShortToast(this, "退出登录失败");
     }
 }
