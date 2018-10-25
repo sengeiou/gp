@@ -35,8 +35,8 @@ android {
         applicationId "com.ubtechinc.goldenpig"
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
-        versionCode 12
-        versionName "1.0.0.12"
+        versionCode 13
+        versionName "1.0.0.13"
         multiDexEnabled true
     }
     signingConfigs {

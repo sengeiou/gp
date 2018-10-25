@@ -1,6 +1,7 @@
 package com.ubtechinc.goldenpig.pigmanager;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -23,6 +24,7 @@ import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.view.UbtPasswordEditText;
 import com.ubtechinc.goldenpig.comm.view.UbtWifiListEditText;
+import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
@@ -54,6 +56,8 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
     private String mCap;
     private ICommandProduce commandProduce;
     private BungdingManager bungdingManager;
+
+    private static final int TIME_OUT = 30;
 
     @Override
     protected int getConentView() {
@@ -224,10 +228,16 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
             ToastUtils.showShortToast(this, "正在获取Wi-Fi加密方式，请稍后尝试");
             return;
         }
-        showLoadingDialog();
+        LoadingDialog.getInstance(this).setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                mSendWifiInfoBtn.setText(R.string.ubt_connect);
+                mSendWifiInfoBtn.setAlpha(1.0f);
+            }
+        });
         String message = commandProduce.getWifiPasswdInfo(wifiCtype, wifiName, wifiPwd);
         UbtBluetoothManager.getInstance().sendMessageToBle(message);
-//        showLoadingDialog();
+        LoadingDialog.getInstance(SetPigNetWorkActivity.this).setTimeout(TIME_OUT).setShowToast(true).show();
     }
 
     BundingListenerAbster mBandingListenerAbster = new BundingListenerAbster() {
@@ -280,7 +290,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
         @Override
         public void onPigConnected(String wifiState) {
             super.onPigConnected(wifiState);
-            dismissLoadDialog();
+//            dismissLoadDialog();
             //{"co":120,"wifi_info":"{\"l\":-29,\"s\":\"\\\"alpha-bigbox-5G\\\"\"}"}
             UbtLogger.i("onPigConnected", wifiState);
             String wifiName = "";
@@ -329,6 +339,12 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
         }
     };
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateDefaultSsid("");
+    }
+
     private void updateDefaultSsid(String wifiName) {
 //        String defaultSsid;
 //        if (TextUtils.isEmpty(wifiName)) {
@@ -336,7 +352,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
 //        } else {
 //            defaultSsid = wifiName;
 //        }
-        String defaultSsid = WifiControl.get(SetPigNetWorkActivity.this).getSSID();
+        String defaultSsid = WifiControl.get(SetPigNetWorkActivity.this).getConnectInfo().getSSID();
         if (!TextUtils.isEmpty(defaultSsid)) {
             mWifiNamEdt.setText(defaultSsid);
         }

@@ -60,6 +60,10 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
 
     }
 
+    public String getClientId() {
+        return proxy.getClientId(getELoginPlatform());
+    }
+
 
     public void init(Activity activity) {
         proxy.setOwnActivity(activity);
