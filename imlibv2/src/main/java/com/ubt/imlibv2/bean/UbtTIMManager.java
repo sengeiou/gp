@@ -12,6 +12,7 @@ import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
 import com.tencent.TIMTextElem;
 import com.tencent.TIMUser;
+import com.tencent.TIMUserStatusListener;
 import com.tencent.TIMValueCallBack;
 import com.ubt.imlibv2.BuildConfig;
 import com.ubt.imlibv2.bean.event.MessageEvent;
@@ -19,6 +20,7 @@ import com.ubt.imlibv2.bean.listener.OnPigOnlineStateListener;
 import com.ubt.imlibv2.bean.listener.OnTIMLoginListener;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubt.improtolib.UserRecords;
+import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.commlib.log.UbtLogger;
 
 import org.json.JSONException;
@@ -166,6 +168,17 @@ public class UbtTIMManager {
         initUserConfig();
         TIMUser user = new TIMUser();
         user.setIdentifier(userId);
+        TIMManager.getInstance().setUserStatusListener(new TIMUserStatusListener() {
+            @Override
+            public void onForceOffline() {
+                ToastUtils.showShortToast("被踢了");
+            }
+
+            @Override
+            public void onUserSigExpired() {
+
+            }
+        });
         try {
             TIMManager.getInstance().login(
                     appidAt3rd,

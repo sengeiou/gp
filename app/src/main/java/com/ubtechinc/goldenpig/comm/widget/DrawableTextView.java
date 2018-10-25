@@ -85,6 +85,11 @@ public class DrawableTextView extends AppCompatTextView {
         postInvalidate();
     }
 
+    public void setDrawable(@DrawGravity int gravity, Drawable drawable) {
+        drawables[gravity] = drawable;
+        postInvalidate();
+    }
+
     public void setDrawables(Drawable[] drawables, int[] widths, int[] heights) {
         if (drawables != null && drawables.length >= 4
                 && widths != null && widths.length >= 4

@@ -53,6 +53,7 @@ public class SetNetWorkEnterActivity extends BaseToolBarActivity implements View
 
     @Override
     protected void init(Bundle savedInstanceState) {
+        hiddleTitle();
         initViews();
     }
 

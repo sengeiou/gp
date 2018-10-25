@@ -23,7 +23,6 @@ import com.ubtechinc.bluetooth.utils.BLEcryption;
 import java.util.UUID;
 
 import static android.util.Log.d;
-import static android.util.Log.e;
 
 /**
  * @author：wululin
@@ -219,6 +218,8 @@ class UbtBluetoothConnector {
                 public void onServicesDiscovered(BluetoothGatt gatt, int status) {
                     super.onServicesDiscovered(gatt, status);
 
+                    Log.i(TAG,"mBleConnectAbstract==rePlyJson====gatt:" + gatt.getDevice().getAddress());
+
                     synchronized (mSyncLock) {
                         if (status == BluetoothGatt.GATT_SUCCESS) {
                             UUID serviceUUID = UUID.fromString(UUID_SERVICE);
@@ -234,6 +235,7 @@ class UbtBluetoothConnector {
                                     UbtBluetoothConnector.this.connectState =
                                             ConnectState.DISCOVERED;//发现周边设备指定服务的指定特征
                                     boolean success = gatt.setCharacteristicNotification(notifyCharacteristic, true);
+                                    Log.i(TAG,"mBleConnectAbstract==rePlyJson====success:" + success);
                                     if (success) {
                                         Message msg = Message.obtain();
                                         msg.what = MSG_CONNECT_SUCCESS;//特征激活成功, 通知外部模块写入数据,

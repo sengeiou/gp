@@ -119,7 +119,7 @@ public class LoadingDialog extends Dialog {
                         try {
                             mDia.cancel();
                             if (showToast) {
-                                ToastUtils.showShortToast("请求超时，请重试");
+                                ToastUtils.showShortToast("操作失败，请重试");
                             }
                         } catch (Exception e) {
 

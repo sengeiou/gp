@@ -143,6 +143,16 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
             tvTitle.setText(title);
         }
     }
+
+    protected void hiddleTitle() {
+        if (tvTitle == null) {
+            tvTitle = findViewById(R.id.ubt_tv_toolbar_title);
+        }
+        if (tvTitle != null) {
+            tvTitle.setVisibility(View.GONE);
+        }
+    }
+
     protected void setToolBarTitle(int titleId) {
          String title=getString(titleId);
         setToolBarTitle(title);

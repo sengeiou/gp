@@ -216,6 +216,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
 
     private void sendWifiInfo() {
         mSendWifiInfoBtn.setText(R.string.ubt_connecting);
+        mSendWifiInfoBtn.setAlpha(0.5f);
         final String wifiName = mWifiNamEdt.getText();
         final String wifiPwd = mWifiPwdEdt.getPwd();
         final String wifiCtype = mWifiNamEdt.getcType();
@@ -236,6 +237,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
             if (errorCode != 2041) {
                 dismissLoadDialog();
                 mSendWifiInfoBtn.setText(R.string.ubt_connect);
+                mSendWifiInfoBtn.setAlpha(1.0f);
                 showNotify("连接失败");
                 AuthLive.getInstance().getCurrentPig().setOnlineState(PigInfo.ROBOT_STATE_OFFLINE);
                 UBTPGApplication.pig_net_status = false;
@@ -259,6 +261,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
             super.connWifiSuccess();
             UBTPGApplication.pig_net_status = true;
             mSendWifiInfoBtn.setText(R.string.ubt_connect);
+            mSendWifiInfoBtn.setAlpha(1.0f);
             dismissLoadDialog();
             hideNotify();
             findViewById(R.id.ubt_layout_setnet).setVisibility(View.GONE);

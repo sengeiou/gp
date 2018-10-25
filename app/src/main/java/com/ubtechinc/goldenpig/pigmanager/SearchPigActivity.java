@@ -2,6 +2,7 @@ package com.ubtechinc.goldenpig.pigmanager;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
@@ -12,6 +13,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +26,8 @@ import com.ubtechinc.bluetooth.UbtBluetoothManager;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
+import com.ubtechinc.goldenpig.comm.widget.DrawableTextView;
+import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.net.RegisterRobotModule;
@@ -75,6 +79,10 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
 
     private Disposable disposable;
 
+    private DrawableTextView dtvTopPig;
+
+    public static final int CONNECT_TIMEOUT = 60;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +104,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
     }
 
     private void initViews() {
+        dtvTopPig = findViewById(R.id.dtv_top_pig);
         mGifImg = (GifImageView) findViewById(R.id.ubt_img_set_net_logo);
 
         mGifImg.setImageResource(R.drawable.pig_mute);
@@ -149,11 +158,11 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
     protected void onResume() {
         super.onResume();
         closeEnterDialog();
-        if (isSearched) {
-            mSearchBtn.setText("重新搜索");
-        } else {
-            mSearchBtn.setText("搜索音箱");
-        }
+//        if (isSearched) {
+//            mSearchBtn.setText("重新搜索");
+//        } else {
+//            mSearchBtn.setText("搜索音箱");
+//        }
     }
 
     @Override
@@ -171,6 +180,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         cancelTimer();
         if (disposable != null) {
             disposable.dispose();
+            disposable = null;
         }
     }
 
@@ -222,18 +232,18 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
 
                 @Override
                 public void onFinish() {
-                    if (pigListDialog != null && pigListDialog.isShowing()) {
-                        if (pigListDialog.getBleCount() < 1) {
-                            showNotify("未搜到音箱，请确认已按照引导视频正确操作");
-                        } else if (isClicked) {
-                            ToastUtils.showLongToast(SearchPigActivity.this, R.string.ubt_bunding_ping_timeout);
-                        }
-                        isClicked = false;
-                        UbtBluetoothManager.getInstance().closeConnectBle();
-                        pigListDialog.dismiss();
-
-                    }
-                    mTimer = null;
+//                    if (pigListDialog != null && pigListDialog.isShowing()) {
+//                        if (pigListDialog.getBleCount() < 1) {
+//                            showNotify("未搜到音箱，请确认已按照引导视频正确操作");
+//                        } else if (isClicked) {
+//                            ToastUtils.showLongToast(SearchPigActivity.this, R.string.ubt_bunding_ping_timeout);
+//                        }
+//                        isClicked = false;
+//                        UbtBluetoothManager.getInstance().closeConnectBle();
+//                        pigListDialog.dismiss();
+//
+//                    }
+//                    mTimer = null;
                 }
             };
             mTimer.start();
@@ -303,6 +313,16 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
     private boolean isClicked;
 
     private void showPigListDialog() {
+        if (isSearched) {
+            mSearchBtn.setText(R.string.researching_pig);
+        } else {
+            mSearchBtn.setText(R.string.searching_pig);
+        }
+        isSearched = true;
+        mSearchBtn.setAlpha(0.5f);
+        dtvTopPig.setVisibility(View.VISIBLE);
+        dtvTopPig.setText(R.string.close_pig_tip);
+        dtvTopPig.setDrawable(DrawableTextView.LEFT, ContextCompat.getDrawable(this, R.drawable.ic_iphone));
         pigListDialog = new PigListDialog(this);
         pigListDialog.setBluetoothItemClickListener(new OnPigListItemClickListener() {
             @Override
@@ -311,6 +331,18 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
                 connectBleDevice(device);
                 startTimer();
 
+            }
+        });
+        pigListDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                pigListDialog.onDismiss();
+                mSearchBtn.setText(R.string.research_pig);
+                mSearchBtn.setAlpha(1.0f);
+                if (disposable != null) {
+                    disposable.dispose();
+                    disposable = null;
+                }
             }
         });
         pigListDialog.show();
@@ -324,9 +356,15 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
                         if (locManager == null || !locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                             Toast.makeText(this, "无法扫描到蓝牙设备，请打开GPS定位", Toast.LENGTH_SHORT).show();
                         }
-                        pigListDialog.dismiss();
+                        onNoBleDeviceFound();
                     }
                 });
+    }
+
+    private void onNoBleDeviceFound() {
+        pigListDialog.dismiss();
+        dtvTopPig.setText(R.string.no_search_pig_tip);
+        dtvTopPig.setDrawable(DrawableTextView.LEFT, ContextCompat.getDrawable(this, R.drawable.ic_warning));
     }
 
     private void connectBleDevice(final UbtBluetoothDevice device) {
@@ -359,7 +397,8 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
                     if (pigListDialog != null) {
                         pigListDialog.dismiss();
                     }
-                    showLoadingDialog();
+                    LoadingDialog.getInstance(SearchPigActivity.this).setTimeout(CONNECT_TIMEOUT)
+                            .setShowToast(true).show();
                     UbtBluetoothManager.getInstance().closeConnectBle();
                     UbtBluetoothManager.getInstance().connectBluetooth(mBluetoothDevice);
                     break;
@@ -398,6 +437,13 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         public void connectSuccess() {
             super.connectSuccess();
 
+        }
+
+        @Override
+        public void connectFailed() {
+            super.connectFailed();
+            dismissLoadDialog();
+            ToastUtils.showShortToast(SearchPigActivity.this, R.string.failed_retry);
         }
 
         @Override

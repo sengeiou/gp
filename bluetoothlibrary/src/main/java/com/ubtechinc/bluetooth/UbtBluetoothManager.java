@@ -10,9 +10,9 @@ import com.ubtechinc.bluetooth.event.BleScanFailEvent;
 import com.ubtechinc.bluetooth.event.BleScanFinishedEvent;
 import com.ubtechinc.bluetooth.event.BleScanResultEvent;
 
-import java.lang.reflect.Method;
-
 import org.greenrobot.eventbus.EventBus;
+
+import java.lang.reflect.Method;
 
 /**
  * @author：wululin
@@ -105,17 +105,22 @@ public class UbtBluetoothManager {
         btConnector.setBleConnectListener(new BleConnectListener() {
             @Override
             public void connectFailed() {
-                final UbtBluetoothDevice device = btConnector.getCurrentDevice();
-                if (device != null && !btConnector.isClosed()) {
-                    if (device.getRetryCount() <= 3) {
-                        //FIXME --logic.peng 检查到这个设备信号强且进入连接过程中,设备突然关机了,手机端重试8次失败,则重新扫描
-                        btConnector.connect(device);
-                        device.incRetryCount();
-                    } else {
-                        startScanBluetooth();
-                    }
-                } else {
-                    UbtBluetoothManager.this.device = null;
+//                final UbtBluetoothDevice device = btConnector.getCurrentDevice();
+//                if (device != null && !btConnector.isClosed()) {
+//                    if (device.getRetryCount() <= 3) {
+//                        //FIXME --logic.peng 检查到这个设备信号强且进入连接过程中,设备突然关机了,手机端重试8次失败,则重新扫描
+//                        btConnector.connect(device);
+//                        device.incRetryCount();
+//                    } else {
+//                        startScanBluetooth();
+//                    }
+//                } else {
+//                    UbtBluetoothManager.this.device = null;
+//                }
+                btConnector.closeConnection();
+                UbtBluetoothManager.this.device = null;
+                if (mOuterConnectListener != null) {
+                    mOuterConnectListener.connectFailed();
                 }
             }
 
@@ -203,7 +208,7 @@ public class UbtBluetoothManager {
             this.device = device;
             btConnector.connect(device);
         } else {
-            Log.w(TAG, "@@@@@@@@@@@@@@@@@@正在链接蓝牙设别 , state = : " + btConnector.getConnectState());
+            Log.w(TAG, "@@@@@@@@@@@@@@@@@@正在链接蓝牙设备 , state = : " + btConnector.getConnectState());
         }
     }
 

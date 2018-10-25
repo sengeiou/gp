@@ -12,6 +12,7 @@
         />
 
     <com.ubtechinc.goldenpig.comm.widget.DrawableTextView
+        android:id="@+id/dtv_top_pig"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/ubt_color_c1"
@@ -21,6 +22,7 @@
         android:textColor="@color/ubt_tips_txt_color_cc"
         android:drawablePadding="@dimen/dp_5"
         app:leftDrawable="@drawable/ic_iphone"
+        android:visibility="gone"
         app:leftDrawableHeight="@dimen/dp_20"
         app:leftDrawableWidth="@dimen/dp_20"/>
 </RelativeLayout>

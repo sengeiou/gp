@@ -3,7 +3,6 @@ package com.ubtechinc.goldenpig.pigmanager.widget;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -62,14 +61,14 @@ public class PigListDialog extends BaseDialog {
         dialogWindow.setBackgroundDrawableResource(R.color.ubt_transparent);
         this.setContentView(root);
         mLeList = new ArrayList<>();
-        setOnDismissListener(new OnDismissListener() {
-            @Override
-            public void onDismiss(DialogInterface dialog) {
-                scanLeDevice(false);
-                mLecallback = null;
-                setOnDismissListener(null);
-            }
-        });
+//        setOnDismissListener(new OnDismissListener() {
+//            @Override
+//            public void onDismiss(DialogInterface dialog) {
+//                scanLeDevice(false);
+//                mLecallback = null;
+//                setOnDismissListener(null);
+//            }
+//        });
         mBluetoothadapter = BluetoothAdapter.getDefaultAdapter();
 
         registerLeCallback();
@@ -78,6 +77,11 @@ public class PigListDialog extends BaseDialog {
         mPigRycView.setLayoutManager(new WrapContentLinearLayoutManager(getContext()));
         mPigAdapter = new PigListAdapter(mLeList);
         mPigRycView.setAdapter(mPigAdapter);
+    }
+
+    public void onDismiss() {
+        scanLeDevice(false);
+        mLecallback = null;
     }
 
     public void setBluetoothItemClickListener(OnPigListItemClickListener listener) {
@@ -101,15 +105,17 @@ public class PigListDialog extends BaseDialog {
                     Log.e("pigList", tag + "_ble_distance:" + distance);
                     if (distance < 2.0) {
                         scanLeDevice(false);
-                        mPigAdapter.getItemClickListener().onClick(rawIndex, ubtBluetoothDevice);
+//                        mPigAdapter.getItemClickListener().onClick(rawIndex, ubtBluetoothDevice);
                         return;
                     }
                     if (rawIndex >= 0) {
                         mLeList.remove(rawIndex);
                         mLeList.add(rawIndex, ubtBluetoothDevice);
+                        mPigAdapter.updateList(mLeList);
                         mPigAdapter.notifyItemChanged(rawIndex);
                     } else {
                         mLeList.add(ubtBluetoothDevice);
+                        mPigAdapter.updateList(mLeList);
                         mPigAdapter.notifyItemInserted(mLeList.size());
                     }
                     mPigRycView.setVisibility(View.VISIBLE);
@@ -145,8 +151,8 @@ public class PigListDialog extends BaseDialog {
         }
         final int devLen = mLeList.size();
         for (int index = 0; index < devLen; index++) {
-            if (mLeList.get(index).getDevice().getAddress().equals(device.getAddress())
-                    || mLeList.get(index).getDevice().getName().equals(device.getName())) {
+            if (/*mLeList.get(index).getDevice().getAddress().equals(device.getAddress())
+                    || */mLeList.get(index).getDevice().getName().equals(device.getName())) {
                 return index;
             }
         }

@@ -83,6 +83,10 @@ public class PigListAdapter extends RecyclerView.Adapter<PigListAdapter.PigHolde
         }
     }
 
+    public void updateList(ArrayList<UbtBluetoothDevice> list) {
+        this.mLeList = list;
+    }
+
     public void setItemClickListener(OnPigListItemClickListener onPigListItemClickListener) {
         this.mItemClickListener = onPigListItemClickListener;
     }

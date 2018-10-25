@@ -102,6 +102,7 @@ public class BungdingManager {
 
             try{
                 JSONObject rePlyJson = new JSONObject(data);
+                Log.i(TAG,"mBleConnectAbstract==rePlyJson====" + rePlyJson.toString());
                 if (rePlyJson.has(Constants.DATA_COMMAND)) {
                     int command = rePlyJson.getInt(Constants.DATA_COMMAND);
                     if(command == Constants.ROBOT_CONNENT_WIFI_SUCCESS){
