@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.view.View;
@@ -34,7 +33,6 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -98,8 +96,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
         recycler.setLayoutManager(linearLayoutManager);
         recycler.setHasFixedSize(true);
         Divider divider = new Divider(new ColorDrawable(getResources().getColor(R.color
-                .ubt_main_bg_color)),
-                OrientationHelper.VERTICAL);
+                .ubt_main_bg_color)), OrientationHelper.VERTICAL);
         divider.setHeight((int) getResources().getDimension(R.dimen.dp_10));
         recycler.addItemDecoration(divider);
         recycler.setSwipeMenuCreator(swipeMenuCreator);
@@ -125,7 +122,6 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
                         LoadingDialog.getInstance(InterlocutionActivity.this).dismiss();
                     }
                 });
-
             }
 
             @Override

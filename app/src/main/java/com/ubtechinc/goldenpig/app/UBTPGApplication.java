@@ -5,8 +5,11 @@ import android.support.multidex.MultiDex;
 
 import com.facebook.stetho.Stetho;
 import com.tencent.ai.tvs.LoginApplication;
+import com.tencent.ai.tvs.env.ELoginEnv;
 import com.ubtechinc.commlib.log.UbtLogger;
+import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.protocollibrary.communit.ProtoBufferDisposer;
+import com.ubtechinc.tvlloginlib.TVSManager;
 
 /**
  * @author hqt
@@ -33,11 +36,11 @@ public class UBTPGApplication extends LoginApplication {
         Stetho.initializeWithDefaults(this);
         UbtLogger.init(getApplicationContext());
         UbtLogger.i("", ProtoBufferDisposer.TAG);
-//        if (BuildConfig.IM_HOST.contains("https://210.75.21.106:9080")) {
-//            eLoginEnv = ELoginEnv.FORMAL;
-//        } else {
-//            eLoginEnv = ELoginEnv.TEST;
-//        }
+        if (BuildConfig.TVS_MODE) {
+            TVSManager.eLoginEnv = ELoginEnv.FORMAL;
+        } else {
+            TVSManager.eLoginEnv = ELoginEnv.TEST;
+        }
     }
 
     @Override

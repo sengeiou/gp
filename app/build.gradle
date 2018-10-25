@@ -62,6 +62,8 @@ android {
             //金猪APPKEY
             buildConfigField "String", "APP_KEY", "\"85650f0ffe314beda3b85a9ab626662d\""
 
+            //TVS模式开关
+            buildConfigField "Boolean", "TVS_MODE","false"
 
             //登录Url 域名
             buildConfigField "String",  "LOGIN_URL","\"https://testjimu.ubtrobot.com:8443\""
@@ -99,6 +101,9 @@ android {
             buildConfigField "String", "LOGIN_URL","\"https://testjimu.ubtrobot.com:8443\""
             //IM操作URL域名
             buildConfigField "String", "IM_URL","\"https://210.75.21.106:9080\""
+
+            //TVS模式开关
+            buildConfigField "Boolean", "TVS_MODE","true"
 
             //H5 URL域名
             buildConfigField "String", "H5_URL","\"http://10.10.1.14:8090/cloud-ppi/help/\""
