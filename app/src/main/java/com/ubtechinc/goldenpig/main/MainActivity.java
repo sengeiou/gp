@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -15,9 +16,11 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RadioButton;
 
+import com.ubtech.utilcode.utils.SPUtils;
 import com.ubtechinc.bluetooth.UbtBluetoothManager;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.app.Constant;
 import com.ubtechinc.goldenpig.base.BaseActivity;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.login.LoginActivity;
@@ -26,6 +29,8 @@ import com.ubtechinc.goldenpig.main.fragment.HouseFragment;
 import com.ubtechinc.goldenpig.main.fragment.MainFragmentAdpater;
 import com.ubtechinc.goldenpig.main.fragment.PersonalFragment;
 import com.ubtechinc.goldenpig.main.fragment.PigFragment;
+import com.ubtechinc.goldenpig.model.JsonCallback;
+import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionModel;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
@@ -50,7 +55,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private RadioButton pigRbtn;
     private RadioButton houseRbtn;
     private RadioButton personRbtn;
-
+    Handler mHander = new Handler();
 //    @BindView(R.id.ubt_layout_tips)
 //    View ubtLayoutTips;
 
@@ -58,6 +63,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         inits();
+        checkInitInterlocution();
 //        updateTopTip();
     }
 
@@ -91,32 +97,34 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private void inits() {
         if (TextUtils.isEmpty(CookieInterceptor.get().getToken())) {
-            ActivityRoute.toAnotherActivity(MainActivity.this, LoginActivity.class,true);
+            ActivityRoute.toAnotherActivity(MainActivity.this, LoginActivity.class, true);
             return;
         }
-        new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListHttpProxy.OnGetPigListLitener() {
-            @Override
-            public void onError(ThrowableWrapper e) {
-                ActivityRoute.toAnotherActivity(MainActivity.this, SetNetWorkEnterActivity.class, false);
-                Log.e("getPigList", e.getMessage());
-            }
+        new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new
+                GetPigListHttpProxy.OnGetPigListLitener() {
+                    @Override
+                    public void onError(ThrowableWrapper e) {
+                        ActivityRoute.toAnotherActivity(MainActivity.this, SetNetWorkEnterActivity.class, false);
+                        Log.e("getPigList", e.getMessage());
+                    }
 
-            @Override
-            public void onException(Exception e) {
-                ActivityRoute.toAnotherActivity(MainActivity.this, SetNetWorkEnterActivity.class, false);
-                Log.e("getPigList", e.getMessage());
-            }
+                    @Override
+                    public void onException(Exception e) {
+                        ActivityRoute.toAnotherActivity(MainActivity.this, SetNetWorkEnterActivity.class, false);
+                        Log.e("getPigList", e.getMessage());
+                    }
 
-            @Override
-            public void onSuccess(String response) {
-                Log.e("getPigList", response);
-                PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance().getCurrentPigList());
-                ArrayList<PigInfo> list = AuthLive.getInstance().getCurrentPigList();
-                if (list == null || list.isEmpty()) {
-                    ActivityRoute.toAnotherActivity(MainActivity.this, SetNetWorkEnterActivity.class, false);
-                }
-            }
-        });
+                    @Override
+                    public void onSuccess(String response) {
+                        Log.e("getPigList", response);
+                        PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance()
+                                .getCurrentPigList());
+                        ArrayList<PigInfo> list = AuthLive.getInstance().getCurrentPigList();
+                        if (list == null || list.isEmpty()) {
+                            ActivityRoute.toAnotherActivity(MainActivity.this, SetNetWorkEnterActivity.class, false);
+                        }
+                    }
+                });
         personRbtn = (RadioButton) findViewById(R.id.ubt_rbt_me);
         personRbtn.setOnClickListener(this);
 
@@ -216,6 +224,31 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         @Override
         public void onPageScrollStateChanged(int state) {
 
+        }
+    }
+
+    public void checkInitInterlocution() {
+        if (!SPUtils.get().getBoolean(Constant.SP_ADDED_INIT_INTERLOCUTION, false)) {
+            InterlocutionModel requestModel = new InterlocutionModel();
+            requestModel.addInterlocutionRequest("谁是你的宝宝", "当然是小猪宝宝我啦。", new
+                    JsonCallback<String>(String.class) {
+                        @Override
+                        public void onSuccess(String reponse) {
+                            mHander.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    SPUtils.get().put(Constant.SP_ADDED_INIT_INTERLOCUTION, true);
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onError(String str) {
+                            if (str.contains("问句重复")) {
+                                SPUtils.get().put(Constant.SP_ADDED_INIT_INTERLOCUTION, true);
+                            }
+                        }
+                    });
         }
     }
 

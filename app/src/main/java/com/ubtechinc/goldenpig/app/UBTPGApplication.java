@@ -36,11 +36,11 @@ public class UBTPGApplication extends LoginApplication {
         Stetho.initializeWithDefaults(this);
         UbtLogger.init(getApplicationContext());
         UbtLogger.i("", ProtoBufferDisposer.TAG);
-        if (BuildConfig.TVS_MODE) {
-            TVSManager.eLoginEnv = ELoginEnv.FORMAL;
-        } else {
-            TVSManager.eLoginEnv = ELoginEnv.TEST;
-        }
+//        if (BuildConfig.TVS_MODE) {
+//            TVSManager.eLoginEnv = ELoginEnv.FORMAL;
+//        } else {
+//            TVSManager.eLoginEnv = ELoginEnv.TEST;
+//        }
     }
 
     @Override
