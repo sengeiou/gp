@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.tencent.ai.tvs.ConstantValues;
+import com.tencent.ai.tvs.info.ProductManager;
 import com.ubtech.utilcode.utils.JsonUtils;
 import com.ubtechinc.bluetooth.BleConnectAbstract;
 import com.ubtechinc.bluetooth.Constants;
@@ -158,7 +160,7 @@ public class BungdingManager {
                         int code = rePlyJson.getInt(Constants.CODE);
                         /* final String productId = rePlyJson.getString(Constants.PRODUCTID);*/
 
-                        getClientId(BuildConfig.APP_ID, mSerialId);
+                        getClientId(BuildConfig.PRODUCT_ID, mSerialId);
                         //String serailId = mCurrentDevices.getName().replace(Constants.ROBOT_TAG,"");
                         // checkRobotBindState(serailId,mToken,"wx0238743de057a634");
                         /*if(code == Constants.CODE_0){
@@ -283,9 +285,11 @@ public class BungdingManager {
         final String userId = AuthLive.getInstance().getUserId();
         final String token = CookieInterceptor.get().getToken();
 
+        ProductManager.getInstance().productId = productId;
+        ProductManager.getInstance().dsn = dsn;
         String clientId = TVSManager.getInstance(mContext, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ).getClientId();
-        if (!TextUtils.isEmpty(clientId)) {
-            Log.i(TAG, "onSuccess=======" + clientId);
+        if (!ConstantValues.INVALID_CLIENTID.equals(clientId)) {
+            Log.i(TAG, "BungdingManager|getClientId:" + clientId);
             clientIdRecord = clientId;
             // 先绑定机器人绑定成功再发送clientId
             //TODO 校验和当前绑定的是否是同一个
