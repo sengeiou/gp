@@ -49,4 +49,10 @@ public interface ICommandProduce {
     * */
     String getPigNetWorkState();
 
+    /**
+     * 发给小猪检查网络状态
+     * @return
+     */
+    String checkPigNetWorkState();
+
 }

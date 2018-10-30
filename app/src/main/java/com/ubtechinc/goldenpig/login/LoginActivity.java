@@ -79,7 +79,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     protected void onDestroy() {
-        if (AuthLive.getInstance().getState() != AuthLive.AuthState.LOGINED) {
+        if (AuthLive.getInstance().getState() != AuthLive.AuthState.TVSLOGINED) {
             AuthLive.getInstance().reset();
         }
         super.onDestroy();
@@ -188,14 +188,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     case LOGINING:
                         showLoadingDialog();
                         break;
-                    case LOGINED:
+                    case TVSLOGINED:
                         handler.postDelayed(new Runnable() {
                             @Override
                             public void run() {
                                 dismissLoadDialog();
                                 ActivityRoute.toAnotherActivity(LoginActivity.this, MainActivity.class,true);
                             }
-                        },2000);
+                        },1000);
                         break;
                     case ERROR:
                         ToastUtils.showShortToast(LoginActivity.this,getString(R.string.ubt_login_failure));

@@ -152,6 +152,9 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
             case WX_TVSIDRECV_TYPE:
                 wxClient.onSuccess(i, var2);
                 break;
+            case QQOPEN_TVSIDRECV_TYPE:
+                qqClient.onSuccess(i, var2);
+                break;
             case QQOPEN_VALID_LOGIN_TYPE:
                 qqClient.onSuccess(i, var2);
                 break;

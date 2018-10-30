@@ -20,7 +20,6 @@ import com.ubt.imlibv2.bean.listener.OnPigOnlineStateListener;
 import com.ubt.imlibv2.bean.listener.OnTIMLoginListener;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubt.improtolib.UserRecords;
-import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.commlib.log.UbtLogger;
 
 import org.json.JSONException;
@@ -44,6 +43,7 @@ public class UbtTIMManager {
     private boolean isLoginedTIM; ///是否登录IM
     private TIMRepository repository;
     private TIMPigOnLineRepository onLineRepository;
+    private String pigAccount;
     private String channel;
     public static String userId = "";
     private UbtIMCallBack ubtCallBack;
@@ -110,20 +110,31 @@ public class UbtTIMManager {
         }
     }
 
-    public void loginTIM(String userId, String channel) {
+    public synchronized void loginTIM(String userId, String pigAccount, String channel) {
         this.userId = userId;
+        this.pigAccount = pigAccount;
         this.channel = channel;
-        if (repository != null) {
+        if (repository != null && !isLoginedTIM) {
             long time = System.currentTimeMillis();
             String singa = Utils.getSingal(time);
             repository.login(singa, String.valueOf(time), userId, channel);
         }
     }
 
+    public void setChannel(String channel) {
+        this.channel = channel;
+    }
+
+    public void setUserId(String userId) {
+        UbtTIMManager.userId = userId;
+    }
+
     public void setPigAccount(String account) {
-        conversation = TIMManager.getInstance().getConversation(
-                TIMConversationType.C2C,    //会话类型：单聊
-                account);                      //会话对方用户帐号//对方ID
+        if (!TextUtils.isEmpty(account)) {
+            conversation = TIMManager.getInstance().getConversation(
+                    TIMConversationType.C2C,    //会话类型：单聊
+                    account);                      //会话对方用户帐号//对方ID
+        }
 
     }
 
@@ -171,7 +182,7 @@ public class UbtTIMManager {
         TIMManager.getInstance().setUserStatusListener(new TIMUserStatusListener() {
             @Override
             public void onForceOffline() {
-                ToastUtils.showShortToast("被踢了");
+                Log.d("TIMManager", "IM onForceOffline");
             }
 
             @Override
@@ -188,7 +199,6 @@ public class UbtTIMManager {
         } catch (RuntimeException e) {
             e.printStackTrace();
         }
-        isLoginedTIM = true;
         sendCache();
     }
 
@@ -196,7 +206,17 @@ public class UbtTIMManager {
      * TIM登出
      */
     public void doTIMLogout() {
-        TIMManager.getInstance().logout(timCallBack);
+        TIMManager.getInstance().logout(new TIMCallBack() {
+            @Override
+            public void onError(int i, String s) {
+
+            }
+
+            @Override
+            public void onSuccess() {
+                isLoginedTIM = false;
+            }
+        });
     }
 
     public void setMsgObserve(Observer observe) {
@@ -222,7 +242,7 @@ public class UbtTIMManager {
             ubtMsg.msg = msg;
             ubtMsg.account = account;
             msgQueue.add(ubtMsg);
-            loginTIM(userId, channel);
+            loginTIM(userId, pigAccount, channel);
         } else {
             //检验小猪是否在线
 
@@ -255,10 +275,11 @@ public class UbtTIMManager {
 
         @Override
         public void onSuccess() {
+            isLoginedTIM = true;
+            setPigAccount(pigAccount);
             if (ubtCallBack != null) {
                 ubtCallBack.onSuccess();
             }
-
         }
     };
 
@@ -330,6 +351,9 @@ public class UbtTIMManager {
     }
 
     public void sendTIM(TIMMessage msg) {
+        if (!isLoginedTIM) {
+            return;
+        }
         if (conversation == null) {
             if (onUbtTIMConverListener != null) {
                 onUbtTIMConverListener.onError(0, "TIMConversation 未初始化");
@@ -340,6 +364,7 @@ public class UbtTIMManager {
 
             @Override
             public void onError(int i, String s) {
+                onSendMsgHook(false);
                 if (onUbtTIMConverListener != null) {
                     onUbtTIMConverListener.onError(i, s);
                 }
@@ -347,6 +372,7 @@ public class UbtTIMManager {
 
             @Override
             public void onSuccess(TIMMessage timMessage) {
+                onSendMsgHook(true);
                 if (onUbtTIMConverListener != null) {
                     onUbtTIMConverListener.onSuccess();
                 }
@@ -354,11 +380,22 @@ public class UbtTIMManager {
         });
     }
 
+    private void onSendMsgHook(boolean success) {
+        if (!success && !isLoginedTIM) {
+            loginTIM(userId, pigAccount, channel);
+        }
+
+    }
+
     public void sendTIM(TIMMessage msg, TIMConversation conversation) {
+        if (!isLoginedTIM) {
+            return;
+        }
         conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {
 
             @Override
             public void onError(int i, String s) {
+                onSendMsgHook(false);
                 if (onUbtTIMConverListener != null) {
                     onUbtTIMConverListener.onError(i, s);
                 }
@@ -366,6 +403,7 @@ public class UbtTIMManager {
 
             @Override
             public void onSuccess(TIMMessage timMessage) {
+                onSendMsgHook(true);
                 if (onUbtTIMConverListener != null) {
                     onUbtTIMConverListener.onSuccess();
                 }
@@ -425,8 +463,9 @@ public class UbtTIMManager {
         TIMMessage msg = creatElem(data);
         sendTIM(msg);
     }
-    public long unReadVoiceMailMessage(){
-        if(conversation==null){
+
+    public long unReadVoiceMailMessage() {
+        if (conversation == null) {
             return -1;
         }
         return conversation.getUnreadMessageNum();

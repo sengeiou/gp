@@ -72,4 +72,9 @@ public class JsonCommandProduce implements ICommandProduce{
         }
         return sendJsonObj.toString();
     }
+
+    @Override
+    public String checkPigNetWorkState() {
+        return Utils.pactkCommandToRobot(Constants.SEND_PIG_CHECK_NET_STATE);
+    }
 }

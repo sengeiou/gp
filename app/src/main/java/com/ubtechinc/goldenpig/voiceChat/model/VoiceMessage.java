@@ -26,7 +26,6 @@ import com.tencent.TIMSoundElem;
 import com.tencent.TIMTextElem;
 import com.tencent.TIMValueCallBack;
 import com.ubt.improtolib.VoiceMailContainer;
-import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.common.adapter.ViewHolder;
@@ -293,10 +292,10 @@ public class VoiceMessage extends Message {
                         fos.write(bytes);
                         fos.close();
                         FileInputStream fis = new FileInputStream(tempAudio);
-                       // MediaUtil.getInstance().play(fis);
-                       if (!MediaUtil.getInstance().playCustomize(fis,message.getMsgUniqueId())){
-                            return;
-                       }
+                        MediaUtil.getInstance().play(fis);
+//                       if (!MediaUtil.getInstance().playCustomize(fis,message.getMsgUniqueId())){
+//                            return;
+//                       }
                         frameAnimatio.start();
                         MediaUtil.getInstance().setEventListener(new MediaUtil.EventListener() {
                             @Override

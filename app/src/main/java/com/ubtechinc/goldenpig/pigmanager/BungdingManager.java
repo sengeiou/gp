@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.tencent.ai.tvs.ConstantValues;
 import com.tencent.ai.tvs.info.ProductManager;
+import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtech.utilcode.utils.JsonUtils;
 import com.ubtechinc.bluetooth.BleConnectAbstract;
 import com.ubtechinc.bluetooth.Constants;
@@ -66,11 +67,13 @@ public class BungdingManager {
     private String clientIdRecord;
     private RegisterRobotModule.Response response;
     private String mToken;
+    private UbtTIMManager timManager;
 
     public BungdingManager(BaseActivity context) {
         UbtBluetoothManager.getInstance().setBleConnectListener(mBleConnectAbstract);
         mRobotRepository = new RegisterPigRepository();
         commandProduce = new JsonCommandProduce();
+        timManager = UbtTIMManager.getInstance();
         this.mContext = context;
     }
 
@@ -300,6 +303,7 @@ public class BungdingManager {
                     if (robotDsn.equals(dsn)) {
                         //同一个猪
                         mBanddingListener.onStopBind(true);
+                        sendClientIdToRobot(clientIdRecord);
                     } else {
                         //不同猪
                         mBanddingListener.onStopBind(false);
@@ -408,6 +412,8 @@ public class BungdingManager {
                         }
                         break;
                     case MySelf:
+                        //TODO 如果IM未登录，进行IM登录
+                        doTIMLogin();
                         sendClientIdToRobot(clientIdRecord);
                         if (mBanddingListener != null) {
                             mBanddingListener.onMaster();
@@ -434,6 +440,13 @@ public class BungdingManager {
                 }
             }
         });
+    }
+
+    private void doTIMLogin() {
+        if (timManager == null) {
+            timManager = UbtTIMManager.getInstance();
+        }
+        timManager.loginTIM(AuthLive.getInstance().getUserId(), mSerialId, com.ubt.imlibv2.BuildConfig.IM_Channel);
     }
 
     public interface BanddingListener {

@@ -7,6 +7,7 @@ import com.ubt.improtolib.UserContacts;
 import com.ubt.improtolib.UserRecords;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.ubtrobot.channelservice.proto.GPRelationshipContainer;
+import com.ubtrobot.tvs.proto.ClientIdUpdateContainer;
 
 import java.util.List;
 
@@ -199,6 +200,19 @@ public class ContactsProtoBuilder {
         GPRelationshipContainer.RelationShip.Builder builder = GPRelationshipContainer.RelationShip.newBuilder();
         builder.setEvent(event);
         GPRelationshipContainer.RelationShip message = builder.build();
+        ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer.ChannelMessage.newBuilder()
+                .setHeader(header)
+                .setPayload(Any.pack(message))
+                .build();
+        return channelMessage.toByteArray();
+    }
+
+    public static byte[] getClientId(String clientId) {
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction(IM_RELATIONSHIP_CHANGED)
+                .setTime(System.currentTimeMillis()).build();
+        ClientIdUpdateContainer.ClientIdUpdate.Builder builder = ClientIdUpdateContainer.ClientIdUpdate.newBuilder();
+        builder.setClientId(clientId);
+        ClientIdUpdateContainer.ClientIdUpdate message = builder.build();
         ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer.ChannelMessage.newBuilder()
                 .setHeader(header)
                 .setPayload(Any.pack(message))

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 
+import com.tencent.ai.tvs.info.UserInfoManager;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.BuildConfig;
@@ -55,9 +56,7 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
     @Override
     public void onSuccess(UserInfo userInfo) {
         authLive.logined(userInfo);
-        Log.d(TAG,"onSuccess  "+userInfo.getUserId() +userInfo.getUserImage());
-        UbtTIMManager.avatarURL=userInfo.getUserImage();
-        timManager.loginTIM(userInfo.getUserId(), com.ubt.imlibv2.BuildConfig.IM_Channel);
+        Log.d(TAG, "onSuccess  " + userInfo.getUserId() + userInfo.getUserImage());
         getPigList();
     }
 
@@ -84,8 +83,15 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
                         PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance()
                                 .getCurrentPigList());
                         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
-                        if (pigInfo != null) {
-                            UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
+                        if (pigInfo != null && pigInfo.isAdmin) {
+                            UbtTIMManager.avatarURL = UserInfoManager.getInstance().headImgUrl;
+                            timManager.loginTIM(AuthLive.getInstance().getUserId(), pigInfo.getRobotName(), com.ubt.imlibv2.BuildConfig.IM_Channel);
+//                            UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
+                        } else {
+                            UbtTIMManager.avatarURL = UserInfoManager.getInstance().headImgUrl;
+                            timManager.setUserId(AuthLive.getInstance().getUserId());
+                            timManager.setPigAccount(pigInfo != null ? pigInfo.getRobotName() : "");
+                            timManager.setChannel(com.ubt.imlibv2.BuildConfig.IM_Channel);
                         }
                     }
                 });

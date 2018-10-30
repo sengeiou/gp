@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.tencent.ai.tvs.ConstantValues;
 import com.tencent.ai.tvs.info.UserInfoManager;
+import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtechinc.commlib.view.UbtSubTxtButton;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.ActivityManager;
@@ -119,6 +120,7 @@ public class UserInfoActivity extends BaseToolBarActivity implements View.OnClic
     private void doLogout() {
         new LoginModel().logoutTVS();
         AuthLive.getInstance().logout();
+        UbtTIMManager.getInstance().doTIMLogout();
         ActivityManager.getInstance().popAllActivity();
         ActivityRoute.toAnotherActivity(this, LoginActivity.class, true);
     }

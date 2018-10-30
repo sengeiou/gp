@@ -110,12 +110,37 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
                 checkWifiInfo();
                 break;
             case R.id.ubt_tv_set_net_skip:
-                ActivityRoute.toAnotherActivity(this, MainActivity.class, true);
+                doProcessSkip();
                 break;
             default:
                 break;
         }
     } //权限请求码
+
+    private void doProcessSkip() {
+        doSendSkipComm();
+        if (UBTPGApplication.pig_net_status) {
+            hideNotify();
+            findViewById(R.id.ubt_layout_setnet).setVisibility(View.GONE);
+            findViewById(R.id.ubt_img_success).setVisibility(View.VISIBLE);
+            findViewById(R.id.ubt_tv_set_net_success).setVisibility(View.VISIBLE);
+            mTvSkip.setEnabled(false);
+            mTvSkip.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    ActivityRoute.toAnotherActivity(SetPigNetWorkActivity.this, MainActivity.class, true);
+                }
+            }, 1000);
+        } else {
+            ActivityRoute.toAnotherActivity(this, MainActivity.class, true);
+        }
+    }
+
+    private void doSendSkipComm() {
+        String message = commandProduce.checkPigNetWorkState();
+        UbtBluetoothManager.getInstance().sendMessageToBle(message);
+    }
+
 
     private static final int PERMISSION_REQUEST_CODE = 0;
     //两个危险权限需要动态申请
@@ -248,7 +273,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
                 dismissLoadDialog();
                 mSendWifiInfoBtn.setText(R.string.ubt_connect);
                 mSendWifiInfoBtn.setAlpha(1.0f);
-                showNotify("连接失败");
+                ToastUtils.showShortToast(SetPigNetWorkActivity.this, "连接失败");
                 AuthLive.getInstance().getCurrentPig().setOnlineState(PigInfo.ROBOT_STATE_OFFLINE);
                 UBTPGApplication.pig_net_status = false;
             }
@@ -283,7 +308,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
                 public void run() {
                     ActivityRoute.toAnotherActivity(SetPigNetWorkActivity.this, MainActivity.class, true);
                 }
-            }, 2000);
+            }, 1000);
 
         }
 

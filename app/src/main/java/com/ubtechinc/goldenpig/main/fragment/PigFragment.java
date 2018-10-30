@@ -107,7 +107,7 @@ public class PigFragment extends BaseFragment implements Observer {
         View view = inflater.inflate(R.layout.fragment_pig, container, false);
         EventBusUtil.register(this);
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
-        if (pigInfo != null) {
+        if (pigInfo != null && pigInfo.isAdmin) {
             UbtTIMManager.getInstance().setMsgObserve(this);
             UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
                 @Override
@@ -340,7 +340,7 @@ public class PigFragment extends BaseFragment implements Observer {
     public void onMessageEvent(Event event) {
         if (event != null && event.getCode() == CONTACT_PIC_SUCCESS) {
             PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
-            if (pigInfo != null) {
+            if (pigInfo != null && pigInfo.isAdmin) {
                 UbtTIMManager.getInstance().setMsgObserve(this);
                 UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
                     @Override

@@ -126,9 +126,10 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
 
     private void imSyncRelationShip() {
         //TODO 给自己的猪发
-        TIMMessage selfMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(1));
-        UbtTIMManager.getInstance().sendTIM(selfMessage);
-
+        if (AuthLive.getInstance().getCurrentPig().isAdmin) {
+            TIMMessage selfMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(1));
+            UbtTIMManager.getInstance().sendTIM(selfMessage);
+        }
     }
 
     private void initViews() {

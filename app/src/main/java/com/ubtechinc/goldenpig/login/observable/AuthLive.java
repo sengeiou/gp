@@ -23,7 +23,7 @@ import static com.ubtechinc.goldenpig.login.observable.AuthLive.AuthState.NORMAL
 public class AuthLive extends LiveData<AuthLive> {
 
     public enum AuthState {
-        LOGINING, LOGINED, LOGOUTTING, LOGOUTTED, FORCE_OFFLINE, FORBIDDEN, ERROR, CANCEL, NORMAL
+        LOGINING, TVSLOGINED, TIMLOGINED, LOGOUTTING, LOGOUTTED, FORCE_OFFLINE, FORBIDDEN, ERROR, CANCEL, NORMAL
     }
 
     private static class AuthLiveHolder {
@@ -40,52 +40,55 @@ public class AuthLive extends LiveData<AuthLive> {
 
 
     private UserInfo currentUser;
-    private ArrayList<PigInfo>  currentPigList;
+    private ArrayList<PigInfo> currentPigList;
     private AuthState state;
     private String loginToken;
+
     public void logining() {
         this.state = AuthState.LOGINING;
-        if(isMainThread()){
+        if (isMainThread()) {
             setValue(this);
-        }else {
+        } else {
             postValue(this);
         }
     }
 
     public void logined(UserInfo userInfo) {
         currentUser = userInfo;
-//        this.state = AuthState.LOGINED;
-////        if(isMainThread()){
-////            setValue(this);
-////        }else {
-////            postValue(this);
-////        }
-    }
-    public void timLogined(){
-        this.state = AuthState.LOGINED;
-        if(isMainThread()){
+        this.state = AuthState.TVSLOGINED;
+        if (isMainThread()) {
             setValue(this);
-        }else {
+        } else {
             postValue(this);
         }
     }
+
+    public void timLogined() {
+        this.state = AuthState.TIMLOGINED;
+        if (isMainThread()) {
+            setValue(this);
+        } else {
+            postValue(this);
+        }
+    }
+
     public PigInfo getCurrentPig() {
-        if (currentPigList!=null&&currentPigList.size()>0) {
+        if (currentPigList != null && currentPigList.size() > 0) {
             return currentPigList.get(0);
         }
         return null;
     }
 
     public ArrayList<PigInfo> getCurrentPigList() {
-        if (currentPigList==null){
-            currentPigList=new ArrayList<>();
+        if (currentPigList == null) {
+            currentPigList = new ArrayList<>();
         }
         return currentPigList;
     }
 
     public void setCurrentPig(PigInfo currentPig) {
-        if (this.currentPigList==null) {
-           currentPigList=new ArrayList<>();
+        if (this.currentPigList == null) {
+            currentPigList = new ArrayList<>();
         }
         this.currentPigList.add(currentPig);
 
@@ -93,45 +96,45 @@ public class AuthLive extends LiveData<AuthLive> {
 
     public void logout() {
         this.state = AuthState.LOGOUTTED;
-        if(isMainThread()){
+        if (isMainThread()) {
             setValue(this);
-        }else {
+        } else {
             postValue(this);
         }
     }
 
     public void forceOffline() {
         this.state = AuthState.FORCE_OFFLINE;
-        if(isMainThread()){
+        if (isMainThread()) {
             setValue(this);
-        }else {
+        } else {
             postValue(this);
         }
     }
 
     public void error() {
         this.state = AuthState.ERROR;
-        if(isMainThread()){
+        if (isMainThread()) {
             setValue(this);
-        }else {
+        } else {
             postValue(this);
         }
     }
 
     public void cancel() {
         this.state = AuthState.CANCEL;
-        if(isMainThread()){
+        if (isMainThread()) {
             setValue(this);
-        }else {
+        } else {
             postValue(this);
         }
     }
 
     public void forbidden() {
         this.state = AuthState.FORBIDDEN;
-        if(isMainThread()){
+        if (isMainThread()) {
             setValue(this);
-        }else {
+        } else {
             postValue(this);
         }
     }
@@ -160,9 +163,9 @@ public class AuthLive extends LiveData<AuthLive> {
 
     public void reset() {
         this.state = NORMAL;
-        if(isMainThread()){
+        if (isMainThread()) {
             setValue(this);
-        }else {
+        } else {
             postValue(this);
         }
     }

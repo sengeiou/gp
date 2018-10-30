@@ -44,6 +44,8 @@ public class Constants {
 
     public static final int PIG_REPLY_NET_STATE = 120; ////小猪返回网络状态
 
+    public static final int SEND_PIG_CHECK_NET_STATE = 6;  //发给小猪check网络状态
+
     public static final String REQUEST_SHARE_TIME = "request_share_time";
     public static String CODE = "cd";
     public static final String ERROR_CODE = "ec";

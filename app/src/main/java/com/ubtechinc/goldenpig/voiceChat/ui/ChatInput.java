@@ -13,13 +13,9 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.text.TextWatcher;
-import android.text.method.KeyListener;
 import android.text.style.ImageSpan;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -31,7 +27,6 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tencent.TIMElem;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.voiceChat.viewfeatures.ChatView;
 
@@ -87,6 +82,7 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
         btnKeyboard = (ImageButton) findViewById(R.id.btn_keyboard);
         btnKeyboard.setOnClickListener(this);
         voicePanel = (TextView) findViewById(R.id.voice_panel);
+        requestDisallowInterceptTouchEvent(false);
         voicePanel.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -96,6 +92,10 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
                         updateVoiceView();
                         break;
                     case MotionEvent.ACTION_UP:
+                        isHoldVoiceBtn = false;
+                        updateVoiceView();
+                        break;
+                    case MotionEvent.ACTION_CANCEL:
                         isHoldVoiceBtn = false;
                         updateVoiceView();
                         break;
