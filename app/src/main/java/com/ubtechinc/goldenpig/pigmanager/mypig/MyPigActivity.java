@@ -90,6 +90,7 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
                                 @Override
                                 public void run() {
                                     ToastUtils.showShortToast(MyPigActivity.this, R.string.ubt_ubbind_success);
+                                    imSyncRelationShip();
                                     try {
                                         ArrayList<PigInfo> pigInfos = AuthLive.getInstance().getCurrentPigList();
                                         int currentIndex = -1;
@@ -159,6 +160,13 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
         if (isMaster) {
             getPigVersion();
         }
+    }
+
+    private void imSyncRelationShip() {
+        //TODO 给自己的猪发
+        TIMMessage selfMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(1));
+        UbtTIMManager.getInstance().sendTIM(selfMessage);
+
     }
 
     private void initViews() {

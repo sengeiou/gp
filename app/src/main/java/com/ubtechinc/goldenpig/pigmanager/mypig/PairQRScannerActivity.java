@@ -95,7 +95,7 @@ public class PairQRScannerActivity extends QRScannerActivity {
                                 String serialNumber = pairData.optString("serialNumber");
                                 int pairUserId = pairData.optInt("pairUserId");
                                 String pairSerialNumber = pairData.optString("pairSerialNumber");
-                                sendPairInfo(userId, serialNumber, pairUserId, pairSerialNumber);
+                                imSyncRelationShip(userId, serialNumber, pairUserId, pairSerialNumber);
                             }
                         }
                     } catch (JSONException e) {
@@ -106,28 +106,30 @@ public class PairQRScannerActivity extends QRScannerActivity {
         });
     }
 
-    private void sendPairInfo(int userId, String serialNumber, int pairUserId, String pairSerialNumber) {
+    private void imSyncRelationShip(int userId, String serialNumber, int pairUserId, String pairSerialNumber) {
         HashMap<String, String> map = new HashMap<>();
+        map.put("serialNumber", serialNumber);
         map.put("pairSerialNumber", pairSerialNumber);
+        map.put("pairUserId", String.valueOf(pairUserId));
         ActivityRoute.toAnotherActivity(PairQRScannerActivity.this, PairPigActivity.class, map, false);
 
         //TODO 给自己的猪发
         TIMConversation selfConversation = TIMManager.getInstance().getConversation(
                 TIMConversationType.C2C, serialNumber);
-        TIMMessage selfMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(1, pairSerialNumber));
+        TIMMessage selfMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(2));
         UbtTIMManager.getInstance().sendTIM(selfMessage, selfConversation);
 
         //TODO 给配对的猪发
         TIMConversation pairPigConversation = TIMManager.getInstance().getConversation(
                 TIMConversationType.C2C, pairSerialNumber);
-        TIMMessage pairPigMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(1, serialNumber));
+        TIMMessage pairPigMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(2));
         UbtTIMManager.getInstance().sendTIM(pairPigMessage, pairPigConversation);
 
 
         //TODO 给配对的用户发
         TIMConversation pairUserConversation = TIMManager.getInstance().getConversation(
                 TIMConversationType.C2C, String.valueOf(pairUserId));
-        TIMMessage pairUserMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.IM_ACCOUNT_PAIR);
+        TIMMessage pairUserMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(2));
         UbtTIMManager.getInstance().sendTIM(pairUserMessage, pairUserConversation);
     }
 }

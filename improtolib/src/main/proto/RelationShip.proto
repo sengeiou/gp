@@ -1,0 +1,8 @@
+syntax = "proto3";
+option java_package="com.ubtrobot.channelservice.proto";
+option java_outer_classname="GPRelationshipContainer";
+
+//解除绑定
+message RelationShip {
+    int32 event = 1; //1更新绑定关系 2更新配对关系 3全部更新
+}

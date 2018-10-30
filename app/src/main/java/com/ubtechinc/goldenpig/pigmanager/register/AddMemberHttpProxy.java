@@ -1,7 +1,10 @@
 package com.ubtechinc.goldenpig.pigmanager.register;
 
+import com.ubtechinc.commlib.log.UBTLog;
 import com.ubtechinc.goldenpig.net.BaseHttpProxy;
 import com.ubtechinc.nets.BuildConfig;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -36,18 +39,20 @@ public class AddMemberHttpProxy extends BaseHttpProxy {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                if (callBack!=null) {
-                    if (response.isSuccessful()){
-                        try {
-
+                if (callBack != null) {
+                    try {
+                        String result = response.body().source().readUtf8();
+                        if (response.isSuccessful()) {
                             callBack.onSuccess();
-                        } catch (RuntimeException e) {
-                            callBack.onError(response.message());
+                        } else {
+                            UBTLog.d("AddMemberHttpProxy", result);
+                            JSONObject jsonObject = new JSONObject(result);
+                            String message = jsonObject.optString("message");
+                            callBack.onError(message);
                         }
-                    }else {
-                        callBack.onError(response.message());
+                    } catch (Exception e) {
+                        callBack.onError(e.getMessage());
                     }
-
                 }
 
             }

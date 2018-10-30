@@ -12,6 +12,9 @@ import android.widget.Button;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.tencent.TIMMessage;
+import com.ubt.imlibv2.bean.ContactsProtoBuilder;
+import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.commlib.view.SpaceItemDecoration;
 import com.ubtechinc.goldenpig.BuildConfig;
@@ -92,6 +95,8 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
                         JSONObject jsonObject = new JSONObject(reponse);
                         int code = jsonObject.has("code") ? jsonObject.getInt("code") : -1;
 
+                        imSyncRelationShip();
+
                         if (code == 0) {
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -117,6 +122,13 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
                 }
             }
         };
+    }
+
+    private void imSyncRelationShip() {
+        //TODO 给自己的猪发
+        TIMMessage selfMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(1));
+        UbtTIMManager.getInstance().sendTIM(selfMessage);
+
     }
 
     private void initViews() {
@@ -423,6 +435,7 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
             @Override
             public void onSuccess(String msg) {
                 com.ubtech.utilcode.utils.ToastUtils.showShortToast("转让成功");
+                imSyncRelationShip();
                 isDownloadedUserList = false;
                 updatePigList();
                 getMember("1");

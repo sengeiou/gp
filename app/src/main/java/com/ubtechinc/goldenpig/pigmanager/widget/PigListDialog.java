@@ -93,6 +93,7 @@ public class PigListDialog extends BaseDialog {
             @Override
             public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
 
+//                Log.e("pigList", "ble_name:" + device.getName() + "==addr:" + device.getAddress());
                 if (!TextUtils.isEmpty(device.getName()) && device.getName().startsWith(Constants.ROBOT_TAG)) {
                     int rawIndex = isHasDevice(device);
                     UbtBluetoothDevice ubtBluetoothDevice = new UbtBluetoothDevice();

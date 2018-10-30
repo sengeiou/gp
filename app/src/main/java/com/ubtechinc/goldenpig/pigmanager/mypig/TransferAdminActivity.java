@@ -7,6 +7,9 @@ import android.view.View;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.tencent.TIMMessage;
+import com.ubt.imlibv2.bean.ContactsProtoBuilder;
+import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
@@ -172,10 +175,18 @@ public class TransferAdminActivity extends BaseToolBarActivity implements View.O
                 @Override
                 public void onSuccess(String msg) {
                     com.ubtech.utilcode.utils.ToastUtils.showShortToast("转让成功");
+                    imSyncRelationShip();
                     setResult(RESULT_OK);
                     finish();
                 }
             });
         }
+    }
+
+    private void imSyncRelationShip() {
+        //TODO 给自己的猪发
+        TIMMessage selfMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(1));
+        UbtTIMManager.getInstance().sendTIM(selfMessage);
+
     }
 }

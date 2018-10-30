@@ -1,0 +1,8 @@
+syntax = "proto3";
+option java_package="com.ubtrobot.tvs.proto";
+option java_outer_classname="ClientIdUpdateContainer";
+
+//发送clientId
+message ClientIdUpdate{
+    string clientId=1;//TVS的clientId
+}

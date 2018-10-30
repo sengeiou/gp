@@ -261,7 +261,9 @@ public class PigFragment extends BaseFragment implements Observer {
             case R.id.view_pig_pair_info:
                 //TODO 配对列表
                 HashMap<String, String> map = new HashMap<>();
-                map.put("pairSerialNumber", String.valueOf(pairSerialNumber));
+                map.put("serialNumber", serialNumber);
+                map.put("pairSerialNumber", pairSerialNumber);
+                map.put("pairUserId", String.valueOf(pairUserId));
                 ActivityRoute.toAnotherActivity(getActivity(), PairPigActivity.class, map, false);
                 break;
             case R.id.ubt_bind_tv:

@@ -3,10 +3,10 @@ package com.ubt.imlibv2.bean;
 import com.google.protobuf.Any;
 import com.tencent.TIMCustomElem;
 import com.tencent.TIMMessage;
-import com.ubt.improtolib.GPPairContainer;
 import com.ubt.improtolib.UserContacts;
 import com.ubt.improtolib.UserRecords;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
+import com.ubtrobot.channelservice.proto.GPRelationshipContainer;
 
 import java.util.List;
 
@@ -24,10 +24,10 @@ public class ContactsProtoBuilder {
     public static final String UPAT_HOTSPOT = "/im/HotSpot/receiver"; /// 修改热点
     public static final String GET_HOTSPOT = "/im/HotSpot/Account"; ///查询热点
 
-    /** int32 action = 1; //1.配对 2.解除配对
-     * int32 userid =2; //1.发送对象
-     */
-    public static final String IM_ACCOUNT_PAIR = "/im/account/pair";
+
+    public static final String IM_RELATIONSHIP_CHANGED = "/im/relationShip/changed";
+
+    public static final String IM_ACCOUNT_CLIENTID = "/im/account/clientid";
 
     public static byte[] getAddContactsInfo(String name, String number) {
 
@@ -188,13 +188,17 @@ public class ContactsProtoBuilder {
         return createTIMMsg(createBaseData(action));
     }
 
-    public static byte[] syncPairInfo(int action, String userid) {
-        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction(IM_ACCOUNT_PAIR)
+    /**
+     * 1更新绑定关系 2更新配对关系 3全部更新
+     * @param event
+     * @return
+     */
+    public static byte[] syncPairInfo(int event) {
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction(IM_RELATIONSHIP_CHANGED)
                 .setTime(System.currentTimeMillis()).build();
-        GPPairContainer.GPPair.Builder builder = com.ubt.improtolib.GPPairContainer.GPPair.newBuilder();
-        builder.setAction(action);
-        builder.setUserid(userid);
-        GPPairContainer.GPPair message = builder.build();
+        GPRelationshipContainer.RelationShip.Builder builder = GPRelationshipContainer.RelationShip.newBuilder();
+        builder.setEvent(event);
+        GPRelationshipContainer.RelationShip message = builder.build();
         ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer.ChannelMessage.newBuilder()
                 .setHeader(header)
                 .setPayload(Any.pack(message))

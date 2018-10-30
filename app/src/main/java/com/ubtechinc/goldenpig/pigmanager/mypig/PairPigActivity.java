@@ -3,27 +3,22 @@ package com.ubtechinc.goldenpig.pigmanager.mypig;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.tencent.TIMConversation;
+import com.tencent.TIMConversationType;
+import com.tencent.TIMManager;
+import com.tencent.TIMMessage;
+import com.ubt.imlibv2.bean.ContactsProtoBuilder;
+import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
-import com.ubtechinc.goldenpig.comm.entity.UserInfo;
-import com.ubtechinc.goldenpig.comm.img.GlideCircleTransform;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
-import com.ubtechinc.goldenpig.comm.view.WrapContentLinearLayoutManager;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
-import com.ubtechinc.goldenpig.login.observable.AuthLive;
-import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
-import com.ubtechinc.goldenpig.pigmanager.adpater.PairPigAdapter;
 import com.ubtechinc.goldenpig.pigmanager.register.UnpairHttpProxy;
-
-import java.util.ArrayList;
 
 /**
  * @auther :hqt
@@ -34,9 +29,16 @@ import java.util.ArrayList;
  * @changetime :2018/9/28 19:18
  */
 public class PairPigActivity extends BaseToolBarActivity implements View.OnClickListener {
-    private String pairSerialNumber;
-    private View unPairBtn; ///解除绑定按钮
+
+    private View unPairBtn;
+
     private TextView memberNameTv;
+
+    private String pairUserId;
+
+    private String serialNumber;
+
+    private String pairSerialNumber;
 
     @Override
     protected int getConentView() {
@@ -84,6 +86,8 @@ public class PairPigActivity extends BaseToolBarActivity implements View.OnClick
         Intent intent = getIntent();
         if (intent != null) {
             pairSerialNumber = intent.getStringExtra("pairSerialNumber");
+            pairUserId = intent.getStringExtra("pairUserId");
+            serialNumber = intent.getStringExtra("serialNumber");
             memberNameTv.setText(pairSerialNumber);
         }
     }
@@ -107,12 +111,35 @@ public class PairPigActivity extends BaseToolBarActivity implements View.OnClick
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                ToastUtils.showShortToast(R.string.ubt_ubpair_success);
-                                finish();
+                                onUnPairSuccess();
                             }
                         });
                     }
                 });
+    }
+
+    private void onUnPairSuccess() {
+        //TODO 给自己的猪发
+        TIMConversation selfConversation = TIMManager.getInstance().getConversation(
+                TIMConversationType.C2C, serialNumber);
+        TIMMessage selfMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(2));
+        UbtTIMManager.getInstance().sendTIM(selfMessage, selfConversation);
+
+        //TODO 给配对的猪发
+        TIMConversation pairPigConversation = TIMManager.getInstance().getConversation(
+                TIMConversationType.C2C, pairSerialNumber);
+        TIMMessage pairPigMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(2));
+        UbtTIMManager.getInstance().sendTIM(pairPigMessage, pairPigConversation);
+
+
+        //TODO 给配对的用户发
+        TIMConversation pairUserConversation = TIMManager.getInstance().getConversation(
+                TIMConversationType.C2C, String.valueOf(pairUserId));
+        TIMMessage pairUserMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(2));
+        UbtTIMManager.getInstance().sendTIM(pairUserMessage, pairUserConversation);
+
+        ToastUtils.showShortToast(R.string.ubt_ubpair_success);
+        finish();
     }
 
     @Override
