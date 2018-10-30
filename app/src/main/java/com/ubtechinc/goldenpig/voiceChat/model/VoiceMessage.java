@@ -26,6 +26,7 @@ import com.tencent.TIMSoundElem;
 import com.tencent.TIMTextElem;
 import com.tencent.TIMValueCallBack;
 import com.ubt.improtolib.VoiceMailContainer;
+import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.common.adapter.ViewHolder;
@@ -181,6 +182,7 @@ public class VoiceMessage extends Message {
                        getBubbleView(viewHolder).setOnClickListener(new View.OnClickListener() {
                            @Override
                            public void onClick(View v) {
+                               MediaUtil.getInstance().setIsReadyPlayingIndex(message.getMsgUniqueId());
                                VoiceMessage.this.playAudio(frameAnimatio);
                            }
                        });
@@ -250,6 +252,7 @@ public class VoiceMessage extends Message {
            getBubbleView(viewHolder).setOnClickListener(new View.OnClickListener() {
                @Override
                public void onClick(View v) {
+                   MediaUtil.getInstance().setIsReadyPlayingIndex(message.getMsgUniqueId());
                    VoiceMessage.this.playAudio(frameAnimatio);
                }
            });
@@ -277,39 +280,11 @@ public class VoiceMessage extends Message {
 
     private void playAudio(final AnimationDrawable frameAnimatio) {
 
-        if(!ChatActivity.VERSION_BYPASS) {
-            TIMCustomElem customElem = (TIMCustomElem) message.getElement(0);
-            customElem.getData();
-            try {
-                ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage
-                        .parseFrom((byte[]) customElem.getData());
-                VoiceMailContainer.VoiceMail mVoiceData = msg.getPayload().unpack(VoiceMailContainer.VoiceMail.class);
-                //mVoiceData.getMessage().toByteArray();
-                File tempAudio = FileUtil.getTempFile(FileUtil.FileType.AUDIO);
-                FileOutputStream fos = new FileOutputStream(tempAudio);
-                fos.write(mVoiceData.getMessage().toByteArray());
-                fos.close();
-                FileInputStream fis = new FileInputStream(tempAudio);
-                MediaUtil.getInstance().play(fis);
-                frameAnimatio.start();
-                MediaUtil.getInstance().setEventListener(new MediaUtil.EventListener() {
-                    @Override
-                    public void onStop() {
-                        frameAnimatio.stop();
-                        frameAnimatio.selectDrawable(0);
-                    }
-                });
-
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }else {
             TIMSoundElem elem = (TIMSoundElem) message.getElement(0);
             elem.getSound(new TIMValueCallBack<byte[]>() {
                 @Override
                 public void onError(int i, String s) {
                 }
-
                 @Override
                 public void onSuccess(byte[] bytes) {
                     try {
@@ -318,7 +293,10 @@ public class VoiceMessage extends Message {
                         fos.write(bytes);
                         fos.close();
                         FileInputStream fis = new FileInputStream(tempAudio);
-                        MediaUtil.getInstance().play(fis);
+                       // MediaUtil.getInstance().play(fis);
+                       if (!MediaUtil.getInstance().playCustomize(fis,message.getMsgUniqueId())){
+                            return;
+                       }
                         frameAnimatio.start();
                         MediaUtil.getInstance().setEventListener(new MediaUtil.EventListener() {
                             @Override
@@ -332,7 +310,6 @@ public class VoiceMessage extends Message {
                     }
                 }
             });
-        }
     }
 
     public static SpannableStringBuilder getString(List<TIMElem> elems, Context context){

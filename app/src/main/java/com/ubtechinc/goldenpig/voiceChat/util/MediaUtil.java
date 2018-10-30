@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.util.Log;
 
 
+import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 
 import java.io.FileInputStream;
@@ -19,6 +20,17 @@ public class MediaUtil {
 
     private MediaPlayer player;
     private EventListener eventListener;
+    private long playingIndex=-1;
+
+    public long getIsReadyPlayingIndex() {
+        return isReadyPlayingIndex;
+    }
+
+    public void setIsReadyPlayingIndex(long isReadyPlayingIndex) {
+        this.isReadyPlayingIndex = isReadyPlayingIndex;
+    }
+
+    private long isReadyPlayingIndex=-1;
 
     private MediaUtil(){
         player = new MediaPlayer();
@@ -59,8 +71,35 @@ public class MediaUtil {
         }catch (IOException e){
             Log.e(TAG, "play error:" + e);
         }
+    }
 
+    public boolean playCustomize(FileInputStream inputStream,long index){
+        try{
+            if (eventListener != null){
+                eventListener.onStop();
+            }
+            UbtLogger.d(TAG,"PLAYING INDEX  "+getPlayingIndex() +"isReady  "+getIsReadyPlayingIndex());
 
+            if(getPlayingIndex()==getIsReadyPlayingIndex()){
+                    stop();
+                    return false;
+            }
+            player.reset();
+            player.setDataSource(inputStream.getFD());
+            player.prepare();
+            player.start();
+            setPlayingIndex(index);
+        }catch (IOException e){
+            Log.e(TAG, "play error:" + e);
+        }
+        return true;
+    }
+
+    public void setPlayingIndex(long index ){
+        playingIndex=index;
+    }
+    public long getPlayingIndex(){
+        return playingIndex;
     }
 
 

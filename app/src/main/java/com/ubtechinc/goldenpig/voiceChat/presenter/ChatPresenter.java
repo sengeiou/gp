@@ -18,6 +18,7 @@ import com.ubtechinc.goldenpig.voiceChat.event.RefreshEvent;
 import com.ubtechinc.goldenpig.voiceChat.viewfeatures.ChatView;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -29,12 +30,13 @@ public class ChatPresenter implements Observer {
     private ChatView view;
     private TIMConversation conversation;
     private boolean isGetingMessage = false;
-    private final int LAST_MESSAGE_NUM = 200;
+    private final int LAST_MESSAGE_NUM = 20;
     public static int MESSAGE_TEXT=0;
     public static int MESSAGE_VOICE=1;
     public static int MESSAGE_VIDEO=2;
     public static int MESSAGE_FILE=3;
     public static int MESSAGE_IMAGE=4;
+    public static int SHOW_MESSAGE_MAX=200;
 
     public ChatPresenter(ChatView view, String identify, TIMConversationType type){
         this.view = view;
@@ -245,7 +247,13 @@ public class ChatPresenter implements Observer {
                 public void onSuccess(List<TIMMessage> timMessages) {
                     Log.e("NYLive","get message success" +timMessages.size());
                     isGetingMessage = false;
-                    view.showMessage(timMessages);
+                    if(timMessages.size()>SHOW_MESSAGE_MAX){
+                        List<TIMMessage> destTimMessages=new ArrayList<>();
+                        System.arraycopy(timMessages,0,destTimMessages,0,200);
+                        view.showMessage(destTimMessages);
+                    }else {
+                        view.showMessage(timMessages);
+                    }
                 }
             });
         }
