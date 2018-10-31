@@ -3,6 +3,7 @@ package com.ubtechinc.goldenpig.voiceChat.util;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 
 import com.ubtechinc.commlib.log.UbtLogger;
@@ -79,10 +80,10 @@ public class MediaUtil {
                 eventListener.onStop();
             }
             UbtLogger.d(TAG,"PLAYING INDEX  "+getPlayingIndex() +"isReady  "+getIsReadyPlayingIndex());
-
-            if(getPlayingIndex()==getIsReadyPlayingIndex()){
-                    stop();
-                    return false;
+            if(getPlayingIndex()==getIsReadyPlayingIndex()&&player.isPlaying()){
+                Toast.makeText(UBTPGApplication.getContext(),"stop ", Toast.LENGTH_SHORT).show();
+                stop();
+                return false;
             }
             player.reset();
             player.setDataSource(inputStream.getFD());

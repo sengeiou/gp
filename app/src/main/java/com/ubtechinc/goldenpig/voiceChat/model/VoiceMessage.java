@@ -292,10 +292,10 @@ public class VoiceMessage extends Message {
                         fos.write(bytes);
                         fos.close();
                         FileInputStream fis = new FileInputStream(tempAudio);
-                        MediaUtil.getInstance().play(fis);
-//                       if (!MediaUtil.getInstance().playCustomize(fis,message.getMsgUniqueId())){
-//                            return;
-//                       }
+//                        MediaUtil.getInstance().play(fis);
+                       if (!MediaUtil.getInstance().playCustomize(fis,message.getMsgUniqueId())){
+                            return;
+                       }
                         frameAnimatio.start();
                         MediaUtil.getInstance().setEventListener(new MediaUtil.EventListener() {
                             @Override
