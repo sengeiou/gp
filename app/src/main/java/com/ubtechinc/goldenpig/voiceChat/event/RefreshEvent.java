@@ -1,5 +1,7 @@
 package com.ubtechinc.goldenpig.voiceChat.event;
 
+import android.util.Log;
+
 import com.tencent.TIMConversation;
 import com.tencent.TIMManager;
 import com.tencent.TIMRefreshListener;
@@ -46,8 +48,8 @@ public class RefreshEvent extends Observable implements TIMRefreshListener {
      */
     @Override
     public void onRefreshConversation(List<TIMConversation> list) {
+        Log.d("RefreshEvent","onRefreshConversation from different devices");
         setChanged();
         notifyObservers();
-
     }
 }

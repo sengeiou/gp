@@ -530,6 +530,7 @@ public class ChatActivity extends FragmentActivity implements ChatView {
         return super.onContextItemSelected(item);
     }
 
+
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

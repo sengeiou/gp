@@ -6,6 +6,7 @@ import android.util.Log;
 import com.tencent.TIMCustomElem;
 import com.ubtechinc.goldenpig.common.adapter.CommonAdaper;
 import com.ubtechinc.goldenpig.voiceChat.model.Message;
+import com.ubtechinc.goldenpig.voiceChat.presenter.ChatPresenter;
 import com.ubtechinc.goldenpig.voiceChat.ui.ChatActivity;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 
@@ -24,21 +25,12 @@ public class ChatAdapter extends CommonAdaper<Message> {
     }
 
     private void filter(List<Message> messageList) {
-        Iterator<Message> iterable = messageList.iterator();
-        while (iterable.hasNext()) {
-            Message message =  iterable.next();
-            try {
-                TIMCustomElem customElem = (TIMCustomElem) message.message.getElement(0);
-                ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage
-                        .parseFrom((byte[]) customElem.getData());
-                Log.d(TAG, "MessageEvent " + msg.getHeader().getAction());
-                if (!msg.getHeader().getAction().equals("/im/voicemail/receiver")) {
-                    iterable.remove();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        Log.d("ChatAdapter","filter size" +messageList.size());
+       if(messageList.size()>ChatPresenter.SHOW_MESSAGE_MAX) {
+           Message message = messageList.get(0);
+           message.remove();
+           messageList.remove(0);
+       }
     }
 
 //    @Override
@@ -81,7 +73,7 @@ public class ChatAdapter extends CommonAdaper<Message> {
 
     @Override
     public void update(List<Message> items) {
-        if(!ChatActivity.VERSION_BYPASS) {
+        if(ChatActivity.VERSION_BYPASS) {
             filter(items);
         }
         notifyDataSetChanged();

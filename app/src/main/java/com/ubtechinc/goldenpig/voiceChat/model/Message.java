@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -67,6 +68,9 @@ public abstract class Message {
      * @param viewHolder 界面样式
      */
     public RelativeLayout getBubbleView(final ViewHolder viewHolder){
+        if(UBTPGApplication.voiceMail_debug){
+            Toast.makeText(UBTPGApplication.getContext(), "hasTime "+ hasTime, Toast.LENGTH_LONG).show();
+        }
         viewHolder.getView(R.id.systemMessage).setVisibility(hasTime? View.VISIBLE: View.GONE);
         viewHolder.setText(R.id.systemMessage, TimeUtil.getChatTimeStr(message.timestamp()));
         showDesc(viewHolder);

@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.tencent.TIMCustomElem;
 import com.tencent.TIMElem;
@@ -181,6 +182,9 @@ public class VoiceMessage extends Message {
                        getBubbleView(viewHolder).setOnClickListener(new View.OnClickListener() {
                            @Override
                            public void onClick(View v) {
+                               if(UBTPGApplication.voiceMail_debug){
+                                   Toast.makeText(UBTPGApplication.getContext(),"click ", Toast.LENGTH_SHORT).show();
+                               }
                                MediaUtil.getInstance().setIsReadyPlayingIndex(message.getMsgUniqueId());
                                VoiceMessage.this.playAudio(frameAnimatio);
                            }

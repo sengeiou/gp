@@ -81,7 +81,9 @@ public class MediaUtil {
             }
             UbtLogger.d(TAG,"PLAYING INDEX  "+getPlayingIndex() +"isReady  "+getIsReadyPlayingIndex());
             if(getPlayingIndex()==getIsReadyPlayingIndex()&&player.isPlaying()){
-                Toast.makeText(UBTPGApplication.getContext(),"stop ", Toast.LENGTH_SHORT).show();
+                if(UBTPGApplication.voiceMail_debug){
+                    Toast.makeText(UBTPGApplication.getContext(),"stop ", Toast.LENGTH_SHORT).show();
+                }
                 stop();
                 return false;
             }

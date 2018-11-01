@@ -3,6 +3,7 @@ package com.ubtechinc.goldenpig.voiceChat.presenter;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.tencent.TIMCallBack;
 import com.tencent.TIMConversation;
 import com.tencent.TIMConversationType;
 import com.tencent.TIMCustomElem;
@@ -36,7 +37,7 @@ public class ChatPresenter implements Observer {
     public static int MESSAGE_VIDEO=2;
     public static int MESSAGE_FILE=3;
     public static int MESSAGE_IMAGE=4;
-    public static int SHOW_MESSAGE_MAX=200;
+    public static int SHOW_MESSAGE_MAX=200;//200;
 
     public ChatPresenter(ChatView view, String identify, TIMConversationType type){
         this.view = view;
@@ -185,24 +186,12 @@ public class ChatPresenter implements Observer {
         if (observable instanceof MessageEvent) {
             TIMMessage msg = (TIMMessage) data;
             //delete other actions event
-            if(msg!=null){
-//                try {
-//                    TIMCustomElem customElem = (TIMCustomElem) msg.getElement(0);
-//                    ChannelMessageContainer.ChannelMessage voicemsg = ChannelMessageContainer.ChannelMessage
-//                            .parseFrom((byte[]) customElem.getData());
-//                    Log.d("ChatPresenter", "message check " + voicemsg.getHeader().getAction());
-//                    if (!voicemsg.getHeader().getAction().equals("/im/voicemail/receiver")) {
-//                        return;
-//                    }
-//                }catch(Exception e){
-//                    e.printStackTrace();
-//                }
-            }
             try {
                 view.showMessage(msg);
                 //msg, sender, read or unread: my pig(me--->pig)  pip group(pig--->pig)
                 if(msg!=null) {
                     if (msg.isSelf()) {
+                        Log.d("ChatPresenter","SAVE THE MESSAGE ");
                         conversation.saveMessage(msg, UbtTIMManager.userId, true);
                     } else {
                         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
@@ -247,13 +236,7 @@ public class ChatPresenter implements Observer {
                 public void onSuccess(List<TIMMessage> timMessages) {
                     Log.e("NYLive","get message success" +timMessages.size());
                     isGetingMessage = false;
-                    if(timMessages.size()>SHOW_MESSAGE_MAX){
-                        List<TIMMessage> destTimMessages=new ArrayList<>();
-                        System.arraycopy(timMessages,0,destTimMessages,0,200);
-                        view.showMessage(destTimMessages);
-                    }else {
-                        view.showMessage(timMessages);
-                    }
+                    view.showMessage(timMessages);
                 }
             });
         }
