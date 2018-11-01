@@ -8,7 +8,6 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.ubtechinc.commlib.network.NetworkHelper;
-import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseActivity;
 import com.ubtechinc.goldenpig.login.LoginActivity;
@@ -64,7 +63,7 @@ public class SplashActivity extends BaseActivity {
                         }, 2000);
                         break;
                     case ERROR:
-                        ToastUtils.showShortToast(SplashActivity.this, getString(R.string.ubt_login_failure));
+//                        ToastUtils.showShortToast(SplashActivity.this, getString(R.string.ubt_login_failure));
                     case NORMAL:
                     case CANCEL:
                         ///向下传递处理

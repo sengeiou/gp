@@ -303,7 +303,9 @@ public class BungdingManager {
                     if (robotDsn.equals(dsn)) {
                         //同一个猪
                         mBanddingListener.onStopBind(true);
-                        sendClientIdToRobot(clientIdRecord);
+                        if (pigInfo.isAdmin) {
+                            sendClientIdToRobot(clientIdRecord);
+                        }
                     } else {
                         //不同猪
                         mBanddingListener.onStopBind(false);
@@ -318,20 +320,23 @@ public class BungdingManager {
             }
         }
 
-//       TVSManager.getInstance(mContext, BuildConfig.APP_ID_WX,BuildConfig.APP_ID_QQ).tvsAuth(BuildConfig.PRODUCT_ID, dsn, new TVSManager.TVSAuthListener() {
+//        TVSManager.getInstance(mContext, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ).tvsAuth(BuildConfig.PRODUCT_ID, dsn, new TVSManager.TVSAuthListener() {
 //            @Override
 //            public void onSuccess(String clientId) {
-//                Log.i(TAG,"onSuccess======="+clientId);
+//                Log.i(TAG, "onSuccess=======" + clientId);
 //                clientIdRecord = clientId;
 //                // 先绑定机器人绑定成功再发送clientId
 //                //TODO 校验和当前绑定的是否是同一个
 //                PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
 //                if (pigInfo != null && !TextUtils.isEmpty(pigInfo.getRobotName())) {
 //                    String robotDsn = pigInfo.getRobotName();
-//                    if(mBanddingListener != null){
+//                    if (mBanddingListener != null) {
 //                        if (robotDsn.equals(dsn)) {
 //                            //同一个猪
 //                            mBanddingListener.onStopBind(true);
+//                            if (pigInfo.isAdmin) {
+//                                sendClientIdToRobot(clientIdRecord);
+//                            }
 //                        } else {
 //                            //不同猪
 //                            mBanddingListener.onStopBind(false);
@@ -340,15 +345,15 @@ public class BungdingManager {
 //
 //
 //                } else {
-//                    mRobotRepository.registerRobot(token, userId,dsn,BuildConfig.APP_ID,BuildConfig.product, mResponseListener);
+//                    mRobotRepository.registerRobot(token, userId, dsn, BuildConfig.APP_ID, BuildConfig.product, mResponseListener);
 //                }
 //            }
 //
 //            @Override
 //            public void onError(int code) {
-//                Log.i(TAG,"onError========="+code);
+//                Log.i(TAG, "onError=========" + code);
 //                //UbtBluetoothManager.getInstance().closeConnectBle();
-//                if(mBanddingListener != null){
+//                if (mBanddingListener != null) {
 //                    mBanddingListener.onFaild(Constants.GET_CLIENT_ID_ERROR_CODE);
 //                }
 //            }

@@ -123,7 +123,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        disConnectBle();
+//        disConnectBle();
     }
 
     private void disConnectBle() {
