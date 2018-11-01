@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
     android:background="@drawable/shape_ubt_toast_bg"
-    android:layout_height="wrap_content">
+    android:padding="@dimen/dp_8">
 
     <TextView
         android:id="@+id/ubt_tv_toast_tips"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/dp_22"
-        android:layout_marginEnd="@dimen/dp_18"
-        android:layout_marginStart="@dimen/dp_18"
-        android:layout_marginTop="@dimen/dp_22"
-        android:text="TextView"
+        android:gravity="center"
         android:textColor="@color/ubt_white"
-        android:textSize="@dimen/sp_17"
+        android:textSize="@dimen/sp_15"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

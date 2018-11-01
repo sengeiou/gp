@@ -47,7 +47,7 @@
     <string name="ubt_null">无</string>
     <string name="ubt_visitor_login">游客登录</string>
     <string name="ubt_bunding_set_net">绑定与配网</string>
-    <string name="ubt_person_hotspot">个人热点</string>
+    <string name="ubt_person_hotspot">小猪热点</string>
     <string name="ubt_device_manger">设备管理</string>
     <string name="ubt_custom_answer">定制问答</string>
     <string name="ubt_aclock">闹钟</string>
@@ -180,5 +180,8 @@
 
     <string name="ubt_page_bottom">优必选科技有限公司   版权所有</string>
     <string name="ubt_page_bottom_sub">Copyright © 2018 Ubtech Robotics Corp.All rights reserved</string>
+
+    <string name="ubt_login_agree_policy">同意《优必选服务协议》与《隐私协议》</string>
+    <string name="ubt_login_agree_policy_tip">请确认并同意《优必选服务协议》与《隐私协议》</string>
 
 </resources>

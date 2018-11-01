@@ -185,7 +185,7 @@ public class TransferAdminActivity extends BaseToolBarActivity implements View.O
 
     private void imSyncRelationShip() {
         //TODO 给自己的猪发
-        TIMMessage selfMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(1));
+        TIMMessage selfMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(3));
         UbtTIMManager.getInstance().sendTIM(selfMessage);
 
     }

@@ -296,11 +296,11 @@ class UbtBluetoothConnector {
             mMessageHandler.sendMessage(message);
             mConnectTime=0;
         } else {
-            Log.e(TAG, "Illegal State: 还未与机器人建立服务连接...");
-            if (mConnectTime<6&&mCurrentDevice!=null){
-                mConnectTime++;
-                connect(mCurrentDevice);
-            }
+            Log.e(TAG, "Illegal State: 还未与蓝牙设备建立服务连接...");
+//            if (mConnectTime<6&&mCurrentDevice!=null){
+//                mConnectTime++;
+//                connect(mCurrentDevice);
+//            }
         }
     }
 
