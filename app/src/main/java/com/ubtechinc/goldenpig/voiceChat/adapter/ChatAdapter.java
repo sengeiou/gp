@@ -24,12 +24,20 @@ public class ChatAdapter extends CommonAdaper<Message> {
         super(context, list, itemLayoutId);
     }
 
+    /**
+     *  200 voice record limited 
+     * @param messageList
+     */
     private void filter(List<Message> messageList) {
         Log.d("ChatAdapter","filter size" +messageList.size());
-       if(messageList.size()>ChatPresenter.SHOW_MESSAGE_MAX) {
-           Message message = messageList.get(0);
-           message.remove();
-           messageList.remove(0);
+       try {
+           if (messageList.size() > ChatPresenter.SHOW_MESSAGE_MAX) {
+               Message message = messageList.get(0);
+               message.remove();
+               messageList.remove(0);
+           }
+       }catch(Exception e){
+           e.printStackTrace();
        }
     }
 

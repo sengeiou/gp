@@ -37,7 +37,7 @@ public class ChatPresenter implements Observer {
     public static int MESSAGE_VIDEO=2;
     public static int MESSAGE_FILE=3;
     public static int MESSAGE_IMAGE=4;
-    public static int SHOW_MESSAGE_MAX=200;//200;
+    public static int SHOW_MESSAGE_MAX=200;
 
     public ChatPresenter(ChatView view, String identify, TIMConversationType type){
         this.view = view;

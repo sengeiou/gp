@@ -183,7 +183,7 @@ public class VoiceMessage extends Message {
                            @Override
                            public void onClick(View v) {
                                if(UBTPGApplication.voiceMail_debug){
-                                   Toast.makeText(UBTPGApplication.getContext(),"click ", Toast.LENGTH_SHORT).show();
+                                   Toast.makeText(UBTPGApplication.getContext(),"click other ", Toast.LENGTH_SHORT).show();
                                }
                                MediaUtil.getInstance().setIsReadyPlayingIndex(message.getMsgUniqueId());
                                VoiceMessage.this.playAudio(frameAnimatio);
@@ -255,6 +255,9 @@ public class VoiceMessage extends Message {
            getBubbleView(viewHolder).setOnClickListener(new View.OnClickListener() {
                @Override
                public void onClick(View v) {
+                   if(UBTPGApplication.voiceMail_debug){
+                       Toast.makeText(UBTPGApplication.getContext(),"click voice xxx ", Toast.LENGTH_SHORT).show();
+                   }
                    MediaUtil.getInstance().setIsReadyPlayingIndex(message.getMsgUniqueId());
                    VoiceMessage.this.playAudio(frameAnimatio);
                }
