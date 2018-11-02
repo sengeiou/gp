@@ -8,8 +8,6 @@
     android:orientation="vertical"
     tools:context=".personal.DeviceManageActivity">
 
-    <include layout="@layout/view_item_second_titlebar_tv" />
-
     <RelativeLayout
         android:id="@+id/rl_my_pig"
         android:layout_width="match_parent"

@@ -15,6 +15,8 @@
     <!--扫描蓝牙i列表-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-feature android:name="android.hardware.location.gps" />
+
     <!--获取wifi状态-->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
@@ -176,6 +178,7 @@
             android:screenOrientation="portrait" />
         <activity android:name=".main.SkillActivity"/>
         <activity android:name=".about.ServicePolicyActivity"/>
+        <activity android:name=".main.SkillDetailActivity" />
     </application>
 
 </manifest>

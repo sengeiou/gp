@@ -30,7 +30,7 @@ import com.ubtechinc.goldenpig.net.URestSigner;
 
 public abstract class BaseWebActivity extends BaseToolBarActivity {
 
-    private WebView mWebView;
+    protected WebView mWebView;
 
     private FrameLayout root;
 
@@ -67,6 +67,10 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
         initWebView();
     }
 
+    protected void processWeb() {
+
+    }
+
     private void initWebView() {
         String baseUrl = BuildConfig.H5_URL + "/small/smallSkill.html?";
 
@@ -75,6 +79,8 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
 
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setAllowFileAccess(true);
+        processWeb();
+
         //开发稳定后需去掉该行代码
 //        mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 //        mWebView.getSettings().setUseWideViewPort(true);  //将图片调整到适合webview的大小
@@ -178,14 +184,12 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
                 UBTLog.d("basewebview", "title:" + title);
-//                setToolBarTitle(title);
+                setToolBarTitle(title);
             }
         });
 
         UBTLog.d("goldPig", "URL:" + URL);
-        mWebView.loadUrl(
-
-                getURL());
+        mWebView.loadUrl(getURL());
     }
 
     @Override

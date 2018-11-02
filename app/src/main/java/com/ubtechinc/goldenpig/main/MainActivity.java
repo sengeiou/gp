@@ -30,10 +30,10 @@ import com.ubtechinc.goldenpig.base.BaseActivity;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.login.LoginActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
-import com.ubtechinc.goldenpig.main.fragment.HouseFragment;
 import com.ubtechinc.goldenpig.main.fragment.MainFragmentAdpater;
 import com.ubtechinc.goldenpig.main.fragment.PersonalFragment;
 import com.ubtechinc.goldenpig.main.fragment.PigFragment;
+import com.ubtechinc.goldenpig.main.fragment.SkillFragment;
 import com.ubtechinc.goldenpig.model.JsonCallback;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionModel;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
@@ -115,19 +115,21 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 }
             });
         }
-
     }
-
-
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-//        disConnectBle();
+        disConnectBle();
     }
 
     private void disConnectBle() {
-        UbtBluetoothManager.getInstance().closeConnectBle();
+        getWindow().getDecorView().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                UbtBluetoothManager.getInstance().closeConnectBle();
+            }
+        }, 5000);
     }
 
 
@@ -180,7 +182,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         fragments = new ArrayList<>();
         fragments.add(new PigFragment());
-        fragments.add(new HouseFragment());
+        fragments.add(new SkillFragment());
         fragments.add(new PersonalFragment());
         adapter = new MainFragmentAdpater(getSupportFragmentManager(), fragments);
         fragmentPage.setAdapter(adapter);

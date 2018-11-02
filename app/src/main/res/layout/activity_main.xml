@@ -32,7 +32,7 @@
             android:layout_weight="1"
             android:button="@null"
             android:drawableTop="@drawable/selector_ubt_tab_house"
-            android:text="@string/ubt_tab_house" />
+            android:text="@string/ubt_tab_skill" />
 
         <RadioButton
             style="@style/UBTTabButtonTheme"

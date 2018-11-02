@@ -275,7 +275,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
                 mSendWifiInfoBtn.setAlpha(1.0f);
                 ToastUtils.showShortToast(SetPigNetWorkActivity.this, "连接失败");
                 AuthLive.getInstance().getCurrentPig().setOnlineState(PigInfo.ROBOT_STATE_OFFLINE);
-                UBTPGApplication.pig_net_status = false;
+//                UBTPGApplication.pig_net_status = false;
             }
         }
 
