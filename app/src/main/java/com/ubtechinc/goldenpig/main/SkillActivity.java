@@ -32,16 +32,26 @@ public class SkillActivity extends BaseWebActivity {
 
     @Override
     protected int getToolBarTitle() {
+        hideActionBar();
         return R.string.ubt_skills_manual;
     }
 
     @Override
     protected void onGoNextWeb() {
         setToolBarTitle(R.string.ubt_skills_detail);
+        showActionBar();
     }
 
     @Override
     protected void onGoBackWeb() {
         setToolBarTitle(R.string.ubt_skills_manual);
+        hideActionBar();
     }
+
+    @Override
+    protected void processWeb() {
+        mWebView.addJavascriptInterface(new SmallPigObject(SkillActivity.this), "SmallPigObject");
+    }
+
+
 }

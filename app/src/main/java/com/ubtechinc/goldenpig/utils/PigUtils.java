@@ -47,7 +47,11 @@ public class PigUtils {
                     }
                     PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
                     if (pigInfo != null) {
-                        UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
+                        UbtTIMManager ubtTIMManager = UbtTIMManager.getInstance();
+                        ubtTIMManager.setPigAccount(pigInfo.getRobotName());
+                        if (pigInfo.isAdmin && !ubtTIMManager.isLoginedTIM()) {
+                            ubtTIMManager.loginTIM(userId, pigInfo.getRobotName(), com.ubt.imlibv2.BuildConfig.IM_Channel);
+                        }
                     }
                 }
             } catch (JSONException e) {

@@ -10,8 +10,8 @@
         android:id="@+id/ubt_me_normal_bg"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ubt_me_normal_height"
-        android:visibility="gone"
-        android:background="@drawable/shape_ubt_tv_cyan_gb" />
+        android:background="@drawable/shape_ubt_tv_cyan_gb"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,55 +20,55 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/ubt_me_fragment_title"
             style="@style/UBTTabTitleTheme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/ubt_me_fragment_title"
-             android:paddingTop="@dimen/ubt_16dp"
+            android:paddingTop="@dimen/ubt_16dp"
             android:text="@string/ubt_mina" />
 
         <include layout="@layout/include_tips" />
 
 
-            <RelativeLayout
-                android:id="@+id/rl_login_info"
-                android:layout_marginEnd="@dimen/ubt_16dp"
+        <RelativeLayout
+            android:id="@+id/rl_login_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginEnd="@dimen/ubt_16dp"
+            android:layout_marginStart="@dimen/ubt_16dp"
+            android:layout_marginTop="@dimen/ubt_16dp"
+            android:background="@drawable/shape_ubt_card_bg">
+
+            <ImageView
+                android:id="@+id/ubt_img_me_photo"
+                android:layout_width="@dimen/ubt_me_photo_size"
+                android:layout_height="@dimen/ubt_me_photo_size"
+                android:layout_marginBottom="@dimen/ubt_16dp"
                 android:layout_marginStart="@dimen/ubt_16dp"
-                android:layout_marginBottom="4dp"
                 android:layout_marginTop="@dimen/ubt_16dp"
-                android:layout_width="match_parent"
-                android:background="@drawable/shape_ubt_card_bg"
-                android:layout_height="wrap_content">
+                app:srcCompat="@drawable/ic_sign_in" />
 
-                <ImageView
-                    android:id="@+id/ubt_img_me_photo"
-                    android:layout_width="@dimen/ubt_me_photo_size"
-                    android:layout_height="@dimen/ubt_me_photo_size"
-                    android:layout_marginBottom="@dimen/ubt_16dp"
-                    android:layout_marginStart="@dimen/ubt_16dp"
-                    android:layout_marginTop="@dimen/ubt_16dp"
-                    app:srcCompat="@drawable/ic_sign_in" />
+            <TextView
+                android:id="@+id/ubt_tv_me_nikename"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="@dimen/ubt_16dp"
+                android:layout_toEndOf="@+id/ubt_img_me_photo"
+                android:text="@string/ubt_visitor_login"
+                android:textColor="@color/ubt_tips_txt_color"
+                android:textSize="18sp" />
 
-                <TextView
-                    android:id="@+id/ubt_tv_me_nikename"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="@dimen/ubt_16dp"
-                    android:layout_toEndOf="@+id/ubt_img_me_photo"
-                    android:text="@string/ubt_visitor_login"
-                    android:textColor="@color/ubt_tips_txt_color"
-                    android:textSize="18sp" />
-
-                <ImageView
-                    android:id="@+id/ubt_btn_go_login"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_margin="10dp"
-                    android:src="@drawable/ic_goto" />
-            </RelativeLayout>
+            <ImageView
+                android:id="@+id/ubt_btn_go_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="10dp"
+                android:src="@drawable/ic_goto" />
+        </RelativeLayout>
 
 
         <ScrollView
@@ -86,53 +86,54 @@
                 <Button
                     android:id="@+id/ubt_btn_person_set_wifi"
                     style="@style/UBTMeBtnTheme"
-
                     android:drawableStart="@drawable/ic_wifi"
                     android:text="@string/ubt_bunding_set_net" />
 
                 <Button
                     android:id="@+id/ubt_btn_person_hotspot"
                     style="@style/UBTMeBtnTheme"
-                     android:drawableStart="@drawable/ic_hotspot"
+                    android:drawableStart="@drawable/ic_hotspot"
                     android:text="@string/ubt_person_hotspot" />
 
                 <Button
                     android:id="@+id/ubt_btn_device_manager"
                     style="@style/UBTMeBtnTheme"
-                    android:layout_marginTop="10dp"
                     android:drawableStart="@drawable/ic_family"
                     android:text="@string/ubt_device_manger" />
 
                 <Button
                     android:id="@+id/ubt_btn_person_answer"
                     style="@style/UBTMeBtnTheme"
-                     android:drawableStart="@drawable/ic_answer"
-                    android:text="@string/ubt_custom_answer" />
+                    android:layout_marginTop="10dp"
+                    android:drawableStart="@drawable/ic_answer"
+                    android:text="@string/ubt_custom_answer"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/ubt_btn_person_clock"
                     style="@style/UBTMeBtnTheme"
-                     android:drawableStart="@drawable/ic_clock"
-                    android:text="@string/ubt_aclock" />
+                    android:drawableStart="@drawable/ic_clock"
+                    android:text="@string/ubt_aclock"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/ubt_btn_person_remind"
                     style="@style/UBTMeBtnTheme"
-                     android:drawableStart="@drawable/ic_remind"
-                    android:text="@string/ubt_remind" />
+                    android:drawableStart="@drawable/ic_remind"
+                    android:text="@string/ubt_remind"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/ubt_btn_person_qq"
                     style="@style/UBTMeBtnTheme"
                     android:layout_marginTop="10dp"
-                    android:visibility="gone"
                     android:drawableStart="@drawable/ic_member"
                     android:text="@string/ubt_qq_music" />
 
                 <Button
                     android:id="@+id/ubt_btn_person_feedback"
                     style="@style/UBTMeBtnTheme"
-                     android:layout_marginTop="10dp"
+                    android:layout_marginTop="10dp"
                     android:drawableStart="@drawable/ic_help"
                     android:text="@string/ubt_help" />
 
@@ -140,12 +141,12 @@
                 <com.ubtechinc.commlib.view.UbtSubTxtButton
                     android:id="@+id/ubt_btn_person_about"
                     style="@style/UBTMeBtnTheme"
-                     android:drawableStart="@drawable/ic_about"
+                    android:drawableStart="@drawable/ic_about"
                     android:text="@string/ubt_about"
                     app:rightText="@string/ubt_version_format"
                     app:rightTextColor="@color/ubt_version_color"
-                    app:rightTextSize="14sp"
-                    app:rightTextPadding="52dp" />
+                    app:rightTextPadding="52dp"
+                    app:rightTextSize="14sp" />
 
             </LinearLayout>
         </ScrollView>

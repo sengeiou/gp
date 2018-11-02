@@ -27,6 +27,9 @@ import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.SkillActivity;
+import com.ubtechinc.goldenpig.personal.alarm.AlarmListActivity;
+import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionActivity;
+import com.ubtechinc.goldenpig.personal.remind.RemindActivity;
 import com.ubtechinc.goldenpig.pigmanager.RecordActivity;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
@@ -91,10 +94,39 @@ public class PigFragment extends BaseFragment implements Observer {
     @BindView(R.id.iv_unreadvoice)
     ImageView mVoiceUnRead;
 
+    @BindView(R.id.view_answer)
+    View viewAnswer;
+
+    @BindView(R.id.view_alarm)
+    View viewAlarm;
+
+    @BindView(R.id.view_remind)
+    View viewRemind;
+
     int pairUserId;
     String serialNumber;
     String pairSerialNumber;
     int userId;
+
+    //TODO
+    @BindView(R.id.ubt_tv_pig_title)
+    View ubt_tv_pig_title;
+    @BindView(R.id.ubt_tv_pig_sub_title)
+    View ubt_tv_pig_sub_title;
+    @BindView(R.id.ubt_tv_answer_title)
+    View ubt_tv_answer_title;
+    @BindView(R.id.ubt_tv_answer_sub_title)
+    View ubt_tv_answer_sub_title;
+    @BindView(R.id.ubt_tv_alarm_title)
+    View ubt_tv_alarm_title;
+    @BindView(R.id.ubt_tv_alarm_sub_title)
+    View ubt_tv_alarm_sub_title;
+    @BindView(R.id.ubt_tv_remind_title)
+    View ubt_tv_remind_title;
+    @BindView(R.id.ubt_tv_remind_sub_title)
+    View ubt_tv_remind_sub_title;
+    @BindView(R.id.ubt_tv_call_title)
+    View ubt_tv_call_title;
 
     public PigFragment() {
         super();
@@ -133,7 +165,7 @@ public class PigFragment extends BaseFragment implements Observer {
         if (UbtTIMManager.getInstance().unReadVoiceMailMessage() >= 1) {
             Log.e(setOnUbtTIMConver, "unRead message " + UbtTIMManager.getInstance().unReadVoiceMailMessage());
             mVoiceUnRead.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             mVoiceUnRead.setVisibility(View.INVISIBLE);
         }
     }
@@ -153,10 +185,38 @@ public class PigFragment extends BaseFragment implements Observer {
             rlPairPig.setAlpha(1.0f);
             unReadVoiceMail("setOnUbtTIMConver-DEBUG");
             llRecord.setAlpha(1.0f);
+            viewAnswer.setAlpha(1.0f);
+            viewAlarm.setAlpha(1.0f);
+            viewRemind.setAlpha(1.0f);
+            //TODO
+            ubt_tv_pig_title.setAlpha(1.0f);
+            ubt_tv_pig_sub_title.setAlpha(1.0f);
+            ubt_tv_answer_title.setAlpha(1.0f);
+            ubt_tv_answer_sub_title.setAlpha(1.0f);
+            ubt_tv_alarm_title.setAlpha(1.0f);
+            ubt_tv_alarm_sub_title.setAlpha(1.0f);
+            ubt_tv_remind_title.setAlpha(1.0f);
+            ubt_tv_remind_sub_title.setAlpha(1.0f);
+            ubt_tv_call_title.setAlpha(1.0f);
+            ubt_tv_call_sub_title.setAlpha(1.0f);
         } else {
             llVoiceChat.setAlpha(0.5f);
             rlPairPig.setAlpha(0.5f);
             llRecord.setAlpha(0.5f);
+            viewAnswer.setAlpha(0.5f);
+            viewAlarm.setAlpha(0.5f);
+            viewRemind.setAlpha(0.5f);
+            //TODO
+            ubt_tv_pig_title.setAlpha(0.5f);
+            ubt_tv_pig_sub_title.setAlpha(0.5f);
+            ubt_tv_answer_title.setAlpha(0.5f);
+            ubt_tv_answer_sub_title.setAlpha(0.5f);
+            ubt_tv_alarm_title.setAlpha(0.5f);
+            ubt_tv_alarm_sub_title.setAlpha(0.5f);
+            ubt_tv_remind_title.setAlpha(0.5f);
+            ubt_tv_remind_sub_title.setAlpha(0.5f);
+            ubt_tv_call_title.setAlpha(0.5f);
+            ubt_tv_call_sub_title.setAlpha(0.5f);
         }
         updatePigPair();
     }
@@ -212,8 +272,12 @@ public class PigFragment extends BaseFragment implements Observer {
         } else {
             UBTPGApplication.mPairSerialNumber = null;
         }
-        viewPigPairInfo.setVisibility(hasPair ? View.VISIBLE : View.GONE);
-        viewPigPairAdd.setVisibility(!hasPair ? View.VISIBLE : View.GONE);
+        if (viewPigPairInfo != null) {
+            viewPigPairInfo.setVisibility(hasPair ? View.VISIBLE : View.GONE);
+        }
+        if (viewPigPairAdd != null) {
+            viewPigPairAdd.setVisibility(!hasPair ? View.VISIBLE : View.GONE);
+        }
     }
 
     @Override
@@ -237,7 +301,7 @@ public class PigFragment extends BaseFragment implements Observer {
     }
 
     @OnClick({R.id.ubt_bind_tv, R.id.ll_record, R.id.ll_voicechat, R.id.view_pig_pair_add, R.id.view_pig_pair_info, R
-            .id.view_skill})
+            .id.view_skill, R.id.view_answer, R.id.view_alarm, R.id.view_remind})
     public void Onclick(View view) {
         switch (view.getId()) {
             case R.id.ll_voicechat:
@@ -269,8 +333,7 @@ public class PigFragment extends BaseFragment implements Observer {
             case R.id.ubt_bind_tv:
                 ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class, false);
                 break;
-            case R.id.ll_record:
-            {
+            case R.id.ll_record: {
                 PigInfo myPig = AuthLive.getInstance().getCurrentPig();
                 if (myPig != null && myPig.isAdmin) {
                     ActivityRoute.toAnotherActivity(getActivity(), RecordActivity.class, false);
@@ -279,7 +342,37 @@ public class PigFragment extends BaseFragment implements Observer {
                 }
 
             }
-                break;
+            break;
+            case R.id.view_answer: {
+                PigInfo myPig = AuthLive.getInstance().getCurrentPig();
+                if (myPig != null && myPig.isAdmin) {
+                    ActivityRoute.toAnotherActivity(getActivity(), InterlocutionActivity.class, false);
+                } else {
+                    ToastUtils.showShortToast(R.string.only_admin_operate);
+                }
+
+            }
+            break;
+            case R.id.view_alarm: {
+                PigInfo myPig = AuthLive.getInstance().getCurrentPig();
+                if (myPig != null && myPig.isAdmin) {
+                    ActivityRoute.toAnotherActivity(getActivity(), AlarmListActivity.class, false);
+                } else {
+                    ToastUtils.showShortToast(R.string.only_admin_operate);
+                }
+
+            }
+            break;
+            case R.id.view_remind: {
+                PigInfo myPig = AuthLive.getInstance().getCurrentPig();
+                if (myPig != null && myPig.isAdmin) {
+                    ActivityRoute.toAnotherActivity(getActivity(), RemindActivity.class, false);
+                } else {
+                    ToastUtils.showShortToast(R.string.only_admin_operate);
+                }
+
+            }
+            break;
             case R.id.view_skill:
                 ActivityRoute.toAnotherActivity(getActivity(), SkillActivity.class, false);
                 break;

@@ -8,9 +8,8 @@ import android.widget.TextView;
 
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
-import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewTv;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
-import com.ubtechinc.goldenpig.base.BaseNewActivity;
+import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.personal.management.AddressBookActivity;
@@ -26,49 +25,46 @@ import com.ubtechinc.nets.http.ThrowableWrapper;
 
 import java.util.HashMap;
 
-import butterknife.BindView;
-import butterknife.OnClick;
+public class DeviceManageActivity extends BaseToolBarActivity implements View.OnClickListener {
 
-public class DeviceManageActivity extends BaseNewActivity {
-
-    @BindView(R.id.rl_titlebar)
-    SecondTitleBarViewTv rl_titlebar;
-
-    @BindView(R.id.ubt_tv_member_group)
     TextView memberItemTitle;
 
-    @BindView(R.id.ubt_tv_member_subtitle)
     TextView memberItemSubTitle;
 
-    @BindView(R.id.rl_my_pig)
     View rlMyPig;
 
-    @BindView(R.id.rl_pairing)
     View rlPairing;
 
-    @BindView(R.id.rl_member_group)
     View rlMemberGroup;
 
-    @BindView(R.id.rl_addressbook)
     View rlAddressbook;
 
     private PigInfo mPig;
 
     @Override
-    protected int getContentViewId() {
+    protected int getConentView() {
         return R.layout.activity_device_manage;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        rl_titlebar.setTitleText(getString(R.string.device_manage));
-        rl_titlebar.setLeftOnclickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
+    protected void init(Bundle savedInstanceState) {
+        setTitleBack(true);
+        setToolBarTitle(getString(R.string.device_manage));
+        initView();
+    }
+
+    private void initView() {
+        memberItemTitle = findViewById(R.id.ubt_tv_member_group);
+        memberItemSubTitle = findViewById(R.id.ubt_tv_member_subtitle);
+        rlMyPig = findViewById(R.id.rl_my_pig);
+        rlPairing = findViewById(R.id.rl_pairing);
+        rlMemberGroup = findViewById(R.id.rl_member_group);
+        rlAddressbook = findViewById(R.id.rl_addressbook);
+
+        rlMyPig.setOnClickListener(this);
+        rlPairing.setOnClickListener(this);
+        rlMemberGroup.setOnClickListener(this);
+        rlAddressbook.setOnClickListener(this);
     }
 
     @Override
@@ -151,7 +147,7 @@ public class DeviceManageActivity extends BaseNewActivity {
         }
     }
 
-    @OnClick({R.id.rl_my_pig, R.id.rl_pairing, R.id.rl_member_group, R.id.rl_addressbook})
+    @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.rl_my_pig:

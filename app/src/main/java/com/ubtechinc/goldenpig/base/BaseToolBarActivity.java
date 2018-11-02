@@ -17,14 +17,14 @@ import android.widget.TextView;
 import com.ubtechinc.goldenpig.R;
 
 /**
- * @author     : HQT
- * @email      :qiangta.huang@ubtrobot.com
- * @describe   :基础带ToolBar Activity
- * @time       :2018/8/17 17:59
- * @change     :
- * @changTime  :2018/8/17 17:59
+ * @author : HQT
+ * @email :qiangta.huang@ubtrobot.com
+ * @describe :基础带ToolBar Activity
+ * @time :2018/8/17 17:59
+ * @change :
+ * @changTime :2018/8/17 17:59
  */
-public abstract  class BaseToolBarActivity extends BaseActivity {
+public abstract class BaseToolBarActivity extends BaseActivity {
     private String menuStr;
     private int menuResId;
     private String menuStr2;
@@ -35,6 +35,7 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
     private TextView mNotifyTv; ///动态提示
     protected TextView mTvSkip;              //跳过按钮
     protected ImageButton mToolbarRightBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,16 +55,28 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
                 }
             }
         });
-        if (getSupportActionBar()!=null) {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
         //2、将子类的布局解析到 FrameLayout 里面
         viewContent = (FrameLayout) findViewById(R.id.ubt_toolbar_contentview);
-        if (getConentView()>0) {
+        if (getConentView() > 0) {
             LayoutInflater.from(this).inflate(getConentView(), viewContent);
         }
         //3、初始化操作（此方法必须放在最后执行位置）
         init(savedInstanceState);
+    }
+
+    protected void hideActionBar() {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().hide();
+        }
+    }
+
+    protected void showActionBar() {
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().show();
+        }
     }
 
     protected boolean isInterceptBack() {
@@ -74,49 +87,54 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
     protected int getContentViewId() {
         return R.layout.activity_base_toolbar;
     }
-    protected void showNotify(String notifyTips){
-        if (mNotifyTv==null){
-            mNotifyTv=new TextView(this);
+
+    protected void showNotify(String notifyTips) {
+        if (mNotifyTv == null) {
+            mNotifyTv = new TextView(this);
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
             lp.gravity = Gravity.TOP;
-            mNotifyTv.setPadding(0,10,0,10);
-            mNotifyTv.setBackgroundColor(ResourcesCompat.getColor(getResources(),R.color.ubt_notify_tv_bg_color,null));
-            mNotifyTv.setTextColor(ResourcesCompat.getColor(getResources(),R.color.ubt_dialog_btn_txt_color,null));
+            mNotifyTv.setPadding(0, 10, 0, 10);
+            mNotifyTv.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.ubt_notify_tv_bg_color, null));
+            mNotifyTv.setTextColor(ResourcesCompat.getColor(getResources(), R.color.ubt_dialog_btn_txt_color, null));
             mNotifyTv.setLayoutParams(lp);
             mNotifyTv.setGravity(Gravity.CENTER);
         }
         mNotifyTv.setText(notifyTips);
         mNotifyTv.setVisibility(View.VISIBLE);
-        if (viewContent!=null||mNotifyTv.getParent()==null){
+        if (viewContent != null || mNotifyTv.getParent() == null) {
             try {
                 viewContent.removeView(mNotifyTv);
-            }catch (Exception e){
+            } catch (Exception e) {
 
             }
             try {
                 viewContent.addView(mNotifyTv); //index是0，表示添加的child在linearlayout顶部，-1为底部
-            }catch (Exception e){
+            } catch (Exception e) {
 
             }
         }
     }
-    protected void setToolBarBackground(int color){
-        if (toolbar!=null){
+
+    protected void setToolBarBackground(int color) {
+        if (toolbar != null) {
             toolbar.setBackgroundColor(color);
         }
     }
-    protected void setSkipEnable(boolean enable){
-        if (mTvSkip!=null){
+
+    protected void setSkipEnable(boolean enable) {
+        if (mTvSkip != null) {
             mTvSkip.setEnabled(enable);
         }
     }
-    protected void hideNotify(){
-        if (mNotifyTv!=null &&viewContent!=null){
+
+    protected void hideNotify() {
+        if (mNotifyTv != null && viewContent != null) {
             mNotifyTv.setVisibility(View.GONE);
 
         }
     }
+
     /**
      * 设置布局资源
      *
@@ -138,7 +156,7 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
      */
     protected void setToolBarTitle(String title) {
         if (!TextUtils.isEmpty(title)) {
-            tvTitle = (TextView)findViewById(R.id.ubt_tv_toolbar_title);
+            tvTitle = (TextView) findViewById(R.id.ubt_tv_toolbar_title);
 
             tvTitle.setText(title);
         }
@@ -154,9 +172,10 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
     }
 
     protected void setToolBarTitle(int titleId) {
-         String title=getString(titleId);
+        String title = getString(titleId);
         setToolBarTitle(title);
     }
+
     /**
      * 设置显示返回按钮
      */
@@ -172,21 +191,26 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
             }
         }
     }
-    /**设置右侧按钮文字***/
+
+    /**
+     * 设置右侧按钮文字
+     ***/
     protected void setToolBarRightBtn(String title) {
         if (!TextUtils.isEmpty(title)) {
 
         }
     }
+
     protected void setToolBarRightBtn(int titleId) {
-        String title=getString(titleId);
+        String title = getString(titleId);
         setTitle(title);
     }
+
     /**
      * 设置标题栏右键按钮事件
      *
-     * @param menuStr 文字
-     * @param menuResId 图片icon
+     * @param menuStr         文字
+     * @param menuResId       图片icon
      * @param onClickListener 事件响应
      */
     protected void setToolBarMenuOne(String menuStr, int menuResId, OnClickRightListener onClickListener) {
@@ -194,11 +218,13 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
         this.menuStr = menuStr;
         this.menuResId = menuResId;
     }
+
     protected void setToolBarMenuTwo(String menuStr, int menuResId, OnClickRightListener onClickListener) {
         this.onClickRightListener2 = onClickListener;
         this.menuStr2 = menuStr;
         this.menuResId2 = menuResId;
     }
+
     /**
      * 设置拦截事件处理业务逻辑
      *
@@ -218,13 +244,14 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
                 this.onClickRightListener2.onClick();
 
                 break;
-                default:
+            default:
         }
         return true;//拦截系统处理事件
     }
 
     /**
      * 加载Toolbar标题右菜单图标和文字
+     *
      * @param menu
      * @return
      */
@@ -232,9 +259,9 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         if (menuResId != 0 || !TextUtils.isEmpty(menuStr)) {//显示自定义右菜单
             getMenuInflater().inflate(R.menu.ubt_toolbar, menu);
-        }else if (menuResId2 != 0 || !TextUtils.isEmpty(menuStr2)){
+        } else if (menuResId2 != 0 || !TextUtils.isEmpty(menuStr2)) {
             getMenuInflater().inflate(R.menu.ubt_toolbar, menu);
-        }else {
+        } else {
 
             //如果把下面这行代码表示右侧菜单显示默认值。
             //显示的默认Menu、Item里的值必须在menu文件中配置好文字和icon。
@@ -245,13 +272,14 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
 
     /**
      * 选择性显示图标或文字
+     *
      * @param menu
      * @return
      */
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem menuItem=menu.findItem(R.id.menu_item_one);
-        if (menuItem!=null) {
+        MenuItem menuItem = menu.findItem(R.id.menu_item_one);
+        if (menuItem != null) {
             if (menuResId != 0) {
                 menuItem.setIcon(menuResId);
             } else if (!TextUtils.isEmpty(menuStr)) {
@@ -260,8 +288,8 @@ public abstract  class BaseToolBarActivity extends BaseActivity {
                 menuItem.setVisible(false);
             }
         }
-        menuItem=menu.findItem(R.id.menu_item_two);
-        if (menuItem!=null) {
+        menuItem = menu.findItem(R.id.menu_item_two);
+        if (menuItem != null) {
             if (menuResId2 != 0) {
                 menu.findItem(R.id.menu_item_two).setIcon(menuResId2);
             } else if (!TextUtils.isEmpty(menuStr)) {

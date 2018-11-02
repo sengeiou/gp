@@ -198,6 +198,7 @@ class UbtBluetoothConnector {
                         } else {//断开连接操作失败,考虑再次断开
                             synchronized (mSyncLock) {
                                 stopConnection(gatt, false);
+                                closeGatt(gatt);
                                 if (!mIsShutdown) {
                                     Log.w(TAG, "connect error, status = "
                                             + Integer.toHexString(status)

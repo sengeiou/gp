@@ -173,7 +173,8 @@ public class UbtTIMManager {
         }
     }
 
-    public void doTIMLogin() {
+    public synchronized void doTIMLogin() {
+        if (isLoginedTIM) return;
         final int type = Integer.valueOf(accountType);
         InitBusiness.start(com.ubtech.utilcode.utils.Utils.getContext(), 0, type);
         initUserConfig();
@@ -359,6 +360,10 @@ public class UbtTIMManager {
                 onUbtTIMConverListener.onError(0, "TIMConversation 未初始化");
             }
             return;
+        }
+        if (conversation.getType() == TIMConversationType.Invalid) {
+            conversation = TIMManager.getInstance().getConversation(
+                    TIMConversationType.C2C, pigAccount);
         }
         conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {
 

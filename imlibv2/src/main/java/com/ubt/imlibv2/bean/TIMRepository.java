@@ -16,7 +16,7 @@ import okhttp3.Response;
 
 public class TIMRepository extends Repository{
     private OnTIMLoginListener loginListener;
-    public void login(String singa, String time, String userId, String channel) {
+    public synchronized void login(String singa, String time, String userId, String channel) {
         HashMap<String,String> parma=new HashMap<>();
         OkHttpClient okHttpClient = new OkHttpClient();
         parma.put("signature",singa);
