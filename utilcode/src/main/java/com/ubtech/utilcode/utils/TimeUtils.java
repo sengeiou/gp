@@ -1711,18 +1711,35 @@ public class TimeUtils {
     public static String format(Date date) {
         long timenow = new Date().getTime();
         long delta = timenow - date.getTime();
-        if (delta < 1L * ONE_MINUTE) {
-            long seconds = toSeconds(delta);
-            return (seconds <= 0 ? 1 : seconds) + ONE_SECOND_AGO;
+        String strTime = TimeUtils.getTime(timenow, TimeUtils
+                .DATE_FORMAT_DATE);
+        String strDelta = TimeUtils.getTime(date.getTime(), TimeUtils
+                .DATE_FORMAT_DATE);
+        if (strTime.equals(strDelta)) {//同一天
+            String str;
+            String timeDate = TimeUtils.getTime(date.getTime(), TimeUtils
+                    .DATE_FORMAT_ONLY_TIME);
+            String[] times = timeDate.split(":");
+            int hour = Integer.parseInt(times[0]);
+            if (hour >= 13) {
+                str = "下午" + (hour - 12) + ":" + times[1];
+            } else {
+                str = "上午" + hour + ":" + times[1];
+            }
+            return str;
         }
-        if (delta < 45L * ONE_MINUTE) {
-            long minutes = toMinutes(delta);
-            return (minutes <= 0 ? 1 : minutes) + ONE_MINUTE_AGO;
-        }
-        if (isSameDayOfMillis(timenow, date.getTime())) {
-            long hours = toHours(delta);
-            return (hours <= 0 ? 1 : hours) + ONE_HOUR_AGO;
-        }
+//        if (delta < 1L * ONE_MINUTE) {
+//            long seconds = toSeconds(delta);
+//            return (seconds <= 0 ? 1 : seconds) + ONE_SECOND_AGO;
+//        }
+//        if (delta < 45L * ONE_MINUTE) {
+//            long minutes = toMinutes(delta);
+//            return (minutes <= 0 ? 1 : minutes) + ONE_MINUTE_AGO;
+//        }
+//        if (isSameDayOfMillis(timenow, date.getTime())) {
+//            long hours = toHours(delta);
+//            return (hours <= 0 ? 1 : hours) + ONE_HOUR_AGO;
+//        }
         if (delta < 24L * ONE_HOUR) {
             return "昨天";
         }
@@ -1735,18 +1752,21 @@ public class TimeUtils {
 //        }
         if (delta < 30L * ONE_DAY) {
             long days = toDay(timenow) - toDay(date.getTime());
-            if(days <= 1){
+            if (days <= 1) {
                 return "昨天";
             }
-            return days + ONE_DAY_AGO;
+            //return days + ONE_DAY_AGO;
         }
-        if (delta < 12L * 4L * ONE_WEEK) {
-            long months = toMonths(delta);
-            return (months <= 0 ? 1 : months) + ONE_MONTH_AGO;
-        } else {
-            long years = toYears(delta);
-            return (years <= 0 ? 1 : years) + ONE_YEAR_AGO;
-        }
+        int month = TimeUtils.getMonthFromDate(date);
+        int day = TimeUtils.getDayFromDate(date);
+        return month + "月" + day + "日";
+//        if (delta < 12L * 4L * ONE_WEEK) {
+//            long months = toMonths(delta);
+//            return (months <= 0 ? 1 : months) + ONE_MONTH_AGO;
+//        } else {
+//            long years = toYears(delta);
+//            return (years <= 0 ? 1 : years) + ONE_YEAR_AGO;
+//        }
     }
 
     private static long toSeconds(long date) {
@@ -1816,4 +1836,6 @@ public class TimeUtils {
     private static long toDay(long millis) {
         return (millis + TimeZone.getDefault().getOffset(millis)) / ONE_DAY;
     }
+
+
 }

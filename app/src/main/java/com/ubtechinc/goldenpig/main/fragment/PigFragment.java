@@ -1,6 +1,8 @@
 package com.ubtechinc.goldenpig.main.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
@@ -91,39 +93,54 @@ public class PigFragment extends BaseFragment implements Observer {
     @BindView(R.id.iv_unreadvoice)
     ImageView mVoiceUnRead;
 
+    @BindView(R.id.iv_unreadrecord)
+    ImageView iv_unreadrecord;
+
     int pairUserId;
     String serialNumber;
     String pairSerialNumber;
     int userId;
+    public Boolean hasSetRecord = false;
 
     public PigFragment() {
         super();
     }
 
+    public static int RECORDTYPE = 1234;
+    Handler recordHander = new Handler(new Handler.Callback() {
+        @Override
+        public boolean handleMessage(Message msg) {
+            if (msg.what == RECORDTYPE && !hasSetRecord) {
+                sendRecordMsg();
+            }
+            return false;
+        }
+    });
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_pig, container, false);
         EventBusUtil.register(this);
-        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
-        if (pigInfo != null && pigInfo.isAdmin) {
-            UbtTIMManager.getInstance().setMsgObserve(this);
-            UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
-                @Override
-                public void onError(int i, String s) {
-                    Log.e("setOnUbtTIMConver", s);
-//                    ToastUtils.showShortToast(s);
-                }
-
-                @Override
-                public void onSuccess() {
-                    Log.e("setOnUbtTIMConver", "sss");
-                }
-            });
-            UbtTIMManager.getInstance().queryLatestRecord();
-            //unReadVoiceMail("setOnUbtTIMConver");
-        }
+        sendRecordMsg();
+//        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+//        if (pigInfo != null && pigInfo.isAdmin) {
+//            UbtTIMManager.getInstance().setMsgObserve(this);
+//            UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
+//                @Override
+//                public void onError(int i, String s) {
+//                    Log.e("setOnUbtTIMConver", s);
+////                    ToastUtils.showShortToast(s);
+//                }
+//
+//                @Override
+//                public void onSuccess() {
+//                    Log.e("setOnUbtTIMConver", "sss");
+//                }
+//            });
+//            UbtTIMManager.getInstance().queryLatestRecord();
+//            //unReadVoiceMail("setOnUbtTIMConver");
+//        }
         return view;
     }
 
@@ -133,7 +150,7 @@ public class PigFragment extends BaseFragment implements Observer {
         if (UbtTIMManager.getInstance().unReadVoiceMailMessage() >= 1) {
             Log.e(setOnUbtTIMConver, "unRead message " + UbtTIMManager.getInstance().unReadVoiceMailMessage());
             mVoiceUnRead.setVisibility(View.VISIBLE);
-        }else{
+        } else {
             mVoiceUnRead.setVisibility(View.INVISIBLE);
         }
     }
@@ -269,8 +286,7 @@ public class PigFragment extends BaseFragment implements Observer {
             case R.id.ubt_bind_tv:
                 ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class, false);
                 break;
-            case R.id.ll_record:
-            {
+            case R.id.ll_record: {
                 PigInfo myPig = AuthLive.getInstance().getCurrentPig();
                 if (myPig != null && myPig.isAdmin) {
                     ActivityRoute.toAnotherActivity(getActivity(), RecordActivity.class, false);
@@ -279,7 +295,7 @@ public class PigFragment extends BaseFragment implements Observer {
                 }
 
             }
-                break;
+            break;
             case R.id.view_skill:
                 ActivityRoute.toAnotherActivity(getActivity(), SkillActivity.class, false);
                 break;
@@ -325,12 +341,16 @@ public class PigFragment extends BaseFragment implements Observer {
                     mo.duration = list.get(j).getDuration();
                     ss.add(mo);
                 }
+                hasSetRecord = true;
                 if (ss.size() == 0) {
                     ubt_tv_call_sub_title.setText("无");
+                    iv_unreadrecord.setVisibility(View.INVISIBLE);
                 } else if (!TextUtils.isEmpty(ss.get(0).name)) {
                     ubt_tv_call_sub_title.setText(ss.get(0).name);
+                    iv_unreadrecord.setVisibility(View.VISIBLE);
                 } else {
                     ubt_tv_call_sub_title.setText(ss.get(0).number);
+                    iv_unreadrecord.setVisibility(View.VISIBLE);
                 }
                 break;
         }
@@ -339,23 +359,28 @@ public class PigFragment extends BaseFragment implements Observer {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Event event) {
         if (event != null && event.getCode() == CONTACT_PIC_SUCCESS) {
-            PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
-            if (pigInfo != null && pigInfo.isAdmin) {
-                UbtTIMManager.getInstance().setMsgObserve(this);
-                UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
-                    @Override
-                    public void onError(int i, String s) {
-                        Log.e("setOnUbtTIMConver", s);
-                        ToastUtils.showShortToast(s);
-                    }
+            sendRecordMsg();
+        }
+    }
 
-                    @Override
-                    public void onSuccess() {
-                        Log.e("setOnUbtTIMConver", "sss");
-                    }
-                });
-                UbtTIMManager.getInstance().queryLatestRecord();
-            }
+    public void sendRecordMsg() {
+        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+        if (pigInfo != null && pigInfo.isAdmin) {
+            UbtTIMManager.getInstance().setMsgObserve(this);
+            UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
+                @Override
+                public void onError(int i, String s) {
+                    Log.e("setOnUbtTIMConver", s);
+                    ToastUtils.showShortToast(s);
+                }
+
+                @Override
+                public void onSuccess() {
+                    Log.e("setOnUbtTIMConver", "sss");
+                }
+            });
+            UbtTIMManager.getInstance().queryLatestRecord();
+            recordHander.sendEmptyMessageDelayed(RECORDTYPE, 10 * 1000);
         }
     }
 }

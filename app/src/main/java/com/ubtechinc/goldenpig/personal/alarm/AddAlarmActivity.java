@@ -121,7 +121,15 @@ public class AddAlarmActivity extends BaseNewActivity {
 
                     break;
             }
-
+        } else {
+            int hour = TimeUtils.getHourFromDate(new Date());
+            int minute = TimeUtils.getMinuteFromDate(new Date());
+            if (hour > 12) {
+                loopView_date.setInitPosition(1);
+                hour -= 12;
+            }
+            loopView_hour.setInitPosition((hour - 1) % 12);
+            loopView_minute.setInitPosition(minute % 60);
         }
 
     }

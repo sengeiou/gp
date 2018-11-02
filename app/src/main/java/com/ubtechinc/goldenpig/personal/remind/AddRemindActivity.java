@@ -125,6 +125,10 @@ public class AddRemindActivity extends BaseNewActivity {
                 getMsgTime();
             }
         });
+
+        int hour = TimeUtils.getHourFromDate(new Date());
+        int minute = TimeUtils.getMinuteFromDate(new Date());
+        LogUtils.d("hdf", "hour:" + hour + ",minute:" + minute);
         StringBuffer sb = new StringBuffer();
         Date da = TimeUtils.addDate(today, loopView_date.getSelectedItem());
         int year = TimeUtils.getYearFromDate(da);
@@ -136,10 +140,18 @@ public class AddRemindActivity extends BaseNewActivity {
         sb.append("月");
         sb.append(day);
         sb.append("日");
-        sb.append(amList.get(loopView_am.getSelectedItem()));
-        sb.append(hourList.get(8));
+        if (hour > 12) {
+            loopView_am.setInitPosition(1);
+            sb.append("下午");
+            hour -= 12;
+        } else {
+            sb.append("上午");
+        }
+        loopView_hour.setInitPosition((hour - 1) % 12);
+        loopView_minute.setInitPosition(minute % 60);
+        sb.append(hourList.get((hour - 1) % 12));
         sb.append(":");
-        sb.append(minList.get(30));
+        sb.append(minList.get(minute % 60));
         tv_time.setText(sb.toString());
         tv_right.setEnabled(false);
         tv_right.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
@@ -154,8 +166,8 @@ public class AddRemindActivity extends BaseNewActivity {
                 finish();
                 break;
             case R.id.rl_recount:
-                Intent it =new Intent(this, SetRemindRepeatActivity.class);
-                it.putExtra("repeatType",repeatType);
+                Intent it = new Intent(this, SetRemindRepeatActivity.class);
+                it.putExtra("repeatType", repeatType);
                 startActivity(it);
                 break;
             case R.id.tv_right:

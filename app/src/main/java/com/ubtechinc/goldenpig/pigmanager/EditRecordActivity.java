@@ -143,8 +143,8 @@ public class EditRecordActivity extends BaseNewActivity implements Observer {
                     helper.setTextColor(R.id.tv_count, mContext.getResources().getColor(R.color.ubt_tips_txt_color));
                 }
                 helper.setText(R.id.tv_content, TextUtils.isEmpty(item.name) ? item.number : item.name);
-                helper.setText(R.id.tv_count, "(" + item.duration + ")");
-                helper.setVisible(R.id.tv_count, item.duration > 1 ? true : false);
+                helper.setText(R.id.tv_count, "(" + item.count + ")");
+                helper.setVisible(R.id.tv_count, item.count > 1 ? true : false);
                 helper.setText(R.id.tv_date, TimeUtils.format(TimeUtils.millis2Date(item
                         .dateLong)));
             }
