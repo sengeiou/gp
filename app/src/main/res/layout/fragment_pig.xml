@@ -55,8 +55,9 @@
                         android:id="@+id/ubt_tv_pig_title"
                         style="@style/UBTMainItemTxtTheme"
                         android:layout_alignParentTop="true"
-                        android:layout_marginStart="134dp"
-                        android:layout_marginTop="40dp"
+                        android:layout_toRightOf="@id/ubt_iv_pig_icon"
+                        android:layout_marginStart="@dimen/dp_14"
+                        android:layout_marginTop="@dimen/dp_35"
                         android:alpha="0.5"
                         android:text="@string/ubt_my_pig" />
 
@@ -89,8 +90,7 @@
                 android:layout_marginEnd="@dimen/ubt_layout_add_pig_margin"
                 android:layout_marginStart="@dimen/ubt_layout_add_pig_margin"
                 android:layout_marginTop="@dimen/ubt_layout_add_pig_margintop"
-                android:background="@drawable/shape_add_pig_layout_bg"
-                android:orientation="horizontal">
+                android:background="@drawable/shape_add_pig_layout_bg">
 
                 <include
                     layout="@layout/include_pig_pair_add"

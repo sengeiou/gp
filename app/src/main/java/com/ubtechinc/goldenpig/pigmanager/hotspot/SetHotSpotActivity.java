@@ -210,6 +210,7 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer,
             final boolean result = msg.getPayload().unpack(GPResponse.Response.class).getResult();
             if (result) {
                 ToastUtils.showLongToast("修改成功");
+                UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getHotSpot()));
             } else {
                 ToastUtils.showLongToast("修改失败");
             }

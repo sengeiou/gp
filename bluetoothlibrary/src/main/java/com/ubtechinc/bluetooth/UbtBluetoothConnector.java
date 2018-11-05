@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.ubtech.utilcode.utils.LogUtils;
+import com.ubtech.utilcode.utils.bt.ByteHexHelper;
 import com.ubtechinc.bluetooth.command.IAbstractBleCommandFactory;
 import com.ubtechinc.bluetooth.command.ICommandEncode;
 import com.ubtechinc.bluetooth.command.JsonAbstractBleCommandFactory;
@@ -332,6 +333,7 @@ class UbtBluetoothConnector {
                             while (--tryCount > 0) {
                                 sendCmdSuccess = true;
                                 for (byte[] bytes : packets) {
+                                    d(TAG, "ble分段发送: " + ByteHexHelper.bytesToHexString(bytes));
                                     sendPacketSuccess = false;
                                     if (mCurrentBluetoothGatt != null) {
                                         BluetoothGattService service =

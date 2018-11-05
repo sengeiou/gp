@@ -28,11 +28,11 @@ public class FeedBackActivity extends BaseWebActivity {
 
     @Override
     protected void onGoNextWeb() {
-        setToolBarTitle(R.string.ubt_feedback);
+//        setToolBarTitle(R.string.ubt_feedback);
     }
 
     @Override
     protected void onGoBackWeb() {
-        setToolBarTitle(R.string.ubt_help);
+//        setToolBarTitle(R.string.ubt_help);
     }
 }

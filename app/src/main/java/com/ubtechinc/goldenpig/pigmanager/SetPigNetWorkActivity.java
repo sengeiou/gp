@@ -333,11 +333,11 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
                     if (jsonObject.has("s")) {
                         wifiName = jsonObject.getString("s");
                         if (!TextUtils.isEmpty(wifiName)) {
-                            showNotify("音箱已连接“" + wifiName + "”无线网络");
+                            showNotify(getResources().getString(R.string.wifi_connect_tip, wifiName));
                         }
                     } else {
                         ///连接到有道网络是提示
-                        showNotify("音箱已连接移动网络");
+                        showNotify(getResources().getString(R.string.mobile_net_connect_tip));
                     }
                     AuthLive.getInstance().getCurrentPig().setOnlineState(PigInfo.ROBOT_STATE_ONLINE);
                     UBTPGApplication.pig_net_status = true;

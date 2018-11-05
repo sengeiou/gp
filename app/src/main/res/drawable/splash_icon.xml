@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    android:opacity="opaque">
+    <item android:drawable="@color/white" />
+    <item android:top="@dimen/dp_120">
+        <bitmap
+            android:gravity="top|center_vertical"
+            android:src="@drawable/ic_pig_about" />
+    </item>
+    <item android:bottom="@dimen/dp_15">
+        <bitmap
+            android:gravity="bottom|center_horizontal"
+            android:src="@drawable/ic_ubt_logo" />
+    </item>
+</layer-list>

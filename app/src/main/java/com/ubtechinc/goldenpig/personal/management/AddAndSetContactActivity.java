@@ -16,8 +16,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.Selection;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
@@ -67,6 +65,8 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
     EditText etPhone;
     @BindView(R.id.iv_phone_clear)
     ImageView ivPhoneClear;
+    @BindView(R.id.view_clear_line)
+    View viewClearLine;
     @BindView(R.id.iv_add)
     ImageView ivAdd;
     @BindView(R.id.et_name)
@@ -227,10 +227,12 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                 strPhone = etPhone.getText().toString().trim();
                 if (TextUtils.isEmpty(strPhone)) {
                     ivPhoneClear.setVisibility(View.INVISIBLE);
+                    viewClearLine.setVisibility(View.INVISIBLE);
                     rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color
                             .ubt_skip_txt_unenable_color));
                 } else {
                     ivPhoneClear.setVisibility(View.VISIBLE);
+                    viewClearLine.setVisibility(View.VISIBLE);
                     rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color
                             .ubt_tab_btn_txt_checked_color));
                 }
