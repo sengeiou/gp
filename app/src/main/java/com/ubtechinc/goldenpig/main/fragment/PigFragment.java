@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -216,6 +217,7 @@ public class PigFragment extends BaseFragment implements Observer {
             ubt_tv_remind_sub_title.setAlpha(1.0f);
             ubt_tv_call_title.setAlpha(1.0f);
             ubt_tv_call_sub_title.setAlpha(1.0f);
+            viewPigPairAdd.setAlpha(1.0f);
         } else {
             llVoiceChat.setAlpha(0.5f);
             rlPairPig.setAlpha(0.5f);
@@ -234,6 +236,7 @@ public class PigFragment extends BaseFragment implements Observer {
             ubt_tv_remind_sub_title.setAlpha(0.5f);
             ubt_tv_call_title.setAlpha(0.5f);
             ubt_tv_call_sub_title.setAlpha(0.5f);
+            viewPigPairAdd.setAlpha(0.5f);
         }
         updatePigPair();
     }

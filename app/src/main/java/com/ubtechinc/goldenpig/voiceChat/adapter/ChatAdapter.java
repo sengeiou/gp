@@ -25,7 +25,7 @@ public class ChatAdapter extends CommonAdaper<Message> {
     }
 
     /**
-     *  200 voice record limited 
+     *  200 voice record limited
      * @param messageList
      */
     private void filter(List<Message> messageList) {
