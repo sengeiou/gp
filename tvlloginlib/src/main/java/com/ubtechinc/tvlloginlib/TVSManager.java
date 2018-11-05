@@ -43,6 +43,7 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
     public LoginInfo info;
     public static ELoginEnv eLoginEnv = ELoginEnv.FORMAL;
 
+    public static ELoginEnv eLoginEnv = ELoginEnv.FORMAL;
     public static TVSManager getInstance(Context context, String wxId, String qqOpenId) {
         if (instance == null) {
             instance = new TVSManager(context, wxId, qqOpenId);
@@ -54,6 +55,8 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
         proxy = LoginProxy.getInstance(wxId, qqOpenId, context);
         proxy.setLoginEnv(eLoginEnv);
         Log.d("hdf", "eLoginEnv111:" + eLoginEnv);
+        proxy.setLoginEnv(ELoginEnv.FORMAL);
+        Log.d("hdf","eLoginEnv111:"+eLoginEnv);
         wxClient = new WXClient(proxy, this);
         qqClient = new QQClient(proxy, this);
         /**这步监听主要是作tvs相关的结果回调主要方法onSuccess和onError*/
