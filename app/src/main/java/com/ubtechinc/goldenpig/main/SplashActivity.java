@@ -34,6 +34,7 @@ public class SplashActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         //全屏
+        getWindow().setBackgroundDrawable(null);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
@@ -60,7 +61,7 @@ public class SplashActivity extends BaseActivity {
                                 dismissLoadDialog();
                                 ActivityRoute.toAnotherActivity(SplashActivity.this, MainActivity.class, true);
                             }
-                        }, 2000);
+                        }, 500);
                         break;
                     case ERROR:
 //                        ToastUtils.showShortToast(SplashActivity.this, getString(R.string.ubt_login_failure));
@@ -116,7 +117,7 @@ public class SplashActivity extends BaseActivity {
                 public void run() {
                     ActivityRoute.toAnotherActivity(SplashActivity.this, LoginActivity.class, true);
                 }
-            }, 1000);
+            }, 500);
         }
     }
 

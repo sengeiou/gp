@@ -5,6 +5,7 @@ import android.util.Log;
 import com.tencent.TIMConversation;
 import com.tencent.TIMManager;
 import com.tencent.TIMRefreshListener;
+import com.ubtechinc.commlib.log.UbtLogger;
 
 import java.util.List;
 import java.util.Observable;
@@ -38,6 +39,7 @@ public class RefreshEvent extends Observable implements TIMRefreshListener {
      */
     @Override
     public void onRefresh() {
+        UbtLogger.d("RefreshEvent","onRefresh");
         setChanged();
         notifyObservers();
     }

@@ -7,51 +7,32 @@ import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.net.URestSigner;
 
 /**
- * @author：ubt
- * @date：2018/10/12 15:56
- * @modifier：ubt
- * @modify_date：2018/10/12 15:56
- * [A brief description]
+ * @author ubt
  */
-
-public class SkillActivity extends BaseWebActivity {
-
-    @Override
-    protected int getConentView() {
-        return R.layout.activity_web_common;
-    }
+public class QQMusicWebActivity extends BaseWebActivity {
 
     @Override
     protected String getURL() {
-        String baseUrl = BuildConfig.H5_URL + "/small/smallSkill.html?";
+        String baseUrl = BuildConfig.H5_URL + "/small/smallqqMusic.html?";
 
         String url = baseUrl + "appId=" + BuildConfig.APP_ID + "&sign=" + URestSigner.sign().replace(" ", "%20") + "&authorization=" +
                 CookieInterceptor.get().getToken() + "&product=" + BuildConfig.product;
+
         return url;
     }
 
     @Override
     protected int getToolBarTitle() {
-        hideActionBar();
-        return R.string.ubt_skills_manual;
+        return R.string.ubt_qq_music;
     }
 
     @Override
     protected void onGoNextWeb() {
-//        setToolBarTitle(R.string.ubt_skills_detail);
-        showActionBar();
+//        setToolBarTitle(R.string.ubt_feedback);
     }
 
     @Override
     protected void onGoBackWeb() {
-//        setToolBarTitle(R.string.ubt_skills_manual);
-        hideActionBar();
+//        setToolBarTitle(R.string.ubt_help);
     }
-
-    @Override
-    protected void processWeb() {
-        mWebView.addJavascriptInterface(new SmallPigObject(SkillActivity.this), "SmallPigObject");
-    }
-
-
 }

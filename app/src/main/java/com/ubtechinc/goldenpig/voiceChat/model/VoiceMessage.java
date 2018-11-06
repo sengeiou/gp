@@ -218,7 +218,7 @@ public class VoiceMessage extends Message {
                voicetime = ((TIMSoundElem) message.getElement(0)).getDuration();
            }else {
                //milliseconds
-              voicetime = ((TIMSoundElem) message.getElement(0)).getDuration()%1000;
+              voicetime = ((TIMSoundElem) message.getElement(0)).getDuration()/1000;
            }
            if(5<voicetime&&voicetime<10){
                tv.setText("     ");

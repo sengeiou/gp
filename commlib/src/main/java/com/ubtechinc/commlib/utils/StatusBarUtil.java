@@ -61,12 +61,13 @@ public class StatusBarUtil {
 
 
     /**
-     * 修改状态来字体颜色
+     * 修改状态栏字体颜色
      */
-    public static void setStatusBarTextColor(Activity activity) {
+    public static void setStatusBarTextColor(Activity activity, boolean isFull) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             activity.getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+                    isFull ? View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+                            : View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
     }
 }
