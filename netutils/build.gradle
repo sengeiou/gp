@@ -61,7 +61,7 @@ android {
                 //product   60101 区分产品
                 buildConfigField "String", "product", "\"60101\""
                 buildConfigField "String", "APP_ID","\"100080014\""
-                buildConfigField "String", "APP_KEY","\"85650f0ffe314beda3b85a9ab626662d\""
+                buildConfigField "String", "APP_KEY","\"ffb54fb08efe11e8a377658d0db82adb\""
                 buildConfigField 'String', 'EQUIPMENTID_HOST', props['change_equipmentid_host']
                 buildConfigField 'String', 'IM_CHANNEL', props['im_channel']
                 printf('host=%s,im_host=%s ,user_host=%s,xinge_host=%s，im_channel=%s\n', props['host'], props['im_host'], props['user_host'], props['xinge_host'],props['im_channel'])
@@ -80,7 +80,7 @@ android {
                 //product   60101 区分产品
                 buildConfigField "String", "product", "\"60101\""
                 buildConfigField "String", "APP_ID","\"100080014\""
-                buildConfigField "String", "APP_KEY","\"85650f0ffe314beda3b85a9ab626662d\""
+                buildConfigField "String", "APP_KEY","\"ffb54fb08efe11e8a377658d0db82adb\""
                 buildConfigField 'String', 'EQUIPMENTID_HOST', props['change_equipmentid_host']
                 buildConfigField 'String', 'IM_CHANNEL', props['im_channel']
                 printf('host=%s,im_host=%s ,user_host=%s,xinge_host=%s，im_channel=%s, update=%s\n', props['host'], props['im_host'], props['user_host'], props['xinge_host'],props['im_channel'],props['update'])

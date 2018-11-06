@@ -107,7 +107,7 @@ public class AddAlarmActivity extends BaseNewActivity {
             switch (model.eRepeatType) {
                 case 1:
                     repeatType = 0;
-                    tv_cycle.setText("永不");
+                    tv_cycle.setText("单次");
                     break;
                 case 2:
                     repeatType = 8;
@@ -190,7 +190,7 @@ public class AddAlarmActivity extends BaseNewActivity {
             repeatType = (int) event.getData();
             switch (repeatType) {
                 case 0:
-                    tv_cycle.setText("永不");
+                    tv_cycle.setText("单次");
                     break;
                 case 1:
                     tv_cycle.setText("每周日");
@@ -215,6 +215,9 @@ public class AddAlarmActivity extends BaseNewActivity {
                     break;
                 case 8:
                     tv_cycle.setText("每天");
+                    break;
+                case 9:
+                    tv_cycle.setText("每工作日");
                     break;
                 default:
                     break;
@@ -249,7 +252,7 @@ public class AddAlarmActivity extends BaseNewActivity {
         long timeMill = TimeUtils.string2Millis(date);
         int eRepeatType = 0;
         switch (repeatType) {
-            case 0://永不
+            case 0://单次
                 if (timnow > timeMill) {
                     eRepeatType = 1;
                     timeMill += 24 * 60 * 60 * 1000;
@@ -259,6 +262,12 @@ public class AddAlarmActivity extends BaseNewActivity {
                 if (timnow > timeMill) {
                     timeMill += 24 * 60 * 60 * 1000;
                     eRepeatType = 2;
+                }
+                break;
+            case 9:
+                if (timnow > timeMill) {
+                    timeMill += 24 * 60 * 60 * 1000;
+                    eRepeatType = 5;
                 }
                 break;
             case 1://每周日

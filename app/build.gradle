@@ -59,16 +59,16 @@ android {
             buildConfigField "String", "APP_ID","\"100080014\""
             //product   60101 区分产品
             buildConfigField "String", "product", "\"60101\""
-            //金猪APPKEY
-            buildConfigField "String", "APP_KEY", "\"85650f0ffe314beda3b85a9ab626662d\""
+            //金猪APPKEY 85650f0ffe314beda3b85a9ab626662d
+            buildConfigField "String", "APP_KEY", "\"ffb54fb08efe11e8a377658d0db82adb\""
 
             //TVS模式开关
             buildConfigField "Boolean", "TVS_MODE","false"
 
             //登录Url 域名
             buildConfigField "String",  "LOGIN_URL","\"https://testjimu.ubtrobot.com:8443\""
-            //IM操作URL域名
-            buildConfigField "String", "IM_URL","\"https://10.10.1.43:9080\""
+            //IM操作URL域名https://10.10.1.43:9080
+            buildConfigField "String", "IM_URL","\"https://210.75.21.106:9080\""
 
             //H5 URL域名
             buildConfigField "String", "H5_URL","\"http://10.10.32.22:8080\""
@@ -95,7 +95,7 @@ android {
             //product   60101 区分产品
             buildConfigField "String", "product", "\"60101\""
             //金猪APPKEY
-            buildConfigField "String", "APP_KEY","\"85650f0ffe314beda3b85a9ab626662d\""
+            buildConfigField "String", "APP_KEY","\"ffb54fb08efe11e8a377658d0db82adb\""
 
             //登录Url 域名
             buildConfigField "String", "LOGIN_URL","\"https://testjimu.ubtrobot.com:8443\""
