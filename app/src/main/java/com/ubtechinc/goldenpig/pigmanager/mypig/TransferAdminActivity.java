@@ -2,6 +2,7 @@ package com.ubtechinc.goldenpig.pigmanager.mypig;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -16,6 +17,7 @@ import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.view.WrapContentLinearLayoutManager;
+import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.adpater.MemberPermissionAdapter;
@@ -148,8 +150,33 @@ public class TransferAdminActivity extends BaseToolBarActivity implements View.O
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.ubt_tv_set_net_skip) {
-            doTransferAdmin();
+            showTransferAdminDialog();
         }
+    }
+
+    /**
+     * 显示转让权限确认对话框
+     */
+    private void showTransferAdminDialog() {
+        UBTSubTitleDialog dialog = new UBTSubTitleDialog(this);
+        dialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
+        dialog.setTips(getString(R.string.ubt_trandfer_admin_tips));
+        dialog.setLeftButtonTxt(getString(R.string.ubt_cancel));
+        dialog.setRightButtonTxt(getString(R.string.ubt_enter));
+        dialog.setSubTips(getString(R.string.ubt_transfer_tips));
+        dialog.setOnUbtDialogClickLinsenter(new UBTSubTitleDialog.OnUbtDialogClickLinsenter() {
+            @Override
+            public void onLeftButtonClick(View view) {
+
+            }
+
+            @Override
+            public void onRightButtonClick(View view) {
+                //TODO do管理员权限转让
+                doTransferAdmin();
+            }
+        });
+        dialog.show();
     }
 
     /**

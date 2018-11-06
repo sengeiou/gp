@@ -171,6 +171,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
         rl_titlebar.setTvRightName(getString(R.string.complete));
         rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color
                 .ubt_skip_txt_unenable_color));
+        rl_titlebar.getTvRight().setEnabled(false);
         mList = new ArrayList<>();
         initData();
         GridLayoutManager gm = new GridLayoutManager(this, 5);
@@ -197,6 +198,8 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                     } else {
                         helper.setBackgroundRes(R.id.tv_name, R.drawable.gray_round_frame);
                     }
+                } else {
+                    helper.setBackgroundRes(R.id.tv_name, R.drawable.gray_round_frame);
                 }
             }
         });
@@ -228,11 +231,13 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                 if (TextUtils.isEmpty(strPhone)) {
                     ivPhoneClear.setVisibility(View.INVISIBLE);
                     viewClearLine.setVisibility(View.INVISIBLE);
+                    rl_titlebar.getTvRight().setEnabled(false);
                     rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color
                             .ubt_skip_txt_unenable_color));
                 } else {
                     ivPhoneClear.setVisibility(View.VISIBLE);
                     viewClearLine.setVisibility(View.VISIBLE);
+                    rl_titlebar.getTvRight().setEnabled(true);
                     rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color
                             .ubt_tab_btn_txt_checked_color));
                 }
@@ -254,6 +259,8 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                 strName = etName.getText().toString().trim();
                 if (TextUtils.isEmpty(strName)) {
                     ivNameClear.setVisibility(View.INVISIBLE);
+                    curPosition = -1;
+                    adapter.notifyDataSetChanged();
                 } else {
                     ivNameClear.setVisibility(View.VISIBLE);
                 }

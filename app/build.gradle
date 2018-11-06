@@ -106,7 +106,7 @@ android {
             buildConfigField "Boolean", "TVS_MODE","true"
 
             //H5 URL域名
-            buildConfigField "String", "H5_URL","\"http://10.10.1.14:8090/cloud-ppi/help/\""
+            buildConfigField "String", "H5_URL","\"http://10.10.1.14:8090/cloud-ppi/help\""
 
             //是否优化zip
             zipAlignEnabled false

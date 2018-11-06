@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class MemberPermissionAdapter extends RecyclerView.Adapter<MemberPermissionAdapter.MemberHolder> {
     private ArrayList<CheckBindRobotModule.User> mUserList;
     private SoftReference<Activity> activityRefer;
-    private int selectedIndex = -1;
+    private int selectedIndex = 0;
 
     public MemberPermissionAdapter(Activity context, ArrayList<CheckBindRobotModule.User> userLsit) {
         this.mUserList = userLsit;

@@ -17,8 +17,6 @@ import android.widget.ImageView;
 import com.ubtechinc.commlib.log.UBTLog;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
-import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
-import com.ubtechinc.goldenpig.net.URestSigner;
 
 /**
  * @author：ubt
@@ -33,8 +31,6 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
     protected WebView mWebView;
 
     private FrameLayout root;
-
-    private String URL;
 
     private int scrollX;
 
@@ -74,8 +70,8 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
     private void initWebView() {
         String baseUrl = BuildConfig.H5_URL + "/small/smallSkill.html?";
 
-        URL = baseUrl + "appId=" + BuildConfig.APP_ID + "&sign=" + URestSigner.sign().replace(" ", "%20") + "&authorization=" +
-                CookieInterceptor.get().getToken() + "&product=" + BuildConfig.product;
+//        URL = baseUrl + "appId=" + BuildConfig.APP_ID + "&sign=" + URestSigner.sign().replace(" ", "%20") + "&authorization=" +
+//                CookieInterceptor.get().getToken() + "&product=" + BuildConfig.product;
 
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setAllowFileAccess(true);
@@ -91,6 +87,8 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
 //        mWebView.getSettings().setDatabaseEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
 //        mWebView.getSettings().setAppCacheEnabled(true);
+//        WebView.setWebContentsDebuggingEnabled(true);
+//        mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ONLY);
 
 
         mWebView.setWebViewClient(new WebViewClient() {
@@ -188,8 +186,9 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
             }
         });
 
-        UBTLog.d("goldPig", "URL:" + URL);
-        mWebView.loadUrl(getURL());
+        String url = getURL();
+        UBTLog.d("goldPig", "URL:" + url);
+        mWebView.loadUrl(url);
     }
 
     @Override
@@ -197,7 +196,7 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
         if (mWebView.canGoBack()) {
             isGoBack = true;
             mWebView.goBack();
-            mWebView.scrollTo(scrollX, scrollY);
+//            mWebView.scrollTo(scrollX, scrollY);
             onGoBackWeb();
         } else {
             super.onBackPressed();
