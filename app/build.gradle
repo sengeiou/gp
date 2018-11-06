@@ -60,7 +60,7 @@ android {
             //product   60101 区分产品
             buildConfigField "String", "product", "\"60101\""
             //金猪APPKEY 85650f0ffe314beda3b85a9ab626662d
-            buildConfigField "String", "APP_KEY", "\"ffb54fb08efe11e8a377658d0db82adb\""
+            buildConfigField "String", "APP_KEY", "\"85650f0ffe314beda3b85a9ab626662d\""
 
             //TVS模式开关
             buildConfigField "Boolean", "TVS_MODE","false"
@@ -95,7 +95,7 @@ android {
             //product   60101 区分产品
             buildConfigField "String", "product", "\"60101\""
             //金猪APPKEY
-            buildConfigField "String", "APP_KEY","\"ffb54fb08efe11e8a377658d0db82adb\""
+            buildConfigField "String", "APP_KEY","\"85650f0ffe314beda3b85a9ab626662d\""
 
             //登录Url 域名
             buildConfigField "String", "LOGIN_URL","\"https://testjimu.ubtrobot.com:8443\""
