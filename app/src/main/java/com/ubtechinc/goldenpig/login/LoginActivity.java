@@ -11,8 +11,8 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
+import android.text.style.BackgroundColorSpan;
 import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.view.View;
 import android.widget.TextView;
 
@@ -28,6 +28,7 @@ import com.ubtechinc.goldenpig.main.MainActivity;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.UbtToastUtils;
+import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
 
 import java.lang.ref.WeakReference;
 
@@ -94,6 +95,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferencesUtils.putBoolean(this, "isPrivacySelect", ivSelectPrivacy.isSelected());
+    }
+
+    @Override
     protected void onDestroy() {
         if (AuthLive.getInstance().getState() != AuthLive.AuthState.TVSLOGINED) {
             AuthLive.getInstance().reset();
@@ -137,6 +144,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void processPolicy() {
+        ivSelectPrivacy.setSelected(SharedPreferencesUtils.getBoolean(this, "isPrivacySelect", true));
         SpannableString spannableString = new SpannableString(getResources().getString(R.string.ubt_login_agree_policy));
         spannableString.setSpan(new ClickableSpan() {
             @Override
@@ -147,8 +155,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             @Override
             public void updateDrawState(TextPaint ds) {
                 //TODO
+                ds.setColor(Color.parseColor("#0099EE"));
+                ds.setUnderlineText(false);
             }
-        }, 2, 11, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        }, 2, 11, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannableString.setSpan(new ClickableSpan() {
             @Override
             public void onClick(View widget) {
@@ -158,16 +168,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             @Override
             public void updateDrawState(TextPaint ds) {
                 //TODO
+                ds.setColor(Color.parseColor("#0099EE"));
+                ds.setUnderlineText(false);
             }
-        }, 12, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(getBlueSpan(), 2, 11, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        spannableString.setSpan(getBlueSpan(), 12, spannableString.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+        }, 12, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        spannableString.setSpan(getBlueSpan(), 2, 11, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        spannableString.setSpan(getBlueSpan(), 12, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tvAgreementPolicy.setText(spannableString);
         tvAgreementPolicy.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
-    private ForegroundColorSpan getBlueSpan(){
-        return new ForegroundColorSpan(Color.parseColor("#0099EE"));
+    private BackgroundColorSpan getBlueSpan(){
+        return new BackgroundColorSpan(Color.parseColor("#0099EE"));
     }
 
     private void initNetHelper() {
