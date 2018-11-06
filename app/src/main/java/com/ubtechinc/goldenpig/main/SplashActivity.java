@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.commlib.network.NetworkHelper;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseActivity;
@@ -14,6 +15,12 @@ import com.ubtechinc.goldenpig.login.LoginActivity;
 import com.ubtechinc.goldenpig.login.LoginModel;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 
 /**
@@ -29,6 +36,7 @@ public class SplashActivity extends BaseActivity {
     private NetworkHelper.NetworkInductor mInductor;
     private LoginModel mLoginModel = null;
     private Handler handler;
+    private Disposable disposable;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,6 +84,10 @@ public class SplashActivity extends BaseActivity {
         });
     }
 
+    private void unRegisterEventObserve() {
+        AuthLive.getInstance().removeObservers(this);
+    }
+
     private void checkLogin() {
 //        mInductor = new NetworkHelper.NetworkInductor() {
 //            @Override
@@ -112,21 +124,37 @@ public class SplashActivity extends BaseActivity {
 //            }
 //        });
         if (!mLoginModel.checkToken(this)) {
-            getWindow().getDecorView().postDelayed(new Runnable() {
+            handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     ActivityRoute.toAnotherActivity(SplashActivity.this, LoginActivity.class, true);
                 }
             }, 500);
+        } else {
+            disposable = Observable.timer(5, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(aLong -> {
+                        //TODO 超时
+                        ToastUtils.showShortToast("自动登录超时，请重新登录");
+                        ActivityRoute.toAnotherActivity(SplashActivity.this, LoginActivity.class, true);
+                    });
         }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unRegisterEventObserve();
         if (mLoginModel != null) {
             mLoginModel.onCancel();
             //mLoginModel.logoutTVS();
+        }
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+            handler = null;
+        }
+        if (disposable != null) {
+            disposable.dispose();
+            disposable = null;
         }
     }
 

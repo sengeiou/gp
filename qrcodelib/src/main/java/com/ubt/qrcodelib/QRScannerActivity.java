@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -52,6 +53,7 @@ public abstract class QRScannerActivity extends AppCompatActivity implements Sur
     private TextView errorTv;
     final String[] permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.VIBRATE};
     ArrayList<String> mPermissionList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +65,7 @@ public abstract class QRScannerActivity extends AppCompatActivity implements Sur
         toolbar = (Toolbar) findViewById(R.id.ubt_qr_toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_return);
         setSupportActionBar(toolbar);
-        if (getSupportActionBar()!=null) {
+        if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
         ActionBar actionBar = getSupportActionBar();
@@ -76,29 +78,43 @@ public abstract class QRScannerActivity extends AppCompatActivity implements Sur
                 finish();//返回
             }
         });
-        tvTitle = (TextView)findViewById(R.id.ubt_tv_toolbar_title);
+        tvTitle = (TextView) findViewById(R.id.ubt_tv_toolbar_title);
 
         tvTitle.setText(getQrTitle());
         viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
         viewfinderView.setSubTitle(getQrSubTitle());
-        errorTv=findViewById(R.id.ubt_tv_error);
+        errorTv = findViewById(R.id.ubt_tv_error);
         init();
         initTips(getIntent());
         if (Build.VERSION.SDK_INT >= 23) {
             for (int index = 0; index < permissions.length; index++) {
                 if (ContextCompat.checkSelfPermission(this, permissions[index]) !=
-                PackageManager.PERMISSION_GRANTED){
+                        PackageManager.PERMISSION_GRANTED) {
                     mPermissionList.add(permissions[index]);
                     requestPermissions(new String[]{Manifest.permission.CAMERA}, 1);
                 }
             }
-            if (mPermissionList!=null&&mPermissionList.size()>0) {
+            if (mPermissionList != null && mPermissionList.size() > 0) {
                 String[] permissions = mPermissionList.toArray(new String[mPermissionList.size()]);//将List转为数组   
                 ActivityCompat.requestPermissions(this, permissions, 1);
             }
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 1:
+                for (int index = 0; index < grantResults.length; index++) {
+                    if (grantResults[index] != PackageManager.PERMISSION_GRANTED) {
+                        finish();
+                        break;
+                    }
+                }
+                break;
+        }
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -264,19 +280,22 @@ public abstract class QRScannerActivity extends AppCompatActivity implements Sur
         }
     };
 
-    private void initTips(Intent intent){
-        if (intent!=null){
+    private void initTips(Intent intent) {
+        if (intent != null) {
 
         }
     }
-    protected void setErrorTips(String errorTips){
-        if (errorTv==null) {
+
+    protected void setErrorTips(String errorTips) {
+        if (errorTv == null) {
             errorTv = findViewById(R.id.ubt_tv_error);
         }
         errorTv.setText(errorTips);
         errorTv.setVisibility(View.VISIBLE);
     }
+
     protected abstract String getQrTitle();
+
     protected abstract String getQrSubTitle();
 
     protected abstract void doSendSign(String msg);

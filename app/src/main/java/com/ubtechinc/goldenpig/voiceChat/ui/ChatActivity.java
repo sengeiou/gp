@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -28,10 +27,10 @@ import com.tencent.TIMMessageDraft;
 import com.tencent.TIMMessageStatus;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.improtolib.VoiceMailContainer;
-import com.ubtechinc.commlib.log.UBTLog;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
+import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.voiceChat.ChannelInfo;
@@ -58,7 +57,7 @@ import java.util.TimerTask;
 
 import static com.tencent.TIMElemType.GroupSystem;
 
-public class ChatActivity extends FragmentActivity implements ChatView {
+public class ChatActivity extends BaseToolBarActivity implements ChatView {
     public static ChatActivity Instance = null;
     private List<Message> messageList = new ArrayList<>();
     private ChatAdapter adapter;
@@ -94,7 +93,9 @@ public class ChatActivity extends FragmentActivity implements ChatView {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Instance = this;
-        setContentView(R.layout.activity_chat);
+//        setContentView(R.layout.activity_chat);
+        setTitleBack(true);
+        setToolBarTitle(R.string.my_pig);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
 
@@ -169,6 +170,16 @@ public class ChatActivity extends FragmentActivity implements ChatView {
         }
         voiceSendingView = (VoiceSendingView) findViewById(R.id.voice_sending);
         presenter.start();
+    }
+
+    @Override
+    protected int getConentView() {
+        return R.layout.activity_chat;
+    }
+
+    @Override
+    protected void init(Bundle savedInstanceState) {
+
     }
 
     @Override
