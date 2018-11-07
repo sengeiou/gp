@@ -77,6 +77,10 @@ public class MessageEvent extends Observable implements TIMMessageListener, TIMM
         instance = null;
     }
 
+
+    /**
+     *     消息被撤回通知监听器
+     */
     @Override
     public void onMessageRevoked(TIMMessageLocator timMessageLocator) {
         setChanged();

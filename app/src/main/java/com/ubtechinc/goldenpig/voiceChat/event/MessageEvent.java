@@ -16,6 +16,7 @@ import java.util.Observable;
 
 /**
  * 消息通知事件，上层界面可以订阅此事件
+ * deprecated using imlibv2 messageevent class
  */
 public class MessageEvent extends Observable implements TIMMessageListener {
 
@@ -42,18 +43,6 @@ public class MessageEvent extends Observable implements TIMMessageListener {
     public boolean onNewMessages(List<TIMMessage> list) {
         for (TIMMessage item:list){
             Log.d(TAG,"MessageEvent(Receive TIMMessageListener)--->ChatPresenter(observe update)----->ChatView showMessage -->ChatAdapter notify---->getView --->VoiceMessage(showMessage)   "+list  +item.getElement(0).toString());
-//           try {
-//               TIMCustomElem customElem = (TIMCustomElem) item.getElement(0);
-//               ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage
-//                       .parseFrom((byte[]) customElem.getData());
-//               Log.d(TAG, "MessageEvent " + msg.getHeader().getAction());
-//               if (!msg.getHeader().getAction().equals("/im/voicemail/receiver")) {
-//                   return false;
-//               }
-//           }catch(Exception e){
-//              e.printStackTrace();
-//           }
-
             setChanged();
             notifyObservers(item);
         }

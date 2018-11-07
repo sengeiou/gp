@@ -233,6 +233,7 @@ public class ChatActivity extends FragmentActivity implements ChatView {
                     if (messageList.size()==0){
                         mMessage.setHasTime(null);
                     }else{
+                        Log.d(TAG,"set has time ");
                         mMessage.setHasTime(messageList.get(messageList.size()-1).getMessage());
                     }
                     messageList.add(mMessage);
@@ -267,6 +268,7 @@ public class ChatActivity extends FragmentActivity implements ChatView {
         }
         adapter.update(messageList);
         listView.setSelection(newMsgNum);
+        UbtLogger.d(TAG,"showMessage number   "+newMsgNum);
     }
 
     /**

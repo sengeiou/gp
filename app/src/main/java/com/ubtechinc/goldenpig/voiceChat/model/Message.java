@@ -2,6 +2,7 @@ package com.ubtechinc.goldenpig.voiceChat.model;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -16,6 +17,7 @@ import com.tencent.TIMMessageStatus;
 import com.tencent.TIMUserProfile;
 import com.tencent.TIMValueCallBack;
 import com.ubt.imlibv2.bean.UbtTIMManager;
+import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.comm.entity.UserInfo;
@@ -69,7 +71,8 @@ public abstract class Message {
      */
     public RelativeLayout getBubbleView(final ViewHolder viewHolder){
         if(UBTPGApplication.voiceMail_debug){
-            Toast.makeText(UBTPGApplication.getContext(), "hasTime "+ hasTime, Toast.LENGTH_LONG).show();
+            Toast.makeText(UBTPGApplication.getContext(), "hasTime "+ hasTime, Toast.LENGTH_SHORT).show();
+            UbtLogger.d(TAG,"hasTime show   "+hasTime);
         }
         viewHolder.getView(R.id.systemMessage).setVisibility(hasTime? View.VISIBLE: View.GONE);
         viewHolder.setText(R.id.systemMessage, TimeUtil.getChatTimeStr(message.timestamp()));
@@ -209,6 +212,8 @@ public abstract class Message {
             hasTime = true;
             return;
         }
+        UbtLogger.d(TAG,"current message timestamp   "+this.message.timestamp());
+        UbtLogger.d(TAG,"previous message timestamp   "+message.timestamp());
         hasTime = this.message.timestamp() - message.timestamp() > 300;
     }
 
