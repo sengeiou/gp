@@ -144,7 +144,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void processPolicy() {
-        ivSelectPrivacy.setSelected(SharedPreferencesUtils.getBoolean(this, "isPrivacySelect", true));
+        ivSelectPrivacy.setSelected(SharedPreferencesUtils.getBoolean(this, "isPrivacySelect", false));
         SpannableString spannableString = new SpannableString(getResources().getString(R.string.ubt_login_agree_policy));
         spannableString.setSpan(new ClickableSpan() {
             @Override

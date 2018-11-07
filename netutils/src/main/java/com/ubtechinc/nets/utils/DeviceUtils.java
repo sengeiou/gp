@@ -34,7 +34,7 @@ public class DeviceUtils {
             WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
             WifiInfo info = wifi.getConnectionInfo();
             String wifiMac = info.getMacAddress();
-            if (!TextUtils.isEmpty(wifiMac)) {
+            if (!TextUtils.isEmpty(wifiMac) && !"02:00:00:00:00:00".equals(wifiMac)) {
                 deviceId.append("wifi");
                 deviceId.append(wifiMac);
                 return deviceId.toString();
@@ -79,7 +79,9 @@ public class DeviceUtils {
         }
         if (TextUtils.isEmpty(uuid)) {
             uuid = UUID.randomUUID().toString();
-            sharedPreferences.edit().putString("uuid", uuid);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("uuid", uuid);
+            editor.commit();
         }
         return uuid;
     }

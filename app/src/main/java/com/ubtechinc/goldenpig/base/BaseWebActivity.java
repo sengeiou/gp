@@ -14,9 +14,10 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.ubtechinc.commlib.log.UBTLog;
+import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.main.SmallPigObject;
 
 /**
  * @author：ubt
@@ -64,7 +65,7 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
     }
 
     protected void processWeb() {
-
+        mWebView.addJavascriptInterface(new SmallPigObject(this, mWebView), "SmallPigObject");
     }
 
     private void initWebView() {
@@ -87,8 +88,7 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
 //        mWebView.getSettings().setDatabaseEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
 //        mWebView.getSettings().setAppCacheEnabled(true);
-//        WebView.setWebContentsDebuggingEnabled(true);
-//        mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ONLY);
+        WebView.setWebContentsDebuggingEnabled(true);
 
 
         mWebView.setWebViewClient(new WebViewClient() {
@@ -181,13 +181,13 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
-                UBTLog.d("basewebview", "title:" + title);
+                LogUtils.d("basewebview", "title:" + title);
                 setToolBarTitle(title);
             }
         });
 
         String url = getURL();
-        UBTLog.d("goldPig", "URL:" + url);
+        LogUtils.d("goldPig", "URL:" + url);
         mWebView.loadUrl(url);
     }
 

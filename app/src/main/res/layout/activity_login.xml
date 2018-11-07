@@ -61,7 +61,6 @@
             android:id="@+id/tv_agreement_policy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:text="@string/ubt_login_agree_policy"
             android:textSize="@dimen/sp_12" />
 
