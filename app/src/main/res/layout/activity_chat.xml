@@ -8,6 +8,7 @@
     tools:context="com.ubtechinc.goldenpig.voiceChat.ui.ChatActivity">
     <com.ubtechinc.goldenpig.voiceChat.ui.TemplateTitle
         android:id="@+id/chat_title"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"

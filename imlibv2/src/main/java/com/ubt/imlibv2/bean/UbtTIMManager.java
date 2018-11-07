@@ -20,6 +20,7 @@ import com.ubt.imlibv2.bean.listener.OnPigOnlineStateListener;
 import com.ubt.imlibv2.bean.listener.OnTIMLoginListener;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubt.improtolib.UserRecords;
+import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.commlib.log.UbtLogger;
 
 import org.json.JSONException;
@@ -365,6 +366,10 @@ public class UbtTIMManager {
             conversation = TIMManager.getInstance().getConversation(
                     TIMConversationType.C2C, pigAccount);
         }
+        if (conversation.getType() == TIMConversationType.Invalid) {
+            ToastUtils.showShortToast("小猪不在线");
+            return;
+        }
         conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {
 
             @Override
@@ -394,6 +399,10 @@ public class UbtTIMManager {
 
     public void sendTIM(TIMMessage msg, TIMConversation conversation) {
         if (!isLoginedTIM) {
+            return;
+        }
+        if (conversation.getType() == TIMConversationType.Invalid) {
+            ToastUtils.showShortToast("小猪不在线");
             return;
         }
         conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {

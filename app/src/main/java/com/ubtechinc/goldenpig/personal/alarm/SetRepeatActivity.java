@@ -38,6 +38,9 @@ public class SetRepeatActivity extends BaseNewActivity {
     RecyclerView recycler;
     private BaseQuickAdapter<RepeatModel, BaseViewHolder> adapter;
     private List<RepeatModel> mList;
+    /**
+     * 0为单次，1为每周一，2为每周二，3为每周三，4为每周四，5为每周五，6为每周六,7为每周天，8为每天
+     */
     private int repeatType = 0;
 
     private class MyHandler extends Handler {
@@ -108,12 +111,16 @@ public class SetRepeatActivity extends BaseNewActivity {
     private void initData() {
         RepeatModel m8 = new RepeatModel();
         m8.repeatType = 0;
-        m8.name = "永不";
+        m8.name = "单次";
         mList.add(m8);
         RepeatModel m7 = new RepeatModel();
         m7.repeatType = 8;
         m7.name = "每天";
         mList.add(m7);
+        RepeatModel m9 = new RepeatModel();
+        m9.repeatType = 9;
+        m9.name = "每工作日";
+        mList.add(m9);
         RepeatModel m0 = new RepeatModel();
         m0.repeatType = 1;
         m0.name = "每周日";

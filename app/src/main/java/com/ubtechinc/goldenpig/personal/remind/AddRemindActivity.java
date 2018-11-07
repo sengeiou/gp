@@ -247,7 +247,7 @@ public class AddRemindActivity extends BaseNewActivity {
             repeatType = (int) event.getData();
             switch (repeatType) {
                 case 1:
-                    tv_cycle.setText("永不");
+                    tv_cycle.setText("单次");
                     break;
                 case 2:
                     tv_cycle.setText("每天");

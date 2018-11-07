@@ -99,6 +99,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     }
                 });
                 mUbtTIMManager.sendTIM(selfMessage);
+                //TVSManager.getInstance(null, null, null).bindRobot(pigInfo.getRobotName());
             }
         } else {
             mUbtTIMManager.setUbtCallBack(new UbtTIMManager.UbtIMCallBack() {
@@ -273,7 +274,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void checkInitInterlocution() {
         if (!SPUtils.get().getBoolean(Constant.SP_ADDED_INIT_INTERLOCUTION, false)) {
             InterlocutionModel requestModel = new InterlocutionModel();
-            requestModel.addInterlocutionRequest("谁是你的宝宝", "当然是小猪宝宝我啦。", new
+            requestModel.addInterlocutionRequest("谁是我的宝宝", "当然是小猪宝宝我啦。", new
                     JsonCallback<String>(String.class) {
                         @Override
                         public void onSuccess(String reponse) {

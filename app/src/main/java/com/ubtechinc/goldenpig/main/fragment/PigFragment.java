@@ -59,6 +59,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CONTACT_PIC_SUCCESS;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.INVISE_RECORD_POINT;
 
 /**
  * @author : HQT
@@ -457,6 +458,8 @@ public class PigFragment extends BaseFragment implements Observer {
     public void onMessageEvent(Event event) {
         if (event != null && event.getCode() == CONTACT_PIC_SUCCESS) {
             sendRecordMsg();
+        } else if (event != null && event.getCode() == INVISE_RECORD_POINT) {
+            iv_unreadrecord.setVisibility(View.INVISIBLE);
         }
     }
 

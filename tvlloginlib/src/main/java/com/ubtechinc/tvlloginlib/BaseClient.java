@@ -321,6 +321,7 @@ public abstract class BaseClient implements AuthorizeListener {
     }
 
     public void bindRobot(String dsn) {
+        Log.d("hdf", "bindRobot");
         PushInfoManager pushManager = PushInfoManager.getInstance();
         DeviceManager deviceManager = new DeviceManager();
         deviceManager.deviceOEM = DEVICE_OEM;

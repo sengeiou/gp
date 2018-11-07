@@ -1,10 +1,12 @@
 package com.ubtechinc.goldenpig.base;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.comm.widget.DrawableTextView;
 
 /**
  * @author : HQT
@@ -32,7 +35,7 @@ public abstract class BaseToolBarActivity extends BaseActivity {
     private TextView tvTitle;
     private FrameLayout viewContent;
     private Toolbar toolbar;
-    private TextView mNotifyTv; ///动态提示
+    private DrawableTextView mNotifyTv; ///动态提示
     protected TextView mTvSkip;              //跳过按钮
     protected ImageButton mToolbarRightBtn;
 
@@ -90,14 +93,17 @@ public abstract class BaseToolBarActivity extends BaseActivity {
 
     protected void showNotify(String notifyTips) {
         if (mNotifyTv == null) {
-            mNotifyTv = new TextView(this);
+            mNotifyTv = new DrawableTextView(this);
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                     FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
             lp.gravity = Gravity.TOP;
             mNotifyTv.setPadding(0, 10, 0, 10);
-            mNotifyTv.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.ubt_notify_tv_bg_color, null));
-            mNotifyTv.setTextColor(ResourcesCompat.getColor(getResources(), R.color.ubt_dialog_btn_txt_color, null));
+            mNotifyTv.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.ubt_color_c1, null));
+            mNotifyTv.setTextColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tips_txt_color_cc, null));
+            mNotifyTv.setCompoundDrawablePadding(5);
+            mNotifyTv.setDrawable(DrawableTextView.LEFT, ContextCompat.getDrawable(this, R.drawable.ic_done2), 60, 60);
             mNotifyTv.setLayoutParams(lp);
+            mNotifyTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13.0f);
             mNotifyTv.setGravity(Gravity.CENTER);
         }
         mNotifyTv.setText(notifyTips);

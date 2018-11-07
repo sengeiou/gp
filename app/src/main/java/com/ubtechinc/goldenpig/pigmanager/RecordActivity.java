@@ -24,6 +24,7 @@ import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewTv;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
+import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
@@ -49,6 +50,7 @@ import butterknife.BindView;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DELETE_RECORD_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.EDIT_RECORD_CALLBACK;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.INVISE_RECORD_POINT;
 import static com.ubtechinc.goldenpig.utils.CommendUtil.TIMEOUT;
 
 public class RecordActivity extends BaseNewActivity implements Observer {
@@ -382,6 +384,8 @@ public class RecordActivity extends BaseNewActivity implements Observer {
         if (mHandler.hasMessages(1)) {
             mHandler.removeMessages(1);
         }
+        Event<String> event = new Event<>(INVISE_RECORD_POINT);
+        EventBusUtil.sendEvent(event);
         LoadingDialog.getInstance(this).dismiss();
         hasLoadMsg = true;
         mList.clear();

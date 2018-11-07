@@ -106,7 +106,7 @@ public class SetRemindRepeatActivity extends BaseNewActivity {
     private void initData() {
         RepeatModel m0 = new RepeatModel();
         m0.repeatType = 1;
-        m0.name = "永不";
+        m0.name = "单次";
         mList.add(m0);
         RepeatModel m1 = new RepeatModel();
         m1.repeatType = 2;
@@ -120,9 +120,9 @@ public class SetRemindRepeatActivity extends BaseNewActivity {
         m3.repeatType = 4;
         m3.name = "每月";
         mList.add(m3);
-        RepeatModel m4 = new RepeatModel();
-        m4.repeatType = 5;
-        m4.name = "每年";
-        mList.add(m4);
+//        RepeatModel m4 = new RepeatModel();
+//        m4.repeatType = 5;
+//        m4.name = "每年";
+//        mList.add(m4);
     }
 }

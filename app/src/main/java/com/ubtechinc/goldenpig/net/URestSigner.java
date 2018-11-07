@@ -1,6 +1,9 @@
 package com.ubtechinc.goldenpig.net;
 
 
+import android.content.Context;
+import android.util.Log;
+
 /**
  * @author：ubt
  * @date：2018/10/10 11:37
@@ -20,6 +23,12 @@ public class URestSigner {
         // 2. 将签名段与先前的时间戳使用空格连接，得到最终 X-UBT-Sign 内容
 //        return MD5Util.MD5Encode(now + BuildConfig.APP_KEY) + SIGN_PART_SEPARATOR + now;
         return com.ubtechinc.nets.utils.URestSigner.sign();
+    }
+
+    public static String sign(Context context, String deviceId) {
+        String sign = com.ubtechinc.nets.utils.URestSigner.sign(context, deviceId);
+        Log.d("URestSigner", "pigsign:" + sign);
+        return sign;
     }
 
 }

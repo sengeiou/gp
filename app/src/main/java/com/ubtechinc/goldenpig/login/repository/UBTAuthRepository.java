@@ -1,6 +1,9 @@
 package com.ubtechinc.goldenpig.login.repository;
 
 
+import android.util.Log;
+
+import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.comm.entity.UserInfo;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
@@ -27,7 +30,7 @@ public class UBTAuthRepository {
         loginRequest.setMiniTvsId(info.getMiniTvsId());
         loginRequest.setAccessToken(info.getAccessToken());
         loginRequest.setAppId(info.getAppId());
-
+        LogUtils.d("hdf", "openid:" + info.getOpenId());
         //为了后台统计不同产品的注册数据，增肌一个字段ubtAppId
         loginRequest.setUbtAppId(Integer.parseInt(BuildConfig.APP_ID));
         CookieInterceptor.get().setLoginInfo(info);
@@ -50,9 +53,9 @@ public class UBTAuthRepository {
 
     public void logout(final UBTAuthCallBack callback) {
         LoginoutModule.Request request = new LoginoutModule().new Request();
-        HashMap<String,String> header=new HashMap<>();
-        header.put(CookieInterceptor.AUTHORIZATION,CookieInterceptor.get().getToken());
-        HttpProxy.get().doDelete(request,header,new ResponseListener<LoginoutModule.Response>() {
+        HashMap<String, String> header = new HashMap<>();
+        header.put(CookieInterceptor.AUTHORIZATION, CookieInterceptor.get().getToken());
+        HttpProxy.get().doDelete(request, header, new ResponseListener<LoginoutModule.Response>() {
             @Override
             public void onError(ThrowableWrapper e) {
                 if (callback != null) {
@@ -71,12 +74,12 @@ public class UBTAuthRepository {
 
     public interface UBTAuthCallBack {
 
-         void onSuccess(UserInfo userInfo);
+        void onSuccess(UserInfo userInfo);
 
-         void onError();
+        void onError();
 
-         void onLogout();
+        void onLogout();
 
-         void onLogoutError();
+        void onLogoutError();
     }
 }

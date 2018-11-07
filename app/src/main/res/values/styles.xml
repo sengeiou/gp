@@ -10,6 +10,7 @@
     <style name="AppTheme.NoToolbar" parent="AppTheme">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@drawable/splash_icon</item>
     </style>
     <!--彩色按钮基础样式-->
     <style name="UBTButtonTheme" parent="Widget.AppCompat.Button">

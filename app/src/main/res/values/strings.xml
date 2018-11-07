@@ -39,7 +39,7 @@
     <string name="ubt_unbund_pig">音箱未绑定，</string>
     <string name="ubt_my_pig">我的小猪</string>
     <string name="ubt_send_voice">给自己的音箱发送语音留言</string>
-    <string name="ubt_add_pig">配对小猪</string>
+    <string name="ubt_add_pig">添加配对小猪</string>
     <string name="ubt_add_pig_sub">配对音箱之间的语音留言</string>
     <string name="ubt_skills_manual">技能手册</string>
     <string name="ubt_skills_detail">技能详情</string>
@@ -187,5 +187,8 @@
 
     <string name="ubt_login_agree_policy">同意《优必选服务协议》与《隐私协议》</string>
     <string name="ubt_login_agree_policy_tip">请确认并同意《优必选服务协议》与《隐私协议》</string>
+
+    <string name="wifi_connect_tip">音箱已连接“%1$s”无线网络，“跳过”也可完成配网</string>
+    <string name="mobile_net_connect_tip">音箱已连接移动网络，“跳过”也可完成配网</string>
 
 </resources>

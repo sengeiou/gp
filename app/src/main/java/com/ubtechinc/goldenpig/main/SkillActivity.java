@@ -3,8 +3,8 @@ package com.ubtechinc.goldenpig.main;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseWebActivity;
-import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.net.URestSigner;
+import com.ubtechinc.nets.utils.DeviceUtils;
 
 /**
  * @author：ubt
@@ -25,8 +25,10 @@ public class SkillActivity extends BaseWebActivity {
     protected String getURL() {
         String baseUrl = BuildConfig.H5_URL + "/small/smallSkill.html?";
 
-        String url = baseUrl + "appId=" + BuildConfig.APP_ID + "&sign=" + URestSigner.sign().replace(" ", "%20") + "&authorization=" +
-                CookieInterceptor.get().getToken() + "&product=" + BuildConfig.product;
+        String deviceId = DeviceUtils.getDeviceId(this);
+
+        String url = baseUrl + "appId=" + BuildConfig.APP_ID + "&sign=" + URestSigner.sign(this, deviceId).replace(" ", "%20")
+                + "&product=" + BuildConfig.product + "&deviceId=" + deviceId;
         return url;
     }
 
@@ -38,20 +40,20 @@ public class SkillActivity extends BaseWebActivity {
 
     @Override
     protected void onGoNextWeb() {
-        setToolBarTitle(R.string.ubt_skills_detail);
+//        setToolBarTitle(R.string.ubt_skills_detail);
         showActionBar();
     }
 
     @Override
     protected void onGoBackWeb() {
-        setToolBarTitle(R.string.ubt_skills_manual);
+//        setToolBarTitle(R.string.ubt_skills_manual);
         hideActionBar();
     }
 
-    @Override
-    protected void processWeb() {
-        mWebView.addJavascriptInterface(new SmallPigObject(SkillActivity.this), "SmallPigObject");
-    }
+//    @Override
+//    protected void processWeb() {
+//        mWebView.addJavascriptInterface(new SmallPigObject(SkillActivity.this, mWebView), "SmallPigObject");
+//    }
 
 
 }

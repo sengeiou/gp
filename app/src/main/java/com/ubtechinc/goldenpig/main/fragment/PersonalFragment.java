@@ -19,6 +19,7 @@ import com.ubtechinc.goldenpig.base.BaseFragment;
 import com.ubtechinc.goldenpig.comm.img.GlideCircleTransform;
 import com.ubtechinc.goldenpig.feedback.FeedBackActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
+import com.ubtechinc.goldenpig.main.QQMusicWebActivity;
 import com.ubtechinc.goldenpig.me.UserInfoActivity;
 import com.ubtechinc.goldenpig.personal.DeviceManageActivity;
 import com.ubtechinc.goldenpig.personal.alarm.AlarmListActivity;
@@ -175,7 +176,6 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
         inits();
     }
 
-
     private void inits() {
         if (AuthLive.getInstance().getCurrentUser() != null) {
             mPohtoImg = (ImageView) getActivity().findViewById(R.id.ubt_img_me_photo);
@@ -251,7 +251,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
     }
 
     @Override
-    @OnClick({R.id.rl_login_info, R.id.ubt_btn_person_hotspot, R.id.ubt_btn_person_remind})
+    @OnClick({R.id.rl_login_info, R.id.ubt_btn_person_hotspot, R.id.ubt_btn_person_remind, R.id.ubt_btn_person_qq})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_login_info:
@@ -285,6 +285,9 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                 break;
             case R.id.ubt_btn_person_remind:
                 ActivityRoute.toAnotherActivity(getActivity(), RemindActivity.class, false);
+                break;
+            case R.id.ubt_btn_person_qq:
+                ActivityRoute.toAnotherActivity(getActivity(), QQMusicWebActivity.class, false);
                 break;
                 default:
         }

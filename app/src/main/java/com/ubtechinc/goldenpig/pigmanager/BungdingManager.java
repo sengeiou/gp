@@ -312,7 +312,8 @@ public class BungdingManager {
                     }
                 }
             } else {
-                mRobotRepository.registerRobot(token, userId, dsn, BuildConfig.APP_ID, BuildConfig.product, mResponseListener);
+                mRobotRepository.registerRobot(token, userId, dsn, BuildConfig.APP_ID, BuildConfig.product,
+                        mResponseListener);
             }
         } else {
             if (mBanddingListener != null) {
@@ -320,7 +321,8 @@ public class BungdingManager {
             }
         }
 
-//        TVSManager.getInstance(mContext, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ).tvsAuth(BuildConfig.PRODUCT_ID, dsn, new TVSManager.TVSAuthListener() {
+//        TVSManager.getInstance(mContext, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ).tvsAuth(BuildConfig
+// .PRODUCT_ID, dsn, new TVSManager.TVSAuthListener() {
 //            @Override
 //            public void onSuccess(String clientId) {
 //                Log.i(TAG, "onSuccess=======" + clientId);
@@ -345,7 +347,8 @@ public class BungdingManager {
 //
 //
 //                } else {
-//                    mRobotRepository.registerRobot(token, userId, dsn, BuildConfig.APP_ID, BuildConfig.product, mResponseListener);
+//                    mRobotRepository.registerRobot(token, userId, dsn, BuildConfig.APP_ID, BuildConfig.product,
+// mResponseListener);
 //                }
 //            }
 //
@@ -398,7 +401,8 @@ public class BungdingManager {
 
     private void checkRobotBindState(String serialId, String token, String appId) {
         RobotAllAccountViewModel mRobotAllAccountViewModel = new RobotAllAccountViewModel();
-        mRobotAllAccountViewModel.checkRobotBindState(serialId, token, appId).observe(mContext, new Observer<RobotBindStateLive>() {
+        mRobotAllAccountViewModel.checkRobotBindState(serialId, token, appId).observe(mContext, new
+                Observer<RobotBindStateLive>() {
             @Override
             public void onChanged(@Nullable RobotBindStateLive robotBindStateLive) {
 

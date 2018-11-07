@@ -69,7 +69,7 @@ public class SetQuestOrAnswerActivity extends BaseNewActivity {
                 tv_center.setText("添加问句");
                 maxchineseLength = 20;
                 limitToast = "最大长度为20个汉字";
-                etSet.setHint("请输入问句");
+                etSet.setHint("输入问句");
                 tv_hint1.setText("*仅支持汉字");
                 tv_hint2.setText("*最多输入20个汉字");
                 tv_hint3.setVisibility(View.GONE);
@@ -78,7 +78,7 @@ public class SetQuestOrAnswerActivity extends BaseNewActivity {
                 maxchineseLength = 100;
                 tv_center.setText("添加回复");
                 limitToast = "最大长度为100个字";
-                etSet.setHint("请输入回答");
+                etSet.setHint("输入回复");
                 break;
         }
         if (!TextUtils.isEmpty(str)) {
@@ -149,8 +149,9 @@ public class SetQuestOrAnswerActivity extends BaseNewActivity {
                     return source;
                 } else {
                     if (source.equals(" ")) return "";
-                    String speChat = "[`~@#$%^&*()+=|{}':'\\[\\]<>@#￥%……&*（）——+|{}【】‘”“]";
-                    Pattern pattern = Pattern.compile(speChat);
+                    Pattern pattern = Pattern.compile("[^a-zA-Z0-9\\u4E00-\\u9FA5_\\,.，。!;?]");
+                    //String speChat = "[`~@#$%^&*()+=|{}':'\\[\\]<>@#￥%……&*（）——+|{}【】‘”“]";
+                    //Pattern pattern = Pattern.compile(speChat);
                     Matcher matcher = pattern.matcher(source.toString());
                     if (matcher.find()) return "";
 

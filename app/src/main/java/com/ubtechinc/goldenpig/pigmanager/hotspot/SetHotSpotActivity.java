@@ -1,9 +1,12 @@
 package com.ubtechinc.goldenpig.pigmanager.hotspot;
 
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.tencent.TIMCustomElem;
@@ -13,11 +16,9 @@ import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubt.improtolib.GPResponse;
 import com.ubtech.utilcode.utils.ToastUtils;
-import com.ubtechinc.commlib.view.UbtSubTxtButton;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
-import com.ubtechinc.goldenpig.comm.widget.UbtEditDialog;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
@@ -35,14 +36,12 @@ import java.util.Observer;
  * @changetime :2018/9/18 11:10
  */
 public class SetHotSpotActivity extends BaseToolBarActivity implements Observer, View.OnClickListener {
-    //    @BindView(R.id.ubt_btn_hotspot_name)
-    UbtSubTxtButton mHotspotNameBtn;
-    //    @BindView(R.id.ubt_btn_hotspot_pwd)
-    UbtSubTxtButton mHotspotPwdBtn;
 
-    private UbtEditDialog dialog;
+    private EditText etHotName, etHotPwd;
 
     private String hotSpotName, hotSpotPwd;
+
+    private View ivHotNameClear, ivHotPwdClear;
 
     @Override
     protected int getConentView() {
@@ -53,11 +52,84 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer,
     protected void init(Bundle savedInstanceState) {
         setTitleBack(true);
         setToolBarTitle(R.string.ubt_person_hotspot);
-//        ButterKnife.bind(this);
-        mHotspotNameBtn = findViewById(R.id.ubt_btn_hotspot_name);
-        mHotspotNameBtn.setOnClickListener(this);
-        mHotspotPwdBtn = findViewById(R.id.ubt_btn_hotspot_pwd);
-        mHotspotPwdBtn.setOnClickListener(this);
+        initViews();
+        process();
+    }
+
+    private void initViews() {
+        mTvSkip = findViewById(R.id.ubt_tv_set_net_skip);
+        mTvSkip.setVisibility(View.INVISIBLE);
+        mTvSkip.setText(R.string.chat_save);
+        mTvSkip.setOnClickListener(this);
+
+        etHotName = findViewById(R.id.et_hot_name);
+        etHotPwd = findViewById(R.id.et_hot_pwd);
+
+        ivHotNameClear = findViewById(R.id.iv_hot_name_clear);
+        ivHotNameClear.setOnClickListener(this);
+        ivHotPwdClear = findViewById(R.id.iv_hot_pwd_clear);
+        ivHotPwdClear.setOnClickListener(this);
+
+        etHotName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                checkSaveEnabled();
+            }
+        });
+        etHotPwd.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                checkSaveEnabled();
+            }
+        });
+    }
+
+    private void checkSaveEnabled() {
+        String hotName = etHotName.getText().toString();
+        String hotPwd = etHotPwd.getText().toString();
+        if (TextUtils.isEmpty(hotName)) {
+            ivHotNameClear.setVisibility(View.INVISIBLE);
+        } else {
+            ivHotNameClear.setVisibility(View.VISIBLE);
+        }
+        if (TextUtils.isEmpty(hotPwd)) {
+            ivHotPwdClear.setVisibility(View.INVISIBLE);
+        } else {
+            ivHotPwdClear.setVisibility(View.VISIBLE);
+        }
+        mTvSkip.setVisibility(View.VISIBLE);
+        if (TextUtils.isEmpty(hotName) || TextUtils.isEmpty(hotPwd)) {
+            mTvSkip.setTextColor(getResources().getColor(R.color
+                    .ubt_skip_txt_unenable_color));
+            mTvSkip.setEnabled(false);
+        } else {
+            mTvSkip.setTextColor(getResources().getColor(R.color
+                    .ubt_tab_btn_txt_checked_color));
+            mTvSkip.setEnabled(true);
+        }
+    }
+
+    private void process() {
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null) {
             UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
@@ -83,56 +155,23 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer,
     }
 
     @Override
-//    @OnClick({R.id.ubt_btn_hotspot_pwd,R.id.ubt_btn_hotspot_name})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.ubt_btn_hotspot_name:
-                showUpdatNameDialog();
+            case R.id.iv_hot_name_clear:
+                etHotName.getEditableText().clear();
                 break;
-            case R.id.ubt_btn_hotspot_pwd:
-                showUpdatePwdDialog();
+            case R.id.iv_hot_pwd_clear:
+                etHotPwd.getEditableText().clear();
+                break;
+            case R.id.ubt_tv_set_net_skip:
+                sendUpdateHotSpot();
                 break;
         }
     }
 
-    /*显示修改热点名称的对话框*/
-    private void showUpdatNameDialog() {
-        initDialog();
-        dialog.setTipsTxt(mHotspotNameBtn.getText().toString());
-        dialog.setRawTxt(mHotspotNameBtn.getRightText());
-        dialog.setOnEnterClickListener(new UbtEditDialog.OnEnterClickListener() {
-            @Override
-            public void onEnterClick(View view, String newStr) {
-                hotSpotName = dialog.getNewEdtTxt();
-                sendUpdateHotSpot();
-            }
-        });
-        dialog.show();
-    }
-
-    /**
-    * 显示修改热点密码对话框
-    * */
-    private void showUpdatePwdDialog() {
-        initDialog();
-        dialog.setTipsTxt(mHotspotPwdBtn.getText().toString());
-        dialog.setRawTxt(mHotspotPwdBtn.getRightText());
-        dialog.setOnEnterClickListener(new UbtEditDialog.OnEnterClickListener() {
-            @Override
-            public void onEnterClick(View view, String newStr) {
-                hotSpotPwd = dialog.getNewEdtTxt();
-                sendUpdateHotSpot();
-            }
-        });
-        dialog.show();
-    }
-
-    private void initDialog() {
-        dialog = new UbtEditDialog(this);
-
-    }
-
     private void sendUpdateHotSpot() {
+        hotSpotName = etHotName.getText().toString();
+        hotSpotPwd = etHotPwd.getText().toString();
         if (TextUtils.isEmpty(hotSpotName) || TextUtils.isEmpty(hotSpotPwd)) {
             ToastUtils.showShortToast("热点名称或密码不允许为空");
             return;
@@ -184,25 +223,22 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer,
         UserContacts.AccountRequest request = null;
         try {
             request = msg.getPayload().unpack(UserContacts.AccountRequest.class);
-//            if (request.getRequest()){
             final String name = request.getSsid();
             final String pwd = request.getPassword();
-            if (mHotspotNameBtn != null) {
-                mHotspotNameBtn.setRightText(name);
+            if (etHotName != null) {
+                etHotName.setText(name);
+                etHotName.setSelection(name.length());
             }
             hotSpotName = name;
-            if (mHotspotPwdBtn != null) {
-                mHotspotPwdBtn.setRightText(pwd);
+            if (etHotPwd != null) {
+                etHotPwd.setText(pwd);
+                etHotPwd.setSelection(pwd.length());
             }
             hotSpotPwd = pwd;
-//            }else {
-//                ToastUtils.showLongToast("获取热点信息失败");
-//            }
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
             ToastUtils.showLongToast("获取热点信息失败");
         }
-
     }
 
     private void unPackRepsponse(ChannelMessageContainer.ChannelMessage msg) {
@@ -210,6 +246,7 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer,
             final boolean result = msg.getPayload().unpack(GPResponse.Response.class).getResult();
             if (result) {
                 ToastUtils.showLongToast("修改成功");
+                UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getHotSpot()));
             } else {
                 ToastUtils.showLongToast("修改失败");
             }

@@ -43,6 +43,13 @@ public class MD5Util {
 		return MD5Encode(origin,"utf-8").toLowerCase();
 	}
 
+	public static void main(String[] args) {
+		String or = "1541497286" + "100080012" + "60082a6810" + "5dea8150e185941b56eb130c05c249dbbe3bc360082a6810";
+		System.out.println("xxor:" + or);
+//		String or1 = "1540881246" + "12212126b47a4fd6112e08d38d0de112" + "5NNlX4oRWB" + "UBT2018T10200012N";
+		System.out.print("xx:"+  MD5Encode(or));
+	}
+
 	private static final String hexDigits[] = { "0", "1", "2", "3", "4", "5",
 			"6", "7", "8", "9", "a", "b", "c", "d", "e", "f" };
 
