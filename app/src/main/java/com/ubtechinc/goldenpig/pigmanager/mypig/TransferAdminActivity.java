@@ -11,6 +11,7 @@ import com.google.gson.reflect.TypeToken;
 import com.tencent.TIMMessage;
 import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
+import com.ubtech.utilcode.utils.SPUtils;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
@@ -28,6 +29,9 @@ import com.ubtechinc.nets.http.ThrowableWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.ubtechinc.goldenpig.app.Constant.SP_HAS_LOOK_LAST_RECORD;
+import static com.ubtechinc.goldenpig.app.Constant.SP_LAST_RECORD;
 
 /**
  * @author ubt
@@ -202,6 +206,8 @@ public class TransferAdminActivity extends BaseToolBarActivity implements View.O
                 @Override
                 public void onSuccess(String msg) {
                     com.ubtech.utilcode.utils.ToastUtils.showShortToast("转让成功");
+                    SPUtils.get().put(SP_LAST_RECORD, "");
+                    SPUtils.get().put(SP_HAS_LOOK_LAST_RECORD, 0);
                     imSyncRelationShip();
                     setResult(RESULT_OK);
                     finish();

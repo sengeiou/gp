@@ -17,6 +17,7 @@ import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubtech.utilcode.utils.LogUtils;
+import com.ubtech.utilcode.utils.SPUtils;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
@@ -43,6 +44,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
+
+import static com.ubtechinc.goldenpig.app.Constant.SP_HAS_LOOK_LAST_RECORD;
+import static com.ubtechinc.goldenpig.app.Constant.SP_LAST_RECORD;
 
 /**
  * @auther :hqt
@@ -102,6 +106,8 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
                                             }
                                         }
                                         AuthLive.getInstance().getCurrentPigList().remove(currentIndex);
+                                        SPUtils.get().put(SP_LAST_RECORD, "");
+                                        SPUtils.get().put(SP_HAS_LOOK_LAST_RECORD, 0);
                                     } catch (RuntimeException e) {
                                         e.printStackTrace();
                                     }

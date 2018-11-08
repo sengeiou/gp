@@ -7,6 +7,8 @@ import com.tencent.ai.tvs.info.DeviceManager;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
+import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
+import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 
@@ -54,6 +56,8 @@ public class PigUtils {
                             ubtTIMManager.loginTIM(userId, pigInfo.getRobotName(), com.ubt.imlibv2.BuildConfig
                                     .IM_Channel);
                         }
+                        Event<Integer> event = new Event<>(EventBusUtil.CONTACT_PIC_SUCCESS);
+                        EventBusUtil.sendEvent(event);
                     }
                 }
             } catch (JSONException e) {

@@ -91,9 +91,6 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
         bungdingManager = new BungdingManager(this);
         bungdingManager.setBangdingListener(mBandingListenerAbster);
         checkPigWifi();
-
-        Event<Integer> event = new Event<>(EventBusUtil.CONTACT_PIC_SUCCESS);
-        EventBusUtil.sendEvent(event);
     }
 
     @Override
