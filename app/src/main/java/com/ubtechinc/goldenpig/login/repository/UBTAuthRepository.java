@@ -1,8 +1,6 @@
 package com.ubtechinc.goldenpig.login.repository;
 
 
-import android.util.Log;
-
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.comm.entity.UserInfo;
@@ -44,9 +42,13 @@ public class UBTAuthRepository {
             @Override
             public void onSuccess(ThirdPartLoginModule.Response loginResponse) {
 
-                CookieInterceptor.get().setToken(loginResponse.getToken().getToken());
-                CookieInterceptor.get().setExpireAt(loginResponse.getToken().getExpireAt());
-                callback.onSuccess(loginResponse.getUser());
+                if (loginResponse != null) {
+                    CookieInterceptor.get().setToken(loginResponse.getToken().getToken());
+                    CookieInterceptor.get().setExpireAt(loginResponse.getToken().getExpireAt());
+                    callback.onSuccess(loginResponse.getUser());
+                } else {
+                    callback.onError();
+                }
             }
         });
     }

@@ -245,8 +245,8 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
         mClockBtn.setEnabled(isEnable);
         mRemindBtn.setAlpha(alpha);
         mRemindBtn.setEnabled(isEnable);
-        mQQMusicBtn.setAlpha(alpha);
-        mQQMusicBtn.setEnabled(isEnable);
+//        mQQMusicBtn.setAlpha(alpha);
+//        mQQMusicBtn.setEnabled(isEnable);
 
     }
 

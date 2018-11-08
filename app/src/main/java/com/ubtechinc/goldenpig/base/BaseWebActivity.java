@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -182,7 +183,9 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
                 LogUtils.d("basewebview", "title:" + title);
-                setToolBarTitle(title);
+                if (!TextUtils.isEmpty(title)) {
+                    setToolBarTitle(title);
+                }
             }
         });
 

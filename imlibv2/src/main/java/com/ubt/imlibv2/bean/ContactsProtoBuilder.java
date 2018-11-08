@@ -208,7 +208,7 @@ public class ContactsProtoBuilder {
     }
 
     public static byte[] getClientId(String clientId) {
-        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction(IM_RELATIONSHIP_CHANGED)
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction(IM_ACCOUNT_CLIENTID)
                 .setTime(System.currentTimeMillis()).build();
         ClientIdUpdateContainer.ClientIdUpdate.Builder builder = ClientIdUpdateContainer.ClientIdUpdate.newBuilder();
         builder.setClientId(clientId);

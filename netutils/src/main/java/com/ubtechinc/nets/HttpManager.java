@@ -54,6 +54,8 @@ public final class HttpManager {
 
     public static List<Interceptor> interceptors = new ArrayList<>();
 
+    private Interceptor responseInterceptor;
+
     private HttpManager(Context context) {
         this.mContext = context.getApplicationContext();
         initialize(mContext);
@@ -258,9 +260,14 @@ public final class HttpManager {
         mRestApi.doGetWithHeader(url, maps, headers, new ProxyRawCallback<T>(mContext, type, listener));
     }
 
+    /**
+     * 慎用
+     * @param interceptor
+     */
     public void addInterceptors(Interceptor interceptor) {
         if (mRestApi != null) {
             mRestApi.addInterceptor(interceptor);
         }
     }
+
 }

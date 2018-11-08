@@ -26,7 +26,7 @@ public  class BundingListenerAbster implements BungdingManager.BanddingListener 
     }
 
     @Override
-    public void onFaild(int errorCode) {
+    public void onFaild(int errorCode, String message) {
 
     }
 

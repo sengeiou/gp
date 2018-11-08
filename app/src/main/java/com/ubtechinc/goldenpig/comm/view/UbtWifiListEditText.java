@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.commlib.view.UbtClearableEditText;
 import com.ubtechinc.goldenpig.R;
-import com.ubtechinc.goldenpig.pigmanager.SetPigNetWorkActivity;
 import com.ubtechinc.nets.utils.WifiControl;
 
 import java.util.ArrayList;
@@ -49,6 +48,7 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
     private UbtWifiListAdapter mWifiListAdapter;
     private PopupWindow window;
     private String cType; ///保存网络加密方式
+    private String cWifi;
 
     public UbtWifiListEditText(Context context) {
         this(context, null);
@@ -84,9 +84,15 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
     }
 
     public void setText(String text) {
-        if (mWifiNameEdt != null && !TextUtils.isEmpty(text)) {
-            mWifiNameEdt.setText(text.replace("\"", ""));
-            scanWifiInfo();
+        if (mWifiNameEdt != null) {
+            if (!TextUtils.isEmpty(text)) {
+                cWifi = text.replace("\"", "");
+                mWifiNameEdt.setText(cWifi);
+                scanWifiInfo();
+            } else {
+                mWifiNameEdt.setText("");
+                cType = null;
+            }
         }
     }
 
@@ -209,14 +215,13 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
         wifiManager.startScan(); //启动扫描
         List<ScanResult> scanResults = wifiManager.getScanResults();//搜索到的设备列表
         Iterator<ScanResult> iterator = scanResults.iterator();
-        String phoneSsid = wifiManager.getConnectionInfo().getSSID().replace("\"", "");
         while (iterator.hasNext()) {
             ScanResult scanResult = iterator.next();
             String ssid = scanResult.SSID.replace("\"", "");
             if (TextUtils.isEmpty(ssid)) {
                 iterator.remove();
             }
-            if (!TextUtils.isEmpty(ssid) && ssid.equals(phoneSsid)) {
+            if (!TextUtils.isEmpty(ssid) && ssid.equals(cWifi)) {
                 cType = scanResult.capabilities;
             }
         }

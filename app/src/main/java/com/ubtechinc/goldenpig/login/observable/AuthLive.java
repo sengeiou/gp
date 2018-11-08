@@ -23,7 +23,7 @@ import static com.ubtechinc.goldenpig.login.observable.AuthLive.AuthState.NORMAL
 public class AuthLive extends LiveData<AuthLive> {
 
     public enum AuthState {
-        LOGINING, TVSLOGINED, TIMLOGINED, LOGOUTTING, LOGOUTTED, FORCE_OFFLINE, FORBIDDEN, ERROR, CANCEL, NORMAL
+        LOGINING, TVSLOGINED, TIMLOGINED, TIMLOGINERROR, LOGOUTTING, LOGOUTTED, FORCE_OFFLINE, FORBIDDEN, ERROR, CANCEL, NORMAL
     }
 
     private static class AuthLiveHolder {
@@ -71,6 +71,16 @@ public class AuthLive extends LiveData<AuthLive> {
             postValue(this);
         }
     }
+
+    public void timLoginError() {
+        this.state = AuthState.TIMLOGINERROR;
+        if (isMainThread()) {
+            setValue(this);
+        } else {
+            postValue(this);
+        }
+    }
+
 
     public PigInfo getCurrentPig() {
         if (currentPigList != null && currentPigList.size() > 0) {

@@ -171,7 +171,7 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
     private void imSyncRelationShip() {
         //TODO 给自己的猪发
         if (AuthLive.getInstance().getCurrentPig().isAdmin) {
-            TIMMessage selfMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(1));
+            TIMMessage selfMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(3));
             UbtTIMManager.getInstance().sendTIM(selfMessage);
         }
 

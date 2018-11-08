@@ -16,7 +16,6 @@ import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.TextView;
 
-import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtechinc.commlib.network.NetworkHelper;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
@@ -157,6 +156,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 //TODO
                 ds.setColor(Color.parseColor("#0099EE"));
                 ds.setUnderlineText(false);
+                ds.bgColor = Color.parseColor("#F5F8FB");
             }
         }, 2, 11, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         spannableString.setSpan(new ClickableSpan() {
@@ -170,16 +170,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 //TODO
                 ds.setColor(Color.parseColor("#0099EE"));
                 ds.setUnderlineText(false);
+                ds.bgColor = Color.parseColor("#F5F8FB");
             }
         }, 12, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        spannableString.setSpan(getBlueSpan(), 2, 11, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//        spannableString.setSpan(getBlueSpan(), 12, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+//        spannableString.setSpan(getBgSpan(), 2, 11, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//        spannableString.setSpan(getBgSpan(), 12, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         tvAgreementPolicy.setText(spannableString);
         tvAgreementPolicy.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
-    private BackgroundColorSpan getBlueSpan(){
-        return new BackgroundColorSpan(Color.parseColor("#0099EE"));
+    private BackgroundColorSpan getBgSpan(){
+        return new BackgroundColorSpan(Color.parseColor("#F5F8FB"));
     }
 
     private void initNetHelper() {
@@ -202,17 +204,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         if (mLoginModel == null) {
             mLoginModel = new LoginModel();
         }
-        mLoginModel.setTIMLoingCallback(new UbtTIMManager.UbtIMCallBack() {
-            @Override
-            public void onError(int i, String s) {
-                AuthLive.getInstance().error();
-            }
-
-            @Override
-            public void onSuccess() {
-                AuthLive.getInstance().timLogined();
-            }
-        });
         /*if (mLoginModel.checkToken(this)) {
             handler.sendEmptyMessage(0);
         }else*/
@@ -277,7 +268,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         }, 1000);
                         break;
                     case ERROR:
-//                        ToastUtils.showShortToast(LoginActivity.this, getString(R.string.ubt_login_failure));
+                        ToastUtils.showShortToast(LoginActivity.this, getString(R.string.ubt_login_failure));
                     case NORMAL:
                     case CANCEL:
                         ///向下传递处理

@@ -48,6 +48,11 @@ public class DrawableTextView extends AppCompatTextView {
         this(context, null);
     }
 
+    @Override
+    public boolean isFocused() {
+        return true;
+    }
+
     public DrawableTextView(Context context, AttributeSet attrs) {
         this(context, attrs, android.R.attr.textViewStyle);
     }

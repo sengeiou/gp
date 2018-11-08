@@ -16,11 +16,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RadioButton;
 
-import com.tencent.TIMMessage;
-import com.tencent.ai.tvs.info.ProductManager;
-import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
-import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubtech.utilcode.utils.SPUtils;
 import com.ubtechinc.bluetooth.UbtBluetoothManager;
 import com.ubtechinc.goldenpig.BuildConfig;
@@ -42,7 +38,6 @@ import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.nets.http.ThrowableWrapper;
-import com.ubtechinc.tvlloginlib.TVSManager;
 
 import java.util.ArrayList;
 
@@ -72,51 +67,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         inits();
         checkInitInterlocution();
-
-        //TODO 登录成功后发送clientid
-        imSendClientIdToPig();
     }
 
-    private void imSendClientIdToPig() {
-        mUbtTIMManager = UbtTIMManager.getInstance();
-        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
-        if (mUbtTIMManager.isLoginedTIM()) {
-            if (pigInfo != null && pigInfo.isAdmin) {
-                ProductManager.getInstance().productId = BuildConfig.PRODUCT_ID;
-                ProductManager.getInstance().dsn = pigInfo.getRobotName();
-                String clientId = TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ).getClientId();
-                TIMMessage selfMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getClientId(clientId));
-                mUbtTIMManager.setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
-                    @Override
-                    public void onError(int i, String s) {
-                        sendCid = false;
-                    }
-
-                    @Override
-                    public void onSuccess() {
-                        sendCid = true;
-
-                    }
-                });
-                mUbtTIMManager.sendTIM(selfMessage);
-                //TVSManager.getInstance(null, null, null).bindRobot(pigInfo.getRobotName());
-            }
-        } else {
-            mUbtTIMManager.setUbtCallBack(new UbtTIMManager.UbtIMCallBack() {
-                @Override
-                public void onError(int i, String s) {
-
-                }
-
-                @Override
-                public void onSuccess() {
-                    if (!sendCid) {
-                        imSendClientIdToPig();
-                    }
-                }
-            });
-        }
-    }
 
     @Override
     protected void onNewIntent(Intent intent) {
