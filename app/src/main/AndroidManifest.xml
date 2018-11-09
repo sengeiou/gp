@@ -183,6 +183,8 @@
         <activity android:name=".about.ServicePolicyActivity"/>
         <activity android:name=".main.SkillDetailActivity" />
         <activity android:name=".main.QQMusicWebActivity" />
+
+        <service android:name=".app.StartUpService" />
     </application>
 
 </manifest>

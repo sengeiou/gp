@@ -2,8 +2,10 @@ package com.ubtechinc.goldenpig.app;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.facebook.stetho.Stetho;
@@ -16,6 +18,7 @@ import com.tencent.ai.tvs.info.ProductManager;
 import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtech.utilcode.utils.ActivityTool;
+import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
@@ -28,6 +31,7 @@ import com.ubtechinc.goldenpig.login.repository.UBTAuthRepository;
 import com.ubtechinc.goldenpig.net.ResponseInterceptor;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.utils.OSUtils;
 import com.ubtechinc.nets.HttpManager;
 import com.ubtechinc.protocollibrary.communit.ProtoBufferDisposer;
 import com.ubtechinc.tvlloginlib.TVSManager;
@@ -57,9 +61,28 @@ public class UBTPGApplication extends LoginApplication {
 
     private UBTAuthRepository ubtAuthRepository;
 
+    public static final String TAG = "goldpig";
+
     @Override
     public void onCreate() {
         super.onCreate();
+        checkStartProcess();
+        LogUtils.d(TAG, "UBTPGApplication|onCreate");
+    }
+
+    private void checkStartProcess() {
+        String processName = OSUtils.getProcessName(this, android.os.Process.myPid());
+        if (!TextUtils.isEmpty(processName)) {
+            boolean defaultProcess = processName.equals(getPackageName());
+            if (defaultProcess) {
+                initAppForMainProcess();
+            } else if (processName.contains(":QALSERVICE")) {
+                //TODO 处理其他进程初始化
+            }
+        }
+    }
+
+    private void initAppForMainProcess() {
         MultiDex.install(this);
         com.ubtech.utilcode.utils.Utils.init(this);
         instance = this;
@@ -72,6 +95,11 @@ public class UBTPGApplication extends LoginApplication {
         initActivityLife();
         initTIMListener();
         HttpManager.interceptors.add(new ResponseInterceptor());
+        initService();
+    }
+
+    private void initService() {
+        startService(new Intent(this, StartUpService.class));
     }
 
     /**

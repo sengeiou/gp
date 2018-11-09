@@ -1,9 +1,5 @@
 package com.ubtechinc.goldenpig.net;
 
-import com.ubtechinc.goldenpig.BuildConfig;
-import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
-
-import java.io.IOException;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -16,10 +12,7 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class BaseHttpProxy {
 
@@ -33,19 +26,7 @@ public class BaseHttpProxy {
                 .readTimeout(20, TimeUnit.SECONDS)
                 .sslSocketFactory(createSSLSocketFactory())
                 .hostnameVerifier(new TrustAllHostnameVerifier())
-                .addInterceptor(new Interceptor() {
-                    @Override
-                    public Response intercept(Chain chain) throws IOException {
-                        Request request = chain.request()
-                                .newBuilder()
-                                .header("X-UBT-AppId", BuildConfig.APP_ID)
-                                .header("X-UBT-Sign", URestSigner.sign())
-                                .header("authorization", CookieInterceptor.get().getToken())
-                                .header("product", BuildConfig.product)
-                                .build();
-                        return chain.proceed(request);
-                    }
-                })
+                .addInterceptor(new RequestInterceptor())
                 .addInterceptor(new ResponseInterceptor())
                 .build();
         return okHttpClient;
