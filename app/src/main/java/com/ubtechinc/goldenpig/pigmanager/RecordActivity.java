@@ -20,6 +20,7 @@ import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubt.improtolib.GPResponse;
 import com.ubt.improtolib.UserRecords;
 import com.ubtech.utilcode.utils.ToastUtils;
+import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewTv;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
@@ -258,6 +259,7 @@ public class RecordActivity extends BaseNewActivity implements Observer {
                             list.add(recordBuild.build());
                         }
                     }
+                    UbtLogger.d("RecordActivity","delete the list");
                     UbtTIMManager.getInstance().deleteRecord(list);
                     deletePosition = adapterPosition;
                     LoadingDialog.getInstance(RecordActivity.this).setTimeout(TIMEOUT)

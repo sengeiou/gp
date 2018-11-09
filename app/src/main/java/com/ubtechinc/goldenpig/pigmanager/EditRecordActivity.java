@@ -30,6 +30,7 @@ import com.ubt.improtolib.UserContacts;
 import com.ubt.improtolib.UserRecords;
 import com.ubtech.utilcode.utils.TimeUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
+import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
@@ -377,6 +378,7 @@ public class EditRecordActivity extends BaseNewActivity implements Observer {
                         }
                     }
                 }
+                UbtLogger.d("EditRecordActivity","delete the list");
                 UbtTIMManager.getInstance().deleteRecord(list);
                 LoadingDialog.getInstance(EditRecordActivity.this).setTimeout(TIMEOUT)
                         .setShowToast(true).show();

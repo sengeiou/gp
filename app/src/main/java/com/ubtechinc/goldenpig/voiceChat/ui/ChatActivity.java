@@ -265,9 +265,11 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
         for (int i = 0; i < messages.size(); ++i){
             Message mMessage = MessageFactory.getMessage(messages.get(i));
             if (mMessage == null || messages.get(i).status() == TIMMessageStatus.HasDeleted) continue;
+            Log.d(TAG,"receive the customeMessae List<TIMMessage>"+mMessage.getMessage().getElement(0).getType());
             if (mMessage instanceof CustomMessage && (((CustomMessage) mMessage).getType() == CustomMessage.Type.TYPING ||
                     ((CustomMessage) mMessage).getType() == CustomMessage.Type.INVALID)) continue;
             ++newMsgNum;
+            Log.d(TAG,"receive the customeMessae List<TIMMessage> number " +newMsgNum);
             if (i != messages.size() - 1){
                 mMessage.setHasTime(messages.get(i+1));
                 messageList.add(0, mMessage);

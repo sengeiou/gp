@@ -225,6 +225,20 @@ public class ChatPresenter implements Observer {
     public void getMessage(@Nullable TIMMessage message){
         if (!isGetingMessage){
             isGetingMessage = true;
+            conversation.getLocalMessage(LAST_MESSAGE_NUM, message, new TIMValueCallBack<List<TIMMessage>>() {
+                @Override
+                public void onError(int i, String s) {
+
+                }
+
+                @Override
+                public void onSuccess(List<TIMMessage> timMessages) {
+                    isGetingMessage = false;
+                    for(int i=0;i<timMessages.size();i++){
+                        Log.d("NYLive","receive the customeMessae local "+timMessages.get(i).getElement(0).getType());
+                    }
+                }
+            });
             conversation.getMessage(LAST_MESSAGE_NUM, message, new TIMValueCallBack<List<TIMMessage>>() {
                 @Override
                 public void onError(int i, String s) {
@@ -236,6 +250,9 @@ public class ChatPresenter implements Observer {
                 public void onSuccess(List<TIMMessage> timMessages) {
                     Log.e("NYLive","get message success" +timMessages.size());
                     isGetingMessage = false;
+                    for(int i=0;i<timMessages.size();i++){
+                        Log.d("NYLive","receive the customeMessae cloud "+timMessages.get(i).getElement(0).getType());
+                    }
                     view.showMessage(timMessages);
                 }
             });
