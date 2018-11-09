@@ -190,4 +190,7 @@
 
     <string name="wifi_connect_tip">音箱已连接“%1$s”无线网络，“跳过”也可完成配网</string>
     <string name="mobile_net_connect_tip">音箱已连接移动网络，“跳过”也可完成配网</string>
+
+    <string name="reload_error">加载失败</string>
+    <string name="reload">重新加载</string>
 </resources>

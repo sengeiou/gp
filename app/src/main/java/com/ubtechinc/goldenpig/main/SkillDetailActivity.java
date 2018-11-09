@@ -18,11 +18,6 @@ public class SkillDetailActivity extends BaseWebActivity {
     private String url;
 
     @Override
-    protected int getConentView() {
-        return R.layout.activity_web_common;
-    }
-
-    @Override
     protected String getURL() {
         return url;
     }

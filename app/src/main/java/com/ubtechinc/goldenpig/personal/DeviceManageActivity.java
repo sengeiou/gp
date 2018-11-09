@@ -75,9 +75,6 @@ public class DeviceManageActivity extends BaseToolBarActivity implements View.On
     }
 
     private void updatePigList() {
-        if (AuthLive.getInstance().getCurrentPigList() != null) {
-            AuthLive.getInstance().getCurrentPigList().clear();
-        }
         new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListHttpProxy.OnGetPigListLitener() {
             @Override
             public void onError(ThrowableWrapper e) {

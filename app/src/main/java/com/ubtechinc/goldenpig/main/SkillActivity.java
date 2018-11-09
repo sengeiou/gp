@@ -17,11 +17,6 @@ import com.ubtechinc.nets.utils.DeviceUtils;
 public class SkillActivity extends BaseWebActivity {
 
     @Override
-    protected int getConentView() {
-        return R.layout.activity_web_common;
-    }
-
-    @Override
     protected String getURL() {
         String baseUrl = BuildConfig.H5_URL + "/small/smallSkill.html?";
 
