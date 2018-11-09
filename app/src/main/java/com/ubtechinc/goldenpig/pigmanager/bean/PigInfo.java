@@ -4,8 +4,6 @@ import android.util.Log;
 
 import com.ubtech.utilcode.utils.CollectionUtils;
 import com.ubtech.utilcode.utils.StringUtils;
-
-import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 
 import java.io.Serializable;
@@ -53,18 +51,15 @@ public class PigInfo implements Serializable {
     private List<PigPermission> robotPermissionList;
 
     private int connectionState = ROBOT_STATE_DISCONNECT; //连接状态
-    private int onlineState = -1;//在线状态
+
+    private int onlineState = ROBOT_STATE_ONLINE;//在线状态
 
     public int getOnlineState() {
         return onlineState;
     }
 
     public boolean isOnline() {
-        if (onlineState == -1) {
-            return UBTPGApplication.pig_net_status;
-        } else {
-            return onlineState == ROBOT_STATE_ONLINE;
-        }
+        return onlineState == ROBOT_STATE_ONLINE;
     }
 
     public void setOnlineState(int onlineState) {

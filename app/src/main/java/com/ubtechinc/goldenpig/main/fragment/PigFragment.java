@@ -1,10 +1,8 @@
 package com.ubtechinc.goldenpig.main.fragment;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +17,8 @@ import com.tencent.TIMMessage;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubt.improtolib.UserRecords;
+import com.ubtech.utilcode.utils.LogUtils;
+import com.ubtech.utilcode.utils.SPUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.commlib.log.UBTLog;
 import com.ubtechinc.goldenpig.BuildConfig;
@@ -38,7 +38,7 @@ import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.bean.RecordModel;
 import com.ubtechinc.goldenpig.pigmanager.mypig.PairPigActivity;
-import com.ubtechinc.goldenpig.pigmanager.mypig.PairQRScannerActivity;
+import com.ubtechinc.goldenpig.pigmanager.mypig.QRCodeActivity;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPairPigQRHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.voiceChat.ui.ChatActivity;
@@ -58,6 +58,8 @@ import java.util.Observer;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.ubtechinc.goldenpig.app.Constant.SP_HAS_LOOK_LAST_RECORD;
+import static com.ubtechinc.goldenpig.app.Constant.SP_LAST_RECORD;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CONTACT_PIC_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.INVISE_RECORD_POINT;
 
@@ -114,7 +116,6 @@ public class PigFragment extends BaseFragment implements Observer {
     String serialNumber;
     String pairSerialNumber;
     int userId;
-    public Boolean hasSetRecord = false;
 
     //TODO
     @BindView(R.id.ubt_tv_pig_title)
@@ -140,16 +141,16 @@ public class PigFragment extends BaseFragment implements Observer {
         super();
     }
 
-    public static int RECORDTYPE = 1234;
-    Handler recordHander = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            if (msg.what == RECORDTYPE && !hasSetRecord) {
-                sendRecordMsg();
-            }
-            return false;
-        }
-    });
+//    public static int RECORDTYPE = 1234;
+//    Handler recordHander = new Handler(new Handler.Callback() {
+//        @Override
+//        public boolean handleMessage(Message msg) {
+//            if (msg.what == RECORDTYPE && !hasSetRecord) {
+//                sendRecordMsg();
+//            }
+//            return false;
+//        }
+//    });
 
     @Nullable
     @Override
@@ -176,6 +177,11 @@ public class PigFragment extends BaseFragment implements Observer {
 //            //unReadVoiceMail("setOnUbtTIMConver");
 //        }
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
     }
 
     private void unReadVoiceMail(String setOnUbtTIMConver) {
@@ -219,6 +225,15 @@ public class PigFragment extends BaseFragment implements Observer {
             ubt_tv_call_title.setAlpha(1.0f);
             ubt_tv_call_sub_title.setAlpha(1.0f);
             viewPigPairAdd.setAlpha(1.0f);
+
+            String lastRecord = SPUtils.get().getString(SP_LAST_RECORD);
+            ubt_tv_call_sub_title.setText((TextUtils.isEmpty(lastRecord) ? "无" : lastRecord));
+            int type = SPUtils.get().getInt(SP_HAS_LOOK_LAST_RECORD);
+            if (type == 3) {
+                iv_unreadrecord.setVisibility(View.VISIBLE);
+            } else {
+                iv_unreadrecord.setVisibility(View.INVISIBLE);
+            }
         } else {
             llVoiceChat.setAlpha(0.5f);
             rlPairPig.setAlpha(0.5f);
@@ -238,6 +253,9 @@ public class PigFragment extends BaseFragment implements Observer {
             ubt_tv_call_title.setAlpha(0.5f);
             ubt_tv_call_sub_title.setAlpha(0.5f);
             viewPigPairAdd.setAlpha(0.5f);
+
+            ubt_tv_call_sub_title.setText("无");
+            iv_unreadrecord.setVisibility(View.INVISIBLE);
         }
         updatePigPair();
     }
@@ -337,8 +355,10 @@ public class PigFragment extends BaseFragment implements Observer {
             case R.id.view_pig_pair_add:
                 PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
                 if (pigInfo != null && pigInfo.isAdmin) {
-                    //TODO 配对小猪
-                    ActivityRoute.toAnotherActivity(getActivity(), PairQRScannerActivity.class, false);
+                    //TODO 配对二维码
+                    HashMap<String, Boolean> param = new HashMap<>();
+                    param.put("isPair", true);
+                    ActivityRoute.toAnotherActivity(getActivity(), QRCodeActivity.class, param, false);
                 } else {
                     ToastUtils.showShortToast(R.string.only_admin_operate);
                 }
@@ -371,7 +391,6 @@ public class PigFragment extends BaseFragment implements Observer {
                 } else {
                     ToastUtils.showShortToast(R.string.only_admin_operate);
                 }
-
             }
             break;
             case R.id.view_alarm: {
@@ -439,16 +458,27 @@ public class PigFragment extends BaseFragment implements Observer {
                     mo.duration = list.get(j).getDuration();
                     ss.add(mo);
                 }
-                hasSetRecord = true;
                 if (ss.size() == 0) {
                     ubt_tv_call_sub_title.setText("无");
                     iv_unreadrecord.setVisibility(View.INVISIBLE);
                 } else if (!TextUtils.isEmpty(ss.get(0).name)) {
                     ubt_tv_call_sub_title.setText(ss.get(0).name);
-                    iv_unreadrecord.setVisibility(View.VISIBLE);
+                    if (ss.get(0).type == 3) {
+                        iv_unreadrecord.setVisibility(View.VISIBLE);
+                    } else {
+                        iv_unreadrecord.setVisibility(View.INVISIBLE);
+                    }
+                    SPUtils.get().put(SP_LAST_RECORD, ss.get(0).name);
+                    SPUtils.get().put(SP_HAS_LOOK_LAST_RECORD, ss.get(0).type);
                 } else {
                     ubt_tv_call_sub_title.setText(ss.get(0).number);
-                    iv_unreadrecord.setVisibility(View.VISIBLE);
+                    if (ss.get(0).type == 3) {
+                        iv_unreadrecord.setVisibility(View.VISIBLE);
+                    } else {
+                        iv_unreadrecord.setVisibility(View.INVISIBLE);
+                    }
+                    SPUtils.get().put(SP_LAST_RECORD, ss.get(0).number);
+                    SPUtils.get().put(SP_HAS_LOOK_LAST_RECORD, ss.get(0).type);
                 }
                 break;
         }
@@ -457,9 +487,11 @@ public class PigFragment extends BaseFragment implements Observer {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Event event) {
         if (event != null && event.getCode() == CONTACT_PIC_SUCCESS) {
+            LogUtils.d("hdf", "CONTACT_PIC_SUCCESS");
             sendRecordMsg();
         } else if (event != null && event.getCode() == INVISE_RECORD_POINT) {
             iv_unreadrecord.setVisibility(View.INVISIBLE);
+            SPUtils.get().put(SP_HAS_LOOK_LAST_RECORD, 0);
         }
     }
 
@@ -467,6 +499,7 @@ public class PigFragment extends BaseFragment implements Observer {
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null && pigInfo.isAdmin) {
             UbtTIMManager.getInstance().setMsgObserve(this);
+            LogUtils.d("hdf", "sendRecordMsg");
             UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
                 @Override
                 public void onError(int i, String s) {
@@ -479,8 +512,7 @@ public class PigFragment extends BaseFragment implements Observer {
                     Log.e("setOnUbtTIMConver", "sss");
                 }
             });
-            UbtTIMManager.getInstance().queryLatestRecord();
-            recordHander.sendEmptyMessageDelayed(RECORDTYPE, 10 * 1000);
+            //UbtTIMManager.getInstance().queryLatestRecord();
         }
     }
 }

@@ -72,7 +72,9 @@ public class SplashActivity extends BaseActivity {
                         }, 500);
                         break;
                     case ERROR:
-//                        ToastUtils.showShortToast(SplashActivity.this, getString(R.string.ubt_login_failure));
+                        dismissLoadDialog();
+                        ActivityRoute.toAnotherActivity(SplashActivity.this, LoginActivity.class, true);
+                        break;
                     case NORMAL:
                     case CANCEL:
                         ///向下传递处理
@@ -131,7 +133,7 @@ public class SplashActivity extends BaseActivity {
                 }
             }, 500);
         } else {
-            disposable = Observable.timer(5, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread())
+            disposable = Observable.timer(10, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread())
                     .subscribe(aLong -> {
                         //TODO 超时
                         ToastUtils.showShortToast("自动登录超时，请重新登录");

@@ -1,12 +1,10 @@
 package com.ubtechinc.goldenpig.comm.widget;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -24,6 +22,7 @@ import com.ubtechinc.goldenpig.base.BaseDialog;
 public class UBTBaseDialog extends BaseDialog implements View.OnClickListener{
     private OnUbtDialogClickLinsenter onUbtDialogClickLinsenter;
     private Button mLeftBtn,mRightBtn;
+    private View ubtBtnDecor;
     private TextView mTipsTv;  //对话框提示语
     private int mLeftBtnColor=-1,mRightBtnColor=-1;
     public UBTBaseDialog(@NonNull Context context) {
@@ -49,6 +48,7 @@ public class UBTBaseDialog extends BaseDialog implements View.OnClickListener{
 
         this.setContentView(root);
         mLeftBtn=(Button) findViewById(R.id.ubt_dialog_left_btn);
+        ubtBtnDecor = findViewById(R.id.ubt_btn_decor);
         if (mLeftBtnColor!=-1){
             mLeftBtn.setTextColor(mLeftBtnColor);
         }
@@ -65,6 +65,15 @@ public class UBTBaseDialog extends BaseDialog implements View.OnClickListener{
             mTipsTv=(TextView)findViewById(R.id.ubt_tv_dialog_tips);
         }
         mTipsTv.setText(tips);
+    }
+
+    public void setLeftBtnShow(boolean isShow) {
+        if (mLeftBtn != null) {
+            mLeftBtn.setVisibility(isShow ? View.VISIBLE : View.GONE);
+            if (ubtBtnDecor != null) {
+                ubtBtnDecor.setVisibility(isShow ? View.VISIBLE : View.GONE);
+            }
+        }
     }
 
     public void setLeftButtonTxt(String btnStr){

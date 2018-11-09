@@ -20,7 +20,6 @@ import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.commlib.utils.WifiUtils;
 import com.ubtechinc.goldenpig.R;
-import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.view.UbtPasswordEditText;
 import com.ubtechinc.goldenpig.comm.view.UbtWifiListEditText;
@@ -28,15 +27,12 @@ import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
-import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.MainActivity;
 import com.ubtechinc.goldenpig.net.RegisterRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.bean.BundingListenerAbster;
-import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.nets.utils.WifiControl;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
@@ -58,6 +54,8 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
     private BungdingManager bungdingManager;
 
     private static final int TIME_OUT = 30;
+
+    private boolean isPigConnectNet = false;
 
     @Override
     protected int getConentView() {
@@ -91,9 +89,6 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
         bungdingManager = new BungdingManager(this);
         bungdingManager.setBangdingListener(mBandingListenerAbster);
         checkPigWifi();
-
-        Event<Integer> event = new Event<>(EventBusUtil.CONTACT_PIC_SUCCESS);
-        EventBusUtil.sendEvent(event);
     }
 
     @Override
@@ -119,7 +114,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
 
     private void doProcessSkip() {
         doSendSkipComm();
-        if (UBTPGApplication.pig_net_status) {
+        if (isPigConnectNet) {
             hideNotify();
             findViewById(R.id.ubt_layout_setnet).setVisibility(View.GONE);
             findViewById(R.id.ubt_img_success).setVisibility(View.VISIBLE);
@@ -267,14 +262,14 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
 
     BundingListenerAbster mBandingListenerAbster = new BundingListenerAbster() {
         @Override
-        public void onFaild(int errorCode) {
-            super.onFaild(errorCode);
+        public void onFaild(int errorCode, String message) {
+            super.onFaild(errorCode, message);
             if (errorCode != 2041) {
                 dismissLoadDialog();
                 mSendWifiInfoBtn.setText(R.string.ubt_connect);
                 mSendWifiInfoBtn.setAlpha(1.0f);
                 ToastUtils.showShortToast(SetPigNetWorkActivity.this, "连接失败");
-                AuthLive.getInstance().getCurrentPig().setOnlineState(PigInfo.ROBOT_STATE_OFFLINE);
+//                AuthLive.getInstance().getCurrentPig().setOnlineState(PigInfo.ROBOT_STATE_OFFLINE);
 //                UBTPGApplication.pig_net_status = false;
             }
         }
@@ -294,7 +289,6 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
         @Override
         public void connWifiSuccess() {
             super.connWifiSuccess();
-            UBTPGApplication.pig_net_status = true;
             mSendWifiInfoBtn.setText(R.string.ubt_connect);
             mSendWifiInfoBtn.setAlpha(1.0f);
             dismissLoadDialog();
@@ -315,71 +309,62 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
         @Override
         public void onPigConnected(String wifiState) {
             super.onPigConnected(wifiState);
-//            dismissLoadDialog();
-            //{"co":120,"wifi_info":"{\"l\":-29,\"s\":\"\\\"alpha-bigbox-5G\\\"\"}"}
+//            {"co":120,"wifi_info":"{\"l\":-60,\"s\":\"UBT-Robot\"}","mobile_info":"{\"m\":4}"}
             UbtLogger.i("onPigConnected", wifiState);
-            String wifiName = "";
             if (!TextUtils.isEmpty(wifiState)) {
                 try {
-
                     wifiState = wifiState.replace("\\", "");
                     wifiState = wifiState.replace("\"{", "{");
                     wifiState = wifiState.replace("}\"", "}");
                     wifiState = wifiState.replace("\"\"", "\"");
-                    JSONObject jsonObject = new JSONObject(wifiState);
-                    if (jsonObject.has("wifi_info")) {
-                        jsonObject = jsonObject.getJSONObject("wifi_info");
-                    }
-                    if (jsonObject.has("s")) {
-                        wifiName = jsonObject.getString("s");
+                    JSONObject wifiStateJson = new JSONObject(wifiState);
+
+                    JSONObject wifi_info = wifiStateJson.optJSONObject("wifi_info");
+                    if (wifi_info != null) {
+                        String wifiName = wifi_info.optString("s");
                         if (!TextUtils.isEmpty(wifiName)) {
                             showNotify(getResources().getString(R.string.wifi_connect_tip, wifiName));
+                            isPigConnectNet = true;
+                            return;
                         }
-                    } else {
-                        ///连接到有道网络是提示
-                        showNotify(getResources().getString(R.string.mobile_net_connect_tip));
                     }
-                    AuthLive.getInstance().getCurrentPig().setOnlineState(PigInfo.ROBOT_STATE_ONLINE);
-                    UBTPGApplication.pig_net_status = true;
-                    /*if (jsonObject.getInt("co") == 120) {
-                        JSONObject subJson = jsonObject.getJSONObject("wifi_info");
-                        if (jsonObject.has("wifi_info")) {
-                            final String wifiName = subJson.getString("s");
-                            if (TextUtils.isEmpty(wifiName)) {
-                                /// 解析小猪网络json反馈
-                                showNotify("音箱已连接“" + wifiName + "”无线网络");
-                            }
+
+                    JSONObject mobile_info = wifiStateJson.optJSONObject("mobile_info");
+                    if (mobile_info != null) {
+                        int mobileType = mobile_info.optInt("m");
+                        if (mobileType != 0) {
+                            showNotify(getResources().getString(R.string.mobile_net_connect_tip));
+                            isPigConnectNet = true;
+                            return;
                         }
-                    } else {
-                        ///连接到有道网络是提示
-                        showNotify("音箱已连接移动网络");
-                    }*/
-                } catch (JSONException e) {
+                    }
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
 
             //TODO 刷新wifi输入框默认ssid
-            updateDefaultSsid(wifiName);
+//            updateDefaultSsid();
         }
     };
 
     @Override
     protected void onResume() {
         super.onResume();
-        updateDefaultSsid("");
+        updateDefaultSsid();
     }
 
-    private void updateDefaultSsid(String wifiName) {
-//        String defaultSsid;
-//        if (TextUtils.isEmpty(wifiName)) {
-//            defaultSsid = WifiControl.get(SetPigNetWorkActivity.this).getSSID();
-//        } else {
-//            defaultSsid = wifiName;
-//        }
-        String defaultSsid = WifiControl.get(SetPigNetWorkActivity.this).getConnectInfo().getSSID();
-        if (!TextUtils.isEmpty(defaultSsid)) {
-            mWifiNamEdt.setText(defaultSsid);
+    private void updateDefaultSsid() {
+        try {
+            String defaultSsid = WifiControl.get(SetPigNetWorkActivity.this).getConnectInfo().getSSID();
+            if (!TextUtils.isEmpty(defaultSsid) && !defaultSsid.contains("unknown")) {
+                mWifiNamEdt.setText(defaultSsid);
+            } else {
+                mWifiNamEdt.setText("");
+            }
+        } catch (Exception e) {
+            //TODO 获取网络异常
         }
+
     }
 }

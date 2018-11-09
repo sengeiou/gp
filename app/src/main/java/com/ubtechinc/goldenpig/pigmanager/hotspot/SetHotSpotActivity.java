@@ -118,7 +118,7 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer,
             ivHotPwdClear.setVisibility(View.VISIBLE);
         }
         mTvSkip.setVisibility(View.VISIBLE);
-        if (TextUtils.isEmpty(hotName) || TextUtils.isEmpty(hotPwd)) {
+        if (TextUtils.isEmpty(hotName) || TextUtils.isEmpty(hotPwd) || hotPwd.length() < 8) {
             mTvSkip.setTextColor(getResources().getColor(R.color
                     .ubt_skip_txt_unenable_color));
             mTvSkip.setEnabled(false);
@@ -246,7 +246,8 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer,
             final boolean result = msg.getPayload().unpack(GPResponse.Response.class).getResult();
             if (result) {
                 ToastUtils.showLongToast("修改成功");
-                UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getHotSpot()));
+                finish();
+//                UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getHotSpot()));
             } else {
                 ToastUtils.showLongToast("修改失败");
             }

@@ -22,6 +22,10 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class BaseHttpProxy {
+
+
+    private static final String TAG = "BaseHttpProxy";
+
     protected OkHttpClient getHttpClient() {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)
@@ -42,6 +46,7 @@ public class BaseHttpProxy {
                         return chain.proceed(request);
                     }
                 })
+                .addInterceptor(new ResponseInterceptor())
                 .build();
         return okHttpClient;
     }

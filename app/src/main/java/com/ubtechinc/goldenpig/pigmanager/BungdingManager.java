@@ -141,7 +141,7 @@ public class BungdingManager {
                         Log.d(TAG, "errorCode=====" + errorCode);
                         ///UbtBluetoothManager.getInstance().closeConnectBle();
                         if (mBanddingListener != null) {
-                            mBanddingListener.onFaild(errorCode);
+                            mBanddingListener.onFaild(errorCode, "");
                         }
                     } else if (command == ROBOT_BANGDING_SUCCESS) {
                         //UbtBluetoothManager.getInstance().closeConnectBle();
@@ -208,7 +208,7 @@ public class BungdingManager {
             //UbtBluetoothManager.getInstance().closeConnectBle();
             if (mBanddingListener != null) {
                 // 发送失败
-                mBanddingListener.onFaild(Constants.BLUETOOTH_SEND_FIAL);
+                mBanddingListener.onFaild(Constants.BLUETOOTH_SEND_FIAL, "");
             }
         }
 
@@ -263,10 +263,12 @@ public class BungdingManager {
         public void onError(String error) {
             // UbtBluetoothManager.getInstance().closeConnectBle();
             int erorCode = -1;
+            String message = "";
             try {
                 if (error != null) {
                     JSONObject jsonObject = new JSONObject(error);
                     erorCode = jsonObject.getInt("code");
+                    message = jsonObject.getString("message");
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -276,7 +278,7 @@ public class BungdingManager {
                 checkRobotBindState(mSerialId, token, BuildConfig.APP_ID);
             }
             if (mBanddingListener != null) {
-                mBanddingListener.onFaild(erorCode);
+                mBanddingListener.onFaild(erorCode, message);
             }
         }
     };
@@ -317,7 +319,7 @@ public class BungdingManager {
             }
         } else {
             if (mBanddingListener != null) {
-                mBanddingListener.onFaild(Constants.GET_CLIENT_ID_ERROR_CODE);
+                mBanddingListener.onFaild(Constants.GET_CLIENT_ID_ERROR_CODE, "");
             }
         }
 
@@ -443,7 +445,7 @@ public class BungdingManager {
                     case Networkerror:
                         //UbtBluetoothManager.getInstance().closeConnectBle();
                         if (mBanddingListener != null) {
-                            mBanddingListener.onFaild(Constants.REGISTER_ROBOT_ERROR_CODE);
+                            mBanddingListener.onFaild(Constants.REGISTER_ROBOT_ERROR_CODE, "");
                         }
                         break;
                 }
@@ -463,7 +465,7 @@ public class BungdingManager {
 
         void onSuccess(RegisterRobotModule.Response response);
 
-        void onFaild(int errorCode);//需要关闭蓝牙
+        void onFaild(int errorCode, String message);//需要关闭蓝牙
 
         void connectSuccess();
 

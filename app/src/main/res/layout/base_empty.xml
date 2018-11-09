@@ -16,7 +16,7 @@
         android:layout_width="@dimen/dp_150"
         android:layout_height="@dimen/dp_150"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/img_maillist" />
+        android:src="@drawable/img_nocall" />
 
     <TextView
         android:id="@+id/tv_empty"

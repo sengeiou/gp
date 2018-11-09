@@ -7,6 +7,8 @@ import com.tencent.ai.tvs.info.DeviceManager;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
+import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
+import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 
@@ -17,7 +19,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class PigUtils {
-    private static String APP_KEY = "ffb54fb08efe11e8a377658d0db82adb";
+    public static String TVS_APP_KEY = "ffb54fb08efe11e8a377658d0db82adb";
 
     public static void getPigList(String response, String userId, ArrayList<PigInfo> pigInfos) {
         if (!TextUtils.isEmpty(response)) {
@@ -54,6 +56,8 @@ public class PigUtils {
                             ubtTIMManager.loginTIM(userId, pigInfo.getRobotName(), com.ubt.imlibv2.BuildConfig
                                     .IM_Channel);
                         }
+                        Event<Integer> event = new Event<>(EventBusUtil.CONTACT_PIC_SUCCESS);
+                        EventBusUtil.sendEvent(event);
                     }
                 }
             } catch (JSONException e) {
@@ -81,7 +85,7 @@ public class PigUtils {
             JSONObject stAIDeviceBaseInfo = new JSONObject();
             stAIDeviceBaseInfo.put("strGuid", "");//AuthLive.getInstance().getCurrentPig() == null ?"hdfeng" :
             // AuthLive.getInstance().getCurrentPig().getGuid()
-            stAIDeviceBaseInfo.put("strAppKey", APP_KEY);
+            stAIDeviceBaseInfo.put("strAppKey", TVS_APP_KEY);
             vCloudAlarmData0.put("stAIDeviceBaseInfo", stAIDeviceBaseInfo);
             vCloudAlarmData0.put("eRepeatType", eRepeatType);
             //0为异常类型，1为一次性，2为每天，3为每周，4为每月，5为工作日，6为节假日
@@ -118,7 +122,7 @@ public class PigUtils {
             stAIDeviceBaseInfo.put("strGuid", "");//AuthLive
             // .getInstance().getCurrentPig() == null ?
             //"hdfeng" : AuthLive.getInstance().getCurrentPig().getRobotName()
-            stAIDeviceBaseInfo.put("strAppKey", APP_KEY);
+            stAIDeviceBaseInfo.put("strAppKey", TVS_APP_KEY);
             vCloudAlarmData0.put("stAIDeviceBaseInfo", stAIDeviceBaseInfo);
             stCloudAlarmReq.put("stAIDeviceBaseInfo", stAIDeviceBaseInfo);
             vCloudAlarmData0.put("eRepeatType", eRepeatType);

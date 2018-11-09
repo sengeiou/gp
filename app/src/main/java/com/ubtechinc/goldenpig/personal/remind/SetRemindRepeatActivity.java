@@ -106,7 +106,7 @@ public class SetRemindRepeatActivity extends BaseNewActivity {
     private void initData() {
         RepeatModel m0 = new RepeatModel();
         m0.repeatType = 1;
-        m0.name = "单次";
+        m0.name = "永不";
         mList.add(m0);
         RepeatModel m1 = new RepeatModel();
         m1.repeatType = 2;

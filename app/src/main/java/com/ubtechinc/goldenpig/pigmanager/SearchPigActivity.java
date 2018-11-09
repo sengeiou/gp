@@ -409,8 +409,8 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
     };
     BundingListenerAbster mBandingListenerAbster = new BundingListenerAbster() {
         @Override
-        public void onFaild(int errorCode) {
-            super.onFaild(errorCode);
+        public void onFaild(int errorCode, String message) {
+            super.onFaild(errorCode, message);
 
             switch (errorCode) {
                 case 2041:
@@ -419,9 +419,11 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
                         ToastUtils.showShortToast(SearchPigActivity.this, R.string.ubt_one_user_one_pig);
                     }
                     break;
+                case 2040:
+                    ToastUtils.showShortToast(SearchPigActivity.this, message);
+                    break;
                 default:
                     ToastUtils.showShortToast(SearchPigActivity.this, Constants.getErrorMsg(errorCode));
-
                     break;
             }
             pigListDialog.dismiss();

@@ -1,0 +1,53 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion COMPILE_SDK_VERSION
+
+    defaultConfig {
+        minSdkVersion MIN_SDK_VERSION
+        targetSdkVersion TARGET_SDK_VERSION
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+
+    android.libraryVariants.all { variant ->
+        variant.outputs.all {
+            if (outputFileName.endsWith('.aar')) {
+                if (variant.buildType.name == "debug") {
+                    outputFileName = "${archivesBaseName}-debug-${android.defaultConfig.versionName}.aar"
+                } else {
+                    outputFileName = "${archivesBaseName}-${android.defaultConfig.versionName}.aar"
+                }
+            }
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2'
+
+    //如果有冲突使用compileOnly编译冲突库
+//    api files('libs/jg_filter_sdk_1.1.jar')
+//    api files('libs/mid-core-sdk-4.0.0.jar')
+//    //compileOnly files('libs/wup-1.0.0.E-SNAPSHOT.jar')
+//    api files('libs/Xg_sdk_v3.2_20171211_1607.jar')
+}

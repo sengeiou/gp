@@ -47,7 +47,7 @@ public class UbtTIMManager {
     private String pigAccount;
     private String channel;
     public static String userId = "";
-    private UbtIMCallBack ubtCallBack;
+    private UbtIMCallBack ubtIMCallBack;
     private TIMConversation conversation;
     private final static String TAG = "UbtTIMManager";
 
@@ -145,7 +145,7 @@ public class UbtTIMManager {
                 @Override
                 public void onFailure(String error) {
                     UbtLogger.e("doTIMLogin", error);
-                    ubtCallBack.onError(1001, error);
+                    ubtIMCallBack.onLoginError(1001, error);
 
                 }
 
@@ -184,7 +184,11 @@ public class UbtTIMManager {
         TIMManager.getInstance().setUserStatusListener(new TIMUserStatusListener() {
             @Override
             public void onForceOffline() {
-                Log.d("TIMManager", "IM onForceOffline");
+                Log.d("TIMManager", "TIM onForceOffline");
+                isLoginedTIM = false;
+                if (ubtIMCallBack != null) {
+                    ubtIMCallBack.onForceOffline();
+                }
             }
 
             @Override
@@ -259,19 +263,19 @@ public class UbtTIMManager {
     }
 
 
-    public void setUbtCallBack(UbtIMCallBack callBack) {
-        this.ubtCallBack = callBack;
+    public void setUbtIMCallBack(UbtIMCallBack callBack) {
+        this.ubtIMCallBack = callBack;
     }
 
     public void removeUbtCallBack() {
-        this.ubtCallBack = null;
+        this.ubtIMCallBack = null;
     }
 
     private TIMCallBack timCallBack = new TIMCallBack() {
         @Override
         public void onError(int i, String s) {
-            if (ubtCallBack != null) {
-                ubtCallBack.onError(i, s);
+            if (ubtIMCallBack != null) {
+                ubtIMCallBack.onLoginError(i, s);
             }
         }
 
@@ -279,8 +283,8 @@ public class UbtTIMManager {
         public void onSuccess() {
             isLoginedTIM = true;
             setPigAccount(pigAccount);
-            if (ubtCallBack != null) {
-                ubtCallBack.onSuccess();
+            if (ubtIMCallBack != null) {
+                ubtIMCallBack.onLoginSuccess();
             }
         }
     };
@@ -394,7 +398,6 @@ public class UbtTIMManager {
         if (!success && !isLoginedTIM) {
             loginTIM(userId, pigAccount, channel);
         }
-
     }
 
     public void sendTIM(TIMMessage msg, TIMConversation conversation) {
@@ -449,9 +452,11 @@ public class UbtTIMManager {
 
 
     public interface UbtIMCallBack {
-        void onError(int i, String s);
+        void onLoginError(int i, String s);
 
-        void onSuccess();
+        void onLoginSuccess();
+
+        void onForceOffline();
     }
 
     public void queryRecord() {

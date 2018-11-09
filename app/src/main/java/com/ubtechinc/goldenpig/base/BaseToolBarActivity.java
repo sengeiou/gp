@@ -1,13 +1,10 @@
 package com.ubtechinc.goldenpig.base;
 
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.TypedValue;
-import android.view.Gravity;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +31,9 @@ public abstract class BaseToolBarActivity extends BaseActivity {
     private int menuResId2;
     private TextView tvTitle;
     private FrameLayout viewContent;
+    private View rlTopTip;
+    private TextView dtvTopTip;
+
     private Toolbar toolbar;
     private DrawableTextView mNotifyTv; ///动态提示
     protected TextView mTvSkip;              //跳过按钮
@@ -63,6 +63,8 @@ public abstract class BaseToolBarActivity extends BaseActivity {
         }
         //2、将子类的布局解析到 FrameLayout 里面
         viewContent = (FrameLayout) findViewById(R.id.ubt_toolbar_contentview);
+        rlTopTip = findViewById(R.id.rl_top_tip);
+        dtvTopTip = findViewById(R.id.dtv_top_tip);
         if (getConentView() > 0) {
             LayoutInflater.from(this).inflate(getConentView(), viewContent);
         }
@@ -92,34 +94,43 @@ public abstract class BaseToolBarActivity extends BaseActivity {
     }
 
     protected void showNotify(String notifyTips) {
-        if (mNotifyTv == null) {
-            mNotifyTv = new DrawableTextView(this);
-            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
-            lp.gravity = Gravity.TOP;
-            mNotifyTv.setPadding(0, 10, 0, 10);
-            mNotifyTv.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.ubt_color_c1, null));
-            mNotifyTv.setTextColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tips_txt_color_cc, null));
-            mNotifyTv.setCompoundDrawablePadding(5);
-            mNotifyTv.setDrawable(DrawableTextView.LEFT, ContextCompat.getDrawable(this, R.drawable.ic_done2), 60, 60);
-            mNotifyTv.setLayoutParams(lp);
-            mNotifyTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13.0f);
-            mNotifyTv.setGravity(Gravity.CENTER);
-        }
-        mNotifyTv.setText(notifyTips);
-        mNotifyTv.setVisibility(View.VISIBLE);
-        if (viewContent != null || mNotifyTv.getParent() == null) {
-            try {
-                viewContent.removeView(mNotifyTv);
-            } catch (Exception e) {
+        rlTopTip.setVisibility(View.VISIBLE);
+        dtvTopTip.setText(notifyTips);
+        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+        int width = displayMetrics.widthPixels;
+        dtvTopTip.setMaxWidth((int) (width * 0.8));
 
-            }
-            try {
-                viewContent.addView(mNotifyTv); //index是0，表示添加的child在linearlayout顶部，-1为底部
-            } catch (Exception e) {
-
-            }
-        }
+//        if (mNotifyTv == null) {
+//            mNotifyTv = new DrawableTextView(this);
+//            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+//                    FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+//            lp.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
+//            mNotifyTv.setPadding(0, 10, 0, 10);
+//            mNotifyTv.setBackgroundColor(ResourcesCompat.getColor(getResources(), R.color.ubt_color_c1, null));
+//            mNotifyTv.setTextColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tips_txt_color_cc, null));
+//            mNotifyTv.setCompoundDrawablePadding(5);
+//            mNotifyTv.setDrawable(DrawableTextView.LEFT, ContextCompat.getDrawable(this, R.drawable.ic_done2), 60, 60);
+//            mNotifyTv.setLayoutParams(lp);
+//            mNotifyTv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13.0f);
+//            mNotifyTv.setGravity(Gravity.CENTER);
+//            DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+//            int width = displayMetrics.widthPixels;
+//            mNotifyTv.setMaxWidth((int) (width * 0.8));
+//        }
+//        mNotifyTv.setText(notifyTips);
+//        mNotifyTv.setVisibility(View.VISIBLE);
+//        if (viewContent != null || mNotifyTv.getParent() == null) {
+//            try {
+//                viewContent.removeView(mNotifyTv);
+//            } catch (Exception e) {
+//
+//            }
+//            try {
+//                viewContent.addView(mNotifyTv); //index是0，表示添加的child在linearlayout顶部，-1为底部
+//            } catch (Exception e) {
+//
+//            }
+//        }
     }
 
     protected void setToolBarBackground(int color) {

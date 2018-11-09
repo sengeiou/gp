@@ -37,4 +37,6 @@ public class EventBusUtil {
     public static final int EDIT_RECORD_CALLBACK = 10012;
     public static final int INVISE_RECORD_POINT = 10013;
 
+    public static final int SERVER_RESPONSE_UNAUTHORIZED = 401;
+
 }

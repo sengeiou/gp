@@ -5,17 +5,20 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.ubtech.utilcode.utils.LogUtils;
-import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.main.SmallPigObject;
 
@@ -43,6 +46,12 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
 
     private ImageView iamgeView;
 
+    private View mWebError;
+
+    private boolean loadError;
+
+    private Button btWebReload;
+
     @Override
     protected int getConentView() {
         return R.layout.activity_web_common;
@@ -57,6 +66,17 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
     protected void init(Bundle savedInstanceState) {
         mWebView = findViewById(R.id.web_common);
         root = findViewById(R.id.web_root);
+        mWebError = findViewById(R.id.view_web_error_info);
+        btWebReload = findViewById(R.id.bt_web_reload);
+
+        btWebReload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mWebError.setVisibility(View.GONE);
+                mWebView.setVisibility(View.VISIBLE);
+                mWebView.reload();
+            }
+        });
 
         setTitleBack(true);
         setToolBarTitle(getToolBarTitle());
@@ -69,7 +89,7 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
     }
 
     private void initWebView() {
-        String baseUrl = BuildConfig.H5_URL + "/small/smallSkill.html?";
+//        String baseUrl = BuildConfig.H5_URL + "/small/smallSkill.html?";
 
 //        URL = baseUrl + "appId=" + BuildConfig.APP_ID + "&sign=" + URestSigner.sign().replace(" ", "%20") + "&authorization=" +
 //                CookieInterceptor.get().getToken() + "&product=" + BuildConfig.product;
@@ -108,6 +128,12 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
                 return true;
             }
 
+            @Override
+            public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                loadError = true;
+                mWebError.setVisibility(View.VISIBLE);
+                mWebView.setVisibility(View.GONE);
+            }
         });
 
         mWebView.setWebChromeClient(new WebChromeClient() {
@@ -182,7 +208,9 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
                 LogUtils.d("basewebview", "title:" + title);
-                setToolBarTitle(title);
+                if (!TextUtils.isEmpty(title)) {
+                    setToolBarTitle(title);
+                }
             }
         });
 
@@ -196,7 +224,7 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
         if (mWebView.canGoBack()) {
             isGoBack = true;
             mWebView.goBack();
-//            mWebView.scrollTo(scrollX, scrollY);
+            mWebView.scrollTo(scrollX, scrollY);
             onGoBackWeb();
         } else {
             super.onBackPressed();

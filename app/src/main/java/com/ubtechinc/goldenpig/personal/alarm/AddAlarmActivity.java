@@ -222,7 +222,6 @@ public class AddAlarmActivity extends BaseNewActivity {
                 default:
                     break;
             }
-            tv_cycle.setText(repeatType);
         }
 //        else if (event.getCode() == ADD_REMIND_REPEAT_SUCCESS) {
 //            repeatType = event.getData().toString();
@@ -254,21 +253,21 @@ public class AddAlarmActivity extends BaseNewActivity {
         switch (repeatType) {
             case 0://单次
                 if (timnow > timeMill) {
-                    eRepeatType = 1;
                     timeMill += 24 * 60 * 60 * 1000;
                 }
+                eRepeatType = 1;
                 break;
             case 8://每天
                 if (timnow > timeMill) {
                     timeMill += 24 * 60 * 60 * 1000;
-                    eRepeatType = 2;
                 }
+                eRepeatType = 2;
                 break;
             case 9:
                 if (timnow > timeMill) {
                     timeMill += 24 * 60 * 60 * 1000;
-                    eRepeatType = 5;
                 }
+                eRepeatType = 5;
                 break;
             case 1://每周日
             case 2://每周一
