@@ -37,7 +37,7 @@
     <string name="ubt_connecting">连接中</string>
     <string name="ubt_mina">我的</string>
     <string name="ubt_pig">小猪</string>
-    <string name="ubt_unbund_pig">音箱未绑定，</string>
+    <string name="ubt_unbund_pig">未绑定音箱，</string>
     <string name="ubt_my_pig">我的小猪</string>
     <string name="ubt_send_voice">给自己的音箱发送语音留言</string>
     <string name="ubt_skills_manual">技能手册</string>
@@ -172,7 +172,7 @@
     <string name="chat_audio_too_long">录音过长，已经发送</string>
     <!-- voice recording-->
     <string name="logout_tip">确定退出吗？</string>
-    <string name="pair_pig">配对小猪</string>
+    <string name="pair_pig">小猪配对</string>
     <string name="pair_pig_voice">管理已配对的小猪</string>
 
     <string name="unbind_pig_dialog_tip">绑定新音箱前，需解绑当前音箱</string>

@@ -1,11 +1,8 @@
 package com.ubtechinc.goldenpig.main.fragment;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -41,7 +38,7 @@ import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.bean.RecordModel;
 import com.ubtechinc.goldenpig.pigmanager.mypig.PairPigActivity;
-import com.ubtechinc.goldenpig.pigmanager.mypig.PairQRScannerActivity;
+import com.ubtechinc.goldenpig.pigmanager.mypig.QRCodeActivity;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPairPigQRHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.voiceChat.ui.ChatActivity;
@@ -358,8 +355,10 @@ public class PigFragment extends BaseFragment implements Observer {
             case R.id.view_pig_pair_add:
                 PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
                 if (pigInfo != null && pigInfo.isAdmin) {
-                    //TODO 配对小猪
-                    ActivityRoute.toAnotherActivity(getActivity(), PairQRScannerActivity.class, false);
+                    //TODO 配对二维码
+                    HashMap<String, Boolean> param = new HashMap<>();
+                    param.put("isPair", true);
+                    ActivityRoute.toAnotherActivity(getActivity(), QRCodeActivity.class, param, false);
                 } else {
                     ToastUtils.showShortToast(R.string.only_admin_operate);
                 }
@@ -392,7 +391,6 @@ public class PigFragment extends BaseFragment implements Observer {
                 } else {
                     ToastUtils.showShortToast(R.string.only_admin_operate);
                 }
-
             }
             break;
             case R.id.view_alarm: {

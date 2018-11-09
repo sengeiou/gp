@@ -47,7 +47,7 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
     private RecyclerView mWifiRyc;   //wifi列表
     private UbtWifiListAdapter mWifiListAdapter;
     private PopupWindow window;
-    private String cType; ///保存网络加密方式
+    private String cType; //保存网络加密方式
     private String cWifi;
 
     public UbtWifiListEditText(Context context) {
