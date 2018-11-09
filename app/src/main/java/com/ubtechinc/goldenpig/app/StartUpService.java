@@ -5,13 +5,16 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 
 import com.ubtech.utilcode.utils.LogUtils;
+import com.ubtechinc.goldenpig.comm.entity.PushAppInfo;
+import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.net.PushHttpProxy;
 
 public class StartUpService extends IntentService {
 
     public StartUpService() {
-        super("PushService");
+        super("StartUpService");
     }
+
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      *
@@ -20,7 +23,6 @@ public class StartUpService extends IntentService {
 //    public StartUpService(String name) {
 //        super(name);
 //    }
-
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
 
@@ -31,7 +33,7 @@ public class StartUpService extends IntentService {
     @Override
     public void onCreate() {
         super.onCreate();
-        LogUtils.d("PushHttpProxy", "StartUpService|onCreate");
+        LogUtils.d(UBTPGApplication.TAG, "StartUpService|onCreate");
         processPush();
     }
 
@@ -46,7 +48,10 @@ public class StartUpService extends IntentService {
             }
 
             @Override
-            public void onSuccess(String result) {
+            public void onSuccess(String token) {
+                PushAppInfo pushAppInfo = new PushAppInfo();
+                pushAppInfo.setToken(token);
+                AuthLive.getInstance().setPushAppInfo(pushAppInfo);
 
             }
         });

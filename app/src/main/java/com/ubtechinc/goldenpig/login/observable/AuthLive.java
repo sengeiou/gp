@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.os.Looper;
 
 
+import com.ubtechinc.goldenpig.comm.entity.PushAppInfo;
 import com.ubtechinc.goldenpig.comm.entity.UserInfo;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 
@@ -43,6 +44,16 @@ public class AuthLive extends LiveData<AuthLive> {
     private ArrayList<PigInfo> currentPigList;
     private AuthState state;
     private String loginToken;
+
+    private PushAppInfo pushAppInfo;
+
+    public PushAppInfo getPushAppInfo() {
+        return pushAppInfo;
+    }
+
+    public void setPushAppInfo(PushAppInfo pushAppInfo) {
+        this.pushAppInfo = pushAppInfo;
+    }
 
     public void logining() {
         this.state = AuthState.LOGINING;

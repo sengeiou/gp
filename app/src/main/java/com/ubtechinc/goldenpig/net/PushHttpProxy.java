@@ -38,7 +38,7 @@ public class PushHttpProxy extends BaseHttpProxy {
                         String result = response.body().source().readUtf8();
                         LogUtils.d("PushHttpProxy", result);
                         if (response.isSuccessful()) {
-                            callBack.onSuccess(result);
+                            callBack.onSuccess(new JSONObject(result).optString("token"));
                         } else {
                             JSONObject jsonObject = new JSONObject(result);
                             String message = jsonObject.optString("message");
@@ -56,6 +56,6 @@ public class PushHttpProxy extends BaseHttpProxy {
     public interface GetTokenCallback {
         void onError(String error);
 
-        void onSuccess(String result);
+        void onSuccess(String token);
     }
 }
