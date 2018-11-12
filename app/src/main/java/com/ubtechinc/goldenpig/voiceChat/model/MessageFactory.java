@@ -34,12 +34,12 @@ public class MessageFactory {
                 return new GroupTipMessage(message);
             case File:
                 return new FileMessage(message);
-            case Custom:
-                if(ChatActivity.VERSION_BYPASS) {
-                    return new CustomMessage(message);
-                }else {
-                    return new VoiceMessage(message);
-                }
+//            case Custom:
+//                if(ChatActivity.VERSION_BYPASS) {
+//                    return new CustomMessage(message);
+//                }else {
+//                    return new VoiceMessage(message);
+//                }
             default:
                 return null;
         }

@@ -501,13 +501,13 @@ public class PigFragment extends BaseFragment implements Observer {
             UbtTIMManager.getInstance().setMsgObserve(this);
             LogUtils.d("hdf", "sendRecordMsg");
             UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
-                @Override
-                public void onError(int i, String s) {
-                    Log.e("setOnUbtTIMConver", s);
-                    ToastUtils.showShortToast(s);
-                }
+                    @Override
+                    public void onError(int i, String s) {
+                        Log.e("setOnUbtTIMConver", s);
+                        ToastUtils.showShortToast(s);
+                    }
 
-                @Override
+                    @Override
                 public void onSuccess() {
                     Log.e("setOnUbtTIMConver", "sss");
                 }

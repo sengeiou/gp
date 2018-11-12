@@ -144,6 +144,7 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && firstItem == 0) {
                     //如果拉到顶端读取更多消息
+                    Log.d("NYLive", "onScrollStateChanged  "+messageList.get(0).getMessage().getElement(0).getType());
                     presenter.getMessage(messageList.size() > 0 ? messageList.get(0).getMessage() : null);
                 }
             }
@@ -268,8 +269,12 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
             Log.d(TAG,"receive the customeMessae List<TIMMessage>"+mMessage.getMessage().getElement(0).getType());
             if (mMessage instanceof CustomMessage && (((CustomMessage) mMessage).getType() == CustomMessage.Type.TYPING ||
                     ((CustomMessage) mMessage).getType() == CustomMessage.Type.INVALID)) continue;
+
+            if (mMessage instanceof CustomMessage ) {
+                Log.d(TAG,"(CustomMessage) mMessage).getType()  "+((CustomMessage) mMessage).getType());
+            }
             ++newMsgNum;
-            Log.d(TAG,"receive the customeMessae List<TIMMessage> number " +newMsgNum);
+            Log.d(TAG,"receive the customeMessae List<TIMMessage> number " +newMsgNum );
             if (i != messages.size() - 1){
                 mMessage.setHasTime(messages.get(i+1));
                 messageList.add(0, mMessage);

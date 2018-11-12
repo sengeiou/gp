@@ -1,12 +1,16 @@
 package com.ubt.imlibv2.bean.event;
 
 
+import android.util.Log;
+
 import com.tencent.TIMElemType;
 import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
 import com.tencent.TIMMessageListener;
 import com.tencent.TIMMessageLocator;
 import com.tencent.TIMMessageRevokedListener;
+import com.ubt.imlibv2.bean.UbtTIMManager;
+import com.ubtechinc.commlib.log.UbtLogger;
 
 import java.util.List;
 import java.util.Observable;
@@ -57,7 +61,11 @@ public class MessageEvent extends Observable implements TIMMessageListener, TIMM
 
     private void checkMsgType(TIMMessage item) {
         if (item.getElement(0).getType() != TIMElemType.Sound) {
+            UbtLogger.d("MessageEvent","checkMsgType "+ item.getElement(0).getType());
             item.getConversation().setReadMessage();
+        }else {
+            UbtLogger.d("MessageEvent","checkMsgType "+ item.getElement(0).getType());
+            UbtTIMManager.getInstance().setUnReadVoiceMailMessage(UbtTIMManager.getInstance().unReadMessage());
         }
     }
 
@@ -66,6 +74,7 @@ public class MessageEvent extends Observable implements TIMMessageListener, TIMM
      * 主动通知新消息
      */
     public void onNewMessage(TIMMessage message){
+        UbtLogger.d("MessageEvent","onNewMessage "+"active push notification");
         setChanged();
         notifyObservers(message);
     }
@@ -86,4 +95,6 @@ public class MessageEvent extends Observable implements TIMMessageListener, TIMM
         setChanged();
         notifyObservers(timMessageLocator);
     }
+
+
 }

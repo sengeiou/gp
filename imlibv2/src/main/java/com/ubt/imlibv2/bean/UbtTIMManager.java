@@ -58,7 +58,7 @@ public class UbtTIMManager {
 
     private OnUbtTIMConverListener onUbtTIMConverListener;
     private ArrayBlockingQueue<UbtTIMMsg> msgQueue = new ArrayBlockingQueue<>(16); //IM信息队列
-
+    private long unreadVoiceNumber=-1;
 
     private UbtTIMManager() {
         repository = new TIMRepository();
@@ -378,6 +378,7 @@ public class UbtTIMManager {
 
             @Override
             public void onError(int i, String s) {
+                UbtLogger.d("UbtTIMManager","1unRead message "+ UbtTIMManager.getInstance().unReadVoiceMailMessage());
                 onSendMsgHook(false);
                 if (onUbtTIMConverListener != null) {
                     onUbtTIMConverListener.onError(i, s);
@@ -387,6 +388,7 @@ public class UbtTIMManager {
             @Override
             public void onSuccess(TIMMessage timMessage) {
                 onSendMsgHook(true);
+                UbtLogger.d("UbtTIMManager","unRead message"+ UbtTIMManager.getInstance().unReadVoiceMailMessage());
                 if (onUbtTIMConverListener != null) {
                     onUbtTIMConverListener.onSuccess();
                 }
@@ -483,11 +485,33 @@ public class UbtTIMManager {
         sendTIM(msg);
     }
 
+    public void setUnReadVoiceMailMessage(long number){
+        Log.e(TAG, "set unRead message (voice) " +number );
+        unreadVoiceNumber=number;
+    }
+
+    /**
+     *  messageEVENT接收到IM消息，目前遇到问题是，在进入热点时候，在退出从腾讯返回的接口数值不对
+     * @return
+     */
     public long unReadVoiceMailMessage() {
         if (conversation == null) {
             return -1;
         }
-        return conversation.getUnreadMessageNum();
+        if(conversation.getUnreadMessageNum()==0){
+            setUnReadVoiceMailMessage(0);
+            Log.e(TAG, "get system unRead message " +conversation.getUnreadMessageNum());
+            return conversation.getUnreadMessageNum();
+        }
+        Log.e(TAG, "get variable unRead message " +unreadVoiceNumber);
+        return unreadVoiceNumber;
+    }
+
+    public long unReadMessage(){
+        if (conversation == null) {
+            return -1;
+        }
+      return conversation.getUnreadMessageNum();
     }
 
 }

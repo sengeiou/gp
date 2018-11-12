@@ -7,6 +7,7 @@ import com.tencent.TIMCallBack;
 import com.tencent.TIMConversation;
 import com.tencent.TIMConversationType;
 import com.tencent.TIMCustomElem;
+import com.tencent.TIMElemType;
 import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
 import com.tencent.TIMMessageDraft;
@@ -235,7 +236,7 @@ public class ChatPresenter implements Observer {
                 public void onSuccess(List<TIMMessage> timMessages) {
                     isGetingMessage = false;
                     for(int i=0;i<timMessages.size();i++){
-                        Log.d("NYLive","receive the customeMessae local "+timMessages.get(i).getElement(0).getType());
+                        Log.d("NYLive","receive the customeMessae local "+i+"    "+timMessages.get(i).getElement(0).getType());
                     }
                 }
             });
@@ -250,8 +251,17 @@ public class ChatPresenter implements Observer {
                 public void onSuccess(List<TIMMessage> timMessages) {
                     Log.e("NYLive","get message success" +timMessages.size());
                     isGetingMessage = false;
+                    TIMMessage mHeadMessage=timMessages.get(0);
                     for(int i=0;i<timMessages.size();i++){
-                        Log.d("NYLive","receive the customeMessae cloud "+timMessages.get(i).getElement(0).getType());
+                        Log.d("NYLive","receive the customeMessae cloud "+ i+"     " +timMessages.get(i).getElement(0).getType());
+                        if(timMessages.get(i).getElement(0).getType() == TIMElemType.Custom){
+                                timMessages.remove(i);
+                        }
+                    }
+                    if(timMessages.size()==0){
+                        Log.e("NYLive","get next message");
+                        getMessage(mHeadMessage);
+                        return;
                     }
                     view.showMessage(timMessages);
                 }
