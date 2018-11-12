@@ -220,17 +220,17 @@ public class VoiceMessage extends Message {
                //milliseconds
               voicetime = ((TIMSoundElem) message.getElement(0)).getDuration()/1000;
            }
-           if(5<voicetime&&voicetime<10){
+           if(5<=voicetime&&voicetime<10){
                tv.setText("     ");
-           }else if(10<voicetime&&voicetime<15){
+           }else if(10<=voicetime&&voicetime<15){
                tv.setText("         ");
-           }else if(15<voicetime&&voicetime<20){
+           }else if(15<=voicetime&&voicetime<20){
                tv.setText("             ");
-           }else if(20<voicetime&&voicetime<25){
+           }else if(20<=voicetime&&voicetime<25){
                tv.setText("                 ");
-           }else if(25<voicetime&&voicetime<30){
+           }else if(25<=voicetime&&voicetime<30){
                tv.setText("                     ");
-           }else if(voicetime>30){
+           }else if(voicetime>=30){
                tv.setText("                         ");
            }
            if (message.isSelf()) {
