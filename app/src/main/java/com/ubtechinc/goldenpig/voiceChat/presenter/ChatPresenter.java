@@ -21,6 +21,7 @@ import com.ubtechinc.goldenpig.voiceChat.viewfeatures.ChatView;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -32,7 +33,7 @@ public class ChatPresenter implements Observer {
     private ChatView view;
     private TIMConversation conversation;
     private boolean isGetingMessage = false;
-    private final int LAST_MESSAGE_NUM = 20;
+    private final int LAST_MESSAGE_NUM = 200;
     public static int MESSAGE_TEXT=0;
     public static int MESSAGE_VOICE=1;
     public static int MESSAGE_VIDEO=2;
@@ -235,9 +236,9 @@ public class ChatPresenter implements Observer {
                 @Override
                 public void onSuccess(List<TIMMessage> timMessages) {
                     isGetingMessage = false;
-                    for(int i=0;i<timMessages.size();i++){
-                        Log.d("NYLive","receive the customeMessae local "+i+"    "+timMessages.get(i).getElement(0).getType());
-                    }
+//                    for(int i=0;i<timMessages.size();i++){
+//                        Log.d("NYLive","receive the customeMessae local "+i+"    "+timMessages.get(i).getElement(0).getType());
+//                    }
                 }
             });
             conversation.getMessage(LAST_MESSAGE_NUM, message, new TIMValueCallBack<List<TIMMessage>>() {
@@ -249,20 +250,21 @@ public class ChatPresenter implements Observer {
 
                 @Override
                 public void onSuccess(List<TIMMessage> timMessages) {
-                    Log.e("NYLive","get message success" +timMessages.size());
+                    Log.e("NYLive", "get message success" + timMessages.size());
                     isGetingMessage = false;
-                    TIMMessage mHeadMessage=timMessages.get(0);
-                    for(int i=0;i<timMessages.size();i++){
-                        Log.d("NYLive","receive the customeMessae cloud "+ i+"     " +timMessages.get(i).getElement(0).getType());
-                        if(timMessages.get(i).getElement(0).getType() == TIMElemType.Custom){
-                                timMessages.remove(i);
-                        }
-                    }
-                    if(timMessages.size()==0){
-                        Log.e("NYLive","get next message");
-                        getMessage(mHeadMessage);
-                        return;
-                    }
+                    //TODO
+                   // TIMMessage mHeadMessage=timMessages.get(0);
+                 //   filter(timMessages);
+//                    for(int i=0;i<timMessages.size();i++){
+//                        Log.e("NYLive", "get message success" + timMessages.get(0).getElement(0).getType());
+//                    }
+//                    if(timMessages.size()==0){
+//                        Log.e("NYLive", "next get message success" + timMessages.size());
+//                        if(message==null) {
+//                            getMessage(mHeadMessage);
+//                            return;
+//                        }
+//                    }
                     view.showMessage(timMessages);
                 }
             });
@@ -291,6 +293,20 @@ public class ChatPresenter implements Observer {
                 draft.addElem(message.getElement(i));
             }
             conversation.setDraft(draft);
+        }
+    }
+
+    private void filter(List<TIMMessage> timMessages) {
+        Iterator<TIMMessage> iterable = timMessages.iterator();
+        while (iterable.hasNext()) {
+           TIMMessage message =  iterable.next();
+            try {
+                if (message.getElement(0).getType()==TIMElemType.Custom) {
+                    iterable.remove();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -144,7 +144,6 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && firstItem == 0) {
                     //如果拉到顶端读取更多消息
-                    Log.d("NYLive", "onScrollStateChanged  "+messageList.get(0).getMessage().getElement(0).getType());
                     presenter.getMessage(messageList.size() > 0 ? messageList.get(0).getMessage() : null);
                 }
             }
