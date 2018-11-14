@@ -25,8 +25,6 @@ import com.ubtechinc.goldenpig.comm.view.UbtPasswordEditText;
 import com.ubtechinc.goldenpig.comm.view.UbtWifiListEditText;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
-import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
-import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.main.MainActivity;
 import com.ubtechinc.goldenpig.net.RegisterRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.bean.BundingListenerAbster;
@@ -289,6 +287,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
         @Override
         public void connWifiSuccess() {
             super.connWifiSuccess();
+            UbtBluetoothManager.getInstance().closeConnectBle();
             mSendWifiInfoBtn.setText(R.string.ubt_connect);
             mSendWifiInfoBtn.setAlpha(1.0f);
             dismissLoadDialog();

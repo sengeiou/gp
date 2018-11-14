@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.util.AttributeSet;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -221,6 +223,14 @@ public class StateView extends View {
         }
         TextView tv = mEmptyView.findViewById(R.id.tv_empty);
         tv.setText(state);
+    }
+
+    public void setEmptyViewIcon(@DrawableRes int resId) {
+        if (mEmptyView == null) {
+            mEmptyView = inflate(mEmptyResource);
+        }
+        ImageView imageView = mEmptyView.findViewById(R.id.iv_empty);
+        imageView.setImageResource(resId);
     }
 
     public View showEmpty() {

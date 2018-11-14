@@ -6,12 +6,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -94,12 +96,19 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
 //        URL = baseUrl + "appId=" + BuildConfig.APP_ID + "&sign=" + URestSigner.sign().replace(" ", "%20") + "&authorization=" +
 //                CookieInterceptor.get().getToken() + "&product=" + BuildConfig.product;
 
+        mWebView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                mWebView.requestDisallowInterceptTouchEvent(true);
+                return false;
+            }
+        });
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setAllowFileAccess(true);
         processWeb();
 
         //开发稳定后需去掉该行代码
-//        mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+        mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 //        mWebView.getSettings().setUseWideViewPort(true);  //将图片调整到适合webview的大小
 //        mWebView.getSettings().setLoadWithOverviewMode(true); // 缩放至屏幕的大小
 //        mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);

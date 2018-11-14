@@ -12,10 +12,12 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 
 public class BaseHttpProxy {
 
+    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
     private static final String TAG = "BaseHttpProxy";
 

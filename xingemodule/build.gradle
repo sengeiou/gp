@@ -9,7 +9,7 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+//        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -25,29 +25,29 @@ android {
         }
     }
 
-
-    android.libraryVariants.all { variant ->
-        variant.outputs.all {
-            if (outputFileName.endsWith('.aar')) {
-                if (variant.buildType.name == "debug") {
-                    outputFileName = "${archivesBaseName}-debug-${android.defaultConfig.versionName}.aar"
-                } else {
-                    outputFileName = "${archivesBaseName}-${android.defaultConfig.versionName}.aar"
-                }
-            }
-        }
-    }
+//    android.libraryVariants.all { variant ->
+//        variant.outputs.all {
+//            if (outputFileName.endsWith('.aar')) {
+//                if (variant.buildType.name == "debug") {
+//                    outputFileName = "${archivesBaseName}-debug-${android.defaultConfig.versionName}.aar"
+//                } else {
+//                    outputFileName = "${archivesBaseName}-${android.defaultConfig.versionName}.aar"
+//                }
+//            }
+//        }
+//    }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.2.2'
 
-    //如果有冲突使用compileOnly编译冲突库
-//    api files('libs/jg_filter_sdk_1.1.jar')
-//    api files('libs/mid-core-sdk-4.0.0.jar')
-//    //compileOnly files('libs/wup-1.0.0.E-SNAPSHOT.jar')
-//    api files('libs/Xg_sdk_v3.2_20171211_1607.jar')
+    //信鸽jar，不包含厂商通道
+    implementation  'com.tencent.xinge:xinge:4.0.3-Release'
+
+    //jg包
+    implementation'com.tencent.jg:jg:1.1'
+    //wup包
+//    implementation 'com.tencent.wup:wup:1.0.0.E-release'
+    //mid包
+    implementation 'com.tencent.mid:mid:4.0.7'
 }

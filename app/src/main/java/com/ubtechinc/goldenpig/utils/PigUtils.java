@@ -48,6 +48,9 @@ public class PigUtils {
 
                         }
                     }
+
+                    EventBusUtil.sendEvent(new Event<>(EventBusUtil.USER_PIG_UPDATE));
+
                     PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
                     if (pigInfo != null) {
                         UbtTIMManager ubtTIMManager = UbtTIMManager.getInstance();

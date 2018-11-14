@@ -15,7 +15,6 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.tencent.TIMCustomElem;
 import com.tencent.TIMMessage;
 import com.ubt.imlibv2.bean.UbtTIMManager;
-import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubt.improtolib.UserRecords;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.SPUtils;
@@ -62,6 +61,7 @@ import static com.ubtechinc.goldenpig.app.Constant.SP_HAS_LOOK_LAST_RECORD;
 import static com.ubtechinc.goldenpig.app.Constant.SP_LAST_RECORD;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CONTACT_PIC_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.INVISE_RECORD_POINT;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
 
 /**
  * @author : HQT
@@ -198,12 +198,16 @@ public class PigFragment extends BaseFragment implements Observer {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
+        updateUserPig();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        updatePigPair();
+    }
+
+    private void updateUserPig() {
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null && pigInfo.isAdmin && pigInfo.isOnline()) {
             llVoiceChat.setAlpha(1.0f);
@@ -257,7 +261,6 @@ public class PigFragment extends BaseFragment implements Observer {
             ubt_tv_call_sub_title.setText("无");
             iv_unreadrecord.setVisibility(View.INVISIBLE);
         }
-        updatePigPair();
     }
 
     @Override
@@ -486,12 +489,20 @@ public class PigFragment extends BaseFragment implements Observer {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Event event) {
-        if (event != null && event.getCode() == CONTACT_PIC_SUCCESS) {
-            LogUtils.d("hdf", "CONTACT_PIC_SUCCESS");
-            sendRecordMsg();
-        } else if (event != null && event.getCode() == INVISE_RECORD_POINT) {
-            iv_unreadrecord.setVisibility(View.INVISIBLE);
-            SPUtils.get().put(SP_HAS_LOOK_LAST_RECORD, 0);
+        if (event == null) return;
+        int code = event.getCode();
+        switch (code) {
+            case CONTACT_PIC_SUCCESS:
+                LogUtils.d("hdf", "CONTACT_PIC_SUCCESS");
+                sendRecordMsg();
+                break;
+            case INVISE_RECORD_POINT:
+                iv_unreadrecord.setVisibility(View.INVISIBLE);
+                SPUtils.get().put(SP_HAS_LOOK_LAST_RECORD, 0);
+                break;
+            case USER_PIG_UPDATE:
+                updateUserPig();
+                break;
         }
     }
 
@@ -499,20 +510,6 @@ public class PigFragment extends BaseFragment implements Observer {
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null && pigInfo.isAdmin) {
             UbtTIMManager.getInstance().setMsgObserve(this);
-            LogUtils.d("hdf", "sendRecordMsg");
-            UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
-                    @Override
-                    public void onError(int i, String s) {
-                        Log.e("setOnUbtTIMConver", s);
-                        ToastUtils.showShortToast(s);
-                    }
-
-                    @Override
-                public void onSuccess() {
-                    Log.e("setOnUbtTIMConver", "sss");
-                }
-            });
-            //UbtTIMManager.getInstance().queryLatestRecord();
         }
     }
 }

@@ -58,7 +58,8 @@
     <string name="ubt_qq_music">QQ音乐</string>
     <string name="ubt_help">帮助与反馈</string>
     <string name="ubt_feedback">意见反馈</string>
-    <string name="ubt_about">关于小猪</string>
+    <string name="ubt_about_pig">关于小猪</string>
+    <string name="ubt_about">关于</string>
     <string name="ubt_version_format">版本%1$s</string>
     <string name="ubt_account">账号类型</string>
     <string name="ubt_associalted_account">关联QQ或微信</string>
@@ -75,7 +76,6 @@
     <string name="ubt_ubbind_success">成功解除绑定</string>
     <string name="ubt_transfer_admin_tips">你是管理员，解绑前请先转让管理员权限</string>
     <string name="ubt_exit_group_tips">你是管理员，退出成员组请先转让管理员权限</string>
-    <string name="ubt_pig_unbing">音箱未绑定，</string>
     <string name="ubt_pig_unset_net">音箱未配网，</string>
     <string name="ubt_click_for_bind">点击绑定</string>
     <string name="ubt_click_for_net">点击配网</string>

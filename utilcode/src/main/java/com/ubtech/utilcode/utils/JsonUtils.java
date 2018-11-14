@@ -112,7 +112,7 @@ public class JsonUtils{
      * @autor 唐宏宇
      * TODO map转成JSON格式数据
      */
-    public static String map2Json(Map<String ,String> map) {
+    public static String map2Json(Map<String, Object> map) {
 
 
 

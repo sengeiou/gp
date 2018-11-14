@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -20,7 +21,9 @@ import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtech.utilcode.utils.ActivityTool;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtechinc.commlib.log.UbtLogger;
+import com.ubtechinc.commlib.utils.ContextUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
+import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
@@ -30,6 +33,8 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.login.repository.UBTAuthRepository;
 import com.ubtechinc.goldenpig.net.ResponseInterceptor;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.push.PushAppInfo;
+import com.ubtechinc.goldenpig.push.PushHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.OSUtils;
 import com.ubtechinc.nets.HttpManager;
@@ -39,7 +44,10 @@ import com.ubtechinc.tvlloginlib.TVSManager;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.PUSH_MESSAGE_RECEIVED;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.PUSH_NOTIFICATION_RECEIVED;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SERVER_RESPONSE_UNAUTHORIZED;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.TVS_LOGIN_SUCCESS;
 
 /**
  * @author hqt
@@ -62,6 +70,8 @@ public class UBTPGApplication extends LoginApplication {
     private UBTAuthRepository ubtAuthRepository;
 
     public static final String TAG = "goldpig";
+
+    private boolean isShowForceOfflineDialog;
 
     @Override
     public void onCreate() {
@@ -182,20 +192,10 @@ public class UBTPGApplication extends LoginApplication {
         mForceOfflineDialog = new UBTBaseDialog(mTopActivity);
         mForceOfflineDialog.setCancelable(false);
         mForceOfflineDialog.setCanceledOnTouchOutside(false);
-//            if (Build.VERSION.SDK_INT >= 26) {//8.0新特性
-//                if (!Settings.canDrawOverlays(this)) {
-//                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-//                    startActivity(intent);
-//                    return;
-//                }
-//                mForceOfflineDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY);
-////                mForceOfflineDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_APPLICATION);
-//            } else {
-//                mForceOfflineDialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
-//            }
-        mForceOfflineDialog.setTips("您的账号于其它设备上登录");
+        mForceOfflineDialog.setTips("你的账号于其它设备上登录");
         mForceOfflineDialog.setLeftBtnShow(false);
-        mForceOfflineDialog.setRightButtonTxt("知道了");
+        mForceOfflineDialog.setRightButtonTxt("我知道了");
+        mForceOfflineDialog.setRightBtnColor(ContextCompat.getColor(this, R.color.ubt_tab_btn_txt_checked_color));
         mForceOfflineDialog.setOnUbtDialogClickLinsenter(new UBTBaseDialog.OnUbtDialogClickLinsenter() {
 
             @Override
@@ -205,20 +205,32 @@ public class UBTPGApplication extends LoginApplication {
 
             @Override
             public void onRightButtonClick(View view) {
-                ubtAuthRepository.logout(null);
+                isShowForceOfflineDialog = false;
+//                ubtAuthRepository.logout(null);
                 doLogout();
             }
 
         });
-        if (!mForceOfflineDialog.isShowing()) {
-            mForceOfflineDialog.show();
+        mForceOfflineDialog.setOnDismissListener(dialog -> isShowForceOfflineDialog = false);
+        if (!isShowForceOfflineDialog || !mForceOfflineDialog.isShowing()) {
+
+            if (mTopActivity != null) {
+                if (mTopActivity instanceof LoginActivity) {
+
+                } else {
+                    if (!mTopActivity.isDestroyed() && !mTopActivity.isFinishing()) {
+                        mForceOfflineDialog.show();
+                        isShowForceOfflineDialog = true;
+                    }
+                }
+            }
         }
     }
 
     private void doLogout() {
         new LoginModel().logoutTVS();
         AuthLive.getInstance().logout();
-        ActivityManager.getInstance().popAllActivity();
+        ActivityManager.getInstance().popAllActivityExcept(LoginActivity.class.getName());
         ActivityRoute.toAnotherActivity(mTopActivity, LoginActivity.class, true);
     }
 
@@ -230,8 +242,31 @@ public class UBTPGApplication extends LoginApplication {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveEvent(Event event) {
-        if (event != null && event.getCode() == SERVER_RESPONSE_UNAUTHORIZED) {
-            showForceOfflineDialog();
+        if (event == null) return;
+        int code = event.getCode();
+        switch (code) {
+            case SERVER_RESPONSE_UNAUTHORIZED:
+                showForceOfflineDialog();
+                break;
+            case TVS_LOGIN_SUCCESS:
+                String userId = AuthLive.getInstance().getUserId();
+                PushAppInfo pushAppInfo = AuthLive.getInstance().getPushAppInfo();
+                String pushToken = pushAppInfo.getPushToken();
+                if (!TextUtils.isEmpty(userId) && !TextUtils.isEmpty(pushToken)/* && !pushAppInfo.isBindStatus()*/) {
+                    int appId = pushAppInfo.getAppId();
+                    String authorization = pushAppInfo.getToken();
+                    AuthLive.getInstance().getUserId();
+                    String appVersion = ContextUtils.getVerName(this);
+                    PushHttpProxy pushHttpProxy = new PushHttpProxy();
+                    pushHttpProxy.bindToken(appId, pushToken, userId, appVersion, BuildConfig.product, authorization, null);
+                }
+                break;
+            case PUSH_NOTIFICATION_RECEIVED:
+
+                break;
+            case PUSH_MESSAGE_RECEIVED:
+
+                break;
         }
     }
 
