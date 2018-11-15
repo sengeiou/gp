@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -52,6 +53,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
     private Boolean hasLoadMsg = false;
     InterlocutionModel requestModel;
     Handler mHander = new Handler();
+    float firstY = 0;
 
     @Override
     protected int getContentViewId() {
@@ -66,6 +68,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        firstY = getResources().getDimensionPixelSize(R.dimen.dp_110);
         initStateView(true);
         mStateView.setOnRetryClickListener(new StateView.OnRetryClickListener() {
             @Override
@@ -105,6 +108,37 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
         adapter = new InterlocutionAdapter(this, mList);
         recycler.setAdapter(adapter);
         requestModel = new InterlocutionModel();
+        recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                //获取最后一个完全显示的ItemPosition ,角标值
+                int firstVisibleItem = manager.findFirstVisibleItemPosition();
+                if (firstVisibleItem > 0) {
+                    rl_titlebar.showIvRight();
+                } else {
+                    View firstVisiableChildView = manager.findViewByPosition(firstVisibleItem);
+                    //获取当前显示条目的高度
+                    int itemHeight = firstVisiableChildView.getHeight();
+                    //获取当前Recyclerview 偏移量
+                    int flag = -firstVisiableChildView.getTop();
+//                    LogUtils.d("hdf", "flag:" + flag + ",firstY:" + firstY + ",itemHeight:" + itemHeight + "," +
+//                            "firstVisiableChildView.getTop:" + firstVisiableChildView.getTop());
+                    if (flag > firstY) {
+                        rl_titlebar.showIvRight();
+                    } else {
+                        rl_titlebar.hideIvRight();
+                    }
+
+                }
+            }
+        });
         onRefresh();
     }
 
@@ -131,15 +165,15 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
                     public void run() {
                         LoadingDialog.getInstance(InterlocutionActivity.this).dismiss();
                         mList.clear();
-                        if (reponse == null || reponse.size() == 0) {
-                            InterlocutionItemModel model = new InterlocutionItemModel();
-                            model.type = 1;
-                            mList.add(model);
-                            rl_titlebar.hideIvRight();
-                        } else {
-                            //Collections.reverse(reponse);
-                            rl_titlebar.showIvRight();
-                        }
+                        InterlocutionItemModel model = new InterlocutionItemModel();
+                        model.type = 1;
+                        mList.add(model);
+//                        if (reponse == null || reponse.size() == 0) {
+//                            rl_titlebar.hideIvRight();
+//                        } else {
+//                            //Collections.reverse(reponse);
+//                            rl_titlebar.showIvRight();
+//                        }
                         mList.addAll(reponse);
                         adapter.notifyDataSetChanged();
                     }
