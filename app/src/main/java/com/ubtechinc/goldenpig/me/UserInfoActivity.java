@@ -69,7 +69,8 @@ public class UserInfoActivity extends BaseToolBarActivity implements View.OnClic
                 mUbtBtnAccount.setRightText(currentPlatform());
             }
             if (!TextUtils.isEmpty(mUser.getUserImage())) {
-                Glide.with(this).load(mUser.getUserImage()).centerCrop().transform(new GlideCircleTransform(this)).into(mPhotoImg);
+                Glide.with(this).load(mUser.getUserImage()).centerCrop().transform(new GlideCircleTransform(this))
+                        .placeholder(R.drawable.ic_sign_in).into(mPhotoImg);
 
             }
         }

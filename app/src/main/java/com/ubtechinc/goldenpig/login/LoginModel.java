@@ -82,6 +82,7 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
                         PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance()
                                 .getCurrentPigList());
                         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+
                         if (pigInfo != null && pigInfo.isAdmin) {
                             UbtTIMManager.avatarURL = UserInfoManager.getInstance().headImgUrl;
                             timManager.loginTIM(AuthLive.getInstance().getUserId(), pigInfo.getRobotName(), com.ubt.imlibv2.BuildConfig.IM_Channel);

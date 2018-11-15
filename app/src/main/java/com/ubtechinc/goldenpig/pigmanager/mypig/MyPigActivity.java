@@ -2,7 +2,6 @@ package com.ubtechinc.goldenpig.pigmanager.mypig;
 
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,6 +24,8 @@ import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
+import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
+import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
@@ -36,10 +37,6 @@ import com.ubtechinc.nets.http.ThrowableWrapper;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.ubtrobot.upgrade.VersionInformation;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -77,64 +74,52 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
         setTitleBack(true);
         setToolBarTitle(R.string.my_pig);
         unBindPigCallback = new UnbindPigProxy.UnBindPigCallback() {
+
             @Override
-            public void onError(IOException e) {
+            public void onError(String msg) {
                 LogUtils.d("onError");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtils.showShortToast(MyPigActivity.this, msg);
+                    }
+                });
             }
 
             @Override
-            public void onSuccess(String reponse) {
-                if (!TextUtils.isEmpty(reponse)) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(reponse);
-                        int code = jsonObject.has("code") ? jsonObject.getInt("code") : -1;
+            public void onSuccess() {
 
-                        if (code == 0) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    ToastUtils.showShortToast(MyPigActivity.this, R.string.ubt_ubbind_success);
-                                    imSyncRelationShip();
-                                    try {
-                                        ArrayList<PigInfo> pigInfos = AuthLive.getInstance().getCurrentPigList();
-                                        int currentIndex = -1;
-                                        for (int index = 0; index < pigInfos.size(); index++) {
-                                            PigInfo pigInfo = pigInfos.get(index);
-                                            if (pigInfo.getRobotName().equals(AuthLive.getInstance().getCurrentPig().getRobotName())) {
-                                                currentIndex = index;
-                                                break;
-                                            }
-                                        }
-                                        AuthLive.getInstance().getCurrentPigList().remove(currentIndex);
-                                        SPUtils.get().put(SP_LAST_RECORD, "");
-                                        SPUtils.get().put(SP_HAS_LOOK_LAST_RECORD, 0);
-                                    } catch (RuntimeException e) {
-                                        e.printStackTrace();
-                                    }
-                                    new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", null);
-                                    try {
-                                        Thread.sleep(100);
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                    finish();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtils.showShortToast(MyPigActivity.this, R.string.ubt_ubbind_success);
+                        imSyncRelationShip();
+                        try {
+                            ArrayList<PigInfo> pigInfos = AuthLive.getInstance().getCurrentPigList();
+                            int currentIndex = -1;
+                            for (int index = 0; index < pigInfos.size(); index++) {
+                                PigInfo pigInfo = pigInfos.get(index);
+                                if (pigInfo.getRobotName().equals(AuthLive.getInstance().getCurrentPig().getRobotName())) {
+                                    currentIndex = index;
+                                    break;
                                 }
-                            });
-                        } else {
-                            final String msg = jsonObject.has("message") ? jsonObject.getString("message") : "返回的结果格式错误";
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    ToastUtils.showShortToast(MyPigActivity.this, msg);
-                                }
-                            });
+                            }
+                            AuthLive.getInstance().getCurrentPigList().remove(currentIndex);
+                            EventBusUtil.sendEvent(new Event<>(EventBusUtil.USER_PIG_UPDATE));
+                            SPUtils.get().put(SP_LAST_RECORD, "");
+                            SPUtils.get().put(SP_HAS_LOOK_LAST_RECORD, 0);
+                        } catch (RuntimeException e) {
+                            e.printStackTrace();
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", null);
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        finish();
                     }
-                }
-
-
+                });
             }
         };
 
@@ -237,18 +222,18 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
         new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListHttpProxy.OnGetPigListLitener() {
             @Override
             public void onError(ThrowableWrapper e) {
-                Log.e("getPigList",e.getMessage());
+                Log.e("getPigList", e.getMessage());
             }
 
             @Override
             public void onException(Exception e) {
-                Log.e("getPigList",e.getMessage());
+                Log.e("getPigList", e.getMessage());
             }
 
             @Override
             public void onSuccess(String response) {
-                Log.e("getPigList",response);
-                PigUtils.getPigList(response,AuthLive.getInstance().getUserId(),AuthLive.getInstance().getCurrentPigList());
+                Log.e("getPigList", response);
+                PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance().getCurrentPigList());
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

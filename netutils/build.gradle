@@ -53,7 +53,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             def props = getProps(rootProject.ext.app.serverEnviroment)
             if (props != null) {
-                buildConfigField 'String', 'HOST', "\"https://testjimu.ubtrobot.com:8443\""
+                buildConfigField 'String', 'HOST', "\"http://120.25.57.42\""
                 buildConfigField 'String', 'PUSH_HOST', "\"https://apis.ubtrobot.com\""
                 buildConfigField 'String', 'IM_HOST', "\"http://210.75.21.106:9080\""
                 buildConfigField 'String', 'USER_HOST', props['user_host']

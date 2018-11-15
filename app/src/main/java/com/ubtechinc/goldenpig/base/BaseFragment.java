@@ -71,8 +71,8 @@ public abstract class BaseFragment extends Fragment {
     protected void showTips() {
         if (mTipsView != null) {
             final PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
-            mTipsView.setVisibility(View.VISIBLE);
             if (pigInfo == null) {
+                mTipsView.setVisibility(View.VISIBLE);
                 onNoPig();
                 mTipsTv.setText(R.string.ubt_unbund_pig);
                 if (mTipsClickView != null) {
@@ -83,18 +83,6 @@ public abstract class BaseFragment extends Fragment {
                         @Override
                         public void onClick(View v) {
                             tipsClickForBind();
-                        }
-                    });
-                }
-            } else if (!pigInfo.isOnline()) {
-                onNoSetNet();
-                mTipsTv.setText(R.string.ubt_pig_unset_net);
-                mTipsClickView.setText(R.string.ubt_click_for_net);
-                if (mTipsClickView != null) {
-                    mTipsClickView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            tipsClickForNet();
                         }
                     });
                 }

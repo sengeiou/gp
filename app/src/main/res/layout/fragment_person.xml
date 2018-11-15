@@ -142,7 +142,7 @@
                     android:id="@+id/ubt_btn_person_about"
                     style="@style/UBTMeBtnTheme"
                     android:drawableStart="@drawable/ic_about"
-                    android:text="@string/ubt_about"
+                    android:text="@string/ubt_about_pig"
                     app:rightText="@string/ubt_version_format"
                     app:rightTextColor="@color/ubt_version_color"
                     app:rightTextPadding="52dp"

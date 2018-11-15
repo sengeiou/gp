@@ -45,6 +45,7 @@ public class MemberPermissionAdapter extends RecyclerView.Adapter<MemberPermissi
                         .asBitmap()
                         .centerCrop()
                         .transform(new GlideCircleTransform(activityRefer.get()))
+                        .placeholder(R.drawable.ic_sign_in)
                         .into(holder.userPhoto);
             }
             if (position == selectedIndex) {

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +31,7 @@ import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.register.CheckUserRepository;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.pigmanager.register.TransferAdminHttpProxy;
+import com.ubtechinc.goldenpig.push.PushHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.nets.http.ThrowableWrapper;
@@ -42,13 +42,10 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author :hqt
@@ -83,43 +80,28 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
 
     private void initData() {
         unBindPigCallback = new UnbindPigProxy.UnBindPigCallback() {
-            @Override
-            public void onError(IOException e) {
 
+            @Override
+            public void onError(String msg) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtils.showShortToast(PigMemberActivity.this, msg);
+                    }
+                });
             }
 
             @Override
-            public void onSuccess(String reponse) {
-                if (!TextUtils.isEmpty(reponse)) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(reponse);
-                        int code = jsonObject.has("code") ? jsonObject.getInt("code") : -1;
-
-                        imSyncRelationShip();
-
-                        if (code == 0) {
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    isDownloadedUserList = false;
-                                    updatePigList();
-                                    getMember("1");
-                                }
-                            });
-                        } else {
-                            final String msg = jsonObject.has("message") ? jsonObject.getString("message") : "返回的结果格式错误";
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    ToastUtils.showShortToast(PigMemberActivity.this, msg);
-                                }
-                            });
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+            public void onSuccess() {
+                imSyncRelationShip();
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        isDownloadedUserList = false;
+                        updatePigList();
+                        getMember("1");
                     }
-
-                }
+                });
             }
         };
     }
@@ -383,10 +365,43 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
                 final String serialNo = AuthLive.getInstance().getCurrentPig().getRobotName();
 
                 final String token = CookieInterceptor.get().getToken();
-                pigProxy.unbindPig(serialNo, userId, token, BuildConfig.APP_ID, unBindPigCallback);
+                pigProxy.unbindPig(serialNo, userId, token, BuildConfig.APP_ID, new UnbindPigProxy.UnBindPigCallback() {
+
+                    @Override
+                    public void onError(String msg) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtils.showShortToast(PigMemberActivity.this, msg);
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onSuccess() {
+                        doPushDelMemberMsg(userId);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                isDownloadedUserList = false;
+                                updatePigList();
+                                getMember("1");
+                            }
+                        });
+                    }
+                });
             }
         });
         dialog.show();
+    }
+
+    private void doPushDelMemberMsg(String userId) {
+        //TODO 给删除成员推送
+        PushHttpProxy pushHttpProxy = new PushHttpProxy();
+        Map map = new HashMap();
+        map.put("app_category", 1);
+        pushHttpProxy.pushToken("", "你已被管理员移除成员组", userId, map, 1);
     }
 
     /**
@@ -437,11 +452,20 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
             public void onSuccess(String msg) {
                 com.ubtech.utilcode.utils.ToastUtils.showShortToast("转让成功");
                 imSyncRelationShip();
+                doPushTransferMsg(userId);
                 isDownloadedUserList = false;
                 updatePigList();
                 getMember("1");
             }
         });
+    }
+
+    private void doPushTransferMsg(String userId) {
+        //TODO 给新管理员推送
+        PushHttpProxy pushHttpProxy = new PushHttpProxy();
+        Map map = new HashMap();
+        map.put("app_category", 1);
+        pushHttpProxy.pushToken("", "你已成为新的小猪管理员", userId, map, 1);
     }
 
     private void updatePigList() {

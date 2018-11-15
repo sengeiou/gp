@@ -62,4 +62,11 @@ public class UbtPushModel {
     public void setXGPushClickedResult(XGPushClickedResult XGPushClickedResult) {
         mXGPushClickedResult = XGPushClickedResult;
     }
+
+    public String getToken() {
+        if (mXGPushRegisterResult != null) {
+            return mXGPushRegisterResult.getToken();
+        }
+        return null;
+    }
 }

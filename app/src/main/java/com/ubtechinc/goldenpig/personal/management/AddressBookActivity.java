@@ -109,6 +109,7 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
                 refreshLayout.autoRefresh();
             }
         });
+        mStateView.setEmptyViewIcon(R.drawable.img_maillist);
         rl_titlebar.setTitleText(getString(R.string.address_book));
         rl_titlebar.setLeftOnclickListener(new View.OnClickListener() {
             @Override

@@ -36,7 +36,13 @@ public class EventBusUtil {
     public static final int CONTACT_PIC_SUCCESS = 10011;
     public static final int EDIT_RECORD_CALLBACK = 10012;
     public static final int INVISE_RECORD_POINT = 10013;
+    public static final int TVS_LOGIN_SUCCESS = 10014;
+    public static final int PUSH_NOTIFICATION_RECEIVED = 10015;
+    public static final int PUSH_MESSAGE_RECEIVED = 10016;
+    public static final int PUSH_NOTIFICATION_CLICKED_RECEIVED = 10017;
+    public static final int USER_PIG_UPDATE = 10018;
 
     public static final int SERVER_RESPONSE_UNAUTHORIZED = 401;
+
 
 }

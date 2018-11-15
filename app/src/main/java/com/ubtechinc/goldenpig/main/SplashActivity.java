@@ -133,7 +133,7 @@ public class SplashActivity extends BaseActivity {
                 }
             }, 500);
         } else {
-            disposable = Observable.timer(10, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread())
+            disposable = Observable.timer(15, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread())
                     .subscribe(aLong -> {
                         //TODO 超时
                         ToastUtils.showShortToast("自动登录超时，请重新登录");

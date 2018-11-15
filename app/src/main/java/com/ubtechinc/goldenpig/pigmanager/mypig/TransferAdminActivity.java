@@ -25,10 +25,13 @@ import com.ubtechinc.goldenpig.pigmanager.adpater.MemberPermissionAdapter;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.register.CheckUserRepository;
 import com.ubtechinc.goldenpig.pigmanager.register.TransferAdminHttpProxy;
+import com.ubtechinc.goldenpig.push.PushHttpProxy;
 import com.ubtechinc.nets.http.ThrowableWrapper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.ubtechinc.goldenpig.app.Constant.SP_HAS_LOOK_LAST_RECORD;
 import static com.ubtechinc.goldenpig.app.Constant.SP_LAST_RECORD;
@@ -209,11 +212,20 @@ public class TransferAdminActivity extends BaseToolBarActivity implements View.O
                     SPUtils.get().put(SP_LAST_RECORD, "");
                     SPUtils.get().put(SP_HAS_LOOK_LAST_RECORD, 0);
                     imSyncRelationShip();
+                    doPushTransferMsg(userId);
                     setResult(RESULT_OK);
                     finish();
                 }
             });
         }
+    }
+
+    private void doPushTransferMsg(String userId) {
+        //TODO 给新管理员推送
+        PushHttpProxy pushHttpProxy = new PushHttpProxy();
+        Map map = new HashMap();
+        map.put("app_category", 1);
+        pushHttpProxy.pushToken("", "你已成为新的小猪管理员", userId, map, 1);
     }
 
     private void imSyncRelationShip() {

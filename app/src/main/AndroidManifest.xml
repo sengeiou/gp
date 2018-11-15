@@ -47,8 +47,7 @@
         android:roundIcon="@mipmap/ic_logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme.NoToolbar"
-        tools:replace="icon,label,theme">
+        android:theme="@style/AppTheme.NoToolbar">
         <activity
             android:name=".main.SplashActivity"
             android:launchMode="singleTop"

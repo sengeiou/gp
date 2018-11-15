@@ -3,6 +3,8 @@ package com.ubtechinc.goldenpig.pigmanager.mypig;
 import com.ubtechinc.goldenpig.net.BaseHttpProxy;
 import com.ubtechinc.nets.BuildConfig;
 
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import okhttp3.Call;
@@ -34,15 +36,25 @@ public class UnbindPigProxy extends BaseHttpProxy {
             @Override
             public void onFailure(Call call, IOException e) {
                 if (callback != null) {
-                    callback.onError(e);
+                    callback.onError(e.getMessage());
                 }
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (callback != null) {
-                    String result = response.body().source().readUtf8();
-                    callback.onSuccess(result);
+                    try {
+                        String result = response.body().source().readUtf8();
+                        if (response.isSuccessful()) {
+                            callback.onSuccess();
+                        } else {
+                            JSONObject jsonObject = new JSONObject(result);
+                            String message = jsonObject.optString("message");
+                            callback.onError(message);
+                        }
+                    } catch (Exception e) {
+                        callback.onError(e.getMessage());
+                    }
                 }
             }
         });
@@ -50,8 +62,9 @@ public class UnbindPigProxy extends BaseHttpProxy {
     }
 
     public interface UnBindPigCallback {
-        void onError(IOException e);
 
-        void onSuccess(String reponse);
+        void onError(String msg);
+
+        void onSuccess();
     }
 }

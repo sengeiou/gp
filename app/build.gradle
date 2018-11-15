@@ -35,9 +35,15 @@ android {
         applicationId "com.ubtechinc.goldenpig"
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
-        versionCode 17
-        versionName "1.0.0.17"
+        versionCode 18
+        versionName "1.0.0.18"
         multiDexEnabled true
+
+        manifestPlaceholders = [
+
+                XG_ACCESS_ID:"注册应用的accessid",
+                XG_ACCESS_KEY : "注册应用的accesskey",
+        ]
     }
     signingConfigs {
         release {
@@ -71,7 +77,8 @@ android {
             buildConfigField "String", "IM_URL","\"https://210.75.21.106:9080\""
 
             //H5 URL域名
-            buildConfigField "String", "H5_URL","\"http://10.10.32.22:8080\""
+//            buildConfigField "String", "H5_URL","\"http://10.10.32.22:8080\""
+            buildConfigField "String", "H5_URL","\"http://10.10.1.14:8090/cloud-ppi/help\""
 
             minifyEnabled false
             shrinkResources false
@@ -106,7 +113,7 @@ android {
             buildConfigField "Boolean", "TVS_MODE","true"
 
             //H5 URL域名
-            buildConfigField "String", "H5_URL","\"http://10.10.1.14:8090/cloud-ppi/help\""
+            buildConfigField "String", "H5_URL","\"https://apis.ubtrobot.com/v1/cloud-ppi/help\""
 
             //是否优化zip
             zipAlignEnabled false
@@ -161,6 +168,7 @@ dependencies {
                             androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'*/
     implementation project(path: ':commlib')
     implementation project(path: ':tvlloginlib')
+    implementation project(path: ':xingemodule')
     implementation rootProject.ext.deps.okhttp
     implementation rootProject.ext.deps.gson
     implementation rootProject.ext.deps.zxing

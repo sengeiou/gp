@@ -212,8 +212,8 @@ public abstract class Message {
             hasTime = true;
             return;
         }
-        UbtLogger.d(TAG,"current message timestamp   "+this.message.timestamp());
-        UbtLogger.d(TAG,"previous message timestamp   "+message.timestamp());
+        UbtLogger.d(TAG,"current message timestamp   "+this.message.timestamp() +"TYPE :"+this.message.getElement(0).getType());
+        UbtLogger.d(TAG,"previous message timestamp   "+message.timestamp()+"TYPE  :"+message.getElement(0).getType());
         hasTime = this.message.timestamp() - message.timestamp() > 300;
     }
 

@@ -3,10 +3,11 @@ package com.ubtechinc.goldenpig.login.observable;
 import android.arch.lifecycle.LiveData;
 import android.os.Looper;
 
-
-import com.ubtechinc.goldenpig.comm.entity.PushAppInfo;
 import com.ubtechinc.goldenpig.comm.entity.UserInfo;
+import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
+import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.push.PushAppInfo;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -48,6 +49,9 @@ public class AuthLive extends LiveData<AuthLive> {
     private PushAppInfo pushAppInfo;
 
     public PushAppInfo getPushAppInfo() {
+        if (pushAppInfo == null) {
+            pushAppInfo = new PushAppInfo();
+        }
         return pushAppInfo;
     }
 
@@ -65,6 +69,8 @@ public class AuthLive extends LiveData<AuthLive> {
     }
 
     public void logined(UserInfo userInfo) {
+        Event<Integer> event = new Event<>(EventBusUtil.TVS_LOGIN_SUCCESS);
+        EventBusUtil.sendEvent(event);
         currentUser = userInfo;
         this.state = AuthState.TVSLOGINED;
         if (isMainThread()) {

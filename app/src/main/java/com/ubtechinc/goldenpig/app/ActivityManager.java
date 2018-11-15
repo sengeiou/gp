@@ -81,7 +81,7 @@ public class ActivityManager {
         }
     }
 
-    //退出栈中所有Activity
+    //退出栈中所有Activity,除exceptActivity外
     public void popAllActivityExcept(Activity exceptActivity) {
         if (mActivityStack != null) {
             Iterator iterator = mActivityStack.iterator();

@@ -29,6 +29,10 @@ public abstract class CommonAdaper<T> extends BaseAdapter {
 
     @Override
     public T getItem(int position) {
+        //TODO
+        if(list.size()==0){
+          return null;
+        }
         return list.get(position);
     }
 
@@ -40,6 +44,7 @@ public abstract class CommonAdaper<T> extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder = getViewHolder(convertView, parent);
+        if(getItem(position)!=null)
         convert(holder, getItem(position), position);
         return holder.getConvertview();
     }
