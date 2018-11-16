@@ -52,13 +52,13 @@ import butterknife.BindView;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CONTACT_CHECK_SUCCESS;
 
 public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.View,
-        AddressBookPrestener> implements OnRefreshListener, AddressBookContract.View, Observer {
+        AddressBookPrestener> implements AddressBookContract.View, Observer {
     @BindView(R.id.rl_titlebar)
     SecondTitleBarViewImg rl_titlebar;
     @BindView(R.id.recycler)
     SwipeMenuRecyclerView recycler;
-    @BindView(R.id.refreshLayout)
-    SmartRefreshLayout refreshLayout;
+    //    @BindView(R.id.refreshLayout)
+//    SmartRefreshLayout refreshLayout;
     AddressBookAdapter adapter;
     private ArrayList<AddressBookmodel> mList;
     public int deletePosition = 0;
@@ -82,7 +82,8 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
             if (msg.what == 1) {
                 ToastUtils.showShortToast("请求超时，请重试");
                 if (mWeakReference.get() != null) {
-                    ((AddressBookActivity) mWeakReference.get()).refreshLayout.finishRefresh(true);
+                    //((AddressBookActivity) mWeakReference.get()).refreshLayout.finishRefresh(true);
+                    ((AddressBookActivity) mWeakReference.get()).mStateView.showRetry();
                 }
             }
         }
@@ -106,7 +107,8 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
         mStateView.setOnRetryClickListener(new StateView.OnRetryClickListener() {
             @Override
             public void onRetryClick() {
-                refreshLayout.autoRefresh();
+                //refreshLayout.autoRefresh();
+                refresh();
             }
         });
         mStateView.setEmptyViewIcon(R.drawable.img_maillist);
@@ -135,8 +137,8 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
                 }
             }
         });
-        refreshLayout.setEnableAutoLoadMore(false);
-        refreshLayout.setOnRefreshListener(this);
+//        refreshLayout.setEnableAutoLoadMore(false);
+//        refreshLayout.setOnRefreshListener(this);
         mList = new ArrayList<>();
         // adapter = new AddressBookAdapter(this, mList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -162,9 +164,9 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
             public void onError(int i, String s) {
                 Log.e("setOnUbtTIMConver", s);
                 LoadingDialog.getInstance(AddressBookActivity.this).dismiss();
-                if (AuthLive.getInstance().getCurrentPig()!=null) {
+                if (AuthLive.getInstance().getCurrentPig() != null) {
                     com.ubtech.utilcode.utils.ToastUtils.showShortToast("小猪未登录");
-                }else{
+                } else {
                     com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定小猪");
                 }
             }
@@ -174,17 +176,19 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
                 Log.e("setOnUbtTIMConver", "sss");
             }
         });
-        refreshLayout.autoRefresh();
+        //refreshLayout.autoRefresh();
+        refresh();
     }
 
-    @Override
-    public void onRefresh(RefreshLayout refreshLayout) {
-        if (mHandler.hasMessages(1)) {
-            mHandler.removeMessages(1);
-        }
-        mHandler.sendEmptyMessageDelayed(1, 20 * 1000);// 20s 秒后检查加载框是否还在
-        UbtTIMManager.getInstance().queryUser();
-    }
+//    @Override
+//    public void onRefresh(RefreshLayout refreshLayout) {
+//        mStateView.showLoading();
+//        if (mHandler.hasMessages(1)) {
+//            mHandler.removeMessages(1);
+//        }
+//        mHandler.sendEmptyMessageDelayed(1, 20 * 1000);// 20s 秒后检查加载框是否还在
+//        UbtTIMManager.getInstance().queryUser();
+//    }
 
     @Override
     public void onRefreshSuccess(List<AddressBookmodel> list) {
@@ -192,14 +196,13 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
             mHandler.removeMessages(1);
         }
         hasLoadMsg = true;
-        refreshLayout.finishRefresh(true);
+        //refreshLayout.finishRefresh(true);
         mList.clear();
         mList.addAll(list);
         if (mList.size() >= 10) {
             AddressBookmodel ab = new AddressBookmodel();
             ab.type = 1;
             mList.add(ab);
-
             //右上角+置灰
             updateTitlebarRightIcon(false);
         } else {
@@ -320,7 +323,8 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
                 ToastUtils.showShortToast("数据异常，请重试");
-                refreshLayout.finishRefresh(true);
+                mStateView.showRetry();
+                //refreshLayout.finishRefresh(true);
             }
         }
     }
@@ -374,7 +378,7 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
             case "/im/mail/update":
                 msg.getPayload().unpack(GPResponse.Response.class).getResult();
                 break;
-                default:
+            default:
         }
     }
 
@@ -382,7 +386,17 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
     protected void onReceiveStickyEvent(Event event) {
         super.onReceiveStickyEvent(event);
         if (event.getCode() == CONTACT_CHECK_SUCCESS) {
-            refreshLayout.autoRefresh();
+            //refreshLayout.autoRefresh();
+            refresh();
         }
+    }
+
+    public void refresh() {
+        mStateView.showLoading();
+        if (mHandler.hasMessages(1)) {
+            mHandler.removeMessages(1);
+        }
+        mHandler.sendEmptyMessageDelayed(1, 20 * 1000);// 20s 秒后检查加载框是否还在
+        UbtTIMManager.getInstance().queryUser();
     }
 }

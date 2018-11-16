@@ -54,6 +54,7 @@ public class AddInterlocutionActivity extends BaseNewActivity {
     InterlocutionModel requestModel;
     InterlocutionItemModel model;
     Handler mHander = new Handler();
+
     @Override
     protected int getContentViewId() {
         return R.layout.activity_add_interlocution;
@@ -70,14 +71,26 @@ public class AddInterlocutionActivity extends BaseNewActivity {
         model = getIntent().getParcelableExtra("item");
         requestModel = new InterlocutionModel();
         if (model != null) {
-            strQuest = model.vQueries.get(0).strQuery;
-            ll_add_question.setVisibility(View.GONE);
-            llQuestion.setVisibility(View.VISIBLE);
-            tvQuestion.setText("“" + strQuest + "”");
-            strAnswer = model.vAnswers.get(0).strText;
-            llAddAnswer.setVisibility(View.GONE);
-            llAnswer.setVisibility(View.VISIBLE);
-            tvAnswer.setText("“" + strAnswer + "”");
+            try {
+                strQuest = model.vQueries.get(0).strQuery;
+                if (!TextUtils.isEmpty(strQuest)) {
+                    ll_add_question.setVisibility(View.GONE);
+                    llQuestion.setVisibility(View.VISIBLE);
+                    tvQuestion.setText("“" + strQuest + "”");
+                }
+                for (int i = 0; i < model.vAnswers.size(); i++) {
+                    if (model.vAnswers.get(i).iType == 0) {
+                        strAnswer = model.vAnswers.get(i).strText;
+                        break;
+                    }
+                }
+                if (!TextUtils.isEmpty(strAnswer)) {
+                    llAddAnswer.setVisibility(View.GONE);
+                    llAnswer.setVisibility(View.VISIBLE);
+                    tvAnswer.setText("“" + strAnswer + "”");
+                }
+            } catch (Exception e) {
+            }
         }
         if (TextUtils.isEmpty(strQuest) || TextUtils.isEmpty(strAnswer)) {
             tvRight.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));

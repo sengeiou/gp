@@ -271,7 +271,6 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
                         LogUtils.d("code:" + code);
                         if (code.contains("没有")) {
                             mStateView.showEmpty();
-                            ToastUtils.showShortToast("没有设置提醒事项");
                         } else if (mList.size() == 0) {
                             mStateView.showRetry();
                             ToastUtils.showShortToast(code);

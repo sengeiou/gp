@@ -160,6 +160,7 @@ public class InterlocutionModel extends BaseHttpProxy {
             JSONArray answers = new JSONArray();
             JSONObject objAn = new JSONObject();
             objAn.put("strText", strAnswer);
+            objAn.put("iType", 0);
             answers.put(0, objAn);
             obj.put("answers", answers);
             obj.put("imgurl", "");
@@ -256,6 +257,7 @@ public class InterlocutionModel extends BaseHttpProxy {
             JSONArray answers = new JSONArray();
             JSONObject objAn = new JSONObject();
             objAn.put("strText", strAnswer);
+            objAn.put("iType", 0);
             answers.put(objAn);
             obj.put("answers", answers);
             obj.put("imgurl", "");

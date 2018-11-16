@@ -284,13 +284,14 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
                     @Override
                     public void onError(String code) {
                         LoadingDialog.getInstance(AlarmListActivity.this).dismiss();
-                        ToastUtils.showShortToast(code);
                         if (code.contains("没有")) {
                             mStateView.showEmpty();
                         } else if (mList.size() == 0) {
                             mStateView.showRetry();
+                            ToastUtils.showShortToast(code);
                         } else {
                             mStateView.showContent();
+                            ToastUtils.showShortToast(code);
                         }
                         LogUtils.d("code:" + code);
                     }

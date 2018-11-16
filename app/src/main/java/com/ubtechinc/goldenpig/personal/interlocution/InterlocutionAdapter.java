@@ -53,7 +53,12 @@ public class InterlocutionAdapter extends RecyclerView.Adapter<RecyclerView.View
                 aHolder.tv_question.setText(model.vQueries.get(0).strQuery);
             }
             if (model.vAnswers != null && model.vAnswers.size() > 0) {
-                aHolder.tv_answer.setText(model.vAnswers.get(0).strText);
+                for (int i = 0; i < mList.size(); i++) {
+                    if (model.vAnswers.get(i).iType == 0) {
+                        aHolder.tv_answer.setText(model.vAnswers.get(i).strText);
+                        break;
+                    }
+                }
             }
         } else {
             InterlocutionHolder2 aHolder = (InterlocutionHolder2) holder;
