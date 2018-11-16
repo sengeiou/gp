@@ -11,6 +11,8 @@ import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
+import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
+import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.personal.management.AddressBookActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
@@ -23,7 +25,12 @@ import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.nets.http.ThrowableWrapper;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.HashMap;
+
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
 
 public class DeviceManageActivity extends BaseToolBarActivity implements View.OnClickListener {
 
@@ -54,6 +61,7 @@ public class DeviceManageActivity extends BaseToolBarActivity implements View.On
     }
 
     private void initView() {
+        EventBusUtil.register(this);
         memberItemTitle = findViewById(R.id.ubt_tv_member_group);
         memberItemSubTitle = findViewById(R.id.ubt_tv_member_subtitle);
         rlMyPig = findViewById(R.id.rl_my_pig);
@@ -71,7 +79,7 @@ public class DeviceManageActivity extends BaseToolBarActivity implements View.On
     protected void onResume() {
         super.onResume();
         updateUI();
-        updatePigList();
+//        updatePigList();
     }
 
     private void updatePigList() {
@@ -177,6 +185,17 @@ public class DeviceManageActivity extends BaseToolBarActivity implements View.On
                         .class, false);
                 break;
             default:
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(Event event) {
+        if (event == null) return;
+        int code = event.getCode();
+        switch (code) {
+            case USER_PIG_UPDATE:
+                updateUI();
+                break;
         }
     }
 

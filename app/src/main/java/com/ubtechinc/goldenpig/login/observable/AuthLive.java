@@ -3,6 +3,7 @@ package com.ubtechinc.goldenpig.login.observable;
 import android.arch.lifecycle.LiveData;
 import android.os.Looper;
 
+import com.ubtechinc.goldenpig.comm.entity.PairPig;
 import com.ubtechinc.goldenpig.comm.entity.UserInfo;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
@@ -48,11 +49,23 @@ public class AuthLive extends LiveData<AuthLive> {
 
     private PushAppInfo pushAppInfo;
 
+    private PairPig pairPig;
+
     public PushAppInfo getPushAppInfo() {
         if (pushAppInfo == null) {
             pushAppInfo = new PushAppInfo();
         }
         return pushAppInfo;
+    }
+
+    public PairPig getPairPig() {
+        return pairPig;
+    }
+
+    public void setPairPig(PairPig pairPig) {
+        this.pairPig = pairPig;
+        Event<Integer> event = new Event<>(EventBusUtil.PAIR_PIG_UPDATE);
+        EventBusUtil.sendEvent(event);
     }
 
     public void setPushAppInfo(PushAppInfo pushAppInfo) {

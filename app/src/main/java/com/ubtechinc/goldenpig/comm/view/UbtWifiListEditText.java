@@ -88,7 +88,7 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
             if (!TextUtils.isEmpty(text)) {
                 cWifi = text.replace("\"", "");
                 mWifiNameEdt.setText(cWifi);
-                scanWifiInfo();
+                cType = WifiControl.get(getContext()).getCType();
             } else {
                 mWifiNameEdt.setText("");
                 cType = null;
@@ -212,7 +212,7 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
 
     private void scanWifiInfo() {
         WifiManager wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(WIFI_SERVICE);
-        wifiManager.startScan(); //启动扫描
+        wifiManager.startScan(); //启动扫描.
         List<ScanResult> scanResults = wifiManager.getScanResults();//搜索到的设备列表
         Iterator<ScanResult> iterator = scanResults.iterator();
         while (iterator.hasNext()) {
@@ -223,6 +223,7 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
             }
             if (!TextUtils.isEmpty(ssid) && ssid.equals(cWifi)) {
                 cType = scanResult.capabilities;
+                break;
             }
         }
 //        final int size = scanResults.size();

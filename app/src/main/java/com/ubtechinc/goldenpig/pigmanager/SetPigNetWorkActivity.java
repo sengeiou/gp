@@ -266,7 +266,11 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
                 dismissLoadDialog();
                 mSendWifiInfoBtn.setText(R.string.ubt_connect);
                 mSendWifiInfoBtn.setAlpha(1.0f);
-                ToastUtils.showShortToast(SetPigNetWorkActivity.this, "连接失败");
+                if (errorCode == 1) {
+                    ToastUtils.showShortToast(SetPigNetWorkActivity.this, "密码错误");
+                } else {
+                    ToastUtils.showShortToast(SetPigNetWorkActivity.this, "连接失败");
+                }
 //                AuthLive.getInstance().getCurrentPig().setOnlineState(PigInfo.ROBOT_STATE_OFFLINE);
 //                UBTPGApplication.pig_net_status = false;
             }
@@ -351,6 +355,12 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
     protected void onResume() {
         super.onResume();
         updateDefaultSsid();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        getWindow().getDecorView().postDelayed(() -> UbtBluetoothManager.getInstance().closeConnectBle(), 3000);
     }
 
     private void updateDefaultSsid() {

@@ -13,9 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.tencent.TIMCustomElem;
 import com.tencent.TIMMessage;
 import com.ubt.imlibv2.bean.UbtTIMManager;
@@ -119,7 +116,7 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
                 finish();
             }
         });
-        rl_titlebar.hideIvRight();
+        rl_titlebar.setIvRight(R.drawable.ic_add);
         rl_titlebar.setRightOnclickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

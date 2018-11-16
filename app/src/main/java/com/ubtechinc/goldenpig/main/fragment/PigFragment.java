@@ -24,6 +24,7 @@ import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseFragment;
+import com.ubtechinc.goldenpig.comm.entity.PairPig;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
@@ -61,6 +62,7 @@ import static com.ubtechinc.goldenpig.app.Constant.SP_HAS_LOOK_LAST_RECORD;
 import static com.ubtechinc.goldenpig.app.Constant.SP_LAST_RECORD;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CONTACT_PIC_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.INVISE_RECORD_POINT;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.PAIR_PIG_UPDATE;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
 
 /**
@@ -281,6 +283,7 @@ public class PigFragment extends BaseFragment implements Observer {
 
                 //TODO 获取配对数据失败
                 showPigPair(false);
+                AuthLive.getInstance().setPairPig(null);
             }
 
             @Override
@@ -297,6 +300,12 @@ public class PigFragment extends BaseFragment implements Observer {
                                 serialNumber = pairData.optString("serialNumber");
                                 pairSerialNumber = pairData.optString("pairSerialNumber");
                                 userId = pairData.optInt("userId");
+                                PairPig pairPig = new PairPig();
+                                pairPig.setPairUserId(pairUserId);
+                                pairPig.setSerialNumber(serialNumber);
+                                pairPig.setPairSerialNumber(pairSerialNumber);
+                                pairPig.setUserId(userId);
+                                AuthLive.getInstance().setPairPig(pairPig);
                                 showPigPair(true);
                             }
                         }
@@ -502,6 +511,9 @@ public class PigFragment extends BaseFragment implements Observer {
                 break;
             case USER_PIG_UPDATE:
                 updateUserPig();
+                break;
+            case PAIR_PIG_UPDATE:
+                updatePigPair();
                 break;
         }
     }

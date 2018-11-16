@@ -45,10 +45,4 @@ public class SkillActivity extends BaseWebActivity {
         hideActionBar();
     }
 
-//    @Override
-//    protected void processWeb() {
-//        mWebView.addJavascriptInterface(new SmallPigObject(SkillActivity.this, mWebView), "SmallPigObject");
-//    }
-
-
 }

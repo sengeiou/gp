@@ -257,10 +257,27 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
             @Override
             public void afterTextChanged(Editable s) {
                 strName = etName.getText().toString().trim();
+
+                if (mList != null && !mList.isEmpty()) {
+                    int newPos = curPosition;
+                    for(int i = 0; i < mList.size(); i++) {
+                        String value = mList.get(i);
+                        if (!TextUtils.isEmpty(value) && value.equals(strName)) {
+                            newPos = i;
+                            break;
+                        } else {
+                            newPos = -1;
+                        }
+                    }
+                    if (curPosition != newPos) {
+                        curPosition = newPos;
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+
                 if (TextUtils.isEmpty(strName)) {
                     ivNameClear.setVisibility(View.INVISIBLE);
-                    curPosition = -1;
-                    adapter.notifyDataSetChanged();
+
                 } else {
                     ivNameClear.setVisibility(View.VISIBLE);
                 }

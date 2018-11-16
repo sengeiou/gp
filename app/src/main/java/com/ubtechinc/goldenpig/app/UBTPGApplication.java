@@ -7,23 +7,31 @@ import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 
 import com.facebook.stetho.Stetho;
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.tencent.TIMConversation;
 import com.tencent.TIMConversationType;
+import com.tencent.TIMCustomElem;
 import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
 import com.tencent.ai.tvs.LoginApplication;
 import com.tencent.ai.tvs.info.ProductManager;
+import com.tencent.ai.tvs.info.UserInfoManager;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtech.utilcode.utils.ActivityTool;
 import com.ubtech.utilcode.utils.LogUtils;
+import com.ubtechinc.commlib.log.UBTLog;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.commlib.utils.ContextUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.comm.entity.PairPig;
+import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
@@ -33,16 +41,27 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.login.repository.UBTAuthRepository;
 import com.ubtechinc.goldenpig.net.ResponseInterceptor;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.pigmanager.register.GetPairPigQRHttpProxy;
+import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.push.PushAppInfo;
 import com.ubtechinc.goldenpig.push.PushHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.OSUtils;
+import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.nets.HttpManager;
+import com.ubtechinc.nets.http.ThrowableWrapper;
 import com.ubtechinc.protocollibrary.communit.ProtoBufferDisposer;
 import com.ubtechinc.tvlloginlib.TVSManager;
+import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
+import com.ubtrobot.channelservice.proto.GPRelationshipContainer;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Observable;
+import java.util.Observer;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.PUSH_MESSAGE_RECEIVED;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.PUSH_NOTIFICATION_RECEIVED;
@@ -54,7 +73,7 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.TVS_LOGIN_SUCCESS;
  * @des Ubt 金猪applicaption
  * @time 2018/08/17
  */
-public class UBTPGApplication extends LoginApplication {
+public class UBTPGApplication extends LoginApplication implements Observer{
     private static UBTPGApplication instance;
     static Context mContext;
     public static boolean voiceMail_debug = false;
@@ -93,6 +112,7 @@ public class UBTPGApplication extends LoginApplication {
     }
 
     private void initAppForMainProcess() {
+        CrashReport.initCrashReport(getApplicationContext(), "85c6f36db6", true);
         MultiDex.install(this);
         com.ubtech.utilcode.utils.Utils.init(this);
         instance = this;
@@ -155,6 +175,7 @@ public class UBTPGApplication extends LoginApplication {
     private void initTIMListener() {
         ubtAuthRepository = new UBTAuthRepository();
         mUbtTIMManager = UbtTIMManager.getInstance();
+        mUbtTIMManager.setMsgObserve(this);
         mUbtTIMManager.setUbtIMCallBack(new UbtTIMManager.UbtIMCallBack() {
             @Override
             public void onLoginError(int i, String s) {
@@ -262,13 +283,68 @@ public class UBTPGApplication extends LoginApplication {
                 }
                 break;
             case PUSH_NOTIFICATION_RECEIVED:
-
+                showNewManagerDialog();
                 break;
             case PUSH_MESSAGE_RECEIVED:
 
                 break;
         }
     }
+
+
+    private void showNewManagerDialog() {
+        updatePigList();
+        if (mTopActivity == null) return;
+        UBTBaseDialog managerDialog = new UBTBaseDialog(mTopActivity);
+        managerDialog.setCancelable(false);
+        managerDialog.setCanceledOnTouchOutside(false);
+        managerDialog.setTips("您已被指定为管理员");
+        managerDialog.setLeftBtnShow(false);
+        managerDialog.setRightButtonTxt("我知道了");
+        managerDialog.setRightBtnColor(ContextCompat.getColor(this, R.color.ubt_tab_btn_txt_checked_color));
+        managerDialog.setOnUbtDialogClickLinsenter(new UBTBaseDialog.OnUbtDialogClickLinsenter() {
+
+            @Override
+            public void onLeftButtonClick(View view) {
+
+            }
+
+            @Override
+            public void onRightButtonClick(View view) {
+            }
+
+        });
+        if (!mTopActivity.isDestroyed() && !mTopActivity.isFinishing()) {
+            managerDialog.show();
+        }
+    }
+
+    private void updatePigList() {
+        new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListHttpProxy.OnGetPigListLitener() {
+            @Override
+            public void onError(ThrowableWrapper e) {
+                Log.e("getPigList", e.getMessage());
+            }
+
+            @Override
+            public void onException(Exception e) {
+                Log.e("getPigList", e.getMessage());
+            }
+
+            @Override
+            public void onSuccess(String response) {
+                Log.e("getPigList", response);
+                PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance().getCurrentPigList());
+                PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+
+                if (pigInfo != null && pigInfo.isAdmin) {
+                    UbtTIMManager.avatarURL = UserInfoManager.getInstance().headImgUrl;
+                    UbtTIMManager.getInstance().loginTIM(AuthLive.getInstance().getUserId(), pigInfo.getRobotName(), com.ubt.imlibv2.BuildConfig.IM_Channel);
+                }
+            }
+        });
+    }
+
 
     @Override
     public void onLowMemory() {
@@ -287,5 +363,82 @@ public class UBTPGApplication extends LoginApplication {
 
     public static Context getContext() {
         return mContext;
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        TIMMessage msg = (TIMMessage) arg;
+        for (int i = 0; i < msg.getElementCount(); ++i) {
+            TIMCustomElem elem = (TIMCustomElem) msg.getElement(i);
+            try {
+                dealMsg(elem.getData());
+            } catch (InvalidProtocolBufferException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void dealMsg(Object arg) throws InvalidProtocolBufferException {
+        ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage
+                .parseFrom((byte[]) arg);
+        String action = msg.getHeader().getAction();
+        if (action.equals(ContactsProtoBuilder.IM_RELATIONSHIP_CHANGED)) {
+            GPRelationshipContainer.RelationShip info = msg.getPayload().unpack(GPRelationshipContainer.RelationShip.class);
+            if (info != null) {
+                int event = info.getEvent();
+                handleRelationShip(event);
+            }
+        }
+    }
+
+    private void handleRelationShip(int event) {
+        switch (event) {
+            case 1:
+                //绑定关系变化
+                break;
+            case 2:
+                //配对关系变化
+                updatePigPair();
+                break;
+        }
+    }
+
+    private void updatePigPair() {
+        new GetPairPigQRHttpProxy().getPairPigQR(this, CookieInterceptor.get().getToken(), BuildConfig
+                .APP_ID, new GetPairPigQRHttpProxy.GetPairPigQRCallBack() {
+            @Override
+            public void onError(String error) {
+                //TODO 配对关系不存在
+                AuthLive.getInstance().setPairPig(null);
+            }
+
+            @Override
+            public void onSuccess(String response) {
+
+                //TODO 刷新配对关系
+                if (!TextUtils.isEmpty(response)) {
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        if (jsonObject != null) {
+                            JSONObject pairData = new JSONObject(jsonObject.optString("pairData"));
+                            if (pairData != null) {
+                                int pairUserId = pairData.optInt("pairUserId");
+                                String serialNumber = pairData.optString("serialNumber");
+                                String pairSerialNumber = pairData.optString("pairSerialNumber");
+                                int userId = pairData.optInt("userId");
+                                PairPig pairPig = new PairPig();
+                                pairPig.setPairUserId(pairUserId);
+                                pairPig.setSerialNumber(serialNumber);
+                                pairPig.setPairSerialNumber(pairSerialNumber);
+                                pairPig.setUserId(userId);
+                                AuthLive.getInstance().setPairPig(pairPig);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        UBTLog.e("pig", e.getMessage());
+                    }
+                }
+            }
+        });
     }
 }

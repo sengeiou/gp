@@ -41,6 +41,7 @@ public class SkillDetailActivity extends BaseWebActivity {
 
     @Override
     protected void processWeb() {
+        super.processWeb();
         Intent intent = getIntent();
         url = intent.getStringExtra("url");
     }

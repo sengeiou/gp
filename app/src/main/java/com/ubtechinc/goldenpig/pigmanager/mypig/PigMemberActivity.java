@@ -24,6 +24,8 @@ import com.ubtechinc.goldenpig.comm.view.WrapContentLinearLayoutManager;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
+import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
+import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.adpater.PigMemberAdapter;
@@ -42,10 +44,15 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
 
 /**
  * @author :hqt
@@ -71,6 +78,7 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
 
     @Override
     protected void init(Bundle savedInstanceState) {
+        EventBusUtil.register(this);
         setTitleBack(true);
         setToolBarTitle(getString(R.string.ubt_menber_group));
         initViews();
@@ -445,7 +453,7 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
             @Override
             public void onException(Exception e) {
                 LoadingDialog.getInstance(PigMemberActivity.this).dismiss();
-                com.ubtech.utilcode.utils.ToastUtils.showShortToast("转让失败");
+//                com.ubtech.utilcode.utils.ToastUtils.showShortToast("转让失败");
             }
 
             @Override
@@ -462,10 +470,15 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
 
     private void doPushTransferMsg(String userId) {
         //TODO 给新管理员推送
-        PushHttpProxy pushHttpProxy = new PushHttpProxy();
-        Map map = new HashMap();
-        map.put("app_category", 1);
-        pushHttpProxy.pushToken("", "你已成为新的小猪管理员", userId, map, 1);
+        try {
+            PushHttpProxy pushHttpProxy = new PushHttpProxy();
+            Map map = new HashMap();
+            map.put("app_category", 1);
+            pushHttpProxy.pushToken("", "你已成为新的小猪管理员", userId, map, 1);
+        } catch (Exception e) {
+            //TODO
+        }
+
     }
 
     private void updatePigList() {
@@ -505,5 +518,17 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
             e.printStackTrace();
         }
         return result;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(Event event) {
+        if (event == null) return;
+        int code = event.getCode();
+        switch (code) {
+            case USER_PIG_UPDATE:
+                isDownloadedUserList = false;
+                getMember("1");
+                break;
+        }
     }
 }

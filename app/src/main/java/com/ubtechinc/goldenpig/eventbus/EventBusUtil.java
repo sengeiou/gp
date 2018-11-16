@@ -41,6 +41,7 @@ public class EventBusUtil {
     public static final int PUSH_MESSAGE_RECEIVED = 10016;
     public static final int PUSH_NOTIFICATION_CLICKED_RECEIVED = 10017;
     public static final int USER_PIG_UPDATE = 10018;
+    public static final int PAIR_PIG_UPDATE = 10019;
 
     public static final int SERVER_RESPONSE_UNAUTHORIZED = 401;
 
