@@ -15,6 +15,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.tencent.TIMConversation;
 import com.tencent.TIMConversationType;
 import com.tencent.TIMCustomElem;
+import com.tencent.TIMElem;
 import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
 import com.tencent.ai.tvs.LoginApplication;
@@ -73,7 +74,7 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.TVS_LOGIN_SUCCESS;
  * @des Ubt 金猪applicaption
  * @time 2018/08/17
  */
-public class UBTPGApplication extends LoginApplication implements Observer{
+public class UBTPGApplication extends LoginApplication implements Observer {
     private static UBTPGApplication instance;
     static Context mContext;
     public static boolean voiceMail_debug = false;
@@ -368,13 +369,16 @@ public class UBTPGApplication extends LoginApplication implements Observer{
     @Override
     public void update(Observable o, Object arg) {
         TIMMessage msg = (TIMMessage) arg;
-        for (int i = 0; i < msg.getElementCount(); ++i) {
-            TIMCustomElem elem = (TIMCustomElem) msg.getElement(i);
-            try {
-                dealMsg(elem.getData());
-            } catch (InvalidProtocolBufferException e) {
-                e.printStackTrace();
+        try {
+            for (int i = 0; i < msg.getElementCount(); ++i) {
+                TIMElem tIMElem = msg.getElement(i);
+                if (tIMElem != null && tIMElem instanceof TIMCustomElem) {
+                    TIMCustomElem elem = (TIMCustomElem) tIMElem;
+                    dealMsg(elem.getData());
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -410,6 +414,8 @@ public class UBTPGApplication extends LoginApplication implements Observer{
             public void onError(String error) {
                 //TODO 配对关系不存在
                 AuthLive.getInstance().setPairPig(null);
+                Event<Integer> event = new Event<>(EventBusUtil.PAIR_PIG_UPDATE);
+                EventBusUtil.sendEvent(event);
             }
 
             @Override
@@ -432,6 +438,8 @@ public class UBTPGApplication extends LoginApplication implements Observer{
                                 pairPig.setPairSerialNumber(pairSerialNumber);
                                 pairPig.setUserId(userId);
                                 AuthLive.getInstance().setPairPig(pairPig);
+                                Event<Integer> event = new Event<>(EventBusUtil.PAIR_PIG_UPDATE);
+                                EventBusUtil.sendEvent(event);
                             }
                         }
                     } catch (JSONException e) {

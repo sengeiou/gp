@@ -360,7 +360,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        getWindow().getDecorView().postDelayed(() -> UbtBluetoothManager.getInstance().closeConnectBle(), 3000);
+        UbtBluetoothManager.getInstance().closeConnectBle();
     }
 
     private void updateDefaultSsid() {

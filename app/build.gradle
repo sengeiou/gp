@@ -35,8 +35,8 @@ android {
         applicationId "com.ubtechinc.goldenpig"
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
-        versionCode 18
-        versionName "1.0.0.18"
+        versionCode 19
+        versionName "1.0.0.19"
         multiDexEnabled true
 
         manifestPlaceholders = [
@@ -147,7 +147,6 @@ android {
             }
     }
 
-
 }
 
 repositories {
@@ -201,4 +200,8 @@ dependencies {
    // implementation 'com.squareup.picasso:picasso:2.71828'
     //implementation 'com.weigan:loopView:0.1.2'
     //compile 'com.yanzhenjie:recyclerview-swipe:1.1.4'
+
+    //add bugly
+    implementation 'com.tencent.bugly:crashreport:latest.release' //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.2.0
+//    implementation 'com.tencent.bugly:nativecrashreport:latest.release' //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
 }

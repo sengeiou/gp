@@ -64,8 +64,6 @@ public class AuthLive extends LiveData<AuthLive> {
 
     public void setPairPig(PairPig pairPig) {
         this.pairPig = pairPig;
-        Event<Integer> event = new Event<>(EventBusUtil.PAIR_PIG_UPDATE);
-        EventBusUtil.sendEvent(event);
     }
 
     public void setPushAppInfo(PushAppInfo pushAppInfo) {
