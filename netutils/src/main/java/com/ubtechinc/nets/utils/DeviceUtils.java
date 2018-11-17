@@ -2,12 +2,19 @@ package com.ubtechinc.nets.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Environment;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
 /**
@@ -25,11 +32,19 @@ import java.util.UUID;
  * @return
  */
 public class DeviceUtils {
+
+    public static final String DEVICE_UUID_FILE_NAME = ".ubt_dev_id.txt";
+
     public static String getDeviceId(Context context) {
         StringBuilder deviceId = new StringBuilder();
         // 渠道标志
         deviceId.append("a");
         try {
+            String uuid = recoverDeviceUuidFromSD();
+            if (!TextUtils.isEmpty(uuid)) {
+                deviceId.append("id").append(uuid);
+                return deviceId.toString();
+            }
             //wifi mac地址
             WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
             WifiInfo info = wifi.getConnectionInfo();
@@ -55,7 +70,7 @@ public class DeviceUtils {
                 return deviceId.toString();
             }
             //如果上面都没有， 则生成一个id：随机码
-            String uuid = getUUID(context);
+            uuid = getUUID(context);
             if (!TextUtils.isEmpty(uuid)) {
                 deviceId.append("id");
                 deviceId.append(uuid);
@@ -72,17 +87,61 @@ public class DeviceUtils {
      * 得到全局唯一UUID
      */
     public static String getUUID(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences("sp_uuid", Context.MODE_PRIVATE);
-        String uuid = "";
-        if (sharedPreferences != null) {
-            uuid = sharedPreferences.getString("uuid", "");
-        }
+        String uuid = recoverDeviceUuidFromSD();
         if (TextUtils.isEmpty(uuid)) {
             uuid = UUID.randomUUID().toString();
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("uuid", uuid);
-            editor.commit();
+            saveDeviceUuidToSD(uuid);
         }
         return uuid;
+    }
+
+    private static void saveDeviceUuidToSD(String uuid) {
+        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        File targetFile = new File(dirPath, DEVICE_UUID_FILE_NAME);
+        if (targetFile != null) {
+            if (targetFile.exists()) {
+
+            } else {
+                OutputStreamWriter osw;
+                try {
+                    osw = new OutputStreamWriter(new FileOutputStream(targetFile), "utf-8");
+                    try {
+                        osw.write(uuid);
+                        osw.flush();
+                        osw.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private static String recoverDeviceUuidFromSD() {
+        try {
+            String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+            File dir = new File(dirPath);
+            File uuidFile = new File(dir, DEVICE_UUID_FILE_NAME);
+            if (!dir.exists() || !uuidFile.exists()) {
+                return null;
+            }
+            FileReader fileReader = new FileReader(uuidFile);
+            StringBuilder sb = new StringBuilder();
+            char[] buffer = new char[100];
+            int readCount;
+            while ((readCount = fileReader.read(buffer)) > 0) {
+                sb.append(buffer, 0, readCount);
+            }
+            //通过UUID.fromString来检查uuid的格式正确性
+            UUID uuid = UUID.fromString(sb.toString());
+            return uuid.toString();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

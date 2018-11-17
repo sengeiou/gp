@@ -11,6 +11,7 @@ import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.nets.BuildConfig;
 
 public class UbtAboutActivtiy extends BaseToolBarActivity {
 
@@ -53,12 +54,24 @@ public class UbtAboutActivtiy extends BaseToolBarActivity {
         findViewById(R.id.ubt_btn_service_policy).setOnClickListener(v -> {
             ActivityRoute.toAnotherActivity(UbtAboutActivtiy.this, ServicePolicyActivity.class, false);
         });
-    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
+        findViewById(R.id.ubt_bottom_nav).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                click_times++;
+                if (click_times > debug_open) {
+                    String text = "";
+                    if (BuildConfig.HOST.contains("apis.ubtrobot")) {
+                        text = "formal";
+                    } else if (BuildConfig.HOST.contains("120.25.57.42")) {
+                        text = "prerelease";
+                    } else if (BuildConfig.HOST.contains("testjimu.ubtrobot")) {
+                        text = "test";
+                    }
+                    Toast.makeText(UBTPGApplication.getContext(), text, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
 }

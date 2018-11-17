@@ -8,7 +8,7 @@ public class Constants {
 
     public static final String ROBOT_BBMINI = "LittlePig";//机器人标志
 
-    public static final String ROBOT_TAG = "LittlePig_";//机器人显示的TAG
+    public static final String ROBOT_TAG = "BaJie_";//机器人显示的TAG
 
     public static final String DATA_COMMAND = "co";//蓝牙传输指令
 

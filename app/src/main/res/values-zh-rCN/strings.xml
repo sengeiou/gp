@@ -193,4 +193,6 @@
 
     <string name="reload_error">加载失败</string>
     <string name="reload">重新加载</string>
+
+    <string name="pair_pig_voice_tip">说“小猪小猪，发送留言给小猪”即可留言互动</string>
 </resources>

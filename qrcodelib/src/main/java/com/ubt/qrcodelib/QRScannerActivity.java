@@ -85,6 +85,19 @@ public abstract class QRScannerActivity extends AppCompatActivity implements Sur
         errorTv = findViewById(R.id.ubt_tv_error);
         init();
         initTips(getIntent());
+        if (Build.VERSION.SDK_INT >= 23) {
+            for (int index = 0; index < permissions.length; index++) {
+                if (ContextCompat.checkSelfPermission(this, permissions[index]) !=
+                        PackageManager.PERMISSION_GRANTED) {
+                    mPermissionList.add(permissions[index]);
+                    requestPermissions(new String[]{Manifest.permission.CAMERA}, 1);
+                }
+            }
+            if (mPermissionList != null && mPermissionList.size() > 0) {
+                String[] permissions = mPermissionList.toArray(new String[mPermissionList.size()]);//将List转为数组   
+                ActivityCompat.requestPermissions(this, permissions, 1);
+            }
+        }
     }
 
     @Override
@@ -119,19 +132,6 @@ public abstract class QRScannerActivity extends AppCompatActivity implements Sur
     @Override
     protected void onResume() {
         super.onResume();
-        if (Build.VERSION.SDK_INT >= 23) {
-            for (int index = 0; index < permissions.length; index++) {
-                if (ContextCompat.checkSelfPermission(this, permissions[index]) !=
-                        PackageManager.PERMISSION_GRANTED) {
-                    mPermissionList.add(permissions[index]);
-                    requestPermissions(new String[]{Manifest.permission.CAMERA}, 1);
-                }
-            }
-            if (mPermissionList != null && mPermissionList.size() > 0) {
-                String[] permissions = mPermissionList.toArray(new String[mPermissionList.size()]);//将List转为数组   
-                ActivityCompat.requestPermissions(this, permissions, 1);
-            }
-        }
         SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
         SurfaceHolder surfaceHolder = surfaceView.getHolder();
         if (hasSurface) {

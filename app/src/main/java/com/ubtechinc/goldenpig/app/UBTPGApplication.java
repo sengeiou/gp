@@ -320,6 +320,33 @@ public class UBTPGApplication extends LoginApplication implements Observer {
         }
     }
 
+    private void showUnpairPigDialog() {
+        updatePigList();
+        if (mTopActivity == null) return;
+        UBTBaseDialog unpairPigDialog = new UBTBaseDialog(mTopActivity);
+        unpairPigDialog.setCancelable(false);
+        unpairPigDialog.setCanceledOnTouchOutside(false);
+        unpairPigDialog.setTips("小猪配对已被对方解除");
+        unpairPigDialog.setLeftBtnShow(false);
+        unpairPigDialog.setRightButtonTxt("我知道了");
+        unpairPigDialog.setRightBtnColor(ContextCompat.getColor(this, R.color.ubt_tab_btn_txt_checked_color));
+        unpairPigDialog.setOnUbtDialogClickLinsenter(new UBTBaseDialog.OnUbtDialogClickLinsenter() {
+
+            @Override
+            public void onLeftButtonClick(View view) {
+
+            }
+
+            @Override
+            public void onRightButtonClick(View view) {
+            }
+
+        });
+        if (!mTopActivity.isDestroyed() && !mTopActivity.isFinishing()) {
+            unpairPigDialog.show();
+        }
+    }
+
     private void updatePigList() {
         new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListHttpProxy.OnGetPigListLitener() {
             @Override
@@ -416,6 +443,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                 AuthLive.getInstance().setPairPig(null);
                 Event<Integer> event = new Event<>(EventBusUtil.PAIR_PIG_UPDATE);
                 EventBusUtil.sendEvent(event);
+                showUnpairPigDialog();
             }
 
             @Override

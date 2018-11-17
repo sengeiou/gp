@@ -79,7 +79,7 @@ public class DeviceManageActivity extends BaseToolBarActivity implements View.On
     protected void onResume() {
         super.onResume();
         updateUI();
-//        updatePigList();
+        updatePigList();
     }
 
     private void updatePigList() {
@@ -98,12 +98,13 @@ public class DeviceManageActivity extends BaseToolBarActivity implements View.On
             public void onSuccess(String response) {
                 Log.e("getPigList", response);
                 PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance().getCurrentPigList());
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        updateUI();
-                    }
-                });
+                EventBusUtil.sendEvent(new Event<>(EventBusUtil.USER_PIG_UPDATE));
+//                runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        updateUI();
+//                    }
+//                });
             }
         });
     }
