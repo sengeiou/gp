@@ -79,21 +79,25 @@ public class TimeUtil {
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
         if (calendar.before(inputTime)){
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+           // SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss a");
             return sdf.format(currenTimeZone);
         }
         calendar.add(Calendar.DAY_OF_MONTH,-1);
         if (calendar.before(inputTime)){
-            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+            //SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss a");
             return "昨天 "+sdf.format(currenTimeZone);
         }else{
             calendar.set(Calendar.DAY_OF_MONTH, 1);
             calendar.set(Calendar.MONTH, Calendar.JANUARY);
             if (calendar.before(inputTime)){
-                SimpleDateFormat sdf = new SimpleDateFormat("M月d日 HH:mm");
+                //SimpleDateFormat sdf = new SimpleDateFormat("M月d日 HH:mm");
+                SimpleDateFormat sdf = new SimpleDateFormat("M月d日 hh:mm");
                 return sdf.format(currenTimeZone);
             }else{
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
+               // SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 hh:mm");
                 return sdf.format(currenTimeZone);
             }
 
