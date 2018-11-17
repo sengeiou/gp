@@ -27,6 +27,7 @@ import com.tencent.TIMSoundElem;
 import com.tencent.TIMTextElem;
 import com.tencent.TIMValueCallBack;
 import com.ubt.improtolib.VoiceMailContainer;
+import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.common.adapter.ViewHolder;
@@ -233,6 +234,49 @@ public class VoiceMessage extends Message {
            }else if(voicetime>=30){
                tv.setText("                         ");
            }
+           //to improve the voice length from product advices
+       try {
+           String mcontent = "";
+           if (1 <= voicetime && voicetime <= 9) {
+               for (int i = 0; i < (voicetime - 1); i++) {
+                   //one spacke is equal to 2mms
+                   mcontent.concat(" ");
+               }
+           }
+           if (10 <= voicetime && voicetime <= 19) {
+               for (int i = 0; i < 9; i++) {
+                   mcontent.concat(" ");
+               }
+           }
+           if (20 <= voicetime && voicetime <= 29) {
+               for (int i = 0; i < 10; i++) {
+                   mcontent.concat(" ");
+               }
+           }
+           if (30 <= voicetime && voicetime <= 39) {
+               for (int i = 0; i < 11; i++) {
+                   mcontent.concat(" ");
+               }
+           }
+           if (40 <= voicetime && voicetime <= 49) {
+               for (int i = 0; i < 12; i++) {
+                   mcontent.concat(" ");
+               }
+           }
+           if (50 <= voicetime && voicetime <= 59) {
+               for (int i = 0; i < 13; i++) {
+                   mcontent.concat(" ");
+               }
+           }
+           if (voicetime == 60) {
+               for (int i = 0; i < 14; i++) {
+                   mcontent.concat(" ");
+               }
+           }
+           LogUtils.d("voice length" + voicetime + "length begin:" + mcontent + ":end");
+       }catch(Exception e){
+               e.printStackTrace();
+       }
            if (message.isSelf()) {
                linearLayout.addView(tv);
                imageLp.setMargins(10, 0, 0, 0);
