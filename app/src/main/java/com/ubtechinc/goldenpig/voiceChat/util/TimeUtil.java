@@ -80,13 +80,13 @@ public class TimeUtil {
         calendar.set(Calendar.MILLISECOND, 0);
         if (calendar.before(inputTime)){
            // SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss a");
+            SimpleDateFormat sdf = new SimpleDateFormat("a hh:mm");
             return sdf.format(currenTimeZone);
         }
         calendar.add(Calendar.DAY_OF_MONTH,-1);
         if (calendar.before(inputTime)){
             //SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss a");
+            SimpleDateFormat sdf = new SimpleDateFormat("a hh:mm");
             return "昨天 "+sdf.format(currenTimeZone);
         }else{
             calendar.set(Calendar.DAY_OF_MONTH, 1);
