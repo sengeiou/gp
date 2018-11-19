@@ -68,15 +68,12 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
     private static final int IMAGE_STORE = 200;
     private static final int FILE_CODE = 300;
     private static final int IMAGE_PREVIEW = 400;
-    private Uri fileUri;
-    private File cameraFile;
     private VoiceSendingView voiceSendingView;
     private String identify;
     private RecorderUtil recorder = new RecorderUtil();
     private TIMConversationType type;
     private ChannelInfo info = null;
     private String TAG="ChatActivity";
-    public static boolean VERSION_BYPASS=true;
     private Timer mVoiceRecordTimer;
     private TimerTask mVoiceRecordTimeOutTask;
     long mVoiceRecordingTimeout=60*1000;
@@ -379,15 +376,9 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
      */
     @Override
     public void sendText() {
-       if(VERSION_BYPASS) {
            Message message = new TextMessage(input.getText());
            presenter.sendMessage(message.getMessage(), ChatPresenter.MESSAGE_TEXT);
            input.setText("");
-       }else {
-           sendPackMessageUsingProto(ChatPresenter.MESSAGE_TEXT, input.getText().toString().getBytes(), -1, UbtTIMManager.userId);
-           input.setText("");
-       }
-
     }
 
     /**
@@ -450,32 +441,15 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
         if (recorder.getTimeInterval() < 1) {
             Toast.makeText(this, getResources().getString(R.string.chat_audio_too_short), Toast.LENGTH_SHORT).show();
         } else {
-            if(recorder.getTimeInterval()==mVoiceRecordingTimeout){
+            if (recorder.getTimeInterval() == mVoiceRecordingTimeout) {
                 Toast.makeText(this, getResources().getString(R.string.chat_audio_too_long), Toast.LENGTH_SHORT).show();
             }
-            if (VERSION_BYPASS) {
-                Message message = new VoiceMessage(recorder.getTimeInterval(), recorder.getFilePath());
-                presenter.sendMessage(message.getMessage(), ChatPresenter.MESSAGE_VOICE);
-            } else {
-                sendPackMessageUsingProto(ChatPresenter.MESSAGE_VOICE, recorder.getDate(), (int) recorder.getTimeInterval(), UbtTIMManager.userId);
-            }
+
+            Message message = new VoiceMessage(recorder.getTimeInterval(), recorder.getFilePath());
+            presenter.sendMessage(message.getMessage(), ChatPresenter.MESSAGE_VOICE);
+
         }
     }
-    private void sendPackMessageUsingProto(int messageType, byte[] infoData,int duration,String sender){
-        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setTime(System.currentTimeMillis()).setAction("/im/voicemail/receiver").build();
-        VoiceMailContainer.VoiceMail voiceMail = VoiceMailContainer.VoiceMail.newBuilder()
-                .setTime(System.currentTimeMillis()) // 发送时间
-                .setElapsedMillis((int)duration*1000) //语音时长
-                .setMessage(ByteString.copyFrom(infoData)) //消息内容
-                .setMsgType(messageType) //消息类型
-                .setSender(sender) //发送方
-                .build();
-        ChannelMessageContainer.ChannelMessage message = ChannelMessageContainer.ChannelMessage.newBuilder().setHeader(header).setPayload(Any.pack(voiceMail)).build();
-        Message mailMessage;
-        mailMessage = new VoiceMessage(message.toByteArray(), duration + "");
-        presenter.sendMessage(mailMessage.getMessage(),messageType);
-    }
-
 
     /**
      * 发送小视频消息

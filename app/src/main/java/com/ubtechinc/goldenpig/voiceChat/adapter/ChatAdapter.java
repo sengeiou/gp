@@ -81,9 +81,7 @@ public class ChatAdapter extends CommonAdaper<Message> {
 
     @Override
     public void update(List<Message> items) {
-        if(ChatActivity.VERSION_BYPASS) {
-            filter(items);
-        }
+        filter(items);
         notifyDataSetChanged();
     }
 

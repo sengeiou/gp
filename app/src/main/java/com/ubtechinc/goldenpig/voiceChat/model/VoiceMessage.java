@@ -109,95 +109,6 @@ public class VoiceMessage extends Message {
      */
     @Override
     public void showMessage(ViewHolder viewHolder, Context context) {
-//        Exception e1 = new Exception("THIS IS VOICE MESSAGE SHOW MESSAGE ");
-//        e1.printStackTrace();
-       if(!ChatActivity.VERSION_BYPASS) {
-           try {
-               TIMCustomElem customElem = (TIMCustomElem) message.getElement(0);
-               ChannelMessageContainer.ChannelMessage msg = ChannelMessageContainer.ChannelMessage
-                       .parseFrom((byte[]) customElem.getData());
-               Log.d(TAG, "message before " + msg.getHeader().getAction());
-               if (msg.getHeader().getAction().equals("/im/voicemail/receiver")) {
-                   VoiceMailContainer.VoiceMail mVoiceData = msg.getPayload().unpack(VoiceMailContainer.VoiceMail.class);
-                   Log.d(TAG, "message before type " + mVoiceData.getMsgType());
-
-                   if (mVoiceData.getMsgType() == ChatPresenter.MESSAGE_TEXT) {
-                       Log.d(TAG, "message text  " + isSelf());
-                       clearView(viewHolder);
-                       boolean hasText = false;
-                       TextView tv = new TextView(UBTPGApplication.getContext());
-                       tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                       tv.setTextColor(UBTPGApplication.getContext().getResources().getColor(isSelf() ? R.color.white : R.color.black));
-                       List<TIMElem> elems = new ArrayList<>();
-                       for (int i = 0; i < message.getElementCount(); ++i) {
-                           elems.add(message.getElement(i));
-//                         if (message.getElement(i).getType() == TIMElemType.Text){
-//                             hasText = true;
-//                         }
-                       }
-                       SpannableStringBuilder stringBuilder = getString(elems, context);
-//                     if (!hasText){
-//                         stringBuilder.insert(0," ");
-//                     }
-                       tv.setText(stringBuilder);
-                       getBubbleView(viewHolder).addView(tv);
-                       viewHolder.getView(R.id.right_voice_time_me).setVisibility(View.INVISIBLE);
-                       viewHolder.getView(R.id.left_voice_time_other).setVisibility(View.INVISIBLE);
-                       showStatus(viewHolder);
-                   } else if (mVoiceData.getMsgType() == ChatPresenter.MESSAGE_VOICE) {
-                       Log.d(TAG, "message voice " + isSelf());
-                       LinearLayout linearLayout = new LinearLayout(UBTPGApplication.getContext());
-                       linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-                       linearLayout.setGravity(Gravity.CENTER);
-                       ImageView voiceIcon = new ImageView(UBTPGApplication.getContext());
-                       voiceIcon.setBackgroundResource(message.isSelf() ? R.drawable.right_voice : R.drawable.left_voice);
-                       final AnimationDrawable frameAnimatio = (AnimationDrawable) voiceIcon.getBackground();
-
-                       TextView tv = new TextView(UBTPGApplication.getContext());
-                       tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                       tv.setTextColor(UBTPGApplication.getContext().getResources().getColor(isSelf() ? R.color.white : R.color.black));
-                       //RECORD TIME ON THE MESSAGE
-                       // tv.setText(String.valueOf(((TIMCustomElem) message.getElement(0)).getDesc()) + "’");
-                       int height = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 18, context.getResources().getDisplayMetrics());
-                       int width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 14, context.getResources().getDisplayMetrics());
-                       LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                       LinearLayout.LayoutParams imageLp = new LinearLayout.LayoutParams(width, height);
-                       if (message.isSelf()) {
-                           linearLayout.addView(tv);
-                           imageLp.setMargins(10, 0, 0, 0);
-                           voiceIcon.setLayoutParams(imageLp);
-                           linearLayout.addView(voiceIcon);
-                           viewHolder.getView(R.id.right_voice_time_me).setVisibility(View.VISIBLE);
-                           viewHolder.setText(R.id.right_voice_time_me, String.valueOf(((TIMCustomElem) message.getElement(0)).getDesc()) + "\"");
-                       } else {
-                           voiceIcon.setLayoutParams(imageLp);
-                           linearLayout.addView(voiceIcon);
-                           lp.setMargins(10, 0, 0, 0);
-                           tv.setLayoutParams(lp);
-                           linearLayout.addView(tv);
-                           viewHolder.getView(R.id.left_voice_time_other).setVisibility(View.VISIBLE);
-                           viewHolder.setText(R.id.left_voice_time_other, mVoiceData.getElapsedMillis() / 1000 + "\"");
-                       }
-                       clearView(viewHolder);
-                       getBubbleView(viewHolder).addView(linearLayout);
-                       getBubbleView(viewHolder).setOnClickListener(new View.OnClickListener() {
-                           @Override
-                           public void onClick(View v) {
-                               if(UBTPGApplication.voiceMail_debug){
-                                   Toast.makeText(UBTPGApplication.getContext(),"click other ", Toast.LENGTH_SHORT).show();
-                               }
-                               MediaUtil.getInstance().setIsReadyPlayingIndex(message.getMsgUniqueId());
-                               VoiceMessage.this.playAudio(frameAnimatio);
-                           }
-                       });
-                       showStatus(viewHolder);
-                   }
-               }
-
-           } catch (Exception e) {
-               e.printStackTrace();
-           }
-       }else{
            LinearLayout linearLayout = new LinearLayout(UBTPGApplication.getContext());
            linearLayout.setOrientation(LinearLayout.HORIZONTAL);
            linearLayout.setGravity(Gravity.CENTER);
@@ -221,19 +132,19 @@ public class VoiceMessage extends Message {
                //milliseconds
               voicetime = ((TIMSoundElem) message.getElement(0)).getDuration()/1000;
            }
-           if(5<=voicetime&&voicetime<10){
-               tv.setText("     ");
-           }else if(10<=voicetime&&voicetime<15){
-               tv.setText("         ");
-           }else if(15<=voicetime&&voicetime<20){
-               tv.setText("             ");
-           }else if(20<=voicetime&&voicetime<25){
-               tv.setText("                 ");
-           }else if(25<=voicetime&&voicetime<30){
-               tv.setText("                     ");
-           }else if(voicetime>=30){
-               tv.setText("                         ");
-           }
+//           if(5<=voicetime&&voicetime<10){
+//               tv.setText("     ");
+//           }else if(10<=voicetime&&voicetime<15){
+//               tv.setText("         ");
+//           }else if(15<=voicetime&&voicetime<20){
+//               tv.setText("             ");
+//           }else if(20<=voicetime&&voicetime<25){
+//               tv.setText("                 ");
+//           }else if(25<=voicetime&&voicetime<30){
+//               tv.setText("                     ");
+//           }else if(voicetime>=30){
+//               tv.setText("                         ");
+//           }
            //to improve the voice length from product advices
        try {
            String mcontent = "";
@@ -273,6 +184,7 @@ public class VoiceMessage extends Message {
                    mcontent.concat(" ");
                }
            }
+           tv.setText(mcontent);
            LogUtils.d("voice length" + voicetime + "length begin:" + mcontent + ":end");
        }catch(Exception e){
                e.printStackTrace();
@@ -307,7 +219,7 @@ public class VoiceMessage extends Message {
                }
            });
            showStatus(viewHolder);
-       }
+
     }
 
 
