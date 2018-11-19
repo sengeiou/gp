@@ -527,11 +527,7 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE) {
-            if (resultCode == RESULT_OK && cameraFile != null) {
-                showImagePreview(cameraFile.getPath());
-            }
-        } else if (requestCode == IMAGE_STORE) {
+      if (requestCode == IMAGE_STORE) {
             if (resultCode == RESULT_OK && data != null) {
                 showImagePreview(FileUtil.getFilePath(this, data.getData()));
             }
