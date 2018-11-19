@@ -38,7 +38,7 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SET_REPEAT_SUCCESS;
 
 public class AddAlarmActivity extends BaseNewActivity {
     @BindView(R.id.loopView_date)
-    LoopView loopView_date;
+    LoopView loopView_am;
     @BindView(R.id.loopView_hour)
     LoopView loopView_hour;
     @BindView(R.id.loopView_minute)
@@ -85,53 +85,59 @@ public class AddAlarmActivity extends BaseNewActivity {
         mHandler = new MyHandler(this);
         model = getIntent().getParcelableExtra("item");
         initData();
-        loopView_date.setItems(dateList);
-        loopView_date.setItemsVisibleCount(0);
-        loopView_date.setTextSize(18);
-        loopView_date.setNotLoop();
+        loopView_am.setItems(dateList);
+        loopView_am.setInitPosition(0);
+        loopView_am.setTextSize(18);
+        loopView_am.setNotLoop();
         loopView_hour.setItems(hourList);
-        loopView_hour.setItemsVisibleCount(0);
+        loopView_hour.setInitPosition(0);
         loopView_hour.setTextSize(18);
         loopView_minute.setItems(minList);
-        loopView_minute.setItemsVisibleCount(0);
+        loopView_minute.setInitPosition(0);
         loopView_minute.setTextSize(18);
-        if (model != null) {
-            if (model.amOrpm.equals("下午")) {
-                loopView_date.setCurrentPosition(1);
-            }
-            String[] str = model.time.split(":");
-            int hour = Integer.parseInt(str[0]);
-            loopView_hour.setCurrentPosition(hour - 1);
-            int minutie = Integer.parseInt(str[1]);
-            loopView_minute.setCurrentPosition(minutie);
-            switch (model.eRepeatType) {
-                case 1:
-                    repeatType = 0;
-                    tv_cycle.setText("单次");
-                    break;
-                case 2:
-                    repeatType = 8;
-                    tv_cycle.setText("每天");
-                    break;
-                case 3:
-                    long lStartTimeStamp = model.lStartTimeStamp * 1000;
-                    String week = TimeUtils.getWeek(lStartTimeStamp);
-                    break;
-                default:
+        try {
+            if (model != null) {
+                String[] str = model.time.split(":");
+                int hour = Integer.parseInt(str[0]);
+                loopView_hour.setCurrentPosition((hour - 1 + 12) % 12);
+                int minutie = Integer.parseInt(str[1]);
+                loopView_minute.setCurrentPosition(minutie % 60);
+                if (hour == 0) {
+                    loopView_am.setInitPosition(1);
+                } else if (model.amOrpm.equals("下午")) {
+                    loopView_am.setCurrentPosition(1);
+                }
+                switch (model.eRepeatType) {
+                    case 1:
+                        repeatType = 0;
+                        tv_cycle.setText("单次");
+                        break;
+                    case 2:
+                        repeatType = 8;
+                        tv_cycle.setText("每天");
+                        break;
+                    case 3:
+                        long lStartTimeStamp = model.lStartTimeStamp * 1000;
+                        String week = TimeUtils.getWeek(lStartTimeStamp);
+                        break;
+                    default:
 
-                    break;
+                        break;
+                }
+            } else {
+                int hour = TimeUtils.getHourFromDate(new Date());
+                int minute = TimeUtils.getMinuteFromDate(new Date());
+                if (hour == 0) {
+                    loopView_am.setInitPosition(1);
+                } else if (hour > 12) {
+                    loopView_am.setInitPosition(1);
+                    hour -= 12;
+                }
+                loopView_hour.setInitPosition((hour - 1 + 12) % 12);
+                loopView_minute.setInitPosition(minute % 60);
             }
-        } else {
-            int hour = TimeUtils.getHourFromDate(new Date());
-            int minute = TimeUtils.getMinuteFromDate(new Date());
-            if (hour > 12) {
-                loopView_date.setInitPosition(1);
-                hour -= 12;
-            }
-            loopView_hour.setInitPosition((hour - 1) % 12);
-            loopView_minute.setInitPosition(minute % 60);
+        } catch (Exception e) {
         }
-
     }
 
 
@@ -243,7 +249,7 @@ public class AddAlarmActivity extends BaseNewActivity {
         //当前星期几:周日的Index才是1，周六为7
         int week = TimeUtils.getWeekIndex(timnow);
         int hour = 0;
-        if (loopView_date.getSelectedItem() == 1) {
+        if (loopView_am.getSelectedItem() == 1) {
             hour += 12;
         }
         hour += Integer.parseInt(hourList.get(loopView_hour.getSelectedItem()));

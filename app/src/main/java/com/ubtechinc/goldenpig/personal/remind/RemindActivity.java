@@ -1,6 +1,7 @@
 package com.ubtechinc.goldenpig.personal.remind;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -360,10 +361,9 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
 
     @Override
     public void onItemClick(View itemView, int position) {
-//        if (mList.get(position).type == 1) {
-//            Intent it = new Intent(RemindActivity.this, AddRemindActivity.class);
-//            startActivity(it);
-//        }
+//        Intent it = new Intent(RemindActivity.this, AddRemindActivity.class);
+//        it.putExtra("item", mList.get(position));
+//        startActivity(it);
     }
 
     public void deleteAlarm(int position) {

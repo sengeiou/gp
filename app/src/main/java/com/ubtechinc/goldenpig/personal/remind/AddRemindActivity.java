@@ -86,19 +86,19 @@ public class AddRemindActivity extends BaseNewActivity {
         model = getIntent().getParcelableExtra("item");
         initData();
         loopView_date.setItems(dateList);
-        loopView_date.setItemsVisibleCount(0);
+        loopView_date.setInitPosition(0);
         loopView_date.setTextSize(18);
         loopView_date.setNotLoop();
         loopView_am.setItems(amList);
-        loopView_am.setItemsVisibleCount(0);
+        loopView_am.setInitPosition(0);
         loopView_am.setTextSize(18);
         loopView_am.setNotLoop();
         loopView_hour.setItems(hourList);
-        loopView_hour.setItemsVisibleCount(0);
+        loopView_hour.setInitPosition(0);
         loopView_hour.setInitPosition(8);
         loopView_hour.setTextSize(18);
         loopView_minute.setItems(minList);
-        loopView_minute.setItemsVisibleCount(0);
+        //loopView_minute.setInitPosition(0);
         loopView_minute.setTextSize(18);
         loopView_minute.setInitPosition(30);
         loopView_date.setListener(new OnItemSelectedListener() {
@@ -125,36 +125,100 @@ public class AddRemindActivity extends BaseNewActivity {
                 getMsgTime();
             }
         });
-
-        int hour = TimeUtils.getHourFromDate(new Date());
-        int minute = TimeUtils.getMinuteFromDate(new Date());
-        LogUtils.d("hdf", "hour:" + hour + ",minute:" + minute);
-        StringBuffer sb = new StringBuffer();
-        Date da = TimeUtils.addDate(today, loopView_date.getSelectedItem());
-        int year = TimeUtils.getYearFromDate(da);
-        int month = TimeUtils.getMonthFromDate(da);
-        int day = TimeUtils.getDayFromDate(da);
-        sb.append(year);
-        sb.append("年");
-        sb.append(month);
-        sb.append("月");
-        sb.append(day);
-        sb.append("日");
-        if (hour > 12) {
-            loopView_am.setInitPosition(1);
-            sb.append("下午");
-            hour -= 12;
-        } else {
-            sb.append("上午");
+        try {
+            if (model == null) {
+                int hour = TimeUtils.getHourFromDate(new Date());
+                int minute = TimeUtils.getMinuteFromDate(new Date());
+                LogUtils.d("hdf", "hour:" + hour + ",minute:" + minute);
+                StringBuffer sb = new StringBuffer();
+                Date da = TimeUtils.addDate(today, loopView_date.getSelectedItem());
+                int year = TimeUtils.getYearFromDate(da);
+                int month = TimeUtils.getMonthFromDate(da);
+                int day = TimeUtils.getDayFromDate(da);
+                sb.append(year);
+                sb.append("年");
+                sb.append(month);
+                sb.append("月");
+                sb.append(day);
+                sb.append("日");
+                if (hour == 0) {
+                    loopView_am.setInitPosition(1);
+                    sb.append("下午");
+                    hour = 12;
+                } else if (hour > 12) {
+                    loopView_am.setInitPosition(1);
+                    sb.append("下午");
+                    hour -= 12;
+                } else {
+                    sb.append("上午");
+                }
+                loopView_hour.setInitPosition((hour - 1 + 12) % 12);
+                loopView_minute.setInitPosition(minute % 60);
+                sb.append(hourList.get((hour - 1 + 12) % 12));
+                sb.append(":");
+                sb.append(minList.get(minute % 60));
+                tv_time.setText(sb.toString());
+                tv_right.setEnabled(false);
+                tv_right.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
+            } else {
+                ed_msg.setText(model.sNote);
+                ed_msg.setSelection(model.sNote.length());
+                String[] str = model.time.split(":");
+                int hour = Integer.parseInt(str[0]);
+                String am = "";
+                if (hour == 0) {
+                    loopView_am.setInitPosition(1);
+                    am = "下午";
+                } else if (model.amOrpm.equals("下午")) {
+                    loopView_am.setInitPosition(1);
+                    am = "下午";
+                } else {
+                    am = "上午";
+                }
+                loopView_hour.setInitPosition((hour - 1 + 12) % 12);
+                int minutie = Integer.parseInt(str[1]);
+                loopView_minute.setInitPosition(minutie % 60);
+                StringBuffer sb = new StringBuffer();
+                Date da = TimeUtils.addDate(today, loopView_date.getSelectedItem());
+                int year = TimeUtils.getYearFromDate(da);
+                int month = TimeUtils.getMonthFromDate(da);
+                int day = TimeUtils.getDayFromDate(da);
+                sb.append(year);
+                sb.append("年");
+                sb.append(month);
+                sb.append("月");
+                sb.append(day);
+                sb.append("日");
+                sb.append(am);
+                sb.append(hourList.get((hour - 1 + 12) % 12) + ":" + minList.get(minutie % 60));
+                tv_time.setText(sb.toString());
+                switch (model.repeatName) {
+                    case "单次闹钟":
+                        tv_cycle.setText("单次");
+                        repeatType = 1;
+                        break;
+                    case "每天":
+                        tv_cycle.setText("每天");
+                        repeatType = 2;
+                        break;
+                    case "每周":
+                        tv_cycle.setText("每周");
+                        repeatType = 3;
+                        break;
+                    case "每月":
+                        tv_cycle.setText("每月");
+                        repeatType = 4;
+                        break;
+                    case "每年":
+                        tv_cycle.setText("每年");
+                        repeatType = 1;
+                        break;
+                }
+                tv_right.setEnabled(true);
+                tv_right.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_checked_color));
+            }
+        } catch (Exception e) {
         }
-        loopView_hour.setInitPosition((hour - 1) % 12);
-        loopView_minute.setInitPosition(minute % 60);
-        sb.append(hourList.get((hour - 1) % 12));
-        sb.append(":");
-        sb.append(minList.get(minute % 60));
-        tv_time.setText(sb.toString());
-        tv_right.setEnabled(false);
-        tv_right.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
         initLengthLimit();
     }
 
