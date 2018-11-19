@@ -45,7 +45,7 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
 
     private ImageButton btnAdd, btnSend, btnVoice, btnKeyboard, btnEmotion;
     private EditText editText;
-    private boolean isSendVisible,isHoldVoiceBtn,isEmoticonReady;
+    private boolean isSendVisible,isHoldVoiceBtn,isEmoticonReady,isCancel;
     private InputMode inputMode = InputMode.NONE;
     private ChatView chatView;
     private LinearLayout morePanel,textPanel;
@@ -98,6 +98,7 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
                         break;
                     case MotionEvent.ACTION_CANCEL:
                         isHoldVoiceBtn = false;
+                        isCancel=true;
                         updateVoiceView();
                         Log.d("chatinput", "cancel");
                         break;
@@ -179,9 +180,13 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
             voicePanel.setBackground(getResources().getDrawable(R.drawable.btn_voice_pressed));
             chatView.startSendVoice();
         }else{
-            voicePanel.setText(getResources().getString(R.string.chat_press_talk));
-            voicePanel.setBackground(getResources().getDrawable(R.drawable.btn_voice_normal));
-            chatView.endSendVoice();
+            if(!isCancel) {
+                voicePanel.setText(getResources().getString(R.string.chat_press_talk));
+                voicePanel.setBackground(getResources().getDrawable(R.drawable.btn_voice_normal));
+                chatView.endSendVoice();
+            }else{
+                chatView.cancelSendVoice();
+            }
         }
     }
 

@@ -444,11 +444,22 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
             if (recorder.getTimeInterval() == mVoiceRecordingTimeout) {
                 Toast.makeText(this, getResources().getString(R.string.chat_audio_too_long), Toast.LENGTH_SHORT).show();
             }
-
             Message message = new VoiceMessage(recorder.getTimeInterval(), recorder.getFilePath());
             presenter.sendMessage(message.getMessage(), ChatPresenter.MESSAGE_VOICE);
 
         }
+    }
+    @Override
+    public void cancelSendvoice() {
+        if(!recorder.isRecording()){
+            return;
+        }
+        stopVoiceRecordingTask();
+        voiceSendingView.showCancel();
+        voiceSendingView.setVisibility(View.GONE);
+        recorder.stopRecording();
+        Toast.makeText(this, getResources().getString(R.string.chat_audio_too_short), Toast.LENGTH_SHORT).show();
+
     }
 
     /**

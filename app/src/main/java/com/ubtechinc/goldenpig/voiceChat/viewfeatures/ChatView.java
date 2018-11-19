@@ -86,7 +86,10 @@ public interface ChatView extends MvpView {
      */
     void endSendVoice();
 
-
+    /**
+     *  取消发送
+     */
+    void cancelSendvoice();
     /**
      * 发送小视频消息
      *
