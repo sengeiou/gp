@@ -16,6 +16,7 @@ import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.ImageSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -98,7 +99,9 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
                     case MotionEvent.ACTION_CANCEL:
                         isHoldVoiceBtn = false;
                         updateVoiceView();
+                        Log.d("chatinput", "cancel");
                         break;
+
                 }
                 return true;
             }
