@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -80,7 +81,6 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
     private TimerTask mVoiceRecordTimeOutTask;
     long mVoiceRecordingTimeout=60*1000;
     private int HIDDEN_CANCEL=1000;
-    Handler mHandler;
     public static void navToChat(Context context, String identify, TIMConversationType type, ChannelInfo info){
         Intent intent = new Intent(context, ChatActivity.class);
         intent.putExtra("identify", identify);
@@ -171,7 +171,6 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
         voiceSendingView = (VoiceSendingView) findViewById(R.id.voice_sending);
         voiceCancelView = (VoiceCancelView) findViewById(R.id.voice_cancel);
         presenter.start();
-        mHandler= new Handler();
     }
 
     @Override
@@ -463,9 +462,9 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
         stopVoiceRecordingTask();
         voiceSendingView.setVisibility(View.GONE);
         voiceCancelView.setVisibility(View.VISIBLE);
+        mHandler.sendEmptyMessageDelayed(HIDDEN_CANCEL,500);
         recorder.stopRecording();
         Toast.makeText(this, getResources().getString(R.string.chat_audio_too_short), Toast.LENGTH_SHORT).show();
-        mHandler.sendEmptyMessageDelayed(HIDDEN_CANCEL,1000);
     }
     /**
      * 发送小视频消息
@@ -592,5 +591,14 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
             Toast.makeText(this, getString(R.string.chat_file_not_exist), Toast.LENGTH_SHORT).show();
         }
     }
+    Handler mHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(android.os.Message message) {
+            if(message.what==HIDDEN_CANCEL) {
+                voiceCancelView.setVisibility(View.GONE);
+
+            }
+        }
+    };
 
 }
