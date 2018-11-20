@@ -89,17 +89,24 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
             public boolean onTouch(View v, MotionEvent event) {
                     float startY = 0;
                     float endY = 0;
-                    boolean send = false;
+//                    float downX=0;
+//                    float downY=0;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+//                        downX=event.getX();
+//                        downY=event.getY();
                         startY = event.getY();
                         isHoldVoiceBtn = true;
                         updateVoiceView();
                         break;
                     case MotionEvent.ACTION_UP:
-                        endY = event.getY();
-                        isHoldVoiceBtn = false;
-                        updateVoiceView();
+                        Log.d(TAG, "--action up"+event.getY() );
+                        int distance = (int) Math.abs(event.getY() - startY);
+                        if (distance > 100) {
+                            chatView.cancelSending();
+                        }
+                            isHoldVoiceBtn = false;
+                            updateVoiceView();
                         break;
                     case MotionEvent.ACTION_CANCEL:
                         isHoldVoiceBtn = false;
@@ -110,7 +117,10 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
                         int instance = (int) Math.abs((moveY - startY));
                         Log.d(TAG, "--action move--instance:" + instance);
                         if (instance > 100) {
-                            chatView.cancelSending();
+                            chatView.showCancelSending();
+                        }else {
+                            isHoldVoiceBtn = true;
+                            updateVoiceView();
                         }
                         break;
 

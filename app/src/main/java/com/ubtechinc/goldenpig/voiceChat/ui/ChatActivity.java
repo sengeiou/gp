@@ -425,8 +425,11 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
     @Override
     public void startSendVoice() {
         voiceSendingView.setVisibility(View.VISIBLE);
+        voiceCancelView.setVisibility(View.GONE);
         voiceSendingView.showRecording();
-        recorder.startRecording();
+        if(!recorder.isRecording()) {
+            recorder.startRecording();
+        }
         startVoiceRecordingTask();
     }
 
@@ -455,14 +458,18 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
     }
 
     @Override
+    public void showCancelSending() {
+        voiceSendingView.setVisibility(View.GONE);
+        voiceCancelView.setVisibility(View.VISIBLE);
+    }
+
+    @Override
     public void cancelSending() {
         if(!recorder.isRecording()){
             return;
         }
         stopVoiceRecordingTask();
-        voiceSendingView.setVisibility(View.GONE);
-        voiceCancelView.setVisibility(View.VISIBLE);
-        mHandler.sendEmptyMessageDelayed(HIDDEN_CANCEL,500);
+        mHandler.sendEmptyMessageDelayed(HIDDEN_CANCEL,100);
         recorder.stopRecording();
     }
     /**
