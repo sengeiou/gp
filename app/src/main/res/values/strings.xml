@@ -153,6 +153,7 @@
     <string name="chat_file_not_exist">文件不存在，发送失败</string>
     <string name="chat_release_send">松开 结束</string>
     <string name="chat_up_finger">手指上滑，取消发送</string>
+    <string name="chat_cancel_finger">松开手指，取消发送</string>
     <string name="chat_content_bad">内容含有敏感词</string>
     <string name="chat_audio_too_short">录音过短，请重试</string>
     <string name="chat_audio_too_long">录音过长，已经发送</string>

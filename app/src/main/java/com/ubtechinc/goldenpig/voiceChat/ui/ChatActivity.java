@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.RequiresApi;
 import android.util.Log;
 import android.view.ContextMenu;
@@ -69,6 +70,7 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
     private static final int FILE_CODE = 300;
     private static final int IMAGE_PREVIEW = 400;
     private VoiceSendingView voiceSendingView;
+    private VoiceCancelView  voiceCancelView;
     private String identify;
     private RecorderUtil recorder = new RecorderUtil();
     private TIMConversationType type;
@@ -77,7 +79,8 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
     private Timer mVoiceRecordTimer;
     private TimerTask mVoiceRecordTimeOutTask;
     long mVoiceRecordingTimeout=60*1000;
-
+    private int HIDDEN_CANCEL=1000;
+    Handler mHandler;
     public static void navToChat(Context context, String identify, TIMConversationType type, ChannelInfo info){
         Intent intent = new Intent(context, ChatActivity.class);
         intent.putExtra("identify", identify);
@@ -166,7 +169,9 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
                 break;
         }
         voiceSendingView = (VoiceSendingView) findViewById(R.id.voice_sending);
+        voiceCancelView = (VoiceCancelView) findViewById(R.id.voice_cancel);
         presenter.start();
+        mHandler= new Handler();
     }
 
     @Override
@@ -449,19 +454,19 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
 
         }
     }
+
     @Override
-    public void cancelSendvoice() {
+    public void cancelSending() {
         if(!recorder.isRecording()){
             return;
         }
         stopVoiceRecordingTask();
-        voiceSendingView.showCancel();
         voiceSendingView.setVisibility(View.GONE);
+        voiceCancelView.setVisibility(View.VISIBLE);
         recorder.stopRecording();
         Toast.makeText(this, getResources().getString(R.string.chat_audio_too_short), Toast.LENGTH_SHORT).show();
-
+        mHandler.sendEmptyMessageDelayed(HIDDEN_CANCEL,1000);
     }
-
     /**
      * 发送小视频消息
      * @param fileName 文件名
@@ -588,151 +593,4 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
         }
     }
 
-    // 点击成员
-//    public void onClickMember(final String userId, final String name) {
-//        if (userId.equals(LiveHelper.getUserId())) {
-//            LiveHelper.toast("无法对自己进行操作");
-//            return;
-//        }
-//        if (userId.equals(info.PublisherID)) {
-//            LiveHelper.toast("无法对群主进行操作");
-//            return;
-//        }
-//        if (LiveHelper.getUserId().equals(info.PublisherID)) {
-//            handleManagerMember(userId, name);
-//            return;
-//        }
-//        LiveHelper.reqGetAuthority(LiveHelper.getUserId(), info.Id, false, new LiveHelper.Callback<AuthorityInfo>() {
-//            @Override
-//            public void onData(AuthorityInfo data) {
-//                if (data.IsManage) {    // 观众是管理员
-//                    handleManagerMember(userId, name);
-//                }
-//            }
-//            @Override
-//            public void onDataList(List<AuthorityInfo> dataList) {
-//            }
-//        });
-//    }
-
-//    // 处理管理成员
-//    private void handleManagerMember(final String userId, final String name) {
-//        LiveHelper.reqGetAuthority(userId, info.Id, false, new LiveHelper.Callback<AuthorityInfo>() {
-//            @Override
-//            public void onData(final AuthorityInfo data) {
-//                final String[] items = {
-//                        data.IsManage ? "取消设置为管理员" : "设置为管理员",
-//                        data.IsWords ? "允许发言" : "禁止发言",
-//                        data.IsIn ? "允许进入房间" : "踢出房间"};
-//                new CircleDialog.Builder(ChatActivity.this)
-//                        .configDialog(new ConfigDialog() {
-//                            @Override
-//                            public void onConfig(DialogParams params) {
-//                                params.animStyle = R.style.dialogWindowAnim;    // 增加弹出动画
-//                            }
-//                        })
-//                        .setTitle("是否对\"" + name + "\"进行操作？")
-//                        .setTitleColor(Color.BLUE)
-//                        .setItems(items, new AdapterView.OnItemClickListener() {
-//                            @Override
-//                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                                if (0 == position) {
-//                                    data.IsManage = !data.IsManage;
-//                                    LiveHelper.reqChannelUserUpdateStatus(userId, info.Id, data.IsWords, data.IsIn, data.IsManage, new LiveHelper.Callback<AuthorityInfo>() {
-//                                        @Override
-//                                        public void onData(final AuthorityInfo data) {
-//                                            TIMGroupManager.getInstance().modifyGroupMemberInfoSetRole(info.VideoSource, userId, data.IsManage ? TIMGroupMemberRoleType.Admin : TIMGroupMemberRoleType.NotMember, new TIMCallBack() {
-//                                                @Override
-//                                                public void onError(int i, String s) {
-//                                                    Log.d("NYLive", "modifyGroupMemberInfoSetRole error, errCode: " + i + ", errMsg: " + s);
-//                                                    LiveHelper.toast("操作失败");
-//                                                }
-//                                                @Override
-//                                                public void onSuccess() {
-//                                                    Log.d("NYLive", "modifyGroupMemberInfoSetRole success");
-//                                                    LiveHelper.toast("操作成功");
-//                                                }
-//                                            });
-//                                        }
-//                                        @Override
-//                                        public void onDataList(List<AuthorityInfo> dataList) {
-//                                        }
-//                                    });
-//                                } else if (1 == position) {
-//                                    data.IsWords = !data.IsWords;
-//                                    LiveHelper.reqChannelUserUpdateStatus(userId, info.Id, data.IsWords, data.IsIn, data.IsManage, new LiveHelper.Callback<AuthorityInfo>() {
-//                                        @Override
-//                                        public void onData(final AuthorityInfo data) {
-//                                            TIMGroupManager.getInstance().modifyGroupMemberInfoSetSilence(info.VideoSource, userId, data.IsWords ? Integer.MAX_VALUE : 0, new TIMCallBack() {
-//                                                @Override
-//                                                public void onError(int i, String s) {
-//                                                    Log.d("NYLive", "modifyGroupMemberInfoSetSilence error, errCode: " + i + ", errMsg: " + s);
-//                                                    LiveHelper.toast("操作失败");
-//                                                }
-//                                                @Override
-//                                                public void onSuccess() {
-//                                                    Log.d("NYLive", "modifyGroupMemberInfoSetSilence success");
-//                                                    LiveHelper.toast("操作成功");
-//                                                    TIMConversation conversation = TIMManager.getInstance().getConversation(TIMConversationType.Group, info.VideoSource);
-//                                                    TIMMessage msg = new TIMMessage();
-//                                                    msg.setCustomInt(data.IsWords ? kGroupIMSilent : kGroupIMNotSilent);
-//                                                    msg.setSender(userId);
-//                                                    conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {
-//                                                        @Override
-//                                                        public void onError(int i, String s) {
-//                                                            Log.d("NYLive", "conversation sendMessage error, code: " + i + ", desc: " + s);
-//                                                        }
-//                                                        @Override
-//                                                        public void onSuccess(TIMMessage timMessage) {
-//                                                            Log.d("NYLive", "conversation sendMessage success");
-//                                                        }
-//                                                    });
-//                                                }
-//                                            });
-//                                        }
-//                                        @Override
-//                                        public void onDataList(List<AuthorityInfo> dataList) {
-//                                        }
-//                                    });
-//                                } else if (2 == position) {
-//                                    data.IsIn = !data.IsIn;
-//                                    LiveHelper.reqChannelUserUpdateStatus(userId, info.Id, data.IsWords, data.IsIn, data.IsManage, new LiveHelper.Callback<AuthorityInfo>() {
-//                                        @Override
-//                                        public void onData(final AuthorityInfo data) {
-//                                            List<String> userIds = new ArrayList<String>();
-//                                            userIds.add(userId);
-//                                            TIMGroupManager.getInstance().deleteGroupMemberWithReason(info.VideoSource, "", userIds, new TIMValueCallBack<List<TIMGroupMemberResult>>() {
-//                                                @Override
-//                                                public void onError(int i, String s) {
-//                                                    Log.d("NYLive", "deleteGroupMemberWithReason error, errCode: " + i + ", errMsg: " + s);
-//                                                    LiveHelper.toast("操作失败");
-//                                                }
-//                                                @Override
-//                                                public void onSuccess(List<TIMGroupMemberResult> timGroupMemberResults) {
-//                                                    Log.d("NYLive", "deleteGroupMemberWithReason success");
-//                                                    LiveHelper.toast("操作成功");
-//                                                }
-//                                            });
-//                                        }
-//                                        @Override
-//                                        public void onDataList(List<AuthorityInfo> dataList) {
-//                                        }
-//                                    });
-//                                }
-//                            }
-//                        })
-//                        .setNegative("取消", null)
-//                        .configNegative(new ConfigButton() {
-//                            @Override
-//                            public void onConfig(ButtonParams params) {
-//                                params.textColor = Color.RED;   // 取消按钮字体颜色
-//                            }
-//                        })
-//                        .show();
-//            }
-//            @Override
-//            public void onDataList(List<AuthorityInfo> dataList) {
-//            }
-//        });
-//    }
 }

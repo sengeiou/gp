@@ -31,12 +31,6 @@ public class VoiceSendingView extends RelativeLayout {
         frameAnimation.start();
     }
 
-    public void showCancel(){
-        frameAnimation.stop();
-        img.setBackgroundResource(R.drawable.head_me);
-
-    }
-
     public void release(){
         frameAnimation.stop();
     }
