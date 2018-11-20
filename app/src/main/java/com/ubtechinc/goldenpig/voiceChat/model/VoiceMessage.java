@@ -51,6 +51,8 @@ import java.util.List;
 public class VoiceMessage extends Message {
 
     private static final String TAG = "VoiceMessage";
+    //two spacce ==2mm
+    private static final String voice_metrics="  ";
 
     public VoiceMessage(TIMMessage message){
         this.message = message;
@@ -152,37 +154,37 @@ public class VoiceMessage extends Message {
                for (int i = 0; i < (voicetime - 1); i++) {
                    //one space is equal to 2mms
                    LogUtils.d("F voice length" + voicetime + "length begin:" + mcontent + ":end");
-                   mcontent=mcontent.concat("   ");
+                   mcontent=mcontent.concat(voice_metrics);
                }
            }
            if (10 <= voicetime && voicetime <= 19) {
                for (int i = 0; i < 9; i++) {
-                   mcontent=mcontent.concat("   ");
+                   mcontent=mcontent.concat(voice_metrics);
                }
            }
            if (20 <= voicetime && voicetime <= 29) {
                for (int i = 0; i < 10; i++) {
-                   mcontent=mcontent.concat("   ");
+                   mcontent=mcontent.concat(voice_metrics);
                }
            }
            if (30 <= voicetime && voicetime <= 39) {
                for (int i = 0; i < 11; i++) {
-                   mcontent=mcontent.concat("   ");
+                   mcontent=mcontent.concat(voice_metrics);
                }
            }
            if (40 <= voicetime && voicetime <= 49) {
                for (int i = 0; i < 12; i++) {
-                   mcontent=mcontent.concat("   ");
+                   mcontent=mcontent.concat(voice_metrics);
                }
            }
            if (50 <= voicetime && voicetime <= 59) {
                for (int i = 0; i < 13; i++) {
-                   mcontent=mcontent.concat("   ");
+                   mcontent=mcontent.concat(voice_metrics);
                }
            }
            if (voicetime == 60) {
                for (int i = 0; i < 14; i++) {
-                   mcontent=mcontent.concat("   ");
+                   mcontent=mcontent.concat(voice_metrics);
                }
            }
            tv.setText(mcontent);
