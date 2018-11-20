@@ -5,8 +5,8 @@
     android:background="@drawable/bg_voice_sending">
     <ImageView
         android:id="@+id/microphone"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="76dp"
+        android:layout_height="119dp"
         android:layout_centerInParent="true"/>
     <TextView
         android:layout_width="wrap_content"

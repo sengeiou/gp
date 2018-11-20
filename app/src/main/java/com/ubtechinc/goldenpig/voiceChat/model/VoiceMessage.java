@@ -150,38 +150,39 @@ public class VoiceMessage extends Message {
            String mcontent = "";
            if (1 <= voicetime && voicetime <= 9) {
                for (int i = 0; i < (voicetime - 1); i++) {
-                   //one spacke is equal to 2mms
-                   mcontent.concat(" ");
+                   //one space is equal to 2mms
+                   LogUtils.d("F voice length" + voicetime + "length begin:" + mcontent + ":end");
+                   mcontent=mcontent.concat("   ");
                }
            }
            if (10 <= voicetime && voicetime <= 19) {
                for (int i = 0; i < 9; i++) {
-                   mcontent.concat(" ");
+                   mcontent=mcontent.concat("   ");
                }
            }
            if (20 <= voicetime && voicetime <= 29) {
                for (int i = 0; i < 10; i++) {
-                   mcontent.concat(" ");
+                   mcontent=mcontent.concat("   ");
                }
            }
            if (30 <= voicetime && voicetime <= 39) {
                for (int i = 0; i < 11; i++) {
-                   mcontent.concat(" ");
+                   mcontent=mcontent.concat("   ");
                }
            }
            if (40 <= voicetime && voicetime <= 49) {
                for (int i = 0; i < 12; i++) {
-                   mcontent.concat(" ");
+                   mcontent=mcontent.concat("   ");
                }
            }
            if (50 <= voicetime && voicetime <= 59) {
                for (int i = 0; i < 13; i++) {
-                   mcontent.concat(" ");
+                   mcontent=mcontent.concat("   ");
                }
            }
            if (voicetime == 60) {
                for (int i = 0; i < 14; i++) {
-                   mcontent.concat(" ");
+                   mcontent=mcontent.concat("   ");
                }
            }
            tv.setText(mcontent);

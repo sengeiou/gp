@@ -87,20 +87,31 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
         voicePanel.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                    float startY = 0;
+                    float endY = 0;
+                    boolean send = false;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        startY = event.getY();
                         isHoldVoiceBtn = true;
                         updateVoiceView();
                         break;
                     case MotionEvent.ACTION_UP:
+                        endY = event.getY();
                         isHoldVoiceBtn = false;
                         updateVoiceView();
                         break;
                     case MotionEvent.ACTION_CANCEL:
                         isHoldVoiceBtn = false;
-                        isCancel=true;
                         updateVoiceView();
-                        Log.d("chatinput", "cancel");
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        float moveY = event.getY();
+                        int instance = (int) Math.abs((moveY - startY));
+                        Log.d(TAG, "--action move--instance:" + instance);
+                        if (instance > 100) {
+                            chatView.cancelSending();
+                        }
                         break;
 
                 }
@@ -175,18 +186,14 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
 
 
     private void updateVoiceView(){
-        if (isHoldVoiceBtn){
+        if (isHoldVoiceBtn) {
             voicePanel.setText(getResources().getString(R.string.chat_release_send));
             voicePanel.setBackground(getResources().getDrawable(R.drawable.btn_voice_pressed));
             chatView.startSendVoice();
-        }else{
-            if(!isCancel) {
-                voicePanel.setText(getResources().getString(R.string.chat_press_talk));
-                voicePanel.setBackground(getResources().getDrawable(R.drawable.btn_voice_normal));
-                chatView.endSendVoice();
-            }else{
-                chatView.cancelSendVoice();
-            }
+        } else {
+            voicePanel.setText(getResources().getString(R.string.chat_press_talk));
+            voicePanel.setBackground(getResources().getDrawable(R.drawable.btn_voice_normal));
+            chatView.endSendVoice();
         }
     }
 

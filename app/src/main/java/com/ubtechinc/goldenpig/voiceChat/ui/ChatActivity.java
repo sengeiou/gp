@@ -464,7 +464,6 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
         voiceCancelView.setVisibility(View.VISIBLE);
         mHandler.sendEmptyMessageDelayed(HIDDEN_CANCEL,500);
         recorder.stopRecording();
-        Toast.makeText(this, getResources().getString(R.string.chat_audio_too_short), Toast.LENGTH_SHORT).show();
     }
     /**
      * 发送小视频消息
