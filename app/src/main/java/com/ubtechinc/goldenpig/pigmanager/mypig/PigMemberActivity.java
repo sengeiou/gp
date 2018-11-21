@@ -48,9 +48,12 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
 
@@ -82,7 +85,6 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
         setTitleBack(true);
         setToolBarTitle(getString(R.string.ubt_menber_group));
         initViews();
-        getMember("1");
         initData();
     }
 
@@ -155,9 +157,41 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
         return false;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        isDownloadedUserList = false;
+        getMember("1");
+    }
+
     private synchronized void getMember(String admin) {
         if (isDownloadedUserList) {
             setAddBtnEnable(isCurrentAdmin());
+            if (adapter != null) {
+                Set<CheckBindRobotModule.User> set = new TreeSet<>((o1, o2) -> String.valueOf(o1.getUserId()).compareTo(String.valueOf(o2.getUserId())));
+                set.addAll(mUsertList);
+                mUsertList.clear();
+                mUsertList.addAll(set);
+                String currUId = AuthLive.getInstance().getUserId();
+                if (!mUsertList.isEmpty()) {
+                    boolean contain = false;
+                    for (CheckBindRobotModule.User user : mUsertList) {
+                        int uid = user.getUserId();
+                        if (currUId.equals(String.valueOf(uid))) {
+                            contain = true;
+                            break;
+                        }
+                    }
+                    if (contain) {
+                        Collections.sort(mUsertList, (o1, o2) -> o2.getIsAdmin() - o1.getIsAdmin());
+                        adapter.notifyDataSetChanged();
+                    } else {
+                        finish();
+                    }
+                } else {
+                    finish();
+                }
+            }
             return;
         }
         if ("0".equals(admin)) {
@@ -190,9 +224,6 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
                 final List<CheckBindRobotModule.User> bindUsers = jsonToUserList(jsonStr);
                 if (mUsertList != null) {
                     mUsertList.addAll(bindUsers);
-                    if (adapter != null) {
-                        adapter.notifyDataSetChanged();
-                    }
                 }
                 getMember("0");
             }
@@ -268,12 +299,22 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            //TODO 刷新UI
-            isDownloadedUserList = false;
-            updatePigList();
-            getMember("1");
+        switch (requestCode) {
+            case 0x01:
+                if (resultCode == RESULT_OK) {
+                    //TODO 先转让管理员再退出群组
+                    doExitGroup();
+                }
+                break;
         }
+    }
+
+    private void doExitGroup() {
+        UnbindPigProxy pigProxy = new UnbindPigProxy();
+        final String serialNo = AuthLive.getInstance().getCurrentPig().getRobotName();
+
+        final String token = CookieInterceptor.get().getToken();
+        pigProxy.unbindPig(serialNo, AuthLive.getInstance().getUserId(), token, BuildConfig.APP_ID, unBindPigCallback);
     }
 
     @Override
@@ -290,6 +331,12 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
             default:
         }
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBusUtil.unregister(this);
     }
 
     /**

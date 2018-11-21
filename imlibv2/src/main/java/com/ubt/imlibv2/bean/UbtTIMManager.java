@@ -95,7 +95,7 @@ public class UbtTIMManager {
             //添加文本内容
             TIMTextElem elem = new TIMTextElem();
             elem.setText(msg);
-            conversation.sendMessage(timmsg, new TIMValueCallBack<TIMMessage>() {//发送消息回调
+            conversation.sendOnlineMessage(timmsg, new TIMValueCallBack<TIMMessage>() {//发送消息回调
                 @Override
                 public void onError(int code, String desc) {//发送消息失败
                     //错误码 code 和错误描述 desc，可用于定位请求失败原因
@@ -374,7 +374,7 @@ public class UbtTIMManager {
             ToastUtils.showShortToast("小猪不在线");
             return;
         }
-        conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {
+        conversation.sendOnlineMessage(msg, new TIMValueCallBack<TIMMessage>() {
 
             @Override
             public void onError(int i, String s) {
@@ -410,7 +410,7 @@ public class UbtTIMManager {
             ToastUtils.showShortToast("小猪不在线");
             return;
         }
-        conversation.sendMessage(msg, new TIMValueCallBack<TIMMessage>() {
+        conversation.sendOnlineMessage(msg, new TIMValueCallBack<TIMMessage>() {
 
             @Override
             public void onError(int i, String s) {

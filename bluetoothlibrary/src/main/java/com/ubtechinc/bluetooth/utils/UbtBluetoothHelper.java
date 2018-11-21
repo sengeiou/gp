@@ -6,18 +6,19 @@ import android.os.Message;
 import android.util.Log;
 
 import com.ubtech.utilcode.utils.LogUtils;
-import com.ubtechinc.bluetooth.event.BleScanFinishedEvent;
-import com.ubtechinc.bluetooth.Constants;
 import com.ubtechinc.bluetooth.UbtBluetoothDevice;
 import com.ubtechinc.bluetooth.UbtBluetoothManager;
 import com.ubtechinc.bluetooth.event.BleScanFailEvent;
+import com.ubtechinc.bluetooth.event.BleScanFinishedEvent;
 import com.ubtechinc.bluetooth.event.BleScanResultEvent;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 蓝牙助手类----处理单个设备直连需求
@@ -98,7 +99,7 @@ public class UbtBluetoothHelper {
     scanCompletely = false;
     final UbtBluetoothManager ubtBluetoothManager = UbtBluetoothManager.getInstance();
     ubtBluetoothManager.setAutoConnect(false);
-    ubtBluetoothManager.setBleNamePrefix(Constants.ROBOT_TAG);
+//    ubtBluetoothManager.setBleNamePrefix(Constants.ROBOT_TAG);
     ubtBluetoothManager.setCurrentRobotSn(userId);
     ubtBluetoothManager.startScanBluetooth();
     handler.removeMessages(MSG_ONE_DEVICE_SCAN_DELAY);

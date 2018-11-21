@@ -41,7 +41,37 @@ allprojects {
         maven { url 'https://dl.google.com/dl/android/maven2/' }
         jcenter {url 'https://maven.aliyun.com/repository/jcenter'}
         maven { url "https://jitpack.io" }*/
+
+        maven {
+            url "${artifactory_url}/${artifactory_rose_release}"
+            credentials {
+                username = artifactory_username
+                password = artifactory_password
+            }
+        }
+
+        maven {
+            url "${artifactory_url}/${artifactory_rose_snapshot}"
+            credentials {
+                username = artifactory_username
+                password = artifactory_password
+            }
+        }
+
+        maven {
+            url "${artifactory_url}/${artifactory_virtual_release}"
+            credentials {
+                username = artifactory_username
+                password = artifactory_password
+            }
+        }
+
     }
+
+    configurations.all {
+        resolutionStrategy.cacheChangingModulesFor 60, 'seconds'
+    }
+
 }
 
 /*task clean(type: Delete) {

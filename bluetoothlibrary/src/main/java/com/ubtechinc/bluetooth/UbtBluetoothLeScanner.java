@@ -11,8 +11,8 @@ import android.os.Build;
 import android.os.ParcelUuid;
 import android.os.SystemClock;
 import android.util.Log;
+
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author：wululin
@@ -26,7 +26,7 @@ import java.util.List;
 @TargetApi(Build.VERSION_CODES.LOLLIPOP) class UbtBluetoothLeScanner {
   private BluetoothLeScanner mScanner;
   /** 扫描过滤 UUID  机器人蓝牙广播出来的也是这uuid 通话这个UUid过滤，扫描出来的蓝牙都是机器广播出来的，不会扫描到其他的蓝牙 **/
-  private static final String UUID_FILTER = "07303e62-cb70-38d8-8f5c-40c062145442";
+  private static final String UUID_FILTER = "00003e63-0000-1000-8000-00805f9b34fb";
   private boolean mScanning = false;
   private final byte[] mLock = new byte[0];
   private ScanCallback mOuterScanCallback;

@@ -312,11 +312,14 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
                     if (needTransfer) {
                         ActivityRoute.toAnotherActivity(MyPigActivity.this, TransferAdminActivity.class, false);
                     } else {
-                        UnbindPigProxy pigProxy = new UnbindPigProxy();
-                        final String serialNo = AuthLive.getInstance().getCurrentPig().getRobotName();
-                        final String userId = AuthLive.getInstance().getUserId();
-                        final String token = CookieInterceptor.get().getToken();
-                        pigProxy.unbindPig(serialNo, userId, token, BuildConfig.APP_ID, unBindPigCallback);
+                        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+                        if (pigInfo != null) {
+                            UnbindPigProxy pigProxy = new UnbindPigProxy();
+                            final String serialNo = AuthLive.getInstance().getCurrentPig().getRobotName();
+                            final String userId = AuthLive.getInstance().getUserId();
+                            final String token = CookieInterceptor.get().getToken();
+                            pigProxy.unbindPig(serialNo, userId, token, BuildConfig.APP_ID, unBindPigCallback);
+                        }
                     }
                 }
             });

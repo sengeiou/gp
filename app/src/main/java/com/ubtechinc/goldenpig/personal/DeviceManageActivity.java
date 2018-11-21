@@ -98,13 +98,6 @@ public class DeviceManageActivity extends BaseToolBarActivity implements View.On
             public void onSuccess(String response) {
                 Log.e("getPigList", response);
                 PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance().getCurrentPigList());
-                EventBusUtil.sendEvent(new Event<>(EventBusUtil.USER_PIG_UPDATE));
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        updateUI();
-//                    }
-//                });
             }
         });
     }

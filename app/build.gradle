@@ -78,7 +78,8 @@ android {
 
             //H5 URL域名
 //            buildConfigField "String", "H5_URL","\"http://10.10.32.22:8080\""
-            buildConfigField "String", "H5_URL","\"http://10.10.1.14:8090/cloud-ppi/help\""
+//            buildConfigField "String", "H5_URL","\"http://10.10.1.14:8090/cloud-ppi/help\""
+            buildConfigField "String", "H5_URL","\"https://apis.ubtrobot.com/v1/cloud-ppi/help\""
 
             minifyEnabled false
             shrinkResources false
@@ -203,4 +204,7 @@ dependencies {
     //add bugly
     implementation 'com.tencent.bugly:crashreport:latest.release' //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.2.0
 //    implementation 'com.tencent.bugly:nativecrashreport:latest.release' //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
+
+    //add SCADA
+    implementation 'com.ubtrobot.mobile:analytics:0.7.0-SNAPSHOT'
 }

@@ -9,12 +9,10 @@ import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.UUID;
 
 /**
@@ -40,7 +38,10 @@ public class DeviceUtils {
         // 渠道标志
         deviceId.append("a");
         try {
-            String uuid = recoverDeviceUuidFromSD();
+            String uuid = recoverDeviceUuidFromSD(Environment.getExternalStorageDirectory());
+            if (TextUtils.isEmpty(uuid)) {
+                uuid = recoverDeviceUuidFromSD(context.getCacheDir());
+            }
             if (!TextUtils.isEmpty(uuid)) {
                 deviceId.append("id").append(uuid);
                 return deviceId.toString();
@@ -87,16 +88,20 @@ public class DeviceUtils {
      * 得到全局唯一UUID
      */
     public static String getUUID(Context context) {
-        String uuid = recoverDeviceUuidFromSD();
+        String uuid = recoverDeviceUuidFromSD(Environment.getExternalStorageDirectory());
         if (TextUtils.isEmpty(uuid)) {
-            uuid = UUID.randomUUID().toString();
-            saveDeviceUuidToSD(uuid);
+            uuid = recoverDeviceUuidFromSD(context.getCacheDir());
+            if (TextUtils.isEmpty(uuid)) {
+                uuid = UUID.randomUUID().toString();
+                saveDeviceUuidToSD(uuid, Environment.getExternalStorageDirectory());
+                saveDeviceUuidToSD(uuid, context.getCacheDir());
+            }
         }
         return uuid;
     }
 
-    private static void saveDeviceUuidToSD(String uuid) {
-        String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+    private static void saveDeviceUuidToSD(String uuid, File dir) {
+        String dirPath = dir.getAbsolutePath();
         File targetFile = new File(dirPath, DEVICE_UUID_FILE_NAME);
         if (targetFile != null) {
             if (targetFile.exists()) {
@@ -112,19 +117,15 @@ public class DeviceUtils {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                } catch (FileNotFoundException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
     }
 
-    private static String recoverDeviceUuidFromSD() {
+    private static String recoverDeviceUuidFromSD(File dir) {
         try {
-            String dirPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-            File dir = new File(dirPath);
             File uuidFile = new File(dir, DEVICE_UUID_FILE_NAME);
             if (!dir.exists() || !uuidFile.exists()) {
                 return null;
