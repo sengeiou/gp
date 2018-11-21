@@ -38,6 +38,7 @@ import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.nets.http.ThrowableWrapper;
+import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
 
 import java.util.ArrayList;
 
@@ -100,12 +101,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 GetPigListHttpProxy.OnGetPigListLitener() {
                     @Override
                     public void onError(ThrowableWrapper e) {
+                        SharedPreferencesUtils.putBoolean(MainActivity.this, "firstEnter", true);
                         ActivityRoute.toAnotherActivity(MainActivity.this, SetNetWorkEnterActivity.class, false);
                         Log.e("getPigList", e.getMessage());
                     }
 
                     @Override
                     public void onException(Exception e) {
+                        SharedPreferencesUtils.putBoolean(MainActivity.this, "firstEnter", true);
                         ActivityRoute.toAnotherActivity(MainActivity.this, SetNetWorkEnterActivity.class, false);
                         Log.e("getPigList", e.getMessage());
                     }
@@ -117,6 +120,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                                 .getCurrentPigList());
                         ArrayList<PigInfo> list = AuthLive.getInstance().getCurrentPigList();
                         if (list == null || list.isEmpty()) {
+                            SharedPreferencesUtils.putBoolean(MainActivity.this, "firstEnter", true);
                             ActivityRoute.toAnotherActivity(MainActivity.this, SetNetWorkEnterActivity.class, false);
                         }
                     }

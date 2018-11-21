@@ -7,9 +7,7 @@ import android.view.View;
 
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
-import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.MainActivity;
-import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
 
@@ -35,11 +33,10 @@ public class SetNetWorkEnterActivity extends BaseToolBarActivity implements View
 
     private void udQPAB() {
         boolean firstEnter = SharedPreferencesUtils.getBoolean(this, "firstEnter", true);
-        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
-        boolean backable = (firstEnter && pigInfo != null) ? false : true;
-        boolean skipebale = (firstEnter && pigInfo != null) ? true : false;
+        boolean backable = firstEnter ? false : true;
+        boolean skipable = firstEnter ? true : false;
         setTitleBack(backable);
-        if (skipebale) {
+        if (skipable) {
             mTvSkip.setVisibility(View.VISIBLE);
         } else {
             mTvSkip.setVisibility(View.GONE);

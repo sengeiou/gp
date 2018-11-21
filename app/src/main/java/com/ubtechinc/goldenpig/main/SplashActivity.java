@@ -1,8 +1,10 @@
 package com.ubtechinc.goldenpig.main;
 
+import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.Window;
 import android.view.WindowManager;
@@ -15,7 +17,13 @@ import com.ubtechinc.goldenpig.login.LoginActivity;
 import com.ubtechinc.goldenpig.login.LoginModel;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Permission;
+import com.yanzhenjie.permission.PermissionListener;
+import com.yanzhenjie.permission.Rationale;
+import com.yanzhenjie.permission.RationaleListener;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -38,6 +46,14 @@ public class SplashActivity extends BaseActivity {
     private Handler handler;
     private Disposable disposable;
 
+    private static final int REQUEST_CODE_PERMISSION_MULTI = 0x101;
+
+    private boolean isPermissionCompleted;
+
+    private boolean isTimeOut;
+
+    private Class<? extends Activity> enterClass;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -46,11 +62,62 @@ public class SplashActivity extends BaseActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
-//        String m_szAndroidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-//        Log.i("ANDOIRID", m_szAndroidID + "==" + android.os.Build.SERIAL);
+        applyPermission();
         handler = new Handler();
         registerEventObserve();
         checkLogin();
+    }
+
+    private void applyPermission() {
+        // 申请多个权限。
+        AndPermission.with(this)
+                .requestCode(REQUEST_CODE_PERMISSION_MULTI)
+                .permission(Permission.LOCATION, Permission.STORAGE, Permission.MICROPHONE, Permission.CAMERA)
+                .callback(permissionListener)
+                // rationale作用是：用户拒绝一次权限，再次申请时先征求用户同意，再打开授权对话框；
+                // 这样避免用户勾选不再提示，导致以后无法申请权限。
+                // 你也可以不设置。
+                .rationale(new RationaleListener() {
+                    @Override
+                    public void showRequestPermissionRationale(int requestCode, Rationale rationale) {
+                        rationale.resume();
+                    }
+                })
+                .start();
+    }
+
+    private PermissionListener permissionListener = new PermissionListener() {
+        @Override
+        public void onSucceed(int requestCode, @NonNull List<String> grantPermissions) {
+            switch (requestCode) {
+                case REQUEST_CODE_PERMISSION_MULTI:
+                    isPermissionCompleted = true;
+                    comparePermissResult();
+                    break;
+                default:
+                    break;
+
+            }
+        }
+
+        @Override
+        public void onFailed(int requestCode, @NonNull List<String> deniedPermissions) {
+            switch (requestCode) {
+                case REQUEST_CODE_PERMISSION_MULTI:
+                    SplashActivity.this.finish();
+                    break;
+                default:
+                    break;
+            }
+
+        }
+
+    };
+
+    private void comparePermissResult() {
+        if (isPermissionCompleted && isTimeOut) {
+            ActivityRoute.toAnotherActivity(SplashActivity.this, enterClass, true);
+        }
     }
 
     private void registerEventObserve() {
@@ -67,13 +134,17 @@ public class SplashActivity extends BaseActivity {
                             @Override
                             public void run() {
                                 dismissLoadDialog();
-                                ActivityRoute.toAnotherActivity(SplashActivity.this, MainActivity.class, true);
+                                isTimeOut = true;
+                                enterClass = MainActivity.class;
+                                comparePermissResult();
                             }
                         }, 500);
                         break;
                     case ERROR:
                         dismissLoadDialog();
-                        ActivityRoute.toAnotherActivity(SplashActivity.this, LoginActivity.class, true);
+                        isTimeOut = true;
+                        enterClass = LoginActivity.class;
+                        comparePermissResult();
                         break;
                     case NORMAL:
                     case CANCEL:
@@ -109,27 +180,13 @@ public class SplashActivity extends BaseActivity {
         if (mLoginModel == null) {
             mLoginModel = new LoginModel();
         }
-//        mLoginModel.setTIMLoingCallback(new UbtTIMManager.UbtIMCallBack() {
-//            @Override
-//            public void onError(int i, String s) {
-//                ActivityRoute.toAnotherActivity(SplashActivity.this, LoginActivity.class, true);
-//            }
-//
-//            @Override
-//            public void onSuccess() {
-//                try {
-//                    Thread.sleep(1000);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                ActivityRoute.toAnotherActivity(SplashActivity.this, MainActivity.class, true);
-//            }
-//        });
         if (!mLoginModel.checkToken(this)) {
             handler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    ActivityRoute.toAnotherActivity(SplashActivity.this, LoginActivity.class, true);
+                    enterClass = LoginActivity.class;
+                    isTimeOut = true;
+                    comparePermissResult();
                 }
             }, 500);
         } else {
@@ -137,7 +194,9 @@ public class SplashActivity extends BaseActivity {
                     .subscribe(aLong -> {
                         //TODO 超时
                         ToastUtils.showShortToast("自动登录超时，请重新登录");
-                        ActivityRoute.toAnotherActivity(SplashActivity.this, LoginActivity.class, true);
+                        enterClass = LoginActivity.class;
+                        isTimeOut = true;
+                        comparePermissResult();
                     });
         }
     }

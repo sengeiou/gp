@@ -42,6 +42,8 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.login.repository.UBTAuthRepository;
 import com.ubtechinc.goldenpig.net.ResponseInterceptor;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.pigmanager.mypig.PairPigActivity;
+import com.ubtechinc.goldenpig.pigmanager.mypig.QRCodeActivity;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPairPigQRHttpProxy;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.push.PushAppInfo;
@@ -52,6 +54,7 @@ import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.nets.HttpManager;
 import com.ubtechinc.nets.http.ThrowableWrapper;
 import com.ubtechinc.protocollibrary.communit.ProtoBufferDisposer;
+import com.ubtechinc.push.UbtPushModel;
 import com.ubtechinc.tvlloginlib.TVSManager;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.ubtrobot.channelservice.proto.GPRelationshipContainer;
@@ -284,7 +287,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                 }
                 break;
             case PUSH_NOTIFICATION_RECEIVED:
-                showNewManagerDialog();
+                showNewManagerDialog(((UbtPushModel)event.getData()).getContent());
                 break;
             case PUSH_MESSAGE_RECEIVED:
 
@@ -293,13 +296,13 @@ public class UBTPGApplication extends LoginApplication implements Observer {
     }
 
 
-    private void showNewManagerDialog() {
+    private void showNewManagerDialog(String content) {
         updatePigList();
         if (mTopActivity == null) return;
         UBTBaseDialog managerDialog = new UBTBaseDialog(mTopActivity);
         managerDialog.setCancelable(false);
         managerDialog.setCanceledOnTouchOutside(false);
-        managerDialog.setTips("您已被指定为管理员");
+        managerDialog.setTips(content);
         managerDialog.setLeftBtnShow(false);
         managerDialog.setRightButtonTxt("我知道了");
         managerDialog.setRightBtnColor(ContextCompat.getColor(this, R.color.ubt_tab_btn_txt_checked_color));
@@ -339,6 +342,9 @@ public class UBTPGApplication extends LoginApplication implements Observer {
 
             @Override
             public void onRightButtonClick(View view) {
+                if (mTopActivity instanceof PairPigActivity) {
+                    mTopActivity.finish();
+                }
             }
 
         });
@@ -468,6 +474,9 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                                 AuthLive.getInstance().setPairPig(pairPig);
                                 Event<Integer> event = new Event<>(EventBusUtil.PAIR_PIG_UPDATE);
                                 EventBusUtil.sendEvent(event);
+                                if (mTopActivity != null && mTopActivity instanceof QRCodeActivity) {
+                                    mTopActivity.finish();
+                                }
                             }
                         }
                     } catch (JSONException e) {

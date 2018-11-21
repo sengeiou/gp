@@ -18,7 +18,6 @@ import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ubtechinc.bluetooth.Constants;
 import com.ubtechinc.bluetooth.UbtBluetoothDevice;
@@ -76,6 +75,8 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
     private boolean mHasPermission;
 
     private UBTSubTitleDialog mUnBindTipDialog;
+
+    private UBTBaseDialog mGpsTipDialog;
 
     private Disposable disposable;
 
@@ -353,11 +354,38 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
                     if (pigListDialog.getLeList() == null || pigListDialog.getLeList().isEmpty()) {
                         LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
                         if (locManager == null || !locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                            Toast.makeText(this, "无法扫描到蓝牙设备，请打开GPS定位", Toast.LENGTH_SHORT).show();
+                            showGpsTipDialog();
+//                            Toast.makeText(this, "无法扫描到蓝牙设备，请打开GPS定位", Toast.LENGTH_SHORT).show();
                         }
                         onNoBleDeviceFound();
                     }
                 });
+    }
+
+    private void showGpsTipDialog() {
+        if (mGpsTipDialog == null) {
+            mGpsTipDialog = new UBTBaseDialog(this);
+            mGpsTipDialog.setTips("请在手机“设置”中确认GPS定位服务已开启");
+            mGpsTipDialog.setLeftBtnShow(false);
+            mGpsTipDialog.setRightButtonTxt("我知道了");
+            mGpsTipDialog.setRightBtnColor(ContextCompat.getColor(this, R.color.ubt_tab_btn_txt_checked_color));
+            mGpsTipDialog.setOnUbtDialogClickLinsenter(new UBTBaseDialog.OnUbtDialogClickLinsenter() {
+
+                @Override
+                public void onLeftButtonClick(View view) {
+
+                }
+
+                @Override
+                public void onRightButtonClick(View view) {
+
+                }
+
+            });
+        }
+        if (!isDestroyed() && !isFinishing()) {
+            mGpsTipDialog.show();
+        }
     }
 
     private void onNoBleDeviceFound() {
