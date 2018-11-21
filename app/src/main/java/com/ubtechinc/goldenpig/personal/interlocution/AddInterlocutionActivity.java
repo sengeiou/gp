@@ -76,7 +76,7 @@ public class AddInterlocutionActivity extends BaseNewActivity {
                 if (!TextUtils.isEmpty(strQuest)) {
                     ll_add_question.setVisibility(View.GONE);
                     llQuestion.setVisibility(View.VISIBLE);
-                    tvQuestion.setText("“" + strQuest + "”");
+                    tvQuestion.setText(strQuest);
                 }
                 for (int i = 0; i < model.vAnswers.size(); i++) {
                     if (model.vAnswers.get(i).iType == 0) {
@@ -87,7 +87,7 @@ public class AddInterlocutionActivity extends BaseNewActivity {
                 if (!TextUtils.isEmpty(strAnswer)) {
                     llAddAnswer.setVisibility(View.GONE);
                     llAnswer.setVisibility(View.VISIBLE);
-                    tvAnswer.setText("“" + strAnswer + "”");
+                    tvAnswer.setText(strAnswer);
                 }
             } catch (Exception e) {
             }
@@ -224,7 +224,7 @@ public class AddInterlocutionActivity extends BaseNewActivity {
             strQuest = (String) event.getData();
             ll_add_question.setVisibility(View.GONE);
             llQuestion.setVisibility(View.VISIBLE);
-            tvQuestion.setText("“" + strQuest + "”");
+            tvQuestion.setText(strQuest);
             if (TextUtils.isEmpty(strQuest) || TextUtils.isEmpty(strAnswer)) {
                 tvRight.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
                 tvRight.setEnabled(false);
@@ -236,7 +236,7 @@ public class AddInterlocutionActivity extends BaseNewActivity {
             strAnswer = (String) event.getData();
             llAddAnswer.setVisibility(View.GONE);
             llAnswer.setVisibility(View.VISIBLE);
-            tvAnswer.setText("“" + strAnswer + "”");
+            tvAnswer.setText(strAnswer);
             if (TextUtils.isEmpty(strQuest) || TextUtils.isEmpty(strAnswer)) {
                 tvRight.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
                 tvRight.setEnabled(false);

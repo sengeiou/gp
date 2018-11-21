@@ -137,13 +137,13 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
         mList = new ArrayList<>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recycler.setCustomBackgroundSize(getResources().getDimensionPixelSize(R.dimen.dp_115));
+        recycler.setCustomBackgroundSize(getResources().getDimensionPixelSize(R.dimen.dp_64));
         recycler.setLayoutManager(linearLayoutManager);
         recycler.setHasFixedSize(true);
         Divider divider = new Divider(new ColorDrawable(getResources().getColor(R.color
                 .ubt_main_bg_color)),
                 OrientationHelper.VERTICAL);
-        divider.setHeight((int) getResources().getDimension(R.dimen.dp_11));
+        divider.setHeight((int) getResources().getDimension(R.dimen.dp_10));
         recycler.addItemDecoration(divider);
         recycler.setSwipeMenuCreator(swipeMenuCreator);
         recycler.setSwipeMenuItemClickListener(mMenuItemClickListener);

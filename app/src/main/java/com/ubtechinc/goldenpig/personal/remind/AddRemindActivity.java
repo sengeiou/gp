@@ -399,6 +399,9 @@ public class AddRemindActivity extends BaseNewActivity {
         ed_msg.setFilters(FilterArray);
         ed_msg.addTextChangedListener(
                 new TextWatcher() {
+                    private int selectionEnd;
+                    private boolean delete = false;
+
                     @Override
                     public void beforeTextChanged(CharSequence s,
                                                   int start, int count, int after) {
@@ -407,13 +410,15 @@ public class AddRemindActivity extends BaseNewActivity {
                     @Override
                     public void onTextChanged(CharSequence s,
                                               int start, int before, int count) {
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+                        selectionEnd = ed_msg.getSelectionEnd();
+                        String str = ed_msg.getText().toString();
+                        //LogUtils.d("hdf", str);
                         int mMsgMaxLength = 0;
-                        Editable editable = ed_msg.getText();
-                        String str = editable.toString().trim();
-                        //得到最初字段的长度大小，用于光标位置的判断
-                        int selEndIndex = Selection.getSelectionEnd(editable);
-                        // 取出每个字符进行判断，如果是字母数字和标点符号则为一个字符加1，
-                        //如果是汉字则为两个字符
+                        int countNum = 0;
                         for (int i = 0; i < str.length(); i++) {
                             char charAt = str.charAt(i);
                             //32-122包含了空格，大小写字母，数字和一些常用的符号，
@@ -426,30 +431,29 @@ public class AddRemindActivity extends BaseNewActivity {
                             }
                             // 当最大字符大于6000时，进行字段的截取，并进行提示字段的大小
                             if (mMsgMaxLength > maxchineseLength * 2) {
-                                // 截取最大的字段
-                                String newStr = str.substring(0, i);
-                                ed_msg.setText(newStr);
-                                // 得到新字段的长度值
-                                editable = ed_msg.getText();
-                                int newLen = editable.length();
-                                if (selEndIndex > newLen) {
-                                    selEndIndex = editable.length();
-                                }
+                                countNum = str.length() - i;
+                                delete = true;
                                 ToastUtils.showShortToast("提醒内容最多输入20字");
+                                break;
                             }
-                            // 设置新光标所在的位置
-                            Selection.setSelection(editable, selEndIndex);
                         }
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
+                        try {
+                            ed_msg.setSelection(str.length());
+                        } catch (Exception e) {
+                        }
                         if (TextUtils.isEmpty(ed_msg.getText())) {
                             tv_right.setEnabled(false);
                             tv_right.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
                         } else {
                             tv_right.setEnabled(true);
                             tv_right.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_checked_color));
+                        }
+                        try {
+                            if (delete) {
+                                delete = false;
+                                editable.delete(selectionEnd - countNum, selectionEnd);
+                            }
+                        } catch (Exception e) {
                         }
                     }
                 }
