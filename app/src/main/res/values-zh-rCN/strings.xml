@@ -194,6 +194,9 @@
 
     <string name="reload_error">加载失败</string>
     <string name="reload">重新加载</string>
+    <string name="network_error_toast">当前网络异常，请检查网络设置</string>
+    <string name="msg_error_toast">当前数据异常，请稍后重试</string>
+    <string name="timeout_error_toast">请求超时，请重试</string>
 
     <string name="pair_pig_voice_tip">说“八戒八戒，发送留言给八戒”即可留言互动</string>
 </resources>
