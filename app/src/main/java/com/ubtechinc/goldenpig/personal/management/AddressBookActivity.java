@@ -162,9 +162,9 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
                 Log.e("setOnUbtTIMConver", s);
                 LoadingDialog.getInstance(AddressBookActivity.this).dismiss();
                 if (AuthLive.getInstance().getCurrentPig() != null) {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("小猪未登录");
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("八戒未登录");
                 } else {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定小猪");
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定八戒");
                 }
             }
 

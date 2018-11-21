@@ -2,7 +2,7 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android"
     android:opacity="opaque">
     <item android:drawable="@color/white" />
-    <item android:top="@dimen/dp_120">
+    <item android:top="@dimen/dp_150">
         <bitmap
             android:gravity="top|center_vertical"
             android:src="@drawable/ic_pig_about" />

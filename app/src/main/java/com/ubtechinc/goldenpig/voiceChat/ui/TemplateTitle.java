@@ -38,7 +38,7 @@ public class TemplateTitle extends RelativeLayout {
 //            moreImg = ta.getResourceId(R.styleable.TemplateTitle_moreImg, 0);
 //            moreText = ta.getString(R.styleable.TemplateTitle_moreText);
             {
-                titleText = "我的小猪";
+                titleText = "我的八戒";
                 canBack = true;
                 backText = "";
                 moreImg = 0;

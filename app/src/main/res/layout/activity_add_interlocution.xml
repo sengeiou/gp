@@ -77,7 +77,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/dp_14"
             android:singleLine="true"
-            android:text="我对小猪说"
+            android:text="我对八戒说"
             android:textColor="@color/ubt_tips_txt_color"
             android:textSize="@dimen/sp_16" />
     </LinearLayout>
@@ -154,7 +154,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="@dimen/dp_14"
             android:singleLine="true"
-            android:text="小猪对我说"
+            android:text="八戒对我说"
             android:textColor="@color/ubt_tips_txt_color"
             android:textSize="@dimen/sp_16" />
     </LinearLayout>

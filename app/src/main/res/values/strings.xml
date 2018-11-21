@@ -1,8 +1,8 @@
 <resources>
-    <string name="app_name">小猪音箱</string>
+    <string name="app_name">八戒音箱</string>
     <string name="ubt_qq_login">QQ登录</string>
     <string name="ubt_wechat_login">微信登录</string>
-    <string name="ubt_tab_little_pig">小猪</string>
+    <string name="ubt_tab_little_pig">八戒</string>
     <string name="ubt_tab_skill">技能</string>
     <string name="ubt_tab_person">我的</string>
     <string name="ubt_wx_uninstalled">微信未安装</string>
@@ -21,7 +21,7 @@
     <string name="researching_pig">重新搜索中</string>
     <string name="ubt_press_mute_btn_tips">在音箱开机时，长按热点键，进入配网模式</string>
     <string name="ubt_bluetooth_none">蓝牙模块不存在，不能使用</string>
-    <string name="ubt_want_open_bluetooth">小猪想要打开蓝牙</string>
+    <string name="ubt_want_open_bluetooth">八戒想要打开蓝牙</string>
     <string name="ubt_cancel">取消</string>
     <string name="ubt_allowed">允许</string>
     <string name="ubt_connect">连接</string>
@@ -30,16 +30,16 @@
     <string name="ubt_enter">确认</string>
     <string name="ubt_wifi_no_pwd_tips">确认此Wi-Fi无密码？</string>
     <string name="ubt_set_pig_net">音箱配网</string>
-    <string name="ubt_bunding_ping_timeout">绑定小猪超时，请稍后重试</string>
+    <string name="ubt_bunding_ping_timeout">绑定八戒超时，请稍后重试</string>
     <string name="ubt_one_user_one_pig">一个账号已被绑定音箱</string>
     <string name="ubt_set_net_success">配网成功</string>
     <string name="ubt_connecting">连接中</string>
     <string name="ubt_mina">我的</string>
-    <string name="ubt_pig">小猪</string>
+    <string name="ubt_pig">八戒</string>
     <string name="ubt_unbund_pig">未绑定音箱，</string>
-    <string name="ubt_my_pig">我的小猪</string>
+    <string name="ubt_my_pig">我的八戒</string>
     <string name="ubt_send_voice">给自己的音箱发送语音留言</string>
-    <string name="ubt_add_pig">配对小猪</string>
+    <string name="ubt_add_pig">配对八戒</string>
     <string name="ubt_add_pig_sub">配对音箱之间的语音留言</string>
     <string name="ubt_skills_manual">技能手册</string>
     <string name="ubt_skills_detail">技能详情</string>
@@ -48,18 +48,18 @@
     <string name="ubt_null">无</string>
     <string name="ubt_visitor_login">游客登录</string>
     <string name="ubt_bunding_set_net">绑定与配网</string>
-    <string name="ubt_person_hotspot">小猪热点</string>
+    <string name="ubt_person_hotspot">八戒热点</string>
     <string name="ubt_device_manger">设备管理</string>
     <string name="ubt_custom_answer">定制问答</string>
     <string name="ubt_custom_answer_sub">定制你的专属个性问答</string>
     <string name="ubt_aclock">闹钟</string>
-    <string name="ubt_aclock_sub">你在小猪上设置的闹钟</string>
+    <string name="ubt_aclock_sub">你在八戒上设置的闹钟</string>
     <string name="ubt_remind">日程提醒</string>
-    <string name="ubt_remind_sub">小猪要提醒主人的事都在这里</string>
+    <string name="ubt_remind_sub">八戒要提醒主人的事都在这里</string>
     <string name="ubt_qq_music">QQ音乐</string>
     <string name="ubt_help">帮助与反馈</string>
     <string name="ubt_feedback">意见反馈</string>
-    <string name="ubt_about_pig">关于小猪</string>
+    <string name="ubt_about_pig">关于八戒</string>
     <string name="ubt_about">关于</string>
     <string name="ubt_version_format">版本%1$s</string>
     <string name="ubt_account">账号类型</string>
@@ -67,8 +67,8 @@
     <string name="ubt_user_info">个人信息</string>
     <string name="ubt_photo">头像</string>
     <string name="ubt_logout">退出登录</string>
-    <string name="my_pig">我的小猪</string>
-    <string name="pic_pair">小猪配对</string>
+    <string name="my_pig">我的八戒</string>
+    <string name="pic_pair">配对八戒</string>
     <string name="member_group">成员组</string>
     <string name="address_book">通讯录</string>
     <string name="device_manage">设备管理</string>
@@ -94,25 +94,25 @@
     <string name="ubt_hotspot_name">热点名称</string>
     <string name="ubt_device_version_update">设备版本升级</string>
     <string name="ubt_upgrade_now">立即升级</string>
-    <string name="ubt_pig_updateing">收到升级请求，小猪会在连接无线网络的情况下自动下载和安装</string>
+    <string name="ubt_pig_updateing">收到升级请求，八戒会在连接无线网络的情况下自动下载和安装</string>
     <string name="ubt_pig_update_failure">异常错误，请重试</string>
     <string name="ubt_pig_is_last_version">当前设备已是最新版本</string>
     <string name="ubt_unbind_member">解除绑定</string>
     <string name="ubt_service_policy">优必选服务协议</string>
     <string name="ubt_privacy_policy">隐私协议</string>
-    <string name="ubt_pig_voice_box">小猪音箱</string>
-    <string name="ubt_no_pigs">没有绑定小猪</string>
+    <string name="ubt_pig_voice_box">八戒音箱</string>
+    <string name="ubt_no_pigs">没有绑定八戒</string>
     <string name="ubt_menber_group">成员组</string>
     <string name="ubt_admin">管理员</string>
     <string name="ubt_trans_admin">转让管理员</string>
     <string name="ubt_delete">删除</string>
     <string name="ubt_add_member">添加成员</string>
-    <string name="ubt_addmember_desc">·请让需绑定此音箱的用户，打开小猪APP-我的-设备管理-加入成员组：\n·扫描上面的二维码，加入成员组；\n·加入成员组后用户即与此音箱绑定，可正常使用此APP功能；</string>
+    <string name="ubt_addmember_desc">·请让需绑定此音箱的用户，打开八戒APP-我的-设备管理-加入成员组：\n·扫描上面的二维码，加入成员组；\n·加入成员组后用户即与此音箱绑定，可正常使用此APP功能；</string>
 
     <string name="record_empty_prompt">没有最近通话</string>
     <string name="ubt_coming_soon">敬请期待</string>
-    <string name="ubt_pair_pig">小猪配对</string>
-    <string name="ubt_pair_pig_desc">·请让配对设备的管理员打开小猪APP-我的-设备管理-小猪配对；\n·点击右上角“扫一扫”，扫描上面的二维码，配对小猪；\n·配对成功的小猪可以相互发送语音留言；</string>
+    <string name="ubt_pair_pig">配对八戒</string>
+    <string name="ubt_pair_pig_desc">·请让配对设备的管理员打开八戒APP-我的-设备管理-配对八戒；\n·点击右上角“扫一扫”，扫描上面的二维码，配对八戒；\n·配对成功的八戒可以相互发送语音留言；</string>
     <string name="ubt_san_formember">扫码进入</string>
     <string name="ubt_drop_up_tips">退出成员组将解绑此设备</string>
     <string name="exit_group">退出群组</string>
@@ -120,7 +120,7 @@
     <string name="ubt_unbind_fialure">退出群组失败</string>
     <string name="ubt_trans_permission">转让权限</string>
     <string name="ubt_delte_member_tips">删除此成员？</string>
-    <string name="ubt_transfer_tips">注意：音箱中的闹钟、提醒、定制问答、配对小猪等个人数据将会清除</string>
+    <string name="ubt_transfer_tips">注意：音箱中的闹钟、提醒、定制问答、配对八戒等个人数据将会清除</string>
     <string name="ubt_trandfer_admin_tips">将管理员权限转让给此账号？</string>
     <string name="ubt_join_group">加入成员组</string>
     <string name="ubt_complete">完成</string>
@@ -162,7 +162,7 @@
     <string name="ubt_confirm_unpair">确认解除配对？</string>
     <string name="ubt_ubpair_success">解除配对成功</string>
     <string name="ubt_ubpair_filure">解除配对失败</string>
-    <string name="ubt_get_qr_pair_pig_fialure">获取配对小猪二维码失败</string>
+    <string name="ubt_get_qr_pair_pig_fialure">获取配对八戒二维码失败</string>
     <string name="ubt_get_qr_join_group_fialure">获取加入成员组二维码失败</string>
     <string name="ubt_scann_qr_tips">将二维码放入框内，即可自动扫描</string>
     <string name="ubt_scann_qr_join_group">扫描进群</string>
@@ -170,14 +170,14 @@
     <string name="ubt_pair_pig_fialure">配对失败</string>
     <string name="ubt_add_member_success">添加成员成功</string>
     <string name="ubt_add_member_failure">添加成员失败</string>
-    <string name="ubt_pair_pig_success">小猪配对成功</string>
+    <string name="ubt_pair_pig_success">配对八戒成功</string>
     <string name="only_admin_operate">仅管理员可操作</string>
     <string name="logout_tip">确定退出吗？</string>
-    <string name="pair_pig">小猪配对</string>
-    <string name="pair_pig_voice">管理已配对的小猪</string>
+    <string name="pair_pig">配对八戒</string>
+    <string name="pair_pig_voice">管理已配对的八戒</string>
 
     <string name="unbind_pig_dialog_tip">绑定新音箱前，需解绑当前音箱</string>
-    <string name="unbind_pig_dialog_sub_tip">解绑入口：设备管理-我的小猪</string>
+    <string name="unbind_pig_dialog_sub_tip">解绑入口：设备管理-我的八戒</string>
     <string name="i_know_text">我知道了</string>
     <string name="close_pig_tip">将手机靠近音箱，可快速绑定</string>
     <string name="no_search_pig_tip">未搜到音箱，请确认已按照引导视频正确操作</string>
@@ -198,5 +198,5 @@
     <string name="msg_error_toast">当前数据异常，请稍后重试</string>
     <string name="timeout_error_toast">请求超时，请重试</string>
 
-    <string name="pair_pig_voice_tip">说“小猪小猪，发送留言给小猪”即可留言互动</string>
+    <string name="pair_pig_voice_tip">说“八戒八戒，发送留言给八戒”即可留言互动</string>
 </resources>

@@ -35,8 +35,8 @@ android {
         applicationId "com.ubtechinc.goldenpig"
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
-        versionCode 19
-        versionName "1.0.0.19"
+        versionCode 20
+        versionName "1.0.0.20"
         multiDexEnabled true
 
         manifestPlaceholders = [
@@ -77,15 +77,15 @@ android {
             buildConfigField "String", "IM_URL","\"https://210.75.21.106:9080\""
 
             //H5 URL域名
-//            buildConfigField "String", "H5_URL","\"http://10.10.32.22:8080\""
-//            buildConfigField "String", "H5_URL","\"http://10.10.1.14:8090/cloud-ppi/help\""
+            buildConfigField "String", "H5_URL","\"http://10.10.32.22:8080\""
+            buildConfigField "String", "H5_URL","\"http://10.10.1.14:8090/cloud-ppi/help\""
             buildConfigField "String", "H5_URL","\"https://apis.ubtrobot.com/v1/cloud-ppi/help\""
 
             minifyEnabled false
             shrinkResources false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "goldpic_test"]
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "goldpig_test"]
             ndk {
                 // 需要将 x86 架构过滤掉
                 abiFilters "armeabi", "armeabi-v7a", "arm64-v8a"
@@ -114,7 +114,7 @@ android {
             buildConfigField "Boolean", "TVS_MODE","true"
 
             //H5 URL域名
-            buildConfigField "String", "H5_URL","\"https://apis.ubtrobot.com/v1/cloud-ppi/help\""
+            buildConfigField "String", "H5_URL","\"https://internal.ubtrobot.com/v1/cloud-ppi/help\""
 
             //是否优化zip
             zipAlignEnabled false
@@ -124,7 +124,7 @@ android {
             minifyEnabled false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "goldpic_issue"]
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "goldpig_issue"]
             ndk {
                 // 需要将 x86 架构过滤掉
                 abiFilters "armeabi", "armeabi-v7a", "arm64-v8a"

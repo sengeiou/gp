@@ -250,7 +250,7 @@ public class UbtTIMManager {
             msgQueue.add(ubtMsg);
             loginTIM(userId, pigAccount, channel);
         } else {
-            //检验小猪是否在线
+            //检验八戒是否在线
 
             long time = System.currentTimeMillis();
             String singa = Utils.getSingal(time);
@@ -371,7 +371,7 @@ public class UbtTIMManager {
                     TIMConversationType.C2C, pigAccount);
         }
         if (conversation.getType() == TIMConversationType.Invalid) {
-            ToastUtils.showShortToast("小猪不在线");
+            ToastUtils.showShortToast("八戒不在线");
             return;
         }
         conversation.sendOnlineMessage(msg, new TIMValueCallBack<TIMMessage>() {
@@ -407,7 +407,7 @@ public class UbtTIMManager {
             return;
         }
         if (conversation.getType() == TIMConversationType.Invalid) {
-            ToastUtils.showShortToast("小猪不在线");
+            ToastUtils.showShortToast("八戒不在线");
             return;
         }
         conversation.sendOnlineMessage(msg, new TIMValueCallBack<TIMMessage>() {

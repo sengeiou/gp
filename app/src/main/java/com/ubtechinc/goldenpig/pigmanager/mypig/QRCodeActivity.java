@@ -32,7 +32,7 @@ public class QRCodeActivity extends BaseToolBarActivity implements View.OnClickL
     private ImageView mQRImg; //二维码
     private int mQRSize;
     private long mQRClickTime;
-    private boolean isPair; //用于区分两种小猪配对和添加成员功能，显示不同文字或导航栏按钮
+    private boolean isPair; //用于区分两种配对八戒和添加成员功能，显示不同文字或导航栏按钮
     private String singa;
 
     @Override

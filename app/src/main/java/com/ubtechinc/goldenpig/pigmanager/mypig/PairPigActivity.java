@@ -23,7 +23,7 @@ import com.ubtechinc.goldenpig.pigmanager.register.UnpairHttpProxy;
 /**
  * @auther :hqt
  * @email :qiangta.huang@ubtrobot.com
- * @description :小猪配对界面
+ * @description :配对八戒界面
  * @time :2018/9/28 19:18
  * @change :
  * @changetime :2018/9/28 19:18
@@ -80,7 +80,7 @@ public class PairPigActivity extends BaseToolBarActivity implements View.OnClick
     }
 
     /**
-     * 初始化与小猪配对的用户列表
+     * 初始化与配对八戒的用户列表
      */
     private void initData() {
         Intent intent = getIntent();

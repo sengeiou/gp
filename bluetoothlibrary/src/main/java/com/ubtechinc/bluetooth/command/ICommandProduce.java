@@ -45,12 +45,12 @@ public interface ICommandProduce {
      */
     String getNetworkNotAvailable();
     /*
-    *获取小猪网络状态
+    *获取八戒网络状态
     * */
     String getPigNetWorkState();
 
     /**
-     * 发给小猪检查网络状态
+     * 发给八戒检查网络状态
      * @return
      */
     String checkPigNetWorkState();

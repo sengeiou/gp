@@ -102,7 +102,7 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
             public void onRetryClick() {
                 onRefresh();
 //                if (AuthLive.getInstance().getCurrentPig() == null) {
-//                    ToastUtils.showShortToast("请先绑定小猪");
+//                    ToastUtils.showShortToast("请先绑定八戒");
 //                    finish();
 //                } else if (!TextUtils.isEmpty(AuthLive.getInstance().getCurrentPig().getGuid())) {
 //                    onRefresh();
@@ -173,7 +173,7 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
 //            }
 //        });
 //        if (AuthLive.getInstance().getCurrentPig() == null) {
-//            ToastUtils.showShortToast("请先绑定小猪");
+//            ToastUtils.showShortToast("请先绑定八戒");
 //            finish();
 //        } else if (!TextUtils.isEmpty(AuthLive.getInstance().getCurrentPig().getGuid())) {
 //            onRefresh();

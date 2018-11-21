@@ -36,7 +36,7 @@ import org.json.JSONObject;
 /**
  * @auther :hqt
  * @email :qiangta.huang@ubtrobot.com
- * @description :设置小猪音箱WIFi及密码
+ * @description :设置八戒音箱WIFi及密码
  * @time :2018/8/27 14:32
  * @change :
  * @changetime :2018/8/27 14:32

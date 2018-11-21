@@ -68,7 +68,7 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
 /**
  * @author : HQT
  * @email :qiangta.huang@ubtrobot.com
- * @describe :小猪分页Fragment
+ * @describe :八戒分页Fragment
  * @time :2018/8/17 18:00
  * @change :
  * @changTime :2018/8/17 18:00

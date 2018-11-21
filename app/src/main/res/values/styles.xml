@@ -117,7 +117,7 @@
         <item name="android:gravity">center</item>
         <item name="android:background">@null</item>
     </style>
-    <!--  主页小猪，磁贴文字样式-->
+    <!--  主页八戒，磁贴文字样式-->
     <style name="UBTMainItemTxtTheme" parent="TextAppearance.AppCompat.Title">
         <item name="android:textColor">@color/ubt_white</item>
         <item name="android:textSize">15sp</item>

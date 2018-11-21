@@ -6,7 +6,7 @@ message VoiceMail {
    int64 time=1; //发送时间
    int32 elapsedMillis =2 ; //语音时长
    bytes message=3;//消息内容
-   string sender=4;//发送方 ID 例如小猪的序列号
-   int32 senderType =5; // 1：发送方是小猪，2：发送方是手机
+   string sender=4;//发送方 ID 例如八戒的序列号
+   int32 senderType =5; // 1：发送方是八戒，2：发送方是手机
    int32 msgType =6; //消息类型 文本:0  语音：1
 }

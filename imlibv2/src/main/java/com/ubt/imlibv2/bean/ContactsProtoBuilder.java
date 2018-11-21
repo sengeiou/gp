@@ -148,20 +148,20 @@ public class ContactsProtoBuilder {
         return channelMessage.toByteArray();
     }
 
-    /*获取小猪版本命令*/
+    /*获取八戒版本命令*/
     public static byte[] getPigVersion() {
 
         return createBaseData(GET_VERSION_ACTION);
 
     }
 
-    /*获取小猪升级状态命令*/
+    /*获取八戒升级状态命令*/
     public static byte[] getPigVersionState() {
 
         return createBaseData(GET_VERSION_STATE_ACTION);
     }
 
-    /*小猪升级命令*/
+    /*八戒升级命令*/
     public static byte[] updatePigVersion() {
         return createBaseData(UPATE_VERSION_ACTION);
     }

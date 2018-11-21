@@ -48,7 +48,7 @@ import static com.ubtechinc.goldenpig.app.Constant.SP_LAST_RECORD;
 /**
  * @auther :hqt
  * @email :qiangta.huang@ubtrobot.com
- * @description :我的小猪页面
+ * @description :我的八戒页面
  * @time :2018/9/15 12:48
  * @change :
  * @changetime :2018/9/15 12:48
@@ -134,9 +134,9 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
                 Log.e("setOnUbtTIMConver", s);
                 LoadingDialog.getInstance(MyPigActivity.this).dismiss();
                 if (AuthLive.getInstance().getCurrentPig() != null) {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("小猪未登录");
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("八戒未登录");
                 } else {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定小猪");
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定八戒");
                 }
             }
 
@@ -216,9 +216,6 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
     }
 
     private void updatePigList() {
-        if (AuthLive.getInstance().getCurrentPigList() != null) {
-            AuthLive.getInstance().getCurrentPigList().clear();
-        }
         new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListHttpProxy.OnGetPigListLitener() {
             @Override
             public void onError(ThrowableWrapper e) {

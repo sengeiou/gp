@@ -73,7 +73,7 @@ public class UbtTIMManager {
                 //sendTIMMsg( msg);
             }
         });
-        setPigaccount("2cb9b9a3");//临时测试小猪账号
+        setPigaccount("2cb9b9a3");//临时测试八戒账号
         setTIMLoginListener();
     }
 
@@ -185,7 +185,7 @@ public class UbtTIMManager {
             msgQueue.add(ubtMsg);
             loginTIM(userId, channel);
         } else {
-            //检验小猪是否在线
+            //检验八戒是否在线
 
             long time = System.currentTimeMillis();
             String singa= Utils.getSingal(time);
