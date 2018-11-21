@@ -97,7 +97,7 @@ public class DeviceUpdateActivity extends BaseToolBarActivity implements Observe
                 dealMsg(elem.getData());
             } catch (InvalidProtocolBufferException e) {
                 Log.e("update", e.getMessage());
-                com.ubtech.utilcode.utils.ToastUtils.showShortToast("数据异常，请重试");
+                com.ubtech.utilcode.utils.ToastUtils.showShortToast(getString(R.string.msg_error_toast));
             }
         }
     }

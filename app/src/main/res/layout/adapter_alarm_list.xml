@@ -8,8 +8,7 @@
     android:layout_centerInParent="true"
     android:background="@color/ubt_white"
     android:orientation="horizontal"
-    android:paddingLeft="@dimen/dp_20"
-    app:right_id="@+id/ll_right_menu">
+    android:paddingLeft="@dimen/dp_20">
 
     <TextView
         android:id="@+id/tv_amorpm"

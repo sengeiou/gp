@@ -361,7 +361,7 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
                 dealMsg(elem.getData());
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
-                com.ubtech.utilcode.utils.ToastUtils.showShortToast("数据异常，请重试");
+                com.ubtech.utilcode.utils.ToastUtils.showShortToast(getString(R.string.msg_error_toast));
 
             }
         }

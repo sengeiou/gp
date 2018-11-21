@@ -1,7 +1,6 @@
 package com.ubtechinc.goldenpig.personal.alarm;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -28,7 +27,6 @@ import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.StateView;
-import com.ubtechinc.goldenpig.voiceChat.util.TimeUtil;
 import com.ubtechinc.tvlloginlib.TVSManager;
 import com.yanzhenjie.recyclerview.swipe.SwipeItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
@@ -70,8 +68,8 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
         public void handleMessage(android.os.Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
-                ToastUtils.showShortToast("请求超时，请重试");
                 if (mWeakReference.get() != null) {
+                    ToastUtils.showShortToast(mWeakReference.get().getString(R.string.timeout_error_toast));
                     LoadingDialog.getInstance(mWeakReference.get()).dismiss();
                     if (mList.size() == 0) {
                         mStateView.showRetry();

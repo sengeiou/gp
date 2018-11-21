@@ -199,7 +199,7 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer,
                 dealMsg(elem.getData());
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
-                ToastUtils.showShortToast("数据异常，请重试");
+                ToastUtils.showShortToast(getString(R.string.msg_error_toast));
 
             }
         }

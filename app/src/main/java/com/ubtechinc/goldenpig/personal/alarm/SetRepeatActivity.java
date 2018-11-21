@@ -54,8 +54,8 @@ public class SetRepeatActivity extends BaseNewActivity {
         public void handleMessage(android.os.Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
-                ToastUtils.showShortToast("请求超时，请重试");
                 if (mWeakReference.get() != null) {
+                    ToastUtils.showShortToast(mWeakReference.get().getString(R.string.timeout_error_toast));
                 }
             }
         }

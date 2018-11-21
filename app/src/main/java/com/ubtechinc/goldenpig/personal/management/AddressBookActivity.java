@@ -77,9 +77,9 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
         public void handleMessage(android.os.Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
-                ToastUtils.showShortToast("请求超时，请重试");
                 if (mWeakReference.get() != null) {
                     //((AddressBookActivity) mWeakReference.get()).refreshLayout.finishRefresh(true);
+                    ToastUtils.showShortToast(mWeakReference.get().getString(R.string.timeout_error_toast));
                     ((AddressBookActivity) mWeakReference.get()).mStateView.showRetry();
                 }
             }
@@ -319,7 +319,7 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
                 dealMsg(elem.getData());
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
-                ToastUtils.showShortToast("数据异常，请重试");
+                ToastUtils.showShortToast(getString(R.string.msg_error_toast));
                 mStateView.showRetry();
                 //refreshLayout.finishRefresh(true);
             }

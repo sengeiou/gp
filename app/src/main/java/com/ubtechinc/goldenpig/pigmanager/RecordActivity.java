@@ -20,6 +20,7 @@ import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubt.improtolib.GPResponse;
 import com.ubt.improtolib.UserRecords;
 import com.ubtech.utilcode.utils.ToastUtils;
+import com.ubtech.utilcode.utils.network.NetworkHelper;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewTv;
@@ -82,7 +83,7 @@ public class RecordActivity extends BaseNewActivity implements Observer {
         public void handleMessage(android.os.Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
-                ToastUtils.showShortToast("请求超时，请重试");
+                ToastUtils.showShortToast(mWeakReference.get().getString(R.string.timeout_error_toast));
                 if (mWeakReference.get() != null) {
                     LoadingDialog.getInstance(mWeakReference.get()).dismiss();
                     if (mList.size() == 0) {
@@ -165,7 +166,19 @@ public class RecordActivity extends BaseNewActivity implements Observer {
             public void onError(int i, String s) {
                 Log.e("setOnUbtTIMConver", s);
                 LoadingDialog.getInstance(RecordActivity.this).dismiss();
-                ToastUtils.showShortToast(s);
+                if (NetworkHelper.sharedHelper() == null) {
+                    ToastUtils.showShortToast(getString(R.string.network_error_toast));
+                } else if (NetworkHelper.sharedHelper().isNetworkAvailable()) {
+                    ToastUtils.showShortToast(getString(R.string.msg_error_toast));
+                } else {
+                    ToastUtils.showShortToast(getString(R.string.network_error_toast));
+                }
+                if (mHandler.hasMessages(1)) {
+                    mHandler.removeMessages(1);
+                }
+                if (mList.size() == 0) {
+                    mStateView.showRetry();
+                }
             }
 
             @Override
@@ -187,15 +200,15 @@ public class RecordActivity extends BaseNewActivity implements Observer {
         UbtTIMManager.getInstance().queryRecord();
     }
 
-    public void onError(String str) {
-        hasLoadMsg = false;
-        ToastUtils.showShortToast(str);
-        if (mList.size() == 0) {
-            mStateView.showRetry();
-        } else {
-            mStateView.showContent();
-        }
-    }
+//    public void onError(String str) {
+//        hasLoadMsg = false;
+//        ToastUtils.showShortToast(str);
+//        if (mList.size() == 0) {
+//            mStateView.showRetry();
+//        } else {
+//            mStateView.showContent();
+//        }
+//    }
 
     public Handler getHandler() {
         return mHandler;
@@ -289,7 +302,7 @@ public class RecordActivity extends BaseNewActivity implements Observer {
                 if (mHandler.hasMessages(1)) {
                     mHandler.removeMessages(1);
                 }
-                ToastUtils.showShortToast("数据异常，请重试");
+                ToastUtils.showShortToast(getString(R.string.msg_error_toast));
                 LoadingDialog.getInstance(RecordActivity.this).dismiss();
             }
         }
