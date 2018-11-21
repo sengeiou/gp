@@ -82,8 +82,8 @@ public class ImageViewXfermode extends ImageView {
         Paint paintrect = new Paint(Paint.ANTI_ALIAS_FLAG);
         paintrect.setColor(0xFF66AAFF);
         canvasrect.drawRoundRect(new RectF(0, 0, defaultWidth, defaultdHeight), getResources()
-                .getDimensionPixelSize(R.dimen.dp_20), getResources()
-                .getDimensionPixelSize(R.dimen.dp_20), paintrect);
+                .getDimensionPixelSize(R.dimen.dp_10), getResources()
+                .getDimensionPixelSize(R.dimen.dp_10), paintrect);
 //        canvasrect.drawRoundRect(0, 0, defaultWidth, defaultdHeight, getResources()
 //                .getDimensionPixelSize(R.dimen.dp_25), getResources()
 //                .getDimensionPixelSize(R.dimen.dp_25), paintrect);

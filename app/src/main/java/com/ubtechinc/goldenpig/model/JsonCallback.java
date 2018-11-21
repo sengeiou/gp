@@ -42,14 +42,19 @@ public abstract class JsonCallback<T> implements Callback {
             if (code == -505) {
                 onError("问句重复，请重新输入");
                 return;
-            } else if ( code == -504) {
+            } else if (code == -504) {
                 onError("问答中包容敏感词，请重新输入");
                 return;
             } else if (code != 0) {
                 if (TextUtils.isEmpty(jsonObject.getString("errMsg"))) {
                     onError("数据异常，请重试");
                 } else {
-                    onError(jsonObject.getString("errMsg"));
+                    String str = jsonObject.getString("errMsg");
+                    if (str.contains("fail") || str.contains("Fail")) {
+                        onError("网络异常，请重试");
+                    } else {
+                        onError(str);
+                    }
                 }
                 return;
             }
