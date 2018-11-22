@@ -253,11 +253,16 @@ public class ChatPresenter implements Observer {
                     Log.e("NYLive", "get message success" + timMessages.size());
                     isGetingMessage = false;
                     //TODO
+
+
                    // TIMMessage mHeadMessage=timMessages.get(0);
-                 //   filter(timMessages);
-//                    for(int i=0;i<timMessages.size();i++){
-//                        Log.e("NYLive", "get message success" + timMessages.get(0).getElement(0).getType());
-//                    }
+                    for(int i=0;i<timMessages.size();i++){
+                        Log.e("NYLive", "before get message success index "+i+" type :" + timMessages.get(i).getElement(0).getType());
+                    }
+                    filter(timMessages);
+                    for(int i=0;i<timMessages.size();i++){
+                        Log.e("NYLive", "after get message success index "+i+" type :" + timMessages.get(i).getElement(0).getType());
+                    }
 //                    if(timMessages.size()==0){
 //                        Log.e("NYLive", "next get message success" + timMessages.size());
 //                        if(message==null) {
