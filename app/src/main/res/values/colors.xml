@@ -17,6 +17,8 @@
     <color name="ubt_dilog_decore_color">#CDCED2</color>
     <color name="ubt_dialog_btn_txt_color">#FE4C4C</color>
     <color name="ubt_wifi_list_divider">#E2E2E2</color>
+    <color name="ubt_voicerecord_cancel">#B13535</color>
+
     <!--自定义提示背景色-->
     <color name="ubt_notify_tv_bg_color">#55FE4C4C </color>
     <color name="ubt_global_bg_color">#FFF5F8FB</color>
