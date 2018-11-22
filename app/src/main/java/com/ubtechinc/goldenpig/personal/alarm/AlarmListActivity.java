@@ -100,7 +100,7 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
             public void onRetryClick() {
                 onRefresh();
 //                if (AuthLive.getInstance().getCurrentPig() == null) {
-//                    ToastUtils.showShortToast("请先绑定小猪");
+//                    ToastUtils.showShortToast("请先绑定八戒");
 //                    finish();
 //                } else if (!TextUtils.isEmpty(AuthLive.getInstance().getCurrentPig().getGuid())) {
 //                    onRefresh();
@@ -170,7 +170,7 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
 //            }
 //        });
 //        if (AuthLive.getInstance().getCurrentPig() == null) {
-//            ToastUtils.showShortToast("请先绑定小猪");
+//            ToastUtils.showShortToast("请先绑定八戒");
 //            finish();
 //        } else if (!TextUtils.isEmpty(AuthLive.getInstance().getCurrentPig().getGuid())) {
 //            onRefresh();

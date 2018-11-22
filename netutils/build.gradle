@@ -54,10 +54,10 @@ android {
             def props = getProps(rootProject.ext.app.serverEnviroment)
             if (props != null) {
 //                buildConfigField 'String', 'HOST', "\"http://120.25.57.42\""
-                buildConfigField 'String', 'HOST', "\"https://apis.ubtrobot.com\""
-                buildConfigField 'String', 'PUSH_HOST', "\"https://apis.ubtrobot.com\""
+                buildConfigField 'String', 'HOST', "\"https://internal.ubtrobot.com\""
+                buildConfigField 'String', 'PUSH_HOST', "\"https://internal.ubtrobot.com\""
 //                buildConfigField 'String', 'IM_HOST', "\"http://210.75.21.106:9080\""
-                buildConfigField 'String', 'IM_HOST', "\"https://apis.ubtrobot.com\""
+                buildConfigField 'String', 'IM_HOST', "\"https://internal.ubtrobot.com\""
                 buildConfigField 'String', 'USER_HOST', props['user_host']
                 buildConfigField 'String', 'XINGE_HOST', props['xinge_host']
                 buildConfigField 'String', 'UPDATE', props['update']
@@ -75,9 +75,14 @@ android {
         debug {
             def props = getProps(rootProject.ext.app.serverEnviroment)
             if (props != null) {
-                buildConfigField 'String', 'HOST', "\"https://testjimu.ubtrobot.com:8443\""
-                buildConfigField 'String', 'PUSH_HOST', "\"https://test79.ubtrobot.com\""
-                buildConfigField 'String', 'IM_HOST', "\"http://210.75.21.106:9080\""
+//                buildConfigField 'String', 'HOST', "\"https://testjimu.ubtrobot.com:8443\""
+//                buildConfigField 'String', 'PUSH_HOST', "\"https://test79.ubtrobot.com\""
+//                buildConfigField 'String', 'IM_HOST', "\"http://210.75.21.106:9080\""
+
+                buildConfigField 'String', 'HOST', "\"https://apis.ubtrobot.com\""
+                buildConfigField 'String', 'PUSH_HOST', "\"https://apis.ubtrobot.com\""
+                buildConfigField 'String', 'IM_HOST', "\"https://apis.ubtrobot.com\""
+
                 buildConfigField 'String', 'USER_HOST', props['user_host']
                 buildConfigField 'String', 'XINGE_HOST', props['xinge_host']
                 buildConfigField 'String', 'UPDATE', props['update']

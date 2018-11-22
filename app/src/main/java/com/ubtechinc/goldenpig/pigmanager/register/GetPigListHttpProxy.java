@@ -17,7 +17,7 @@ import okhttp3.Response;
 /**
  * @auther :hqt
  * @email :qiangta.huang@ubtrobot.com
- * @description :获取该用户所有关联的小猪
+ * @description :获取该用户所有关联的八戒
  * @time :2018/9/12 17:39
  * @change :
  * @changetime :2018/9/12 17:39

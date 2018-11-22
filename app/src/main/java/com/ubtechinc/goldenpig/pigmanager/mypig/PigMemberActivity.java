@@ -521,7 +521,7 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
             PushHttpProxy pushHttpProxy = new PushHttpProxy();
             Map map = new HashMap();
             map.put("app_category", 1);
-            pushHttpProxy.pushToken("", "你已成为新的小猪管理员", userId, map, 1);
+            pushHttpProxy.pushToken("", "你已成为新的八戒管理员", userId, map, 1);
         } catch (Exception e) {
             //TODO
         }
