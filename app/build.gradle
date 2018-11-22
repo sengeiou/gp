@@ -207,4 +207,7 @@ dependencies {
 
     //add SCADA
     implementation 'com.ubtrobot.mobile:analytics:0.7.0-SNAPSHOT'
+
+    //add crash widget
+    implementation 'com.vise.xiaoyaoyou:viseutils:1.1.0'
 }

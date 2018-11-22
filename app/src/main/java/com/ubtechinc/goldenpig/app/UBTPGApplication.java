@@ -62,6 +62,7 @@ import com.ubtechinc.tvlloginlib.TVSManager;
 import com.ubtrobot.analytics.mobile.AnalyticsKit;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.ubtrobot.channelservice.proto.GPRelationshipContainer;
+import com.vise.utils.handler.CrashHandlerUtil;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -122,10 +123,14 @@ public class UBTPGApplication extends LoginApplication implements Observer {
     }
 
     private void initAppForMainProcess() {
+
+        //add crash
+        CrashHandlerUtil.getInstance().init(this, null, "BaJie_crash/");
+
         //SCADA
         initSCADA();
         //bugly
-        CrashReport.initCrashReport(getApplicationContext(), "85c6f36db6", true);
+        CrashReport.initCrashReport(getApplicationContext(), "85c6f36db6", BuildConfig.DEBUG);
         MultiDex.install(this);
         com.ubtech.utilcode.utils.Utils.init(this);
         instance = this;
