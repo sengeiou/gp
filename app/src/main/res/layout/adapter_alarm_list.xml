@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipe_menu"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/dp_115"
+    android:layout_height="@dimen/dp_64"
     android:layout_centerInParent="true"
     android:background="@color/ubt_white"
     android:orientation="horizontal"
-    app:right_id="@+id/ll_right_menu">
+    android:paddingLeft="@dimen/dp_20">
 
     <TextView
         android:id="@+id/tv_amorpm"
@@ -16,7 +16,6 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/tv_time"
         android:layout_alignTop="@+id/tv_time"
-        android:layout_marginLeft="@dimen/dp_20"
         android:gravity="center"
         android:paddingTop="@dimen/dp_2"
         android:textColor="@color/ubt_tips_txt_color"
@@ -28,10 +27,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp_3"
-        android:layout_marginTop="@dimen/dp_25"
         android:layout_toRightOf="@+id/tv_amorpm"
         android:textColor="@color/ubt_tips_txt_color"
-        android:textSize="@dimen/sp_36"
+        android:textSize="@dimen/sp_32"
         tools:text="8:00" />
 
     <TextView
@@ -39,11 +37,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_time"
-        android:layout_marginLeft="@dimen/dp_20"
-        android:layout_marginTop="@dimen/dp_10"
         android:gravity="center"
         android:singleLine="true"
         android:textColor="@color/ubt_tab_btn_txt_color"
-        android:textSize="@dimen/sp_14"
+        android:textSize="@dimen/sp_12"
         tools:text="上午" />
 </RelativeLayout>

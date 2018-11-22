@@ -69,4 +69,11 @@ public class UbtPushModel {
         }
         return null;
     }
+
+    public String getContent() {
+        if (mXGPushShowedResult != null) {
+            return mXGPushShowedResult.getContent();
+        }
+        return "";
+    }
 }

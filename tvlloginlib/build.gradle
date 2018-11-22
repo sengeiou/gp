@@ -44,5 +44,6 @@ dependencies {
     implementation rootProject.ext.deps.appCompatV7
     implementation rootProject.ext.deps.supportV4
     implementation rootProject.ext.deps.tencentOpenSDK
+    implementation project(path: ':utilcode')
 
 }

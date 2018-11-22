@@ -38,6 +38,8 @@ public class SetQuestOrAnswerActivity extends BaseNewActivity {
     TextView tv_center;
     @BindView(R.id.tv_right)
     TextView tv_right;
+    @BindView(R.id.tv_count)
+    TextView tv_count;
     @BindView(R.id.tv_hint1)
     TextView tv_hint1;
     @BindView(R.id.tv_hint2)
@@ -73,16 +75,35 @@ public class SetQuestOrAnswerActivity extends BaseNewActivity {
                 tv_hint1.setText("*仅支持汉字");
                 tv_hint2.setText("*最多输入20个汉字");
                 tv_hint3.setVisibility(View.GONE);
+                tv_count.setText("0/20");
                 break;
             case 1:
                 maxchineseLength = 100;
                 tv_center.setText("添加回复");
                 limitToast = "最大长度为100个字";
                 etSet.setHint("输入回复");
+                tv_count.setText("0/100");
                 break;
         }
         if (!TextUtils.isEmpty(str)) {
             etSet.setText(str);
+            int mMsgMaxLength = 0;
+            for (int i = 0; i < str.length(); i++) {
+                char charAt = str.charAt(i);
+                //32-122包含了空格，大小写字母，数字和一些常用的符号，
+                //如果在这个范围内则算一个字符，
+                //如果不在这个范围比如是汉字的话就是两个字符
+                if (charAt >= 32 && charAt <= 122) {
+                    mMsgMaxLength++;
+                } else {
+                    mMsgMaxLength += 2;
+                }
+            }
+            if (type == 0) {
+                tv_count.setText((mMsgMaxLength / 2) + "/20");
+            } else {
+                tv_count.setText((mMsgMaxLength / 2) + "/100");
+            }
             try {
                 etSet.setSelection(str.length());
             } catch (Exception e) {
@@ -154,8 +175,6 @@ public class SetQuestOrAnswerActivity extends BaseNewActivity {
                     //Pattern pattern = Pattern.compile(speChat);
                     Matcher matcher = pattern.matcher(source.toString());
                     if (matcher.find()) return "";
-
-//                    boolean bInvlid = false;
 //                    int sourceLen = CommendUtil.getMsgLength(source.toString());
 //                    int destLen = CommendUtil.getMsgLength(dest.toString());
 //                    LogUtils.d("sourceLen:" + sourceLen + ",destLen:" + destLen);
@@ -170,6 +189,9 @@ public class SetQuestOrAnswerActivity extends BaseNewActivity {
         etSet.setFilters(FilterArray);
         etSet.addTextChangedListener(
                 new TextWatcher() {
+                    private int selectionEnd;
+                    private boolean delete = false;
+
                     @Override
                     public void beforeTextChanged(CharSequence s,
                                                   int start, int count, int after) {
@@ -178,13 +200,16 @@ public class SetQuestOrAnswerActivity extends BaseNewActivity {
                     @Override
                     public void onTextChanged(CharSequence s,
                                               int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable editable) {
+                        selectionEnd = etSet.getSelectionEnd();
+                        String str = etSet.getText().toString();
+                        //LogUtils.d("hdf", str);
                         int mMsgMaxLength = 0;
-                        Editable editable = etSet.getText();
-                        String str = editable.toString().trim();
-                        //得到最初字段的长度大小，用于光标位置的判断
-                        int selEndIndex = Selection.getSelectionEnd(editable);
-                        // 取出每个字符进行判断，如果是字母数字和标点符号则为一个字符加1，
-                        //如果是汉字则为两个字符
+                        int countNum = 0;
                         for (int i = 0; i < str.length(); i++) {
                             char charAt = str.charAt(i);
                             //32-122包含了空格，大小写字母，数字和一些常用的符号，
@@ -193,34 +218,38 @@ public class SetQuestOrAnswerActivity extends BaseNewActivity {
                             if (charAt >= 32 && charAt <= 122) {
                                 mMsgMaxLength++;
                             } else {
-                                mMsgMaxLength += 1;
+                                mMsgMaxLength += 2;
                             }
                             // 当最大字符大于6000时，进行字段的截取，并进行提示字段的大小
-                            if (mMsgMaxLength > maxchineseLength) {
-                                // 截取最大的字段
-                                String newStr = str.substring(0, i);
-                                etSet.setText(newStr);
-                                // 得到新字段的长度值
-                                editable = etSet.getText();
-                                int newLen = editable.length();
-                                if (selEndIndex > newLen) {
-                                    selEndIndex = editable.length();
-                                }
+                            if (mMsgMaxLength > maxchineseLength * 2) {
+                                countNum = str.length() - i;
+                                delete = true;
                                 ToastUtils.showShortToast(limitToast);
+                                break;
                             }
-                            // 设置新光标所在的位置
-                            Selection.setSelection(editable, selEndIndex);
                         }
-                    }
-
-                    @Override
-                    public void afterTextChanged(Editable s) {
-                        if (TextUtils.isEmpty(etSet.getText())) {
+                        try {
+                            etSet.setSelection(str.length());
+                        } catch (Exception e) {
+                        }
+                        if (type == 0) {
+                            tv_count.setText((mMsgMaxLength / 2) + "/20");
+                        } else {
+                            tv_count.setText((mMsgMaxLength / 2) + "/100");
+                        }
+                        if (TextUtils.isEmpty(str)) {
                             tv_right.setEnabled(false);
                             tv_right.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
                         } else {
                             tv_right.setEnabled(true);
                             tv_right.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_checked_color));
+                        }
+                        try {
+                            if (delete) {
+                                delete = false;
+                                editable.delete(selectionEnd - countNum, selectionEnd);
+                            }
+                        } catch (Exception e) {
                         }
                     }
                 }

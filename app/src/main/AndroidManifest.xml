@@ -177,6 +177,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".pigmanager.mypig.PairQRScannerActivity"
+            android:noHistory="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".personal.MemberQRScannerActivity"

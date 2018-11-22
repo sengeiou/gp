@@ -26,7 +26,7 @@ import com.ubtechinc.tvlloginlib.entity.LoginInfo;
  * @change :目前的整个登录模式进入SplashActivityr后一层层调用TVSManager的refreshLoginToken方法（主要是先作tvslogin），这步主要是在TVSManager和BaseClient
  * 类中完成，再层层回调先在TVSManager的onLoginSuccess中知道tvs登陆成功（获取LoginInfo），再回到LoginModel中的onTVSLoginSuccess
  * ，这时再开始第二步登陆，这步主要在UBTAuthRepository中连接UBT后台登陆，最终返回到LoginModel.onSuccess(UserInfo),在LoginModel.onSuccess(UserInfo)
- * 中用TIM登陆和获取绑定小猪列表，下一步作TIM登陆，主要是UbtTIMManager类，这个先作TIMRepository登陆获取数据，再调用UbtTIMManager
+ * 中用TIM登陆和获取绑定八戒列表，下一步作TIM登陆，主要是UbtTIMManager类，这个先作TIMRepository登陆获取数据，再调用UbtTIMManager
  * .dealIMResponse（）方法登陆，LoginModel是总的登陆管理分发类;
  * @changetime :2018/8/21 11:14
  */
@@ -35,7 +35,7 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
     private TVSAuthRepository tvsAuthRepository;
     private AuthLive authLive;
     private UBTAuthRepository ubtAuthRepository;
-    private GetPigListHttpProxy getPigListRepository; //获取用户当前小猪列表
+    private GetPigListHttpProxy getPigListRepository; //获取用户当前八戒列表
     private UbtTIMManager timManager;
 
     public LoginModel() {
@@ -59,7 +59,7 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
         getPigList();
     }
 
-    ///  获取用户绑定的小猪
+    ///  获取用户绑定的八戒
     private void getPigList() {
         if (AuthLive.getInstance().getCurrentPigList() != null) {
             AuthLive.getInstance().getCurrentPigList().clear();

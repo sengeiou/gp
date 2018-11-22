@@ -27,7 +27,9 @@ import com.ubtechinc.goldenpig.pigmanager.bean.UbtScanResult;
 import com.ubtechinc.goldenpig.pigmanager.model.RobotAllAccountViewModel;
 import com.ubtechinc.goldenpig.pigmanager.observeable.RobotBindStateLive;
 import com.ubtechinc.goldenpig.pigmanager.register.RegisterPigRepository;
+import com.ubtechinc.goldenpig.utils.SCADAHelper;
 import com.ubtechinc.tvlloginlib.TVSManager;
+import com.ubtrobot.analytics.mobile.AnalyticsKit;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -426,6 +428,7 @@ public class BungdingManager {
                         //TODO 如果IM未登录，进行IM登录
                         doTIMLogin();
                         sendClientIdToRobot(clientIdRecord);
+                        SCADAHelper.recordEvent(SCADAHelper.EVENET_APP_ROBOT_BIND, mSerialId);
                         if (mBanddingListener != null) {
                             mBanddingListener.onMaster();
                         }
@@ -477,7 +480,7 @@ public class BungdingManager {
 
         void connectFailed();//不用关闭蓝牙
 
-        void hasWifi(String wifi); //小猪已经连接了的Wifi时，会掉名称
+        void hasWifi(String wifi); //八戒已经连接了的Wifi时，会掉名称
 
         void onMaster(); ///用户是管理员
 

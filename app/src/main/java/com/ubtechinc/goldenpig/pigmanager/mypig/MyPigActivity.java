@@ -48,7 +48,7 @@ import static com.ubtechinc.goldenpig.app.Constant.SP_LAST_RECORD;
 /**
  * @auther :hqt
  * @email :qiangta.huang@ubtrobot.com
- * @description :我的小猪页面
+ * @description :我的八戒页面
  * @time :2018/9/15 12:48
  * @change :
  * @changetime :2018/9/15 12:48
@@ -134,9 +134,9 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
                 Log.e("setOnUbtTIMConver", s);
                 LoadingDialog.getInstance(MyPigActivity.this).dismiss();
                 if (AuthLive.getInstance().getCurrentPig() != null) {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("小猪未登录");
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("八戒未登录");
                 } else {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定小猪");
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定八戒");
                 }
             }
 
@@ -216,9 +216,6 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
     }
 
     private void updatePigList() {
-        if (AuthLive.getInstance().getCurrentPigList() != null) {
-            AuthLive.getInstance().getCurrentPigList().clear();
-        }
         new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListHttpProxy.OnGetPigListLitener() {
             @Override
             public void onError(ThrowableWrapper e) {
@@ -312,11 +309,14 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
                     if (needTransfer) {
                         ActivityRoute.toAnotherActivity(MyPigActivity.this, TransferAdminActivity.class, false);
                     } else {
-                        UnbindPigProxy pigProxy = new UnbindPigProxy();
-                        final String serialNo = AuthLive.getInstance().getCurrentPig().getRobotName();
-                        final String userId = AuthLive.getInstance().getUserId();
-                        final String token = CookieInterceptor.get().getToken();
-                        pigProxy.unbindPig(serialNo, userId, token, BuildConfig.APP_ID, unBindPigCallback);
+                        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+                        if (pigInfo != null) {
+                            UnbindPigProxy pigProxy = new UnbindPigProxy();
+                            final String serialNo = AuthLive.getInstance().getCurrentPig().getRobotName();
+                            final String userId = AuthLive.getInstance().getUserId();
+                            final String token = CookieInterceptor.get().getToken();
+                            pigProxy.unbindPig(serialNo, userId, token, BuildConfig.APP_ID, unBindPigCallback);
+                        }
                     }
                 }
             });
@@ -361,7 +361,7 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
                 dealMsg(elem.getData());
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
-                com.ubtech.utilcode.utils.ToastUtils.showShortToast("数据异常，请重试");
+                com.ubtech.utilcode.utils.ToastUtils.showShortToast(getString(R.string.msg_error_toast));
 
             }
         }

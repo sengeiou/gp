@@ -63,7 +63,7 @@ public class PairQRScannerActivity extends QRScannerActivity {
                             public void run() {
                                 ToastUtils.showShortToast(R.string.ubt_pair_pig_success);
 
-                                //TODO 小猪配对或解除配对后需要通过IM通知小猪本体功能
+                                //TODO 配对八戒或解除配对后需要通过IM通知八戒本体功能
                                 getPigPair();
                             }
                         });

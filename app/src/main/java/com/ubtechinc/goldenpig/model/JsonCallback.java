@@ -1,9 +1,8 @@
 package com.ubtechinc.goldenpig.model;
 
-import android.text.TextUtils;
-
 import com.google.gson.Gson;
 import com.ubtech.utilcode.utils.LogUtils;
+import com.ubtech.utilcode.utils.network.NetworkHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,7 +27,14 @@ public abstract class JsonCallback<T> implements Callback {
     }
 
     public void onFailure(Call call, IOException e) {
-        onError(e.getMessage());
+        if (NetworkHelper.sharedHelper() == null) {
+            onError("当前网络异常，请检查网络设置");
+        } else if (NetworkHelper.sharedHelper().isNetworkAvailable()) {
+            onError("当前数据异常，请稍后重试");
+        } else {
+            onError("当前网络异常，请检查网络设置");
+        }
+        //onError(e.getMessage());
     }
 
     @Override
@@ -42,15 +48,27 @@ public abstract class JsonCallback<T> implements Callback {
             if (code == -505) {
                 onError("问句重复，请重新输入");
                 return;
-            } else if ( code == -504) {
+            } else if (code == -504) {
                 onError("问答中包容敏感词，请重新输入");
                 return;
             } else if (code != 0) {
-                if (TextUtils.isEmpty(jsonObject.getString("errMsg"))) {
-                    onError("数据异常，请重试");
+                if (NetworkHelper.sharedHelper() == null) {
+                    onError("当前网络异常，请检查网络设置");
+                } else if (NetworkHelper.sharedHelper().isNetworkAvailable()) {
+                    onError("当前数据异常，请稍后重试");
                 } else {
-                    onError(jsonObject.getString("errMsg"));
+                    onError("当前网络异常，请检查网络设置");
                 }
+//                if (TextUtils.isEmpty(jsonObject.getString("errMsg"))) {
+//                    onError("数据异常，请重试");
+//                } else {
+//                    String str = jsonObject.getString("errMsg");
+//                    if (str.contains("fail") || str.contains("Fail")) {
+//                        onError("网络异常，请重试");
+//                    } else {
+//                        onError(str);
+//                    }
+//                }
                 return;
             }
             if (clazz == String.class) {
@@ -66,7 +84,7 @@ public abstract class JsonCallback<T> implements Callback {
             onSuccess(data);
         } catch (JSONException e) {
             e.printStackTrace();
-            onError("数据异常，请重试");
+            onError("当前数据异常，请稍后重试");
         }
     }
 

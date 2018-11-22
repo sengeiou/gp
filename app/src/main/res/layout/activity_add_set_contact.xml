@@ -46,8 +46,8 @@
 
         <ImageView
             android:id="@+id/iv_phone_clear"
-            android:layout_width="@dimen/dp_45"
-            android:layout_height="@dimen/dp_45"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:padding="@dimen/dp_8"
             android:src="@drawable/ic_close"
@@ -63,8 +63,8 @@
 
         <ImageView
             android:id="@+id/iv_add"
-            android:layout_width="@dimen/dp_45"
-            android:layout_height="@dimen/dp_45"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:padding="@dimen/dp_10"
             android:src="@drawable/ic_add2" />
@@ -105,8 +105,8 @@
 
         <ImageView
             android:id="@+id/iv_name_clear"
-            android:layout_width="@dimen/dp_45"
-            android:layout_height="@dimen/dp_45"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:padding="@dimen/dp_8"
             android:src="@drawable/ic_close"

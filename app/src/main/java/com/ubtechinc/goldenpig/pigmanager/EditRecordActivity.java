@@ -82,8 +82,8 @@ public class EditRecordActivity extends BaseNewActivity implements Observer {
         public void handleMessage(android.os.Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
-                ToastUtils.showShortToast("请求超时，请重试");
                 if (mWeakReference.get() != null) {
+                    ToastUtils.showShortToast(mWeakReference.get().getString(R.string.timeout_error_toast));
                 }
             }
         }
@@ -283,7 +283,7 @@ public class EditRecordActivity extends BaseNewActivity implements Observer {
                 dealMsg(elem.getData());
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
-                ToastUtils.showShortToast("数据异常，请重试");
+                ToastUtils.showShortToast(getString(R.string.msg_error_toast));
             }
         }
     }

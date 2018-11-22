@@ -71,8 +71,8 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
         public void handleMessage(android.os.Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
-                ToastUtils.showShortToast("请求超时，请重试");
                 if (mWeakReference.get() != null) {
+                    ToastUtils.showShortToast(mWeakReference.get().getString(R.string.timeout_error_toast));
                     LoadingDialog.getInstance(mWeakReference.get()).dismiss();
                     if (mList.size() == 0) {
                         mStateView.showRetry();
@@ -102,7 +102,7 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
             public void onRetryClick() {
                 onRefresh();
 //                if (AuthLive.getInstance().getCurrentPig() == null) {
-//                    ToastUtils.showShortToast("请先绑定小猪");
+//                    ToastUtils.showShortToast("请先绑定八戒");
 //                    finish();
 //                } else if (!TextUtils.isEmpty(AuthLive.getInstance().getCurrentPig().getGuid())) {
 //                    onRefresh();
@@ -173,7 +173,7 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
 //            }
 //        });
 //        if (AuthLive.getInstance().getCurrentPig() == null) {
-//            ToastUtils.showShortToast("请先绑定小猪");
+//            ToastUtils.showShortToast("请先绑定八戒");
 //            finish();
 //        } else if (!TextUtils.isEmpty(AuthLive.getInstance().getCurrentPig().getGuid())) {
 //            onRefresh();

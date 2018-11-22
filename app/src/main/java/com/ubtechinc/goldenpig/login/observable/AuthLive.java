@@ -133,6 +133,8 @@ public class AuthLive extends LiveData<AuthLive> {
     }
 
     public void logout() {
+        Event<Integer> event = new Event<>(EventBusUtil.TVS_LOGOUT_SUCCESS);
+        EventBusUtil.sendEvent(event);
         this.state = AuthState.LOGOUTTED;
         if (isMainThread()) {
             setValue(this);

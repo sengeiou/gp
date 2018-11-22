@@ -77,9 +77,9 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
         public void handleMessage(android.os.Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
-                ToastUtils.showShortToast("请求超时，请重试");
                 if (mWeakReference.get() != null) {
                     //((AddressBookActivity) mWeakReference.get()).refreshLayout.finishRefresh(true);
+                    ToastUtils.showShortToast(mWeakReference.get().getString(R.string.timeout_error_toast));
                     ((AddressBookActivity) mWeakReference.get()).mStateView.showRetry();
                 }
             }
@@ -162,9 +162,9 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
                 Log.e("setOnUbtTIMConver", s);
                 LoadingDialog.getInstance(AddressBookActivity.this).dismiss();
                 if (AuthLive.getInstance().getCurrentPig() != null) {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("小猪未登录");
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("八戒未登录");
                 } else {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定小猪");
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定八戒");
                 }
             }
 
@@ -319,7 +319,7 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
                 dealMsg(elem.getData());
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
-                ToastUtils.showShortToast("数据异常，请重试");
+                ToastUtils.showShortToast(getString(R.string.msg_error_toast));
                 mStateView.showRetry();
                 //refreshLayout.finishRefresh(true);
             }

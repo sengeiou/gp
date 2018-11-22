@@ -2,12 +2,12 @@ package com.ubt.qrcodelib;
 
 public class Constants {
     /**
-     * 小猪配对扫码请求码
+     * 配对八戒扫码请求码
      */
     public static final int QR_PAIR_PIG_REQUEST=1001;
 
     /**
-     * 扫码配对小猪成功码
+     * 扫码配对八戒成功码
      */
     public static final int QR_PAIR_PIG_SUCCESS=1002;
 

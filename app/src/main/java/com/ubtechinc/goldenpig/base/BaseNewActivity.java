@@ -1,12 +1,15 @@
 package com.ubtechinc.goldenpig.base;
 
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.ubtechinc.goldenpig.app.ActivityManager;
+import com.ubtechinc.commlib.utils.StatusBarUtil;
+import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
@@ -31,6 +34,9 @@ public abstract class BaseNewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        StatusBarUtil.setStatusBarColor(this, ContextCompat.getColor(this, R.color.white));
+        StatusBarUtil.setStatusBarTextColor(this, false);
         getWindow().setBackgroundDrawable(null);   ///减少过度绘制
         if (getContentViewId() != 0) {
             setContentView(getContentViewId());

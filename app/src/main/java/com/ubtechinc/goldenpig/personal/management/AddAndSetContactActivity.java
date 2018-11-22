@@ -108,9 +108,9 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
             @Override
             public void onError(int i, String s) {
                 if (AuthLive.getInstance().getCurrentPig() != null) {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("小猪未登录");
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("八戒未登录");
                 } else {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定小猪");
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定八戒");
                 }
                 LoadingDialog.getInstance(AddAndSetContactActivity.this).dismiss();
             }
@@ -509,7 +509,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                 dealMsg(elem.getData());
             } catch (InvalidProtocolBufferException e) {
                 e.printStackTrace();
-                ToastUtils.showShortToast("数据异常，请重试");
+                ToastUtils.showShortToast(getString(R.string.msg_error_toast));
             }
         }
     }

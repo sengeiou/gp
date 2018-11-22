@@ -14,6 +14,7 @@ import com.tencent.ai.tvs.env.ELoginEnv;
 import com.tencent.ai.tvs.env.ELoginPlatform;
 import com.tencent.ai.tvs.info.DeviceManager;
 import com.tencent.ai.tvs.info.UserInfoManager;
+import com.ubtech.utilcode.utils.network.NetworkHelper;
 import com.ubtechinc.tvlloginlib.entity.LoginInfo;
 
 import java.util.ArrayList;
@@ -214,10 +215,14 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
                 break;
             case UNIACCESS_TYPE:
                 if (mTVSAlarmListener != null) {
-                    if (var2 != null) {
+                    if (var2 != null && var2.errMsg.contains("没有")) {
                         mTVSAlarmListener.onError(var2.errMsg);
+                    } else if (NetworkHelper.sharedHelper() == null) {
+                        mTVSAlarmListener.onError("当前网络异常，请检查网络设置");
+                    } else if (NetworkHelper.sharedHelper().isNetworkAvailable()) {
+                        mTVSAlarmListener.onError("当前数据异常，请稍后重试");
                     } else {
-                        mTVSAlarmListener.onError("网络异常请重试");
+                        mTVSAlarmListener.onError("当前网络异常，请检查网络设置");
                     }
                 }
                 break;

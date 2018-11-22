@@ -35,7 +35,7 @@ class UbtBluetoothScanManager {
     private BluetoothManager mBluetoothManager;
     private UbtBluetoothLeScanner mScanner;
     private BleScanListener mBleScanListener;
-    private String mBleNamePrefix;
+    //    private String mBleNamePrefix;
     private String mCurrentRobotSn;
     private volatile boolean mIsAutoConnect = false;
     private AutoConnectListener mAutoConnectListener;
@@ -97,35 +97,34 @@ class UbtBluetoothScanManager {
         mScanner.scanLeDevice(new ScanCallback() {
             @Override
             public void onScanResult(int callbackType, ScanResult result) {
+                Log.w("ble", "扫描结果_ScanResult:" + result);
                 BluetoothDevice btDevice = result.getDevice();
                 String deviceSn = btDevice.getName();
-                if (!TextUtils.isEmpty(deviceSn) && !TextUtils.isEmpty(mBleNamePrefix)) {
-                    if (deviceSn.startsWith(mBleNamePrefix)) {
-                        String[] snSegment = deviceSn.split("_");
-                        if (snSegment[1].length() <= 4) {
-                            return;
-                        }
+                if (!TextUtils.isEmpty(deviceSn)) {
+//                    String[] snSegment = deviceSn.split("_");
+//                    if (snSegment[1].length() <= 4) {
+//                        return;
+//                    }
 
-                        UbtBluetoothDevice connectDevice = new UbtBluetoothDevice();
-                        connectDevice.setDevice(btDevice);
-                        ScanRecord scanRecord = result.getScanRecord();
-                        boolean needEncrypt = false;
-                        if (scanRecord != null) {
-                            needEncrypt = BleUtil.needEncryption(scanRecord.getBytes());
-                        }
-                        connectDevice.setDeviceEncrp(needEncrypt);
-                        connectDevice.setRssi(result.getRssi());
-                        connectDevice.setSn(snSegment[1]);
+                    UbtBluetoothDevice connectDevice = new UbtBluetoothDevice();
+                    connectDevice.setDevice(btDevice);
+                    ScanRecord scanRecord = result.getScanRecord();
+                    boolean needEncrypt = false;
+                    if (scanRecord != null) {
+                        needEncrypt = BleUtil.needEncryption(scanRecord.getBytes());
+                    }
+                    connectDevice.setDeviceEncrp(needEncrypt);
+                    connectDevice.setRssi(result.getRssi());
+//                    connectDevice.setSn(snSegment[1]);
 
-                        if (mIsAutoConnect) {
-                            autoAutoConnect(connectDevice, result.getRssi());
-                        } else {
-                            mCacheDevices.put(connectDevice.getSn(), connectDevice);
-                        }
+                    if (mIsAutoConnect) {
+                        autoAutoConnect(connectDevice, result.getRssi());
+                    } else {
+                        mCacheDevices.put(connectDevice.getSn(), connectDevice);
+                    }
 
-                        if (mBleScanListener != null) {
-                            mBleScanListener.scanSuccess(connectDevice);
-                        }
+                    if (mBleScanListener != null) {
+                        mBleScanListener.scanSuccess(connectDevice);
                     }
                 }
             }
@@ -153,7 +152,7 @@ class UbtBluetoothScanManager {
      * 设置扫描到蓝牙名称的前缀（用于过滤扫描到的蓝牙）
      */
     void setBleNamePrefix(String bleNamePrefix) {
-        mBleNamePrefix = bleNamePrefix;
+//        mBleNamePrefix = bleNamePrefix;
     }
 
     void setScanResultLister(BleScanListener bleNetwortSetListener) {

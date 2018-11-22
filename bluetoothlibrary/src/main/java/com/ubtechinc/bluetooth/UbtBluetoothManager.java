@@ -198,6 +198,12 @@ public class UbtBluetoothManager {
         }
     }
 
+    synchronized public void stopScanBluetooth() {
+        if (btScanner.isScanning()) {
+            btScanner.stopScanDevices();
+        }
+    }
+
     /**
      * 连接蓝牙
      */

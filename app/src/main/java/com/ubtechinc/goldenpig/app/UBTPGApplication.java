@@ -41,20 +41,28 @@ import com.ubtechinc.goldenpig.login.LoginModel;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.login.repository.UBTAuthRepository;
 import com.ubtechinc.goldenpig.net.ResponseInterceptor;
+import com.ubtechinc.goldenpig.pigmanager.SetPigNetWorkActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.pigmanager.mypig.PairPigActivity;
+import com.ubtechinc.goldenpig.pigmanager.mypig.QRCodeActivity;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPairPigQRHttpProxy;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.push.PushAppInfo;
 import com.ubtechinc.goldenpig.push.PushHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.utils.AppUtil;
 import com.ubtechinc.goldenpig.utils.OSUtils;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.nets.HttpManager;
 import com.ubtechinc.nets.http.ThrowableWrapper;
+import com.ubtechinc.nets.utils.DeviceUtils;
 import com.ubtechinc.protocollibrary.communit.ProtoBufferDisposer;
+import com.ubtechinc.push.UbtPushModel;
 import com.ubtechinc.tvlloginlib.TVSManager;
+import com.ubtrobot.analytics.mobile.AnalyticsKit;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.ubtrobot.channelservice.proto.GPRelationshipContainer;
+import com.vise.utils.handler.CrashHandlerUtil;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -63,11 +71,13 @@ import org.json.JSONObject;
 
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.Executors;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.PUSH_MESSAGE_RECEIVED;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.PUSH_NOTIFICATION_RECEIVED;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SERVER_RESPONSE_UNAUTHORIZED;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.TVS_LOGIN_SUCCESS;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.TVS_LOGOUT_SUCCESS;
 
 /**
  * @author hqt
@@ -113,7 +123,14 @@ public class UBTPGApplication extends LoginApplication implements Observer {
     }
 
     private void initAppForMainProcess() {
-        CrashReport.initCrashReport(getApplicationContext(), "85c6f36db6", true);
+
+        //add crash
+        CrashHandlerUtil.getInstance().init(this, null, "BaJie_crash/");
+
+        //SCADA
+        initSCADA();
+        //bugly
+        CrashReport.initCrashReport(getApplicationContext(), "85c6f36db6", BuildConfig.DEBUG);
         MultiDex.install(this);
         com.ubtech.utilcode.utils.Utils.init(this);
         instance = this;
@@ -127,6 +144,12 @@ public class UBTPGApplication extends LoginApplication implements Observer {
         initTIMListener();
         HttpManager.interceptors.add(new ResponseInterceptor());
         initService();
+    }
+
+    private void initSCADA() {
+        AnalyticsKit.initialize(this, BuildConfig.APP_ID, BuildConfig.APP_KEY,
+                DeviceUtils.getDeviceId(this), Executors.newSingleThreadExecutor());
+        AnalyticsKit.setVersion(ContextUtils.getVerName(this));
     }
 
     private void initService() {
@@ -272,6 +295,8 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                 break;
             case TVS_LOGIN_SUCCESS:
                 String userId = AuthLive.getInstance().getUserId();
+                AnalyticsKit.setUserId(userId);
+                AnalyticsKit.setDeviceInfo(userId, AppUtil.getMetaDataFromApp(this, "UMENG_CHANNEL"));
                 PushAppInfo pushAppInfo = AuthLive.getInstance().getPushAppInfo();
                 String pushToken = pushAppInfo.getPushToken();
                 if (!TextUtils.isEmpty(userId) && !TextUtils.isEmpty(pushToken)/* && !pushAppInfo.isBindStatus()*/) {
@@ -283,8 +308,11 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                     pushHttpProxy.bindToken(appId, pushToken, userId, appVersion, BuildConfig.product, authorization, null);
                 }
                 break;
+            case TVS_LOGOUT_SUCCESS:
+                UbtTIMManager.getInstance().doTIMLogout();
+                break;
             case PUSH_NOTIFICATION_RECEIVED:
-                showNewManagerDialog();
+                showNewManagerDialog(((UbtPushModel) event.getData()).getContent());
                 break;
             case PUSH_MESSAGE_RECEIVED:
 
@@ -293,13 +321,13 @@ public class UBTPGApplication extends LoginApplication implements Observer {
     }
 
 
-    private void showNewManagerDialog() {
+    private void showNewManagerDialog(String content) {
         updatePigList();
         if (mTopActivity == null) return;
         UBTBaseDialog managerDialog = new UBTBaseDialog(mTopActivity);
         managerDialog.setCancelable(false);
         managerDialog.setCanceledOnTouchOutside(false);
-        managerDialog.setTips("您已被指定为管理员");
+        managerDialog.setTips(content);
         managerDialog.setLeftBtnShow(false);
         managerDialog.setRightButtonTxt("我知道了");
         managerDialog.setRightBtnColor(ContextCompat.getColor(this, R.color.ubt_tab_btn_txt_checked_color));
@@ -326,7 +354,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
         UBTBaseDialog unpairPigDialog = new UBTBaseDialog(mTopActivity);
         unpairPigDialog.setCancelable(false);
         unpairPigDialog.setCanceledOnTouchOutside(false);
-        unpairPigDialog.setTips("小猪配对已被对方解除");
+        unpairPigDialog.setTips("配对八戒已被对方解除");
         unpairPigDialog.setLeftBtnShow(false);
         unpairPigDialog.setRightButtonTxt("我知道了");
         unpairPigDialog.setRightBtnColor(ContextCompat.getColor(this, R.color.ubt_tab_btn_txt_checked_color));
@@ -339,11 +367,18 @@ public class UBTPGApplication extends LoginApplication implements Observer {
 
             @Override
             public void onRightButtonClick(View view) {
+                if (mTopActivity instanceof PairPigActivity) {
+                    mTopActivity.finish();
+                }
             }
 
         });
         if (!mTopActivity.isDestroyed() && !mTopActivity.isFinishing()) {
-            unpairPigDialog.show();
+            if (mTopActivity instanceof SetPigNetWorkActivity) {
+
+            } else {
+                unpairPigDialog.show();
+            }
         }
     }
 
@@ -468,6 +503,9 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                                 AuthLive.getInstance().setPairPig(pairPig);
                                 Event<Integer> event = new Event<>(EventBusUtil.PAIR_PIG_UPDATE);
                                 EventBusUtil.sendEvent(event);
+                                if (mTopActivity != null && mTopActivity instanceof QRCodeActivity) {
+                                    mTopActivity.finish();
+                                }
                             }
                         }
                     } catch (JSONException e) {

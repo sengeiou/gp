@@ -74,9 +74,9 @@ public class DeviceUpdateActivity extends BaseToolBarActivity implements Observe
                 Log.e("setOnUbtTIMConver", s);
                 LoadingDialog.getInstance(DeviceUpdateActivity.this).dismiss();
                 if (AuthLive.getInstance().getCurrentPig() != null) {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("小猪未登录");
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("八戒未登录");
                 } else {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定小猪");
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定八戒");
                 }
                 dismissLoadDialog();
             }
@@ -97,7 +97,7 @@ public class DeviceUpdateActivity extends BaseToolBarActivity implements Observe
                 dealMsg(elem.getData());
             } catch (InvalidProtocolBufferException e) {
                 Log.e("update", e.getMessage());
-                com.ubtech.utilcode.utils.ToastUtils.showShortToast("数据异常，请重试");
+                com.ubtech.utilcode.utils.ToastUtils.showShortToast(getString(R.string.msg_error_toast));
             }
         }
     }

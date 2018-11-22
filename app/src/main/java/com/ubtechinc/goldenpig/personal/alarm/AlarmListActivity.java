@@ -1,7 +1,6 @@
 package com.ubtechinc.goldenpig.personal.alarm;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -28,7 +27,6 @@ import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.StateView;
-import com.ubtechinc.goldenpig.voiceChat.util.TimeUtil;
 import com.ubtechinc.tvlloginlib.TVSManager;
 import com.yanzhenjie.recyclerview.swipe.SwipeItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
@@ -70,8 +68,8 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
         public void handleMessage(android.os.Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
-                ToastUtils.showShortToast("请求超时，请重试");
                 if (mWeakReference.get() != null) {
+                    ToastUtils.showShortToast(mWeakReference.get().getString(R.string.timeout_error_toast));
                     LoadingDialog.getInstance(mWeakReference.get()).dismiss();
                     if (mList.size() == 0) {
                         mStateView.showRetry();
@@ -102,7 +100,7 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
             public void onRetryClick() {
                 onRefresh();
 //                if (AuthLive.getInstance().getCurrentPig() == null) {
-//                    ToastUtils.showShortToast("请先绑定小猪");
+//                    ToastUtils.showShortToast("请先绑定八戒");
 //                    finish();
 //                } else if (!TextUtils.isEmpty(AuthLive.getInstance().getCurrentPig().getGuid())) {
 //                    onRefresh();
@@ -137,13 +135,13 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
         mList = new ArrayList<>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recycler.setCustomBackgroundSize(getResources().getDimensionPixelSize(R.dimen.dp_115));
+        recycler.setCustomBackgroundSize(getResources().getDimensionPixelSize(R.dimen.dp_64));
         recycler.setLayoutManager(linearLayoutManager);
         recycler.setHasFixedSize(true);
         Divider divider = new Divider(new ColorDrawable(getResources().getColor(R.color
                 .ubt_main_bg_color)),
                 OrientationHelper.VERTICAL);
-        divider.setHeight((int) getResources().getDimension(R.dimen.dp_11));
+        divider.setHeight((int) getResources().getDimension(R.dimen.dp_10));
         recycler.addItemDecoration(divider);
         recycler.setSwipeMenuCreator(swipeMenuCreator);
         recycler.setSwipeMenuItemClickListener(mMenuItemClickListener);
@@ -172,7 +170,7 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
 //            }
 //        });
 //        if (AuthLive.getInstance().getCurrentPig() == null) {
-//            ToastUtils.showShortToast("请先绑定小猪");
+//            ToastUtils.showShortToast("请先绑定八戒");
 //            finish();
 //        } else if (!TextUtils.isEmpty(AuthLive.getInstance().getCurrentPig().getGuid())) {
 //            onRefresh();

@@ -94,7 +94,7 @@ public abstract class BaseFragment extends Fragment {
     }
 
     /**
-     * 获取用户是否绑定小猪或小猪是否有联网
+     * 获取用户是否绑定八戒或八戒是否有联网
      */
     protected int getUsetPigState() {
 
