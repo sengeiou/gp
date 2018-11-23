@@ -45,7 +45,12 @@ public class UbtWifiListAdapter extends RecyclerView.Adapter<UbtWifiListAdapter.
     @Override
     public void onBindViewHolder(@NonNull WifiHoler holder, int position) {
         final ScanResult scanResult = mWifiList == null ? null : mWifiList.get(position);
-        if (scanResult != null) {
+
+//        if(scanResult.SSID.equals("")){
+//            Log.i("UbtWifiListAdapter", "SSID " +scanResult);
+//        }
+        if (scanResult != null&&!scanResult.SSID.equals("")) {
+//            Log.i("UbtWifiListAdapter name",scanResult.SSID+"position "+position);
             holder.mWifiTv.setText(scanResult.SSID);
             showWifiSingal(scanResult, holder);
             if (position==mWifiList.size()-1){
@@ -61,6 +66,9 @@ public class UbtWifiListAdapter extends RecyclerView.Adapter<UbtWifiListAdapter.
                     }
                 }
             });
+
+        }else {
+            Log.i("UbtWifiListAdapter",scanResult.SSID+"abortion position "+position);
 
         }
     }
