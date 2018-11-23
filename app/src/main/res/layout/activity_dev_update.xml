@@ -45,8 +45,9 @@
 
             <TextView
                 android:id="@+id/ubt_tv_version_msg"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_marginTop="@dimen/dp_20"
+                android:layout_gravity="center_horizontal"
                 android:textColor="@color/ubt_tab_btn_txt_color"
                 android:layout_marginStart="@dimen/ubt_login_btn_margin"
                 android:layout_marginEnd="@dimen/ubt_login_btn_margin"

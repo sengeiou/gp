@@ -1,6 +1,8 @@
 package com.ubtechinc.goldenpig.pigmanager.mypig;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -12,12 +14,12 @@ import com.tencent.TIMMessage;
 import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
+import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
-import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.ubtrobot.upgrade.VersionInformation;
 
@@ -58,6 +60,18 @@ public class DeviceUpdateActivity extends BaseToolBarActivity implements Observe
         mUpdateBtn = findViewById(R.id.ubt_btn_dev_update);
         mUpdateBtn.setOnClickListener(this);
 
+        Intent intent = getIntent();
+        if (intent != null) {
+            String latestVersion = intent.getStringExtra("latestVersion");
+            String updateMessage = intent.getStringExtra("updateMessage");
+            if (!TextUtils.isEmpty(latestVersion)) {
+                mVersionTv.setText(getString(R.string.ubt_latest_version_format, latestVersion));
+            }
+            if (!TextUtils.isEmpty(updateMessage)) {
+                mMsgTv.setText(updateMessage);
+            }
+        }
+
         initIM();
 
     }
@@ -74,9 +88,9 @@ public class DeviceUpdateActivity extends BaseToolBarActivity implements Observe
                 Log.e("setOnUbtTIMConver", s);
                 LoadingDialog.getInstance(DeviceUpdateActivity.this).dismiss();
                 if (AuthLive.getInstance().getCurrentPig() != null) {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("八戒未登录");
+//                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("八戒未登录");
                 } else {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定八戒");
+//                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定八戒");
                 }
                 dismissLoadDialog();
             }
@@ -110,10 +124,11 @@ public class DeviceUpdateActivity extends BaseToolBarActivity implements Observe
             final int result = msg.getPayload().unpack(VersionInformation.UpgradeInfo.class).getStatus();
             Log.e("dealMsg", "result:" + result);
             if (result == 5) {
-                UbtToastUtils.showCustomToast(this, getString(R.string.ubt_pig_update_failure));
+                ToastUtils.showShortToast(getString(R.string.ubt_pig_update_failure));
             } else {
-                UbtToastUtils.showCustomToast(this, getString(R.string.ubt_pig_updateing));
+                ToastUtils.showShortToast(getString(R.string.ubt_pig_updateing));
             }
+            finish();
         }
         dismissLoadDialog();
     }
@@ -126,8 +141,8 @@ public class DeviceUpdateActivity extends BaseToolBarActivity implements Observe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.ubt_btn_dev_update:
-                sendUpdate();
                 showLoadingDialog();
+                sendUpdate();
                 break;
             default:
         }

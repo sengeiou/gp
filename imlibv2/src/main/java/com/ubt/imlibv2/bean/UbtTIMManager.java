@@ -193,7 +193,11 @@ public class UbtTIMManager {
 
             @Override
             public void onUserSigExpired() {
-
+                Log.d("TIMManager", "TIM onUserSigExpired");
+                isLoginedTIM = false;
+                if (ubtIMCallBack != null) {
+                    ubtIMCallBack.onForceOffline();
+                }
             }
         });
         try {
@@ -371,7 +375,7 @@ public class UbtTIMManager {
                     TIMConversationType.C2C, pigAccount);
         }
         if (conversation.getType() == TIMConversationType.Invalid) {
-            ToastUtils.showShortToast("八戒不在线");
+//            ToastUtils.showShortToast("八戒不在线");
             return;
         }
         conversation.sendOnlineMessage(msg, new TIMValueCallBack<TIMMessage>() {
@@ -379,9 +383,13 @@ public class UbtTIMManager {
             @Override
             public void onError(int i, String s) {
                 UbtLogger.d("UbtTIMManager","1unRead message "+ UbtTIMManager.getInstance().unReadVoiceMailMessage());
-                onSendMsgHook(false);
-                if (onUbtTIMConverListener != null) {
-                    onUbtTIMConverListener.onError(i, s);
+                if (i == 6200) {
+                    ToastUtils.showShortToast("网络异常");
+                } else {
+                    onSendMsgHook(false);
+                    if (onUbtTIMConverListener != null) {
+                        onUbtTIMConverListener.onError(i, s);
+                    }
                 }
             }
 
@@ -407,7 +415,7 @@ public class UbtTIMManager {
             return;
         }
         if (conversation.getType() == TIMConversationType.Invalid) {
-            ToastUtils.showShortToast("八戒不在线");
+//            ToastUtils.showShortToast("八戒不在线");
             return;
         }
         conversation.sendOnlineMessage(msg, new TIMValueCallBack<TIMMessage>() {
