@@ -35,6 +35,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import static com.vise.utils.handler.HandlerUtil.runOnUiThread;
 
 /**
  * 聊天界面输入控件
@@ -52,6 +56,11 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
     private TextView voicePanel;
     private LinearLayout emoticonPanel;
     private final int REQUEST_CODE_ASK_PERMISSIONS = 100;
+    private Timer mVoiceRecordTimer;
+    private TimerTask mVoiceRecordTimeOutTask;
+    long mVoiceRecordingTimeout=60*1000;
+    boolean previous_task=false;
+    long   mtimeout=0;
 
 
     public ChatInput(Context context, AttributeSet attrs) {
@@ -89,12 +98,12 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
             public boolean onTouch(View v, MotionEvent event) {
                     float startY = 0;
                     float endY = 0;
-//                    float downX=0;
-//                    float downY=0;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-//                        downX=event.getX();
-//                        downY=event.getY();
+                        if(System.currentTimeMillis()-mtimeout<1000){
+                            Log.d(TAG, "down less 1s ");
+                            return true;
+                        }
                         startY = event.getY();
                         isHoldVoiceBtn = true;
                         updateVoiceView();
@@ -113,6 +122,10 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
                         updateVoiceView();
                         break;
                     case MotionEvent.ACTION_MOVE:
+                        if(System.currentTimeMillis()-mtimeout<1000){
+                            Log.d(TAG, "move less 1s ");
+                            return true;
+                        }
                         float moveY = event.getY();
                         int instance = (int) Math.abs((moveY - startY));
                         Log.d(TAG, "--action move--instance:" + instance);
@@ -200,10 +213,16 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
             voicePanel.setText(getResources().getString(R.string.chat_release_send));
             voicePanel.setBackground(getResources().getDrawable(R.drawable.btn_voice_pressed));
             chatView.startSendVoice();
+            if(!previous_task) {
+                startVoiceRecordingTask();
+                previous_task = true;
+            }
         } else {
+            previous_task=false;
             voicePanel.setText(getResources().getString(R.string.chat_press_talk));
             voicePanel.setBackground(getResources().getDrawable(R.drawable.btn_voice_normal));
             chatView.endSendVoice();
+            stopVoiceRecordingTask();
         }
     }
 
@@ -470,6 +489,35 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
 
     private boolean afterM(){
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M;
+    }
+
+
+    public void startVoiceRecordingTask() {
+        stopVoiceRecordingTask();
+        mVoiceRecordTimer = new Timer();
+        mVoiceRecordTimeOutTask = new TimerTask() {
+            @Override
+            public void run() {
+               runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        isHoldVoiceBtn = false;
+                        updateVoiceView();
+                        mtimeout=System.currentTimeMillis();
+                    }
+                });
+            }
+        };
+        mVoiceRecordTimer.schedule(mVoiceRecordTimeOutTask, mVoiceRecordingTimeout);
+    }
+
+    private void stopVoiceRecordingTask() {
+        if (mVoiceRecordTimeOutTask != null) {
+            mVoiceRecordTimeOutTask.cancel();
+            mVoiceRecordTimeOutTask = null;
+            mVoiceRecordTimer.purge();
+            mVoiceRecordTimer = null;
+        }
     }
 
 }

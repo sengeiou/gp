@@ -77,8 +77,6 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
     private TIMConversationType type;
     private ChannelInfo info = null;
     private String TAG="ChatActivity";
-    private Timer mVoiceRecordTimer;
-    private TimerTask mVoiceRecordTimeOutTask;
     long mVoiceRecordingTimeout=60*1000;
     private int HIDDEN_CANCEL=1000;
     public static void navToChat(Context context, String identify, TIMConversationType type, ChannelInfo info){
@@ -394,31 +392,7 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
 //        intent.setType("*/*");
 //        startActivityForResult(intent, FILE_CODE);
     }
-    public void startVoiceRecordingTask() {
-        stopVoiceRecordingTask();
-        mVoiceRecordTimer = new Timer();
-        mVoiceRecordTimeOutTask = new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        endSendVoice();
-                    }
-                });
-            }
-        };
-       mVoiceRecordTimer.schedule(mVoiceRecordTimeOutTask, mVoiceRecordingTimeout);
-    }
 
-    private void stopVoiceRecordingTask() {
-        if (mVoiceRecordTimeOutTask != null) {
-            mVoiceRecordTimeOutTask.cancel();
-            mVoiceRecordTimeOutTask = null;
-            mVoiceRecordTimer.purge();
-            mVoiceRecordTimer = null;
-        }
-    }
     /**
      * 开始发送语音消息
      */
@@ -429,8 +403,8 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
         voiceSendingView.showRecording();
         if(!recorder.isRecording()) {
             recorder.startRecording();
+           // startVoiceRecordingTask();
         }
-        startVoiceRecordingTask();
     }
 
     /**
@@ -441,7 +415,7 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
         if(!recorder.isRecording()){
             return;
         }
-        stopVoiceRecordingTask();
+      //  stopVoiceRecordingTask();
         voiceSendingView.release();
         voiceSendingView.setVisibility(View.GONE);
         recorder.stopRecording();
@@ -468,7 +442,7 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
         if(!recorder.isRecording()){
             return;
         }
-        stopVoiceRecordingTask();
+        //stopVoiceRecordingTask();
         mHandler.sendEmptyMessageDelayed(HIDDEN_CANCEL,100);
         recorder.stopRecording();
     }
