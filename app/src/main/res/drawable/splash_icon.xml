@@ -5,7 +5,7 @@
     <item android:top="@dimen/dp_150">
         <bitmap
             android:gravity="top|center_vertical"
-            android:src="@drawable/ic_pig_about" />
+            android:src="@drawable/img_start" />
     </item>
     <item android:bottom="@dimen/dp_15">
         <bitmap

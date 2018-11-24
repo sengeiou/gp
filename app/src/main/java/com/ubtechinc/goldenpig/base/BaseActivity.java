@@ -19,15 +19,16 @@ import butterknife.Unbinder;
 
 
 /**
- * @author     : HQT
- * @email      :qiangta.huang@ubtrobot.com
- * @describe   : 基础Activity
- * @time       :2018/8/17 17:58
- * @change     :
- * @changTime  :2018/8/17 17:58
+ * @author : HQT
+ * @email :qiangta.huang@ubtrobot.com
+ * @describe : 基础Activity
+ * @time :2018/8/17 17:58
+ * @change :
+ * @changTime :2018/8/17 17:58
  */
 public abstract class BaseActivity extends AppCompatActivity {
     Unbinder unbinder;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +44,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         }
         setContentView(getContentViewId());
-        unbinder=ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
     }
 
     @Override
@@ -67,20 +68,29 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onDestroy();
         ActivityManager am = ActivityManager.getInstance();
         am.clearRecord(this);
-        if (unbinder!=null){
+        if (unbinder != null) {
             unbinder.unbind();
         }
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        onBackCallBack();
         ActivityManager am = ActivityManager.getInstance();
         am.popActivity(this);
     }
+
+    protected void onBackCallBack() {
+        //TODO 后退回调
+    }
+
     public void showLoadingDialog() {
         LoadingDialog.getInstance(this).show();
     }
+
     protected abstract int getContentViewId();
+
     public void dismissLoadDialog() {
         LoadingDialog.dissMiss();
     }

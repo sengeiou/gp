@@ -252,20 +252,38 @@ public class StateView extends View {
     public View showRetry() {
         if (mRetryView == null) {
             mRetryView = inflate(mRetryResource);
-            mRetryView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mRetryClickListener != null) {
-                        showLoading();
-                        mRetryView.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                mRetryClickListener.onRetryClick();
-                            }
-                        }, 0);
+            try {
+                View view = mRetryView.findViewById(R.id.bt_retry);
+                view.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mRetryClickListener != null) {
+                            showLoading();
+                            mRetryView.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mRetryClickListener.onRetryClick();
+                                }
+                            }, 0);
+                        }
                     }
-                }
-            });
+                });
+            } catch (Exception e) {
+            }
+//            mRetryView.setOnClickListener(new OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    if (mRetryClickListener != null) {
+//                        showLoading();
+//                        mRetryView.postDelayed(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                mRetryClickListener.onRetryClick();
+//                            }
+//                        }, 0);
+//                    }
+//                }
+//            });
         }
         showView(mRetryView);
         return mRetryView;

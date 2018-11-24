@@ -1,5 +1,6 @@
 package com.ubtechinc.goldenpig.pigmanager.mypig;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
@@ -33,11 +34,13 @@ import com.ubtechinc.goldenpig.pigmanager.register.CheckUserRepository;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PigUtils;
+import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.ubtechinc.nets.http.ThrowableWrapper;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.ubtrobot.upgrade.VersionInformation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -61,7 +64,6 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
     TextView mSearialNoTv;
     private PigInfo mPig;
 
-    private boolean isNeedUpdate;
     private UnbindPigProxy.UnBindPigCallback unBindPigCallback;
 
     @Override
@@ -134,7 +136,7 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
                 Log.e("setOnUbtTIMConver", s);
                 LoadingDialog.getInstance(MyPigActivity.this).dismiss();
                 if (AuthLive.getInstance().getCurrentPig() != null) {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("八戒未登录");
+//                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("八戒未登录");
                 } else {
                     com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定八戒");
                 }
@@ -307,12 +309,14 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
                 @Override
                 public void onRightButtonClick(View view) {
                     if (needTransfer) {
-                        ActivityRoute.toAnotherActivity(MyPigActivity.this, TransferAdminActivity.class, false);
+                        //TODO 先转让管理员再退出群组
+                        ActivityRoute.toAnotherActivity(MyPigActivity.this, TransferAdminActivity.class,
+                                0x01, false);
                     } else {
                         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
                         if (pigInfo != null) {
                             UnbindPigProxy pigProxy = new UnbindPigProxy();
-                            final String serialNo = AuthLive.getInstance().getCurrentPig().getRobotName();
+                            final String serialNo = pigInfo.getRobotName();
                             final String userId = AuthLive.getInstance().getUserId();
                             final String token = CookieInterceptor.get().getToken();
                             pigProxy.unbindPig(serialNo, userId, token, BuildConfig.APP_ID, unBindPigCallback);
@@ -322,6 +326,25 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
             });
             dialog.show();
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case 0x01:
+                if (resultCode == RESULT_OK) {
+                    doExitGroup();
+                }
+                break;
+        }
+    }
+
+    private void doExitGroup() {
+        UnbindPigProxy pigProxy = new UnbindPigProxy();
+        final String serialNo = AuthLive.getInstance().getCurrentPig().getRobotName();
+
+        final String token = CookieInterceptor.get().getToken();
+        pigProxy.unbindPig(serialNo, AuthLive.getInstance().getUserId(), token, BuildConfig.APP_ID, unBindPigCallback);
     }
 
     private boolean isSingalOrMaster() {
@@ -340,15 +363,6 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
         } else {
             mPigVersionTv.setVisibility(View.GONE);
             mDevUpateBtn.setVisibility(View.GONE);
-        }
-    }
-
-    private void toDeviceUpdate() {
-        dismissLoadDialog();
-        if (isNeedUpdate) {
-            ActivityRoute.toAnotherActivity(this, DeviceUpdateActivity.class, false);
-        } else {
-            ActivityRoute.toAnotherActivity(this, PigLastVersionActivity.class, false);
         }
     }
 
@@ -381,8 +395,27 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
         } else if (action.equals(ContactsProtoBuilder.GET_VERSION_STATE_ACTION)) {
             VersionInformation.UpgradeInfo info = msg.getPayload().unpack(VersionInformation.UpgradeInfo.class);
             if (info != null) {
-                isNeedUpdate = info.getStatus() == 1;
-                toDeviceUpdate();
+                dismissLoadDialog();
+                int status = info.getStatus();
+                String updateMessage = info.getUpdateMessage();
+                String latestVersion = info.getLatestVersion();
+                switch (status) {
+                    case 1:
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put("latestVersion", latestVersion);
+                        map.put("updateMessage", updateMessage);
+                        ActivityRoute.toAnotherActivity(this, DeviceUpdateActivity.class, map, false);
+                        break;
+                    case 2:
+                        ActivityRoute.toAnotherActivity(this, PigLastVersionActivity.class, false);
+                        break;
+                    case 3:
+                        UbtToastUtils.showCustomToast(this, getString(R.string.ubt_ota_status_3));
+                        break;
+                    default:
+                        UbtToastUtils.showCustomToast(this, "异常错误，请重试");
+                        break;
+                }
             }
         }
     }

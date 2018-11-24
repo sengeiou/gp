@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
@@ -92,6 +93,12 @@ public class DeviceManageActivity extends BaseToolBarActivity implements View.On
             @Override
             public void onException(Exception e) {
                 Log.e("getPigList", e.getMessage());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtils.showShortToast("网络异常");
+                    }
+                });
             }
 
             @Override

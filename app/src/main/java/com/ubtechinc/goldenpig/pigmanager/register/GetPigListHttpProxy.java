@@ -42,7 +42,12 @@ public class GetPigListHttpProxy extends BaseHttpProxy {
             @Override
             public void onFailure(Call call, IOException e) {
                 if (listener != null) {
-                    listener.onException(e);
+                    try {
+                        listener.onException(e);
+                    } catch (Exception e1) {
+                        //TODO
+                    }
+
                 }
             }
 

@@ -34,7 +34,7 @@
     <dimen name="ubt_dialog_tips_txt_size">17sp</dimen>
     <dimen name="ubt_dialog_margin_horizontal">52dp</dimen>
     <dimen name="ubt_blue_tooth_list_maxheight">200dp</dimen>
-    <dimen name="ubt_pig_list_item_height">58dp</dimen>
+    <dimen name="ubt_pig_list_item_height">64dp</dimen>
     <dimen name="ubt_pig_list_item_txt_size">16sp</dimen>
 
     <!--设置WIFI界面-->
