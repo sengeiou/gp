@@ -58,7 +58,7 @@ public class PigListAdapter extends RecyclerView.Adapter<PigListAdapter.PigHolde
                         }
                         clickedPos = position;
                         holder.pigPressor.setVisibility(View.VISIBLE);
-
+                        holder.tvBind.setVisibility(View.GONE);
                     } else {
                         holder.pigPressor.setVisibility(View.INVISIBLE);
                     }
@@ -99,12 +99,14 @@ public class PigListAdapter extends RecyclerView.Adapter<PigListAdapter.PigHolde
         public TextView pigNameTv;
         public View pigPressor;
         public View pigDivider;
+        TextView tvBind;
 
         public PigHolder(View itemView) {
             super(itemView);
             pigPressor = itemView.findViewById(R.id.ubt_img_pig_connecting);
-            pigNameTv = (TextView) itemView.findViewById(R.id.ubt_tv_pig_name);
+            pigNameTv = itemView.findViewById(R.id.ubt_tv_pig_name);
             pigDivider = itemView.findViewById(R.id.ubt_pig_dialog_divider);
+            tvBind = itemView.findViewById(R.id.tv_bind);
         }
 
     }

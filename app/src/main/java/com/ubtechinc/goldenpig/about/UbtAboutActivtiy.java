@@ -1,6 +1,7 @@
 package com.ubtechinc.goldenpig.about;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -61,14 +62,16 @@ public class UbtAboutActivtiy extends BaseToolBarActivity {
                 click_times++;
                 if (click_times > debug_open) {
                     String text = "";
-                    if (BuildConfig.HOST.contains("apis.ubtrobot")) {
+                    if (BuildConfig.HOST.contains("apis.ubtrobot") || BuildConfig.HOST.contains("internal.ubtrobot")) {
                         text = "formal";
                     } else if (BuildConfig.HOST.contains("120.25.57.42")) {
                         text = "prerelease";
                     } else if (BuildConfig.HOST.contains("testjimu.ubtrobot")) {
                         text = "test";
                     }
-                    Toast.makeText(UBTPGApplication.getContext(), text, Toast.LENGTH_SHORT).show();
+                    if (!TextUtils.isEmpty(text)) {
+                        Toast.makeText(UBTPGApplication.getContext(), text, Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });

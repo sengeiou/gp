@@ -105,6 +105,9 @@ public class PigListDialog extends BaseDialog {
         BluetoothDevice device = ubtBleDevice.getDevice();
 
         Log.d("gold_ble", "ble_name:" + device.getName() + "==addr:" + device.getAddress());
+//        if (TextUtils.isEmpty(device.getName()) || (!device.getName().startsWith(Constants.ROBOT_TAG) && !device.getName().startsWith(Constants.ROBOT_BBMINI))) {
+//            return;
+//        }
         int rawIndex = isHasDevice(device);
         UbtBluetoothDevice ubtBluetoothDevice = new UbtBluetoothDevice();
         ubtBluetoothDevice.setDevice(device);
@@ -113,17 +116,17 @@ public class PigListDialog extends BaseDialog {
         float distance = getDistance(ubtBleDevice.getRssi());
         String name = device.getName();
         String tag = name.substring(0, name.indexOf("_") + 1) + name.substring(name.length() - 4, name.length());
-        Log.e("pigList", tag + "_ble_distance:" + distance);
+        Log.d("pigList", tag + "_ble_distance:" + distance);
         if (distance < 2.0) {
             scanLeDevice(false);
             mPigAdapter.getItemClickListener().onClick(rawIndex, ubtBluetoothDevice);
             return;
         }
         if (rawIndex >= 0) {
-            mLeList.remove(rawIndex);
-            mLeList.add(rawIndex, ubtBluetoothDevice);
-            mPigAdapter.updateList(mLeList);
-            mPigAdapter.notifyItemChanged(rawIndex);
+//            mLeList.remove(rawIndex);
+//            mLeList.add(rawIndex, ubtBluetoothDevice);
+//            mPigAdapter.updateList(mLeList);
+//            mPigAdapter.notifyItemChanged(rawIndex);
         } else {
             mLeList.add(ubtBluetoothDevice);
             mPigAdapter.updateList(mLeList);

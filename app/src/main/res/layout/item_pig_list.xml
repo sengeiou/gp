@@ -1,39 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:gravity="center_vertical"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/ubt_pig_list_item_height"
     android:background="@null"
-    android:layout_height="@dimen/ubt_pig_list_item_height">
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
 
     <TextView
         android:id="@+id/ubt_tv_pig_name"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ubt_pig_list_item_height"
         android:layout_centerVertical="true"
+        android:layout_marginBottom="@dimen/ubt_1px"
+        android:layout_toStartOf="@id/ubt_img_pig_connecting"
         android:background="@null"
+        android:gravity="center_vertical"
         android:lines="1"
         android:text="ffffffffff"
+        android:drawablePadding="@dimen/dp_10"
+        android:drawableStart="@drawable/ic_xiaozhutx"
         android:textColor="@color/ubt_tips_txt_color"
-        android:gravity="center_vertical"
-        android:textSize="@dimen/ubt_pig_list_item_txt_size"
-        android:layout_toStartOf="@id/ubt_img_pig_connecting"
-        android:layout_marginBottom="@dimen/ubt_1px"
-         />
+        android:textSize="@dimen/ubt_pig_list_item_txt_size" />
+
+    <TextView
+        android:id="@+id/tv_bind"
+        android:layout_width="@dimen/dp_57"
+        android:layout_height="@dimen/dp_23"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/shape_ubt_btn_bind"
+        android:gravity="center"
+        android:text="@string/ubt_bind"
+        android:textColor="#FF29AAFF"
+        android:textSize="@dimen/sp_12" />
 
     <ProgressBar
-        android:visibility="invisible"
         android:id="@+id/ubt_img_pig_connecting"
         android:layout_width="@dimen/ubt_24dp"
         android:layout_height="@dimen/ubt_24dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:indeterminateBehavior="repeat"
-        android:indeterminateDrawable="@drawable/anim_ubt_loading" />
+        android:indeterminateDrawable="@drawable/anim_ubt_loading"
+        android:visibility="invisible" />
+
     <View
         android:id="@+id/ubt_pig_dialog_divider"
         android:layout_width="match_parent"
+        android:layout_height="@dimen/ubt_1px"
         android:layout_alignParentBottom="true"
-        android:background="@color/ubt_wifi_list_divider"
-        android:layout_height="@dimen/ubt_1px"/>
+        android:background="@color/ubt_wifi_list_divider" />
 </RelativeLayout>

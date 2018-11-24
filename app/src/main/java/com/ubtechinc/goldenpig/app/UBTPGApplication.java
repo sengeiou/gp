@@ -214,7 +214,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
 
             @Override
             public void onForceOffline() {
-                showForceOfflineDialog();
+                showForceOfflineDialog("你的账号于其它设备上登录");
             }
         });
     }
@@ -232,7 +232,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
         }
     }
 
-    private void showForceOfflineDialog() {
+    private void showForceOfflineDialog(String tip) {
         if (mTopActivity == null) return;
         mForceOfflineDialog = new UBTBaseDialog(mTopActivity);
         mForceOfflineDialog.setCancelable(false);
@@ -291,7 +291,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
         int code = event.getCode();
         switch (code) {
             case SERVER_RESPONSE_UNAUTHORIZED:
-                showForceOfflineDialog();
+                showForceOfflineDialog("账号授权已过期，请重新登录");
                 break;
             case TVS_LOGIN_SUCCESS:
                 String userId = AuthLive.getInstance().getUserId();

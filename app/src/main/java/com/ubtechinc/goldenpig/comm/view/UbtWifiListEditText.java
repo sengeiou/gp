@@ -11,6 +11,7 @@ import android.provider.Settings;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageButton;
@@ -192,7 +193,17 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
         Set<ScanResult> set = new TreeSet<>((o1, o2) -> o1.SSID.compareTo(o2.SSID));
         set.addAll(results);
         mWifiList.addAll(set);
+        filter(mWifiList);
 
+        final int size = mWifiList.size();
+        for (int index = size - 1; index >= 0; index--) {
+            if (!TextUtils.isEmpty(mWifiList.get(index).SSID)) {
+                Log.i("UbtWifiListEdittext",mWifiList.get(index).SSID);
+            }else {
+
+                Log.i("UbtWifiListEdittext 12",mWifiList.get(index).SSID);
+            }
+        }
 //        mWifiList.add(results.get(0));
 //        for (int i = 1; i < results.size(); i++) {
 //            for (int j = 0; j < mWifiList.size(); j++) {
@@ -210,6 +221,15 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
         }
     }
 
+    private void filter (List<ScanResult> item) {
+        Iterator<ScanResult> iterable = item.iterator();
+        while (iterable.hasNext()) {
+            ScanResult message =  iterable.next();
+            if(message.SSID.equals("")){
+                iterable.remove();
+            }
+        }
+    }
     private void scanWifiInfo() {
         WifiManager wifiManager = (WifiManager) getContext().getApplicationContext().getSystemService(WIFI_SERVICE);
         wifiManager.startScan(); //启动扫描.
@@ -228,10 +248,10 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
         }
 //        final int size = scanResults.size();
 //        for (int index = size - 1; index >= 0; index--) {
-//            if (TextUtils.isEmpty(scanResults.get(index).SSID)) {
-//                scanResults.remove(scanResults.get(index));
+//            if (!TextUtils.isEmpty(scanResults.get(index).SSID)) {
+//                Log.i("UbtWifiListEdittext",scanResults.get(index).SSID);
 //            }
-//        }
+//       }
         if (scanResults == null || scanResults.isEmpty()) {
             LocationManager locManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
             if (!locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {

@@ -225,7 +225,7 @@ public class TransferAdminActivity extends BaseToolBarActivity implements View.O
         PushHttpProxy pushHttpProxy = new PushHttpProxy();
         Map map = new HashMap();
         map.put("app_category", 1);
-        pushHttpProxy.pushToken("", "你已成为新的八戒管理员", userId, map, 1);
+        pushHttpProxy.pushToken("", "您已被指定为管理员", userId, map, 1);
     }
 
     private void imSyncRelationShip() {

@@ -52,7 +52,7 @@ public abstract class BaseToolBarActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 if (!isInterceptBack()) {
-                    finish();//返回
+                    onBackPressed();//返回
                 } else {
                     onBackPressed();
                 }
