@@ -29,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.voiceChat.util.MediaUtil;
 import com.ubtechinc.goldenpig.voiceChat.viewfeatures.ChatView;
 
 import java.io.IOException;
@@ -213,6 +214,11 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
             voicePanel.setText(getResources().getString(R.string.chat_release_send));
             voicePanel.setBackground(getResources().getDrawable(R.drawable.btn_voice_pressed));
             chatView.startSendVoice();
+            try {
+                MediaUtil.getInstance().stop();
+            }catch(Exception e){
+                e.printStackTrace();
+            }
             if(!previous_task) {
                 startVoiceRecordingTask();
                 previous_task = true;
