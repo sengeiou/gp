@@ -168,6 +168,17 @@ public class EditRecordActivity extends BaseNewActivity implements Observer {
                         break;
                     }
                 }
+                for (int i = 0; i < mList.size(); i++) {
+                    if (!mList.get(i).select) {
+                        isSelectAll = false;
+                        iv_select_all.setImageResource(R.drawable.ic_noselect);
+                        break;
+                    }
+                    if (i == mList.size() - 1) {
+                        isSelectAll = true;
+                        iv_select_all.setImageResource(R.drawable.ic_select);
+                    }
+                }
             }
         });
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
@@ -211,7 +222,7 @@ public class EditRecordActivity extends BaseNewActivity implements Observer {
                 break;
             case R.id.tv_right:
                 for (int i = 0; i < mList.size(); i++) {
-                    mList.get(i).select=false;
+                    mList.get(i).select = false;
                 }
                 Event<List<RecordModel>> event = new Event<List<RecordModel>>(EventBusUtil.EDIT_RECORD_CALLBACK);
                 event.setData(mList);
@@ -240,7 +251,7 @@ public class EditRecordActivity extends BaseNewActivity implements Observer {
     @Override
     public void onBackPressed() {
         for (int i = 0; i < mList.size(); i++) {
-            mList.get(i).select=false;
+            mList.get(i).select = false;
         }
         Event<List<RecordModel>> event = new Event<List<RecordModel>>(EventBusUtil.EDIT_RECORD_CALLBACK);
         event.setData(mList);
@@ -378,7 +389,7 @@ public class EditRecordActivity extends BaseNewActivity implements Observer {
                         }
                     }
                 }
-                UbtLogger.d("EditRecordActivity","delete the list");
+                UbtLogger.d("EditRecordActivity", "delete the list");
                 UbtTIMManager.getInstance().deleteRecord(list);
                 LoadingDialog.getInstance(EditRecordActivity.this).setTimeout(TIMEOUT)
                         .setShowToast(true).show();
