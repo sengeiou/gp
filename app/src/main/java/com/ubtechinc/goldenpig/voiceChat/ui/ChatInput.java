@@ -29,6 +29,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.voiceChat.model.VoiceMessage;
 import com.ubtechinc.goldenpig.voiceChat.util.MediaUtil;
 import com.ubtechinc.goldenpig.voiceChat.viewfeatures.ChatView;
 
@@ -110,13 +111,16 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
                         updateVoiceView();
                         break;
                     case MotionEvent.ACTION_UP:
-                        Log.d(TAG, "--action up"+event.getY() );
                         int distance = (int) Math.abs(event.getY() - startY);
+                        Log.d(TAG, "--action up"+event.getY() +"distance : "+distance);
+
                         if (distance > 100) {
                             chatView.cancelSending();
-                        }
+                            cancelVoiceView();
+                        }else {
                             isHoldVoiceBtn = false;
                             updateVoiceView();
+                        }
                         break;
                     case MotionEvent.ACTION_CANCEL:
                         isHoldVoiceBtn = false;
@@ -214,8 +218,9 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
             voicePanel.setText(getResources().getString(R.string.chat_release_send));
             voicePanel.setBackground(getResources().getDrawable(R.drawable.btn_voice_pressed));
             chatView.startSendVoice();
+            //todo refactor
             try {
-                MediaUtil.getInstance().stop();
+                MediaUtil.getInstance().stopPlaying();
             }catch(Exception e){
                 e.printStackTrace();
             }
@@ -232,7 +237,13 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
         }
     }
 
+   private void cancelVoiceView(){
+       previous_task=false;
+       voicePanel.setText(getResources().getString(R.string.chat_press_talk));
+       voicePanel.setBackground(getResources().getDrawable(R.drawable.btn_voice_normal));
+       stopVoiceRecordingTask();
 
+   }
 
     /**
      * 关联聊天界面逻辑

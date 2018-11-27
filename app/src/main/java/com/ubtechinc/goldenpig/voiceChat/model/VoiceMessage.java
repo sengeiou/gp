@@ -116,7 +116,7 @@ public class VoiceMessage extends Message {
            linearLayout.setGravity(Gravity.CENTER);
            ImageView voiceIcon = new ImageView(UBTPGApplication.getContext());
            voiceIcon.setBackgroundResource(message.isSelf() ? R.drawable.right_voice : R.drawable.left_voice);
-           final AnimationDrawable frameAnimatio = (AnimationDrawable) voiceIcon.getBackground();
+        final AnimationDrawable frameAnimatio = (AnimationDrawable) voiceIcon.getBackground();
 
            TextView tv = new TextView(UBTPGApplication.getContext());
            tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
@@ -329,4 +329,8 @@ public class VoiceMessage extends Message {
     private static int getNumLength(int n){
         return String.valueOf(n).length();
     }
+
+
+
+
 }
