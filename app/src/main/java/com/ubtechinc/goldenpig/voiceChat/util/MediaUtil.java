@@ -111,6 +111,13 @@ public class MediaUtil {
             player.stop();
         }
     }
+    public void stopPlaying(){
+        if (player != null && player.isPlaying()){
+            player.stop();
+        }
+        eventListener.onStop();
+
+    }
 
     public long getDuration(String path){
         player = MediaPlayer.create(UBTPGApplication.getContext(), Uri.parse(path));

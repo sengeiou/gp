@@ -412,9 +412,9 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
      */
     @Override
     public void endSendVoice() {
-        if(!recorder.isRecording()){
-            return;
-        }
+//        if(!recorder.isRecording()){
+//            return;
+//        }
       //  stopVoiceRecordingTask();
         voiceSendingView.release();
         voiceSendingView.setVisibility(View.GONE);
@@ -439,9 +439,9 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
 
     @Override
     public void cancelSending() {
-        if(!recorder.isRecording()){
-            return;
-        }
+//        if(!recorder.isRecording()){
+//            return;
+//        }
         //stopVoiceRecordingTask();
         mHandler.sendEmptyMessageDelayed(HIDDEN_CANCEL,100);
         recorder.stopRecording();
