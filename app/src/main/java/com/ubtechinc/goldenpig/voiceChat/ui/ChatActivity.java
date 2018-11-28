@@ -66,7 +66,6 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
     private ListView listView;
     private ChatPresenter presenter;
     private ChatInput input;
-    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
     private static final int IMAGE_STORE = 200;
     private static final int FILE_CODE = 300;
     private static final int IMAGE_PREVIEW = 400;
@@ -102,17 +101,8 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
             identify=pigInfo.getRobotName();
             UbtLogger.d("ChatActivity", "Pig identity  "+identify +"me identity "+UbtTIMManager.userId);
         } else {
-           // identify="2cb9b9a3";
-           // identify="8989898989880000";
-           //  identify="89898989898800000";
-           // identify="990011998000581";
-          //  identify="889834038000566";
-            //identify="809722";
-            //INSTALL XIAOMI MACHINE
-            //identify="813312";
-            //INSTALL SAMSUNG MACHINE
-           identify="776322";
-            Log.d("ChatActivity", "test identity  "+identify);
+            identify="776322";
+           Log.d("ChatActivity", "test identity  "+identify);
         }
        // type = (TIMConversationType) getIntent().getSerializableExtra("type");
         type=TIMConversationType.C2C;

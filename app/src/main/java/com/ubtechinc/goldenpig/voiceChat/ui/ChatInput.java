@@ -111,6 +111,10 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
                         updateVoiceView();
                         break;
                     case MotionEvent.ACTION_UP:
+                        if(System.currentTimeMillis()-mtimeout<1000){
+                            Log.d(TAG, "down less 1s ");
+                            return true;
+                        }
                         int distance = (int) Math.abs(event.getY() - startY);
                         Log.d(TAG, "--action up"+event.getY() +"distance : "+distance);
 
