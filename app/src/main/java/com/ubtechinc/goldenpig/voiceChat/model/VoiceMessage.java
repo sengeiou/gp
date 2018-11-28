@@ -249,6 +249,7 @@ public class VoiceMessage extends Message {
             elem.getSound(new TIMValueCallBack<byte[]>() {
                 @Override
                 public void onError(int i, String s) {
+                    LogUtils.d(TAG,"ERROR "+s);
                 }
                 @Override
                 public void onSuccess(byte[] bytes) {

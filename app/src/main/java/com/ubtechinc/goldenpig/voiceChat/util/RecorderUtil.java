@@ -27,8 +27,8 @@ public class RecorderUtil {
     /**
      * 开始录音
      */
-    public void startRecording() {
-        if (mFileName == null) return;
+    public boolean startRecording() {
+        if (mFileName == null) return false;
         if (isRecording){
             mRecorder.release();
             mRecorder = null;
@@ -43,9 +43,13 @@ public class RecorderUtil {
             mRecorder.prepare();
             mRecorder.start();
             isRecording = true;
+            startTime = System.currentTimeMillis();
         } catch (Exception e){
             Log.e(TAG, "prepare() failed");
+            return false;
         }
+        return true;
+
 
     }
 
@@ -53,8 +57,8 @@ public class RecorderUtil {
     /**
      * 停止录音
      */
-    public void stopRecording() {
-        if (mFileName == null) return;
+    public boolean stopRecording() {
+        if (mFileName == null) return false;
         timeInterval = System.currentTimeMillis() - startTime;
         try{
             if (timeInterval>1000){
@@ -65,8 +69,9 @@ public class RecorderUtil {
             isRecording =false;
         }catch (Exception e){
             Log.e(TAG, "release() failed");
+            return false;
         }
-
+            return true;
     }
 
 

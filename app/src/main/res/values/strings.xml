@@ -158,6 +158,7 @@
     <string name="chat_content_bad">内容含有敏感词</string>
     <string name="chat_audio_too_short">录音过短，请重试</string>
     <string name="chat_audio_too_long">录音过长，已经发送</string>
+    <string name="chat_audio_permission">没有录音权限，请授予权限</string>
     <!-- voice recording-->
     <string name="ubt_unpair">解除配对</string>
     <string name="ubt_confirm_unpair">确认解除配对？</string>
