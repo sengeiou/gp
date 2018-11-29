@@ -186,6 +186,8 @@
         <activity android:name=".about.ServicePolicyActivity"/>
         <activity android:name=".main.SkillDetailActivity" />
         <activity android:name=".main.QQMusicWebActivity" />
+        <activity android:name=".about.EggShellActivtiy"
+            android:launchMode="singleTop"/>
 
         <service android:name=".app.StartUpService" />
     </application>

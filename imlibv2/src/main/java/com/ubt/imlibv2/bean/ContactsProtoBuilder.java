@@ -6,6 +6,7 @@ import com.tencent.TIMMessage;
 import com.ubt.improtolib.UserContacts;
 import com.ubt.improtolib.UserRecords;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
+import com.ubtrobot.channelservice.proto.GPADBSettingContainer;
 import com.ubtrobot.channelservice.proto.GPRelationshipContainer;
 import com.ubtrobot.tvs.proto.ClientIdUpdateContainer;
 
@@ -29,6 +30,8 @@ public class ContactsProtoBuilder {
     public static final String IM_RELATIONSHIP_CHANGED = "/im/relationShip/changed";
 
     public static final String IM_ACCOUNT_CLIENTID = "/im/account/clientid";
+
+    public static final String IM_SETTINGS_ABD = "/im/settings/adb";
 
     public static byte[] getAddContactsInfo(String name, String number) {
 
@@ -213,6 +216,19 @@ public class ContactsProtoBuilder {
         ClientIdUpdateContainer.ClientIdUpdate.Builder builder = ClientIdUpdateContainer.ClientIdUpdate.newBuilder();
         builder.setClientId(clientId);
         ClientIdUpdateContainer.ClientIdUpdate message = builder.build();
+        ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer.ChannelMessage.newBuilder()
+                .setHeader(header)
+                .setPayload(Any.pack(message))
+                .build();
+        return channelMessage.toByteArray();
+    }
+
+    public static byte[] adbOperate(boolean open) {
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction(IM_SETTINGS_ABD)
+                .setTime(System.currentTimeMillis()).build();
+        GPADBSettingContainer.ADBSetting.Builder builder = GPADBSettingContainer.ADBSetting.newBuilder();
+        builder.setStatus(open);
+        GPADBSettingContainer.ADBSetting message = builder.build();
         ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer.ChannelMessage.newBuilder()
                 .setHeader(header)
                 .setPayload(Any.pack(message))

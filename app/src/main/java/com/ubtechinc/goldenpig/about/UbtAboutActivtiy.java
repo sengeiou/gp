@@ -1,6 +1,7 @@
 package com.ubtechinc.goldenpig.about;
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +21,10 @@ public class UbtAboutActivtiy extends BaseToolBarActivity {
     Button mPrivacyBtn;
     int debug_open = 5;
     int click_times = 0;
+
+    private long lastClickTime = 0;
+
+    private int frequencyCount = 0;
 
     @Override
     protected int getConentView() {
@@ -72,6 +77,38 @@ public class UbtAboutActivtiy extends BaseToolBarActivity {
                     if (!TextUtils.isEmpty(text)) {
                         Toast.makeText(UBTPGApplication.getContext(), text, Toast.LENGTH_SHORT).show();
                     }
+                }
+            }
+        });
+
+        findViewById(R.id.iv_ubt_logo).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                long time = SystemClock.elapsedRealtime();
+                if (lastClickTime == 0) {
+                    lastClickTime = time;
+                }
+                if (time - lastClickTime <= 500) {
+                    frequencyCount++;
+                    lastClickTime = time;
+                } else {
+                    if (frequencyCount > 3) {
+                        Toast.makeText(UBTPGApplication.getContext(), "累了吧，要重新来噢", Toast.LENGTH_SHORT).show();
+                    }
+                    frequencyCount = 0;
+                    lastClickTime = 0;
+                }
+//                if (frequencyCount == 10) {
+//                    Toast.makeText(UBTPGApplication.getContext(), "加油，不要停", Toast.LENGTH_SHORT).show();
+//                }
+//                if (frequencyCount == 20) {
+//                    Toast.makeText(UBTPGApplication.getContext(), "快到了，继续", Toast.LENGTH_SHORT).show();
+//                }
+                if (frequencyCount >= 6) {
+                    frequencyCount = 0;
+                    lastClickTime = 0;
+//                    Toast.makeText(UBTPGApplication.getContext(), "厉害，这都被你发现了", Toast.LENGTH_SHORT).show();
+                    ActivityRoute.toAnotherActivity(UbtAboutActivtiy.this, EggShellActivtiy.class, false);
                 }
             }
         });

@@ -510,6 +510,7 @@ public class PigFragment extends BaseFragment implements Observer {
                 SPUtils.get().put(SP_HAS_LOOK_LAST_RECORD, 0);
                 break;
             case USER_PIG_UPDATE:
+                showTips();
                 updateUserPig();
                 break;
             case PAIR_PIG_UPDATE:
