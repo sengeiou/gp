@@ -80,9 +80,9 @@ public class AuthLive extends LiveData<AuthLive> {
     }
 
     public void logined(UserInfo userInfo) {
+        currentUser = userInfo;
         Event<Integer> event = new Event<>(EventBusUtil.TVS_LOGIN_SUCCESS);
         EventBusUtil.sendEvent(event);
-        currentUser = userInfo;
         this.state = AuthState.TVSLOGINED;
         if (isMainThread()) {
             setValue(this);

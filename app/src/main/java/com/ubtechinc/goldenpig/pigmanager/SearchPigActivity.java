@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -32,12 +33,16 @@ import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.net.RegisterRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.bean.BundingListenerAbster;
 import com.ubtechinc.goldenpig.pigmanager.bluetooth.BlueToothManager;
+import com.ubtechinc.goldenpig.pigmanager.mypig.PairQRScannerActivity;
+import com.ubtechinc.goldenpig.pigmanager.mypig.QRCodeActivity;
 import com.ubtechinc.goldenpig.pigmanager.widget.OnPigListItemClickListener;
 import com.ubtechinc.goldenpig.pigmanager.widget.PigListDialog;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
+import com.yanzhenjie.permission.PermissionListener;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -283,35 +288,27 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
 
     private void startSearchPig() {
         if (Build.VERSION_CODES.M <= Build.VERSION.SDK_INT) {
-            if (AndPermission.hasPermission(SearchPigActivity.this, Permission.LOCATION)) {
-                showPigListDialog();
-            } else {
-                if (null == mLocationRequest) {
-                    mLocationRequest = new PermissionLocationRequest(SearchPigActivity.this);
-                }
-                mLocationRequest.request(new PermissionLocationRequest.PermissionLocationCallback() {
-                    @Override
-                    public void onSuccessful() {
-                        showPigListDialog();
-                    }
+            AndPermission.with(this)
+                    .requestCode(0x1102)
+                    .permission(Permission.LOCATION)
+                    .callback(new PermissionListener() {
+                        @Override
+                        public void onSucceed(int requestCode, @NonNull List<String> grantPermissions) {
+                            showPigListDialog();
+                        }
 
-                    @Override
-                    public void onFailure() {
-
-                    }
-
-                    @Override
-                    public void onRationSetting() {
-
-                    }
-                });
-            }
+                        @Override
+                        public void onFailed(int requestCode, @NonNull List<String> deniedPermissions) {
+                            showPermissionDialog(Permission.LOCATION);
+                        }
+                    })
+                    .rationale((requestCode, rationale) -> rationale.resume())
+                    .start();
         } else {
             showPigListDialog();
         }
     }
 
-    private boolean isClicked;
 
     private void showPigListDialog() {
         if (isSearched) {
@@ -328,9 +325,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         pigListDialog.setBluetoothItemClickListener(new OnPigListItemClickListener() {
             @Override
             public void onClick(int pos, UbtBluetoothDevice device) {
-                isClicked = true;
                 connectBleDevice(device);
-//                startTimer();
             }
         });
         pigListDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {

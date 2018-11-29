@@ -2,17 +2,23 @@ package com.ubtechinc.goldenpig.base;
 
 
 import android.content.pm.ActivityInfo;
+import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.WindowManager;
 
 import com.ubtechinc.commlib.utils.StatusBarUtil;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.ActivityManager;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
+import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
+import com.ubtechinc.goldenpig.utils.PermissionPageUtils;
 import com.umeng.analytics.MobclickAgent;
+import com.yanzhenjie.permission.Permission;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -27,7 +33,10 @@ import butterknife.Unbinder;
  * @changTime :2018/8/17 17:58
  */
 public abstract class BaseActivity extends AppCompatActivity {
+
     Unbinder unbinder;
+
+    private UBTSubTitleDialog dialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -94,4 +103,64 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void dismissLoadDialog() {
         LoadingDialog.dissMiss();
     }
+
+    protected void showPermissionDialog(String[] permission) {
+        String subTip = "";
+        if (permission == Permission.LOCATION) {
+            subTip = "使用该功能需要定位权限，请前往系统设置开启权限";
+        } else if (permission == Permission.CAMERA) {
+            subTip = "使用该功能需要拍照权限，请前往系统设置开启权限";
+        }
+        if (dialog == null) {
+            dialog = new UBTSubTitleDialog(this);
+            dialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
+            dialog.setTips("权限申请");
+            dialog.setLeftButtonTxt(getString(R.string.ubt_cancel));
+            dialog.setRightButtonTxt(getString(R.string.go_setting));
+            dialog.setSubTips(subTip);
+            dialog.setOnUbtDialogClickLinsenter(new UBTSubTitleDialog.OnUbtDialogClickLinsenter() {
+                @Override
+                public void onLeftButtonClick(View view) {
+                    //TODO
+                }
+
+                @Override
+                public void onRightButtonClick(View view) {
+                    gotoSetting();
+                }
+            });
+            dialog.show();
+        }
+        if (dialog != null && !dialog.isShowing() && !isFinishing() && !isDestroyed()) {
+            dialog.show();
+        }
+    }
+
+    private void gotoSetting() {
+        //TODO 去应用管理设置权限页
+        PermissionPageUtils.getInstance(this).jumpPermissionPage();
+    }
+
+    protected boolean cameraIsCanUse() {
+        boolean isCanUse = true;
+        Camera mCamera = null;
+        try {
+            mCamera = Camera.open();
+            Camera.Parameters mParameters = mCamera.getParameters(); //针对魅族手机
+            mCamera.setParameters(mParameters);
+        } catch (Exception e) {
+            isCanUse = false;
+        }
+
+        if (mCamera != null) {
+            try {
+                mCamera.release();
+            } catch (Exception e) {
+                e.printStackTrace();
+                return isCanUse;
+            }
+        }
+        return isCanUse;
+    }
+
 }

@@ -205,5 +205,6 @@
     <string name="ubt_latest_version_format">最新版本:%1$s</string>
     <string name="ubt_ota_status_3">系统正处于升级状态，升级包会在连接无线网络时自动下载安装</string>
 
+    <string name="go_setting">去设置</string>
 
 </resources>

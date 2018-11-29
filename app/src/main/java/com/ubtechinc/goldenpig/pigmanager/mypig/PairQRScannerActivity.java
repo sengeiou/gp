@@ -27,6 +27,7 @@ import java.util.HashMap;
  * @author ubt
  */
 public class PairQRScannerActivity extends QRScannerActivity {
+
     @Override
     protected String getQrTitle() {
         return getString(R.string.ubt_scann_qr);
@@ -132,4 +133,5 @@ public class PairQRScannerActivity extends QRScannerActivity {
         TIMMessage pairUserMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(2));
         UbtTIMManager.getInstance().sendTIM(pairUserMessage, pairUserConversation);
     }
+
 }

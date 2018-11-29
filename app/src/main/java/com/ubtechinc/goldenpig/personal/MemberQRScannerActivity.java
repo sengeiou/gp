@@ -10,6 +10,7 @@ import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.pigmanager.register.AddMemberHttpProxy;
 
 public class MemberQRScannerActivity extends QRScannerActivity {
+
     @Override
     protected String getQrTitle() {
         return getString(R.string.ubt_scann_qr_join_group);
@@ -52,4 +53,5 @@ public class MemberQRScannerActivity extends QRScannerActivity {
                     }
                 });
     }
+
 }

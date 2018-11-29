@@ -1,7 +1,9 @@
 package com.ubtechinc.goldenpig.pigmanager.mypig;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -14,11 +16,18 @@ import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
+import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
+import com.ubtechinc.goldenpig.personal.MemberQRScannerActivity;
 import com.ubtechinc.goldenpig.pigmanager.register.GetAddMemberQRHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Permission;
+import com.yanzhenjie.permission.PermissionListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 /**
  * @auther :hqt
@@ -34,6 +43,8 @@ public class QRCodeActivity extends BaseToolBarActivity implements View.OnClickL
     private long mQRClickTime;
     private boolean isPair; //用于区分两种配对八戒和添加成员功能，显示不同文字或导航栏按钮
     private String singa;
+
+    private UBTSubTitleDialog dialog;
 
     @Override
     protected int getConentView() {
@@ -165,16 +176,44 @@ public class QRCodeActivity extends BaseToolBarActivity implements View.OnClickL
                 break;
             case R.id.ubt_imgbtn_add:
                 if (isPair) {
-                    ActivityRoute.toAnotherActivity(this, PairQRScannerActivity.class, Constants.QR_PAIR_PIG_REQUEST, false);
+                    goToPairQRScannerActivity();
                 }
                 break;
                 default:
         }
-
     }
 
     private void doPairPig(String sign) {
 
     }
+
+    private void goToPairQRScannerActivity() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            AndPermission.with(this)
+                    .requestCode(0x1101)
+                    .permission(Permission.CAMERA)
+                    .callback(new PermissionListener() {
+                        @Override
+                        public void onSucceed(int requestCode, @NonNull List<String> grantPermissions) {
+                            ActivityRoute.toAnotherActivity(QRCodeActivity.this, PairQRScannerActivity.class, Constants.QR_PAIR_PIG_REQUEST, false);
+                        }
+
+                        @Override
+                        public void onFailed(int requestCode, @NonNull List<String> deniedPermissions) {
+                            showPermissionDialog(Permission.CAMERA);
+                        }
+                    })
+                    .rationale((requestCode, rationale) -> rationale.resume())
+                    .start();
+
+        } else {
+            if (cameraIsCanUse()) {
+                ActivityRoute.toAnotherActivity(QRCodeActivity.this, MemberQRScannerActivity.class, Constants.QR_PAIR_PIG_REQUEST, false);
+            } else {
+                showPermissionDialog(Permission.CAMERA);
+            }
+        }
+    }
+
 
 }
