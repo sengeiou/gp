@@ -172,6 +172,8 @@
     <string name="chat_content_bad">内容含有敏感词</string>
     <string name="chat_audio_too_short">录音过短，请重试</string>
     <string name="chat_audio_too_long">录音过长，已经发送</string>
+    <string name="chat_audio_permission">没有录音权限，请授予权限</string>
+
     <!-- voice recording-->
     <string name="logout_tip">确定退出吗？</string>
     <string name="pair_pig">配对八戒</string>
@@ -203,4 +205,6 @@
 
     <string name="ubt_latest_version_format">最新版本:%1$s</string>
     <string name="ubt_ota_status_3">系统正处于升级状态，升级包会在连接无线网络时自动下载安装</string>
+
+    <string name="go_setting">去设置</string>
 </resources>

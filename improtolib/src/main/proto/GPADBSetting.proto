@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+option java_package="com.ubtrobot.channelservice.proto";
+option java_outer_classname="GPADBSettingContainer";
+
+//解除绑定
+message ADBSetting{
+    bool status = 1; //true-打开adb false-关闭adb
+}

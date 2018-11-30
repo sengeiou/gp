@@ -1,17 +1,21 @@
 package com.ubtechinc.goldenpig.personal;
 
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.ubt.qrcodelib.Constants;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
+import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
@@ -25,11 +29,15 @@ import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.nets.http.ThrowableWrapper;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Permission;
+import com.yanzhenjie.permission.PermissionListener;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
+import java.util.List;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
 
@@ -48,6 +56,8 @@ public class DeviceManageActivity extends BaseToolBarActivity implements View.On
     View rlAddressbook;
 
     private PigInfo mPig;
+
+    private UBTSubTitleDialog dialog;
 
     @Override
     protected int getConentView() {
@@ -175,8 +185,7 @@ public class DeviceManageActivity extends BaseToolBarActivity implements View.On
                 break;
             case R.id.rl_member_group:
                 if (AuthLive.getInstance().getCurrentPig() == null) {
-
-                    ActivityRoute.toAnotherActivity(this, MemberQRScannerActivity.class, false);
+                    goToMemberQRScannerActivity();
                 } else {
                     ActivityRoute.toAnotherActivity(this, PigMemberActivity.class, false);
                 }
@@ -186,6 +195,34 @@ public class DeviceManageActivity extends BaseToolBarActivity implements View.On
                         .class, false);
                 break;
             default:
+        }
+    }
+
+    private void goToMemberQRScannerActivity() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            AndPermission.with(this)
+                    .requestCode(0x1101)
+                    .permission(Permission.CAMERA)
+                    .callback(new PermissionListener() {
+                        @Override
+                        public void onSucceed(int requestCode, @NonNull List<String> grantPermissions) {
+                            ActivityRoute.toAnotherActivity(DeviceManageActivity.this, MemberQRScannerActivity.class, Constants.QR_PAIR_PIG_REQUEST, false);
+                        }
+
+                        @Override
+                        public void onFailed(int requestCode, @NonNull List<String> deniedPermissions) {
+                            showPermissionDialog(Permission.CAMERA);
+                        }
+                    })
+                    .rationale((requestCode, rationale) -> rationale.resume())
+                    .start();
+
+        } else {
+            if (cameraIsCanUse()) {
+                ActivityRoute.toAnotherActivity(DeviceManageActivity.this, MemberQRScannerActivity.class, Constants.QR_PAIR_PIG_REQUEST, false);
+            } else {
+                showPermissionDialog(Permission.CAMERA);
+            }
         }
     }
 
@@ -199,5 +236,6 @@ public class DeviceManageActivity extends BaseToolBarActivity implements View.On
                 break;
         }
     }
+
 
 }

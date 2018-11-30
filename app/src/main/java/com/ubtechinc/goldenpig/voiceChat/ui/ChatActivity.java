@@ -2,6 +2,7 @@ package com.ubtechinc.goldenpig.voiceChat.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -66,7 +67,6 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
     private ListView listView;
     private ChatPresenter presenter;
     private ChatInput input;
-    private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
     private static final int IMAGE_STORE = 200;
     private static final int FILE_CODE = 300;
     private static final int IMAGE_PREVIEW = 400;
@@ -102,17 +102,8 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
             identify=pigInfo.getRobotName();
             UbtLogger.d("ChatActivity", "Pig identity  "+identify +"me identity "+UbtTIMManager.userId);
         } else {
-           // identify="2cb9b9a3";
-           // identify="8989898989880000";
-           //  identify="89898989898800000";
-           // identify="990011998000581";
-          //  identify="889834038000566";
-            //identify="809722";
-            //INSTALL XIAOMI MACHINE
-            //identify="813312";
-            //INSTALL SAMSUNG MACHINE
-           identify="776322";
-            Log.d("ChatActivity", "test identity  "+identify);
+            identify="776322";
+           Log.d("ChatActivity", "test identity  "+identify);
         }
        // type = (TIMConversationType) getIntent().getSerializableExtra("type");
         type=TIMConversationType.C2C;
@@ -398,12 +389,23 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
      */
     @Override
     public void startSendVoice() {
-        voiceSendingView.setVisibility(View.VISIBLE);
-        voiceCancelView.setVisibility(View.GONE);
-        voiceSendingView.showRecording();
-        if(!recorder.isRecording()) {
-            recorder.startRecording();
-           // startVoiceRecordingTask();
+        try {
+            if (!recorder.isRecording()) {
+                boolean status=recorder.startRecording();
+                if(status){
+                    voiceSendingView.setVisibility(View.VISIBLE);
+                    voiceCancelView.setVisibility(View.GONE);
+                    voiceSendingView.showRecording();
+                }else {
+                    Toast.makeText(this, getResources().getString(R.string.chat_audio_permission), Toast.LENGTH_SHORT).show();
+                }
+            }else {
+                voiceSendingView.setVisibility(View.VISIBLE);
+                voiceCancelView.setVisibility(View.GONE);
+                voiceSendingView.showRecording();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
 
@@ -412,13 +414,13 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
      */
     @Override
     public void endSendVoice() {
-//        if(!recorder.isRecording()){
-//            return;
-//        }
-      //  stopVoiceRecordingTask();
         voiceSendingView.release();
+        voiceCancelView.setVisibility(View.GONE);
         voiceSendingView.setVisibility(View.GONE);
-        recorder.stopRecording();
+        boolean status=recorder.stopRecording();
+        if(!status){
+            return;
+        }
         if (recorder.getTimeInterval() < 1) {
             Toast.makeText(this, getResources().getString(R.string.chat_audio_too_short), Toast.LENGTH_SHORT).show();
         } else {
@@ -439,11 +441,8 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
 
     @Override
     public void cancelSending() {
-//        if(!recorder.isRecording()){
-//            return;
-//        }
-        //stopVoiceRecordingTask();
-        mHandler.sendEmptyMessageDelayed(HIDDEN_CANCEL,100);
+        //mHandler.sendEmptyMessageDelayed(HIDDEN_CANCEL,100);
+        voiceCancelView.setVisibility(View.GONE);
         recorder.stopRecording();
     }
     /**
@@ -575,10 +574,22 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
         @Override
         public void handleMessage(android.os.Message message) {
             if(message.what==HIDDEN_CANCEL) {
-                voiceCancelView.setVisibility(View.GONE);
+             //   voiceCancelView.setVisibility(View.GONE);
 
             }
         }
     };
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        if (requestCode == 100 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            // This method is called when the  permissions are given
+            Log.d(TAG,"onRequestPermissionsResult granted");
+        }else {
+            Log.d(TAG,"onRequestPermissionsResult not granted");
+
+        }
+    }
 
 }

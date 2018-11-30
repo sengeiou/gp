@@ -63,6 +63,7 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
     long mVoiceRecordingTimeout=60*1000;
     boolean previous_task=false;
     long   mtimeout=0;
+    int mHandtouch_up=1000;
 
 
     public ChatInput(Context context, AttributeSet attrs) {
@@ -102,7 +103,7 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
                     float endY = 0;
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        if(System.currentTimeMillis()-mtimeout<1000){
+                        if(System.currentTimeMillis()-mtimeout<mHandtouch_up){
                             Log.d(TAG, "down less 1s ");
                             return true;
                         }
@@ -111,6 +112,10 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
                         updateVoiceView();
                         break;
                     case MotionEvent.ACTION_UP:
+                        if(System.currentTimeMillis()-mtimeout<mHandtouch_up){
+                            Log.d(TAG, "down less 1s ");
+                            return true;
+                        }
                         int distance = (int) Math.abs(event.getY() - startY);
                         Log.d(TAG, "--action up"+event.getY() +"distance : "+distance);
 
@@ -127,7 +132,7 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
                         updateVoiceView();
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        if(System.currentTimeMillis()-mtimeout<1000){
+                        if(System.currentTimeMillis()-mtimeout<mHandtouch_up){
                             Log.d(TAG, "move less 1s ");
                             return true;
                         }
@@ -536,5 +541,6 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
             mVoiceRecordTimer = null;
         }
     }
+
 
 }
