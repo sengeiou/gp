@@ -207,4 +207,15 @@
 
     <string name="go_setting">去设置</string>
 
+    <!-- 2018.11.30-->
+    <string name="main_voice_message">语音留言</string>
+    <string name="main_baijie_pair">配对八戒</string>
+    <string name="main_alarm">闹钟</string>
+    <string name="main_schedule">日程提醒</string>
+    <string name="main_answer">定制问答</string>
+    <string name="main_call_record">最近通话</string>
+    <string name="main_bt_speaker">蓝牙音箱</string>
+
+
+
 </resources>
