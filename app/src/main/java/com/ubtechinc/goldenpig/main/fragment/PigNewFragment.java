@@ -3,6 +3,7 @@ package com.ubtechinc.goldenpig.main.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -10,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -27,20 +27,16 @@ import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
-import com.ubtechinc.goldenpig.main.SkillActivity;
 import com.ubtechinc.goldenpig.personal.alarm.AlarmListActivity;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionActivity;
 import com.ubtechinc.goldenpig.personal.remind.RemindActivity;
 import com.ubtechinc.goldenpig.pigmanager.RecordActivity;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
-import com.ubtechinc.goldenpig.pigmanager.bean.RecordModel;
-import com.ubtechinc.goldenpig.pigmanager.mypig.PairPigActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.QRCodeActivity;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPairPigQRHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.voiceChat.ui.ChatActivity;
-import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -48,6 +44,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Observable;
@@ -55,13 +52,6 @@ import java.util.Observer;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-
-import static com.ubtechinc.goldenpig.app.Constant.SP_HAS_LOOK_LAST_RECORD;
-import static com.ubtechinc.goldenpig.app.Constant.SP_LAST_RECORD;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CONTACT_PIC_SUCCESS;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.INVISE_RECORD_POINT;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.PAIR_PIG_UPDATE;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
 
 /**
  * @author : HQT
@@ -92,6 +82,9 @@ public class PigNewFragment extends BaseFragment implements Observer {
     @BindView(R.id.recycler_skill)
     RecyclerView recyclerView;
 
+    @BindView(R.id.rv_function_card)
+    RecyclerView rvFunctionCard;
+
     PigFragmentAdapter adapter;
     private List<String> list = new ArrayList<String>();
 
@@ -99,7 +92,6 @@ public class PigNewFragment extends BaseFragment implements Observer {
     public PigNewFragment() {
         super();
     }
-
 
 
     @Nullable
@@ -114,20 +106,24 @@ public class PigNewFragment extends BaseFragment implements Observer {
 
     private void initSkillData() {
         //TODO 后续该数据从后台获取
-        list.add("小猪小猪，放一首歌");
-        list.add("小猪小猪，放一首歌");
-        list.add("小猪小猪，放一首歌");
-        list.add("小猪小猪，放一首歌");
-        list.add("小猪小猪，放一首歌");
-        list.add("小猪小猪，放一首歌");
-
+        list.add("“小猪小猪，放一首歌”");
+        list.add("“小猪小猪，发送留言”");
+        list.add("“小猪小猪，我好喜欢你”");
+        list.add("“小猪小猪，打电话给10000”");
+        list.add("“小猪小猪，今天天气怎么样”");
+        list.add("“小猪小猪，提醒我下午四点喝水”");
     }
 
-    private void initRecycleList(){
+    private void initFunctionCard() {
+        MainFunctionAdapter adapter = new MainFunctionAdapter(getActivity(), new ArrayList<>(Arrays.asList(MainFunctionAdapter.FunctionEnum.values())));
+        rvFunctionCard.setLayoutManager(new GridLayoutManager(getActivity(), 4));
+        rvFunctionCard.setAdapter(adapter);
+    }
+
+    private void initRecycleList() {
         adapter = new PigFragmentAdapter(getActivity(), list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(adapter);
-
     }
 
     @Override
@@ -155,15 +151,16 @@ public class PigNewFragment extends BaseFragment implements Observer {
     @Override
     public void onResume() {
         super.onResume();
+        initFunctionCard();
         initRecycleList();
         updatePigPair();
     }
 
     @OnClick({R.id.btn_bt_binding, R.id.rl_voice_message, R.id.rl_bajie_pair, R.id.rl_alarm, R.id.rl_schedule,
-                R.id.rl_answer, R.id.rl_call_record, R.id.rl_bt_speaker})
-    public void onClick(View view){
+            R.id.rl_answer, R.id.rl_call_record, R.id.rl_bt_speaker})
+    public void onClick(View view) {
         PigInfo myPig = AuthLive.getInstance().getCurrentPig();
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.btn_bt_binding:
                 ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class, false);
                 break;
@@ -363,87 +360,87 @@ public class PigNewFragment extends BaseFragment implements Observer {
 
     }
 
-   /* @OnClick({R.id.ubt_bind_tv, R.id.ll_record, R.id.ll_voicechat, R.id.view_pig_pair_add, R.id.view_pig_pair_info, R
-            .id.view_skill, R.id.view_answer, R.id.view_alarm, R.id.view_remind})
-    public void Onclick(View view) {
-        switch (view.getId()) {
-            case R.id.ll_voicechat:
-                PigInfo pigInfo0 = AuthLive.getInstance().getCurrentPig();
-                if (pigInfo0 != null && pigInfo0.isAdmin) {
-                    ActivityRoute.toAnotherActivity(getActivity(), ChatActivity.class, false);
-                }
-                if (UBTPGApplication.voiceMail_debug) {
-                    ActivityRoute.toAnotherActivity(getActivity(), ChatActivity.class, false);
-                }
-                break;
-            case R.id.view_pig_pair_add:
-                PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
-                if (pigInfo != null && pigInfo.isAdmin) {
-                    //TODO 配对二维码
-                    HashMap<String, Boolean> param = new HashMap<>();
-                    param.put("isPair", true);
-                    ActivityRoute.toAnotherActivity(getActivity(), QRCodeActivity.class, param, false);
-                } else {
-                    ToastUtils.showShortToast(R.string.only_admin_operate);
-                }
-                break;
-            case R.id.view_pig_pair_info:
-                //TODO 配对列表
-                HashMap<String, String> map = new HashMap<>();
-                map.put("serialNumber", serialNumber);
-                map.put("pairSerialNumber", pairSerialNumber);
-                map.put("pairUserId", String.valueOf(pairUserId));
-                ActivityRoute.toAnotherActivity(getActivity(), PairPigActivity.class, map, false);
-                break;
-            case R.id.ubt_bind_tv:
-                ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class, false);
-                break;
-            case R.id.ll_record: {
-                PigInfo myPig = AuthLive.getInstance().getCurrentPig();
-                if (myPig != null && myPig.isAdmin) {
-                    ActivityRoute.toAnotherActivity(getActivity(), RecordActivity.class, false);
-                } else {
-                    ToastUtils.showShortToast(R.string.only_admin_operate);
-                }
+    /* @OnClick({R.id.ubt_bind_tv, R.id.ll_record, R.id.ll_voicechat, R.id.view_pig_pair_add, R.id.view_pig_pair_info, R
+             .id.view_skill, R.id.view_answer, R.id.view_alarm, R.id.view_remind})
+     public void Onclick(View view) {
+         switch (view.getId()) {
+             case R.id.ll_voicechat:
+                 PigInfo pigInfo0 = AuthLive.getInstance().getCurrentPig();
+                 if (pigInfo0 != null && pigInfo0.isAdmin) {
+                     ActivityRoute.toAnotherActivity(getActivity(), ChatActivity.class, false);
+                 }
+                 if (UBTPGApplication.voiceMail_debug) {
+                     ActivityRoute.toAnotherActivity(getActivity(), ChatActivity.class, false);
+                 }
+                 break;
+             case R.id.view_pig_pair_add:
+                 PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+                 if (pigInfo != null && pigInfo.isAdmin) {
+                     //TODO 配对二维码
+                     HashMap<String, Boolean> param = new HashMap<>();
+                     param.put("isPair", true);
+                     ActivityRoute.toAnotherActivity(getActivity(), QRCodeActivity.class, param, false);
+                 } else {
+                     ToastUtils.showShortToast(R.string.only_admin_operate);
+                 }
+                 break;
+             case R.id.view_pig_pair_info:
+                 //TODO 配对列表
+                 HashMap<String, String> map = new HashMap<>();
+                 map.put("serialNumber", serialNumber);
+                 map.put("pairSerialNumber", pairSerialNumber);
+                 map.put("pairUserId", String.valueOf(pairUserId));
+                 ActivityRoute.toAnotherActivity(getActivity(), PairPigActivity.class, map, false);
+                 break;
+             case R.id.ubt_bind_tv:
+                 ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class, false);
+                 break;
+             case R.id.ll_record: {
+                 PigInfo myPig = AuthLive.getInstance().getCurrentPig();
+                 if (myPig != null && myPig.isAdmin) {
+                     ActivityRoute.toAnotherActivity(getActivity(), RecordActivity.class, false);
+                 } else {
+                     ToastUtils.showShortToast(R.string.only_admin_operate);
+                 }
 
-            }
-            break;
-            case R.id.view_answer: {
-                PigInfo myPig = AuthLive.getInstance().getCurrentPig();
-                if (myPig != null && myPig.isAdmin) {
-                    ActivityRoute.toAnotherActivity(getActivity(), InterlocutionActivity.class, false);
-                } else {
-                    ToastUtils.showShortToast(R.string.only_admin_operate);
-                }
-            }
-            break;
-            case R.id.view_alarm: {
-                PigInfo myPig = AuthLive.getInstance().getCurrentPig();
-                if (myPig != null && myPig.isAdmin) {
-                    ActivityRoute.toAnotherActivity(getActivity(), AlarmListActivity.class, false);
-                } else {
-                    ToastUtils.showShortToast(R.string.only_admin_operate);
-                }
+             }
+             break;
+             case R.id.view_answer: {
+                 PigInfo myPig = AuthLive.getInstance().getCurrentPig();
+                 if (myPig != null && myPig.isAdmin) {
+                     ActivityRoute.toAnotherActivity(getActivity(), InterlocutionActivity.class, false);
+                 } else {
+                     ToastUtils.showShortToast(R.string.only_admin_operate);
+                 }
+             }
+             break;
+             case R.id.view_alarm: {
+                 PigInfo myPig = AuthLive.getInstance().getCurrentPig();
+                 if (myPig != null && myPig.isAdmin) {
+                     ActivityRoute.toAnotherActivity(getActivity(), AlarmListActivity.class, false);
+                 } else {
+                     ToastUtils.showShortToast(R.string.only_admin_operate);
+                 }
 
-            }
-            break;
-            case R.id.view_remind: {
-                PigInfo myPig = AuthLive.getInstance().getCurrentPig();
-                if (myPig != null && myPig.isAdmin) {
-                    ActivityRoute.toAnotherActivity(getActivity(), RemindActivity.class, false);
-                } else {
-                    ToastUtils.showShortToast(R.string.only_admin_operate);
-                }
+             }
+             break;
+             case R.id.view_remind: {
+                 PigInfo myPig = AuthLive.getInstance().getCurrentPig();
+                 if (myPig != null && myPig.isAdmin) {
+                     ActivityRoute.toAnotherActivity(getActivity(), RemindActivity.class, false);
+                 } else {
+                     ToastUtils.showShortToast(R.string.only_admin_operate);
+                 }
 
-            }
-            break;
-            case R.id.view_skill:
-                ActivityRoute.toAnotherActivity(getActivity(), SkillActivity.class, false);
-                break;
-            default:
-        }
-    }
-*/
+             }
+             break;
+             case R.id.view_skill:
+                 ActivityRoute.toAnotherActivity(getActivity(), SkillActivity.class, false);
+                 break;
+             default:
+         }
+     }
+ */
     @Override
     public void onDestroyView() {
         super.onDestroyView();

@@ -35,8 +35,8 @@ android {
         applicationId "com.ubtechinc.goldenpig"
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
-        versionCode 21
-        versionName "1.0.0.21"
+        versionCode 22
+        versionName "1.0.0.22"
         multiDexEnabled true
 
         manifestPlaceholders = [
