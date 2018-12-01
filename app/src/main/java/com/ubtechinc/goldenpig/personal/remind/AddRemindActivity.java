@@ -265,11 +265,11 @@ public class AddRemindActivity extends BaseNewActivity {
             }
         }
         for (int i = 1; i < 13; i++) {
-            if (i < 10) {
-                hourList.add("0" + i);
-            } else {
-                hourList.add("" + i);
-            }
+//            if (i < 10) {
+//                hourList.add("0" + i);
+//            } else {
+//            }
+            hourList.add("" + i);
         }
         dateList.add("今天");
         dateList2.add(TimeUtils.getTime(System.currentTimeMillis(), DATE_FORMAT_DATE));
