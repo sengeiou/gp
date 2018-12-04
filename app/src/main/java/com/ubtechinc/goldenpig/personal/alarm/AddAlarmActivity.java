@@ -248,11 +248,17 @@ public class AddAlarmActivity extends BaseNewActivity {
         String date = TimeUtils.getTime(timnow, TimeUtils.DATE_FORMAT_DATE);
         //当前星期几:周日的Index才是1，周六为7
         int week = TimeUtils.getWeekIndex(timnow);
-        int hour = 0;
-        if (loopView_am.getSelectedItem() == 1) {
-            hour += 12;
+        int hour = Integer.parseInt(hourList.get(loopView_hour.getSelectedItem()));
+        if (hour == 12) {
+            if (loopView_am.getSelectedItem() == 0) {
+                hour = 0;
+            }
+        } else {
+            if (loopView_am.getSelectedItem() == 1) {
+                hour += 12;
+            }
         }
-        hour += Integer.parseInt(hourList.get(loopView_hour.getSelectedItem()));
+        // hour += Integer.parseInt(hourList.get(loopView_hour.getSelectedItem()));
         date = date + " " + hour + ":" + minList.get(loopView_minute.getSelectedItem()) + ":00";
         long timeMill = TimeUtils.string2Millis(date);
         int eRepeatType = 0;

@@ -8,6 +8,7 @@ import android.text.Selection;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -338,11 +339,20 @@ public class AddRemindActivity extends BaseNewActivity {
             platform = ELoginPlatform.QQOpen;
         }
         String ymd = dateList2.get(loopView_date.getSelectedItem());
-        int hour = 0;
-        if (loopView_am.getSelectedItem() == 1) {
-            hour += 12;
+        int hour = Integer.parseInt(hourList.get(loopView_hour.getSelectedItem()));
+        if (hour == 12) {
+            if (loopView_am.getSelectedItem() == 0) {
+                hour = 0;
+            }
+        } else {
+            if (loopView_am.getSelectedItem() == 1) {
+                hour += 12;
+            }
         }
-        hour += Integer.parseInt(hourList.get(loopView_hour.getSelectedItem()));
+//        if (loopView_am.getSelectedItem() == 1) {
+//            hour += 12;
+//        }
+//        hour += Integer.parseInt(hourList.get(loopView_hour.getSelectedItem()));
         String date = ymd + " " + hour + ":" + minList.get(loopView_minute.getSelectedItem()) + ":00";
         long timeMill = TimeUtils.string2Millis(date);
         if (System.currentTimeMillis() > timeMill) {

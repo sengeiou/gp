@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -42,6 +43,7 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -257,16 +259,30 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
 //                                    } else {
 //                                    }
                                     String time = TimeUtils.getTime(model.lStartTimeStamp, TimeUtils
-                                            .DATE_FORMAT_ONLY_TIME);
-                                    String[] times = time.split(":");
-                                    int hour = Integer.parseInt(times[0]);
-                                    if (hour >= 13) {
-                                        model.amOrpm = "下午";
-                                        model.time = (hour - 12) + ":" + times[1];
-                                    } else {
+                                            .DATE_FORMAT_ONLY_TIME_12);
+                                    Calendar mCalendar = Calendar.getInstance();
+                                    mCalendar.setTimeInMillis(model.lStartTimeStamp);
+                                    if (mCalendar.get(Calendar.AM_PM) == 0) {//apm=0 表示上午，apm=1表示下午。
                                         model.amOrpm = "上午";
-                                        model.time = time;
+                                    } else {
+                                        model.amOrpm = "下午";
                                     }
+                                    model.time = time;
+//                                    String[] times = time.split(":");
+//                                    int hour = Integer.parseInt(times[0]);
+//                                    if (hour == 12) {
+//                                        model.amOrpm = "下午";
+//                                        model.time = "12:" + times[1];
+//                                    } else if (hour == 0) {
+//                                        model.amOrpm = "上午";
+//                                        model.time = "12:" + times[1];
+//                                    } else if (hour >= 13) {
+//                                        model.amOrpm = "下午";
+//                                        model.time = (hour - 12) + ":" + times[1];
+//                                    } else {
+//                                        model.amOrpm = "上午";
+//                                        model.time = time;
+//                                    }
                                 } catch (Exception e) {
                                 }
                                 list.add(model);
