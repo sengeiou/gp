@@ -307,7 +307,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
         int code = event.getCode();
         switch (code) {
             case USER_PIG_UPDATE:
-                showTips();
+//                showTips();
                 changeItemAlpha();
                 break;
         }

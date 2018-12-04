@@ -13,12 +13,14 @@ import android.widget.TextView;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
+import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.BleWebActivity;
 import com.ubtechinc.goldenpig.personal.alarm.AlarmListActivity;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionActivity;
 import com.ubtechinc.goldenpig.personal.remind.RemindActivity;
 import com.ubtechinc.goldenpig.pigmanager.RecordActivity;
+import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.mypig.QRCodeActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
@@ -29,8 +31,6 @@ import java.util.List;
 
 public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapter.ViewHodler> implements View.OnClickListener {
 
-
-    private final String TAG = "PigFragmentAdapter";
     private List<FunctionEnum> list;
     private Context context;
 
@@ -65,62 +65,69 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
         Object o = v.getTag();
         if (o != null && o instanceof FunctionEnum) {
             FunctionEnum functionEnum = (FunctionEnum) o;
-            PigInfo myPig = AuthLive.getInstance().getCurrentPig();
             switch (functionEnum) {
-                case VOICE_MAIL: {
-                    if (myPig != null && myPig.isAdmin) {
-                        ActivityRoute.toAnotherActivity((Activity) context, ChatActivity.class, false);
-                    }
+                case VOICE_MAIL:
                     if (UBTPGApplication.voiceMail_debug) {
                         ActivityRoute.toAnotherActivity((Activity) context, ChatActivity.class, false);
-                    }
-                }
-                break;
-                case PAIR: {
-                    if (myPig != null && myPig.isAdmin) {
-                        //TODO 配对二维码
-                        HashMap<String, Boolean> param = new HashMap<>();
-                        param.put("isPair", true);
-                        ActivityRoute.toAnotherActivity((Activity) context, QRCodeActivity.class, param, false);
                     } else {
-                        ToastUtils.showShortToast(R.string.only_admin_operate);
+                        enterFunction(ChatActivity.class, null);
                     }
-                }
-                break;
-                case ALARM: {
-                    if (myPig != null && myPig.isAdmin) {
-                        ActivityRoute.toAnotherActivity((Activity) context, AlarmListActivity.class, false);
-                    } else {
-                        ToastUtils.showShortToast(R.string.only_admin_operate);
-                    }
-                }
-                break;
+                    break;
+                case PAIR:
+                    HashMap<String, Boolean> param = new HashMap<>();
+                    param.put("isPair", true);
+                    enterFunction(QRCodeActivity.class, param);
+                    break;
+                case ALARM:
+                    enterFunction(AlarmListActivity.class, null);
+                    break;
                 case REMIND:
-                    if (myPig != null && myPig.isAdmin) {
-                        ActivityRoute.toAnotherActivity((Activity) context, RemindActivity.class, false);
-                    } else {
-                        ToastUtils.showShortToast(R.string.only_admin_operate);
-                    }
+                    enterFunction(RemindActivity.class, null);
                     break;
                 case CUSTOM_QA:
-                    if (myPig != null && myPig.isAdmin) {
-                        ActivityRoute.toAnotherActivity((Activity) context, InterlocutionActivity.class, false);
-                    } else {
-                        ToastUtils.showShortToast(R.string.only_admin_operate);
-                    }
+                    enterFunction(InterlocutionActivity.class, null);
                     break;
                 case CALL_RECORD:
-                    if (myPig != null && myPig.isAdmin) {
-                        ActivityRoute.toAnotherActivity((Activity) context, RecordActivity.class, false);
-                    } else {
-                        ToastUtils.showShortToast(R.string.only_admin_operate);
-                    }
+                    enterFunction(RecordActivity.class, null);
                     break;
                 case BLE:
                     ActivityRoute.toAnotherActivity((Activity) context, BleWebActivity.class, false);
                     break;
             }
         }
+    }
+
+    private void enterFunction(Class clazz, HashMap<String, ? extends Object> hashMap) {
+        PigInfo myPig = AuthLive.getInstance().getCurrentPig();
+        if (myPig == null) {
+            showBindTipDialog();
+        } else if (myPig.isAdmin) {
+            ActivityRoute.toAnotherActivity((Activity) context, clazz, hashMap, false);
+        } else {
+            ToastUtils.showShortToast(R.string.only_admin_operate);
+        }
+    }
+
+    private void showBindTipDialog() {
+        UBTSubTitleDialog dialog = new UBTSubTitleDialog(context);
+        dialog.setRightBtnColor(ContextCompat.getColor(context, R.color.ubt_tab_btn_txt_checked_color));
+        dialog.setTips("请完成绑定与配网");
+        dialog.setSubTips("完成后即可使用各项技能");
+        dialog.setLeftButtonTxt("取消");
+        dialog.setRightButtonTxt("确认");
+        dialog.setOnUbtDialogClickLinsenter(new UBTSubTitleDialog.OnUbtDialogClickLinsenter() {
+            @Override
+            public void onLeftButtonClick(View view) {
+
+            }
+
+            @Override
+            public void onRightButtonClick(View view) {
+                //TODO do管理员权限转让
+                ActivityRoute.toAnotherActivity((Activity) context, SetNetWorkEnterActivity.class, false);
+            }
+        });
+        dialog.show();
     }
 
 

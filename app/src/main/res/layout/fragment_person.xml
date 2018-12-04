@@ -27,8 +27,8 @@
             android:paddingTop="@dimen/ubt_16dp"
             android:text="@string/ubt_mina" />
 
-        <include layout="@layout/include_tips" />
-
+        <include layout="@layout/include_tips"
+            android:visibility="gone"/>
 
         <RelativeLayout
             android:id="@+id/rl_login_info"

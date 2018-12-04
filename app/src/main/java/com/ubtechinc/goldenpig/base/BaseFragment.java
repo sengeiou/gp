@@ -177,7 +177,7 @@ public abstract class BaseFragment extends Fragment {
         super.onResume();
         //checkPigWifi();
         MobclickAgent.onPageStart(this.getClass().getSimpleName()); //统计页面("MainScreen"为页面名称，可自定义)
-        showTips();
+//        showTips();
     }
 
     private void checkPigWifi() {
