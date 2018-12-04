@@ -88,7 +88,7 @@ public class AddRemindActivity extends BaseNewActivity {
         loopView_date.setItems(dateList);
         loopView_date.setInitPosition(0);
         loopView_date.setTextSize(18);
-        loopView_date.setNotLoop();
+        //loopView_date.setNotLoop();
         loopView_am.setItems(amList);
         loopView_am.setInitPosition(0);
         loopView_am.setTextSize(18);
@@ -273,7 +273,7 @@ public class AddRemindActivity extends BaseNewActivity {
         }
         dateList.add("今天");
         dateList2.add(TimeUtils.getTime(System.currentTimeMillis(), DATE_FORMAT_DATE));
-        for (int i = 1; i < 7; i++) {
+        for (int i = 1; i < 365; i++) {
             Date da = TimeUtils.addDate(today, i);
             int month = TimeUtils.getMonthFromDate(da);
             int day = TimeUtils.getDayFromDate(da);
