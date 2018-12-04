@@ -19,8 +19,6 @@ public class BaseHttpProxy {
 
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
-    private static final String TAG = "BaseHttpProxy";
-
     protected OkHttpClient getHttpClient() {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .connectTimeout(10, TimeUnit.SECONDS)

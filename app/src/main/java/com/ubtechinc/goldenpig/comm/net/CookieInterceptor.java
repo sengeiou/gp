@@ -2,7 +2,7 @@ package com.ubtechinc.goldenpig.comm.net;
 
 import android.text.TextUtils;
 
-import com.ubtechinc.tvlloginlib.BuildConfig;
+import com.ubtech.utilcode.utils.SPUtils;
 import com.ubtechinc.tvlloginlib.entity.LoginInfo;
 
 import java.io.IOException;
@@ -54,11 +54,15 @@ public class CookieInterceptor implements Interceptor {
     }
 
     public String getToken() {
+        if (TextUtils.isEmpty(token)) {
+            token = SPUtils.get().getString("login_authorization");
+        }
         return token;
     }
 
     public void setToken(String token) {
         this.token = token;
+        SPUtils.get().put("login_authorization", token);
     }
 
     public Long getExpireAt() {
