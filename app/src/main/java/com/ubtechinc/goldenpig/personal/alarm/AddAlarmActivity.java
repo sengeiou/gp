@@ -181,11 +181,11 @@ public class AddAlarmActivity extends BaseNewActivity {
             }
         }
         for (int i = 1; i < 13; i++) {
-            if (i < 10) {
-                hourList.add("0" + i);
-            } else {
-                hourList.add("" + i);
-            }
+//            if (i < 10) {
+//                hourList.add("0" + i);
+//            } else {
+//            }
+            hourList.add("" + i);
         }
     }
 

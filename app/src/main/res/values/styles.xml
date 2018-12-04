@@ -129,6 +129,22 @@
 
         <item name="android:textSize">13sp</item>
     </style>
+
+    <!--主页item tab-->
+    <style name="UBTMainItemTabTxtTheme" parent="UBTMainItemTxtTheme">
+
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/ubt_main_item_tab_color</item>
+        <item name="android:layout_marginTop">@dimen/dp_10</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="UBTMainItemTabImageViewThemeTheme">
+        <item name="android:layout_width">@dimen/dp_55</item>
+        <item name="android:layout_height">@dimen/dp_55</item>
+        <item name="android:scaleType">fitXY</item>
+    </style>
+
     <!--me页按钮样式-->
     <style name="UBTMeBtnTheme" parent="Widget.AppCompat.Button.Borderless">
         <item name="android:gravity">center_vertical|start</item>

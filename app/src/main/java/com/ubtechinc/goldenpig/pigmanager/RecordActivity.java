@@ -272,7 +272,7 @@ public class RecordActivity extends BaseNewActivity implements Observer {
                             list.add(recordBuild.build());
                         }
                     }
-                    UbtLogger.d("RecordActivity","delete the list");
+                    UbtLogger.d("RecordActivity", "delete the list");
                     UbtTIMManager.getInstance().deleteRecord(list);
                     deletePosition = adapterPosition;
                     LoadingDialog.getInstance(RecordActivity.this).setTimeout(TIMEOUT)
@@ -292,19 +292,22 @@ public class RecordActivity extends BaseNewActivity implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
-        TIMMessage msg = (TIMMessage) arg;
-        for (int i = 0; i < msg.getElementCount(); ++i) {
-            TIMCustomElem elem = (TIMCustomElem) msg.getElement(i);
-            try {
-                dealMsg(elem.getData());
-            } catch (InvalidProtocolBufferException e) {
-                e.printStackTrace();
-                if (mHandler.hasMessages(1)) {
-                    mHandler.removeMessages(1);
+        try {
+            TIMMessage msg = (TIMMessage) arg;
+            for (int i = 0; i < msg.getElementCount(); ++i) {
+                TIMCustomElem elem = (TIMCustomElem) msg.getElement(i);
+                try {
+                    dealMsg(elem.getData());
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                    if (mHandler.hasMessages(1)) {
+                        mHandler.removeMessages(1);
+                    }
+                    ToastUtils.showShortToast(getString(R.string.msg_error_toast));
+                    LoadingDialog.getInstance(RecordActivity.this).dismiss();
                 }
-                ToastUtils.showShortToast(getString(R.string.msg_error_toast));
-                LoadingDialog.getInstance(RecordActivity.this).dismiss();
             }
+        } catch (Exception e) {
         }
     }
 
@@ -359,7 +362,8 @@ public class RecordActivity extends BaseNewActivity implements Observer {
                         rl_titlebar.getTvRight().setEnabled(false);
                     } else {
                         mStateView.showContent();
-                        rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_checked_color));
+                        rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color
+                                .ubt_tab_btn_txt_checked_color));
                         rl_titlebar.getTvRight().setEnabled(true);
                     }
                     adapter.notifyDataSetChanged();
@@ -388,7 +392,8 @@ public class RecordActivity extends BaseNewActivity implements Observer {
                     rl_titlebar.getTvRight().setEnabled(false);
                 } else {
                     mStateView.showContent();
-                    rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_checked_color));
+                    rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color
+                            .ubt_tab_btn_txt_checked_color));
                     rl_titlebar.getTvRight().setEnabled(true);
                 }
             }

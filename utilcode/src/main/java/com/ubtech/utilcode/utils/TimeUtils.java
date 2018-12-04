@@ -1185,7 +1185,7 @@ public class TimeUtils {
     public static final SimpleDateFormat DATE_FORMAT_MONTH = new SimpleDateFormat(
             "yyyy-MM");
     public static final SimpleDateFormat DATE_FORMAT_ONLY_TIME = new SimpleDateFormat(
-            "HH:mm");
+            "H:mm");
     public static final SimpleDateFormat DATE_FORMAT_MON_TIME = new SimpleDateFormat(
             "MM-dd-HH-mm");
 

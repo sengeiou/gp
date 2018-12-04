@@ -246,10 +246,7 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
                                     String[] times = time.split("-");
                                     model.date = changeTime(model.eRepeatType, model.lStartTimeStamp);
                                     int hour = Integer.parseInt(times[2]);
-                                    if (hour >= 19) {
-                                        model.amOrpm = "晚上";
-                                        model.time = (hour - 12) + ":" + times[3];
-                                    } else if (hour >= 13) {
+                                    if (hour >= 13) {
                                         model.amOrpm = "下午";
                                         model.time = (hour - 12) + ":" + times[3];
                                     } else {

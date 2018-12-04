@@ -48,4 +48,8 @@
 
     <!-- common rule -->
     <color name="ubt_color_c1">#FFEAF2F6</color>
+
+    <!-- 2018-11-30-->
+    <color name="ubt_main_item_tab_color">#FF454B59</color>
+
 </resources>

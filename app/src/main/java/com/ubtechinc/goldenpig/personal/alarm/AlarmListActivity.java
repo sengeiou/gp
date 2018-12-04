@@ -260,10 +260,7 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
                                             .DATE_FORMAT_ONLY_TIME);
                                     String[] times = time.split(":");
                                     int hour = Integer.parseInt(times[0]);
-                                    if (hour >= 19) {
-                                        model.amOrpm = "晚上";
-                                        model.time = (hour - 12) + ":" + times[1];
-                                    } else if (hour >= 13) {
+                                    if (hour >= 13) {
                                         model.amOrpm = "下午";
                                         model.time = (hour - 12) + ":" + times[1];
                                     } else {
