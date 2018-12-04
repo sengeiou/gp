@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 
-public class AlarmModel implements Parcelable{
+public class AlarmModel implements Parcelable {
     public String amOrpm;
     public String time;
     public String repeatDate;
@@ -13,6 +13,7 @@ public class AlarmModel implements Parcelable{
     public int eRepeatType;
     public long lStartTimeStamp;
     public String repeatName;
+
     public AlarmModel() {
     }
 

@@ -88,7 +88,7 @@ public class AddRemindActivity extends BaseNewActivity {
         loopView_date.setItems(dateList);
         loopView_date.setInitPosition(0);
         loopView_date.setTextSize(18);
-        loopView_date.setNotLoop();
+        //loopView_date.setNotLoop();
         loopView_am.setItems(amList);
         loopView_am.setInitPosition(0);
         loopView_am.setTextSize(18);
@@ -273,7 +273,7 @@ public class AddRemindActivity extends BaseNewActivity {
         }
         dateList.add("今天");
         dateList2.add(TimeUtils.getTime(System.currentTimeMillis(), DATE_FORMAT_DATE));
-        for (int i = 1; i < 7; i++) {
+        for (int i = 1; i < 365; i++) {
             Date da = TimeUtils.addDate(today, i);
             int month = TimeUtils.getMonthFromDate(da);
             int day = TimeUtils.getDayFromDate(da);
@@ -338,11 +338,16 @@ public class AddRemindActivity extends BaseNewActivity {
             platform = ELoginPlatform.QQOpen;
         }
         String ymd = dateList2.get(loopView_date.getSelectedItem());
-        int hour = 0;
-        if (loopView_am.getSelectedItem() == 1) {
-            hour += 12;
+        int hour = Integer.parseInt(hourList.get(loopView_hour.getSelectedItem()));
+        if (hour == 12) {
+            if (loopView_am.getSelectedItem() == 0) {
+                hour = 0;
+            }
+        } else {
+            if (loopView_am.getSelectedItem() == 1) {
+                hour += 12;
+            }
         }
-        hour += Integer.parseInt(hourList.get(loopView_hour.getSelectedItem()));
         String date = ymd + " " + hour + ":" + minList.get(loopView_minute.getSelectedItem()) + ":00";
         long timeMill = TimeUtils.string2Millis(date);
         if (System.currentTimeMillis() > timeMill) {

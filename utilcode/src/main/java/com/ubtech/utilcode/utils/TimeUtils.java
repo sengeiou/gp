@@ -1188,8 +1188,9 @@ public class TimeUtils {
             "HH:mm");
     public static final SimpleDateFormat DATE_FORMAT_MON_TIME = new SimpleDateFormat(
             "MM-dd-HH-mm");
-
-
+    public static final SimpleDateFormat DATE_FORMAT_ONLY_TIME_12 = new SimpleDateFormat(
+            "h:mm");
+    public static final String DEFAULT_PATTERN12 = "yyyy-MM-dd HH:mm:ss aa";
     /**
      * 精确到毫秒
      */
@@ -1837,5 +1838,15 @@ public class TimeUtils {
         return (millis + TimeZone.getDefault().getOffset(millis)) / ONE_DAY;
     }
 
+    /**
+     * 将时间字符串转为时间戳
+     * <p>time格式为yyyy-MM-dd HH:mm:ss</p>
+     *
+     * @param time 时间字符串
+     * @return 毫秒时间戳
+     */
+    public static long string_12hour2Millis(String time) {
+        return string2Millis(time, DEFAULT_PATTERN12);
+    }
 
 }

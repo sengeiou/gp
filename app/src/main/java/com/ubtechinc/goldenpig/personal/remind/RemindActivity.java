@@ -43,6 +43,7 @@ import org.json.JSONObject;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -231,7 +232,7 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
                                 }
                                 model.lReminderId = ob.getLong("lReminderId");
                                 model.sNote = ob.getString("sNote");
-                                model.lStartTimeStamp = ob.getLong("lStartTimeStamp")*1000;
+                                model.lStartTimeStamp = ob.getLong("lStartTimeStamp") * 1000;
                                 try {
 //                                    String time = null;
 //                                    String le = System.currentTimeMillis() + "";
@@ -242,20 +243,16 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
 //                                        mins = model.lStartTimeStamp;
 //                                    }
                                     String time = TimeUtils.getTime(model.lStartTimeStamp, TimeUtils
-                                            .DATE_FORMAT_MON_TIME);
-                                    String[] times = time.split("-");
-                                    model.date = changeTime(model.eRepeatType, model.lStartTimeStamp);
-                                    int hour = Integer.parseInt(times[2]);
-                                    if (hour >= 19) {
-                                        model.amOrpm = "晚上";
-                                        model.time = (hour - 12) + ":" + times[3];
-                                    } else if (hour >= 13) {
-                                        model.amOrpm = "下午";
-                                        model.time = (hour - 12) + ":" + times[3];
-                                    } else {
+                                            .DATE_FORMAT_ONLY_TIME_12);
+                                    Calendar mCalendar = Calendar.getInstance();
+                                    mCalendar.setTimeInMillis(model.lStartTimeStamp);
+                                    if (mCalendar.get(Calendar.AM_PM) == 0) {//apm=0 表示上午，apm=1表示下午。
                                         model.amOrpm = "上午";
-                                        model.time = hour + ":" + times[3];
+                                    } else {
+                                        model.amOrpm = "下午";
                                     }
+                                    model.time = time;
+                                    model.date = changeTime(model.eRepeatType, model.lStartTimeStamp);
                                 } catch (Exception e) {
                                 }
                                 list.add(model);
