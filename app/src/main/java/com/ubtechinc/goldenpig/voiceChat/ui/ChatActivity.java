@@ -441,7 +441,6 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
 
     @Override
     public void cancelSending() {
-        //mHandler.sendEmptyMessageDelayed(HIDDEN_CANCEL,100);
         voiceCancelView.setVisibility(View.GONE);
         recorder.stopRecording();
     }
