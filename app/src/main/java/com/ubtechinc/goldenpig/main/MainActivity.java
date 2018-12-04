@@ -28,7 +28,7 @@ import com.ubtechinc.goldenpig.login.LoginActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.fragment.MainFragmentAdpater;
 import com.ubtechinc.goldenpig.main.fragment.PersonalFragment;
-import com.ubtechinc.goldenpig.main.fragment.PigNewFragment;
+import com.ubtechinc.goldenpig.main.fragment.PigFragment;
 import com.ubtechinc.goldenpig.main.fragment.SkillFragment;
 import com.ubtechinc.goldenpig.model.JsonCallback;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionModel;
@@ -138,8 +138,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         fragmentPage.setOffscreenPageLimit(2);
 
         fragments = new ArrayList<>();
-//        fragments.add(new PigFragment());
-        fragments.add(new PigNewFragment());
+        fragments.add(new PigFragment());
         fragments.add(new SkillFragment());
         fragments.add(new PersonalFragment());
         adapter = new MainFragmentAdpater(getSupportFragmentManager(), fragments);
