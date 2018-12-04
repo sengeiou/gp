@@ -14,6 +14,7 @@ import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
+import com.ubtechinc.goldenpig.main.BleWebActivity;
 import com.ubtechinc.goldenpig.personal.alarm.AlarmListActivity;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionActivity;
 import com.ubtechinc.goldenpig.personal.remind.RemindActivity;
@@ -116,7 +117,7 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
                     }
                     break;
                 case BLE:
-                    ToastUtils.showShortToast("敬请期待");
+                    ActivityRoute.toAnotherActivity((Activity) context, BleWebActivity.class, false);
                     break;
             }
         }

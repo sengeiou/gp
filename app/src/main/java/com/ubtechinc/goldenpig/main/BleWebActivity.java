@@ -7,16 +7,16 @@ import com.ubtechinc.goldenpig.base.BaseWebActivity;
 /**
  * @author ubt
  */
-public class QQMusicWebActivity extends BaseWebActivity {
+public class BleWebActivity extends BaseWebActivity {
 
     @Override
     protected String getURL() {
-        return BuildConfig.H5_URL + "/small/smallqqMusic.html";
+        return BuildConfig.H5_URL + "/small/smallBlue.html";
     }
 
     @Override
     protected int getToolBarTitle() {
-        return R.string.ubt_qq_music;
+        return R.string.main_bt_speaker;
     }
 
     @Override

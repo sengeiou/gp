@@ -188,6 +188,8 @@
         <activity android:name=".main.QQMusicWebActivity" />
         <activity android:name=".about.EggShellActivtiy"
             android:launchMode="singleTop"/>
+        <activity android:name=".main.BleWebActivity" />
+        <activity android:name=".pigmanager.PigWifiInfoActivity" />
 
         <service android:name=".app.StartUpService" />
     </application>

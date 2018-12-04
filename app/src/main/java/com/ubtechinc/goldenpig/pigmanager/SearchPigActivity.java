@@ -16,6 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,6 +24,9 @@ import android.widget.TextView;
 import com.ubtechinc.bluetooth.Constants;
 import com.ubtechinc.bluetooth.UbtBluetoothDevice;
 import com.ubtechinc.bluetooth.UbtBluetoothManager;
+import com.ubtechinc.bluetooth.command.ICommandProduce;
+import com.ubtechinc.bluetooth.command.JsonCommandProduce;
+import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
@@ -33,8 +37,6 @@ import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.net.RegisterRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.bean.BundingListenerAbster;
 import com.ubtechinc.goldenpig.pigmanager.bluetooth.BlueToothManager;
-import com.ubtechinc.goldenpig.pigmanager.mypig.PairQRScannerActivity;
-import com.ubtechinc.goldenpig.pigmanager.mypig.QRCodeActivity;
 import com.ubtechinc.goldenpig.pigmanager.widget.OnPigListItemClickListener;
 import com.ubtechinc.goldenpig.pigmanager.widget.PigListDialog;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
@@ -42,6 +44,9 @@ import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 import com.yanzhenjie.permission.PermissionListener;
 
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -72,6 +77,8 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
 
     private static final int MSG_WATH_DISCONNECT_SUCCESS = 0x001;
 
+    private static final int MSG_CHECK_WIFI = 0x002;
+
     private UbtBluetoothDevice mBluetoothDevice;
     private BungdingManager mBangdingManager;
     private String TAG = "SearchPigActivity";
@@ -88,6 +95,9 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
     private DrawableTextView dtvTopPig;
 
     public static final int CONNECT_TIMEOUT = 30;
+
+    private String mPigWifiName;
+    private int mPigMobileType = -1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -164,6 +174,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
     protected void onResume() {
         super.onResume();
         closeEnterDialog();
+        UbtBluetoothManager.getInstance().closeConnectBle();
 //        if (isSearched) {
 //            mSearchBtn.setText("重新搜索");
 //        } else {
@@ -408,7 +419,22 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         cancelTimer();
         dismissLoadDialog();
 
-        ActivityRoute.toAnotherActivity(SearchPigActivity.this, SetPigNetWorkActivity.class, false);
+        if (!TextUtils.isEmpty(mPigWifiName)) {
+            HashMap<String, String> map = new HashMap<>();
+            map.put("PigWifiName", mPigWifiName);
+            ActivityRoute.toAnotherActivity(SearchPigActivity.this, PigWifiInfoActivity.class, map, false);
+        } else if (mPigMobileType != -1) {
+            ActivityRoute.toAnotherActivity(SearchPigActivity.this, PigWifiInfoActivity.class, false);
+        } else {
+            ActivityRoute.toAnotherActivity(SearchPigActivity.this, SetPigNetWorkActivity.class, false);
+        }
+    }
+
+    private void checkPigWifi() {
+        ICommandProduce commandProduce = new JsonCommandProduce();
+        String message = commandProduce.getPigNetWorkState();
+        UbtBluetoothManager.getInstance().sendMessageToBle(message);
+        mHandler.sendEmptyMessageDelayed(MSG_CHECK_WIFI, 5000);
     }
 
     private Handler mHandler = new Handler() {
@@ -423,6 +449,10 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
                             .setShowToast(true).show();
                     UbtBluetoothManager.getInstance().closeConnectBle();
                     UbtBluetoothManager.getInstance().connectBluetooth(mBluetoothDevice);
+                    break;
+
+                case MSG_CHECK_WIFI:
+                    toSetWifi();
                     break;
 
                 default:
@@ -486,7 +516,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
             if (mTimer != null) {
                 mTimer.cancel();
             }
-            toSetWifi();
+            checkPigWifi();
         }
 
         @Override
@@ -503,6 +533,34 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
             } else {
                 showOnBindTipDialog();
             }
+        }
+
+        @Override
+        public void onPigConnected(String wifiState) {
+            UbtLogger.i("onPigConnected", wifiState);
+            if (!TextUtils.isEmpty(wifiState)) {
+                try {
+                    wifiState = wifiState.replace("\\", "");
+                    wifiState = wifiState.replace("\"{", "{");
+                    wifiState = wifiState.replace("}\"", "}");
+                    wifiState = wifiState.replace("\"\"", "\"");
+                    JSONObject wifiStateJson = new JSONObject(wifiState);
+
+                    JSONObject wifi_info = wifiStateJson.optJSONObject("wifi_info");
+                    if (wifi_info != null) {
+                        mPigWifiName = wifi_info.optString("s");
+                    }
+
+                    JSONObject mobile_info = wifiStateJson.optJSONObject("mobile_info");
+                    if (mobile_info != null) {
+                        mPigMobileType = mobile_info.optInt("m");
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            mHandler.removeMessages(MSG_CHECK_WIFI);
+            toSetWifi();
         }
     };
 

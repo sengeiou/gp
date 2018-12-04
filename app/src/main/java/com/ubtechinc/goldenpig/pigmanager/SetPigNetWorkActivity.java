@@ -99,7 +99,6 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.ubt_btn_connect_wifi:
-
                 checkWifiInfo();
                 break;
             case R.id.ubt_tv_set_net_skip:
@@ -360,7 +359,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
     @Override
     protected void onBackCallBack() {
         super.onBackCallBack();
-        UbtBluetoothManager.getInstance().closeConnectBle();
+//        UbtBluetoothManager.getInstance().closeConnectBle();
     }
 
     private void updateDefaultSsid() {
