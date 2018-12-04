@@ -19,6 +19,7 @@ public class ThrowableWrapper extends Throwable {
     public ThrowableWrapper(Throwable e, int errorCode) {
         super(e);
         this.errorCode = errorCode;
+        this.message = e.getMessage();
     }
 
     public ThrowableWrapper(String msg, int errorCode) {
