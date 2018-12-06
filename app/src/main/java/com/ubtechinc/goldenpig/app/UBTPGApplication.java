@@ -236,7 +236,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
         mForceOfflineDialog = new UBTBaseDialog(mTopActivity);
         mForceOfflineDialog.setCancelable(false);
         mForceOfflineDialog.setCanceledOnTouchOutside(false);
-        mForceOfflineDialog.setTips("你的账号于其它设备上登录");
+        mForceOfflineDialog.setTips(tip);
         mForceOfflineDialog.setLeftBtnShow(false);
         mForceOfflineDialog.setRightButtonTxt("我知道了");
         mForceOfflineDialog.setRightBtnColor(ContextCompat.getColor(this, R.color.ubt_tab_btn_txt_checked_color));
