@@ -149,7 +149,6 @@ public class UBTPGApplication extends LoginApplication implements Observer {
     private void initSCADA() {
         AnalyticsKit.initialize(this, BuildConfig.APP_ID, BuildConfig.APP_KEY,
                 DeviceUtils.getDeviceId(this), Executors.newSingleThreadExecutor());
-        AnalyticsKit.setVersion(ContextUtils.getVerName(this));
     }
 
     private void initService() {
