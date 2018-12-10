@@ -62,6 +62,7 @@ import static com.ubtechinc.goldenpig.app.Constant.SP_HAS_LOOK_LAST_RECORD;
 import static com.ubtechinc.goldenpig.app.Constant.SP_LAST_RECORD;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CONTACT_PIC_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.INVISE_RECORD_POINT;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NEW_MESSAGE_NOTIFICATION;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.PAIR_PIG_UPDATE;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
 
@@ -515,6 +516,9 @@ public class PigFragment extends BaseFragment implements Observer {
                 break;
             case PAIR_PIG_UPDATE:
                 updatePigPair();
+                break;
+            case NEW_MESSAGE_NOTIFICATION:
+                LogUtils.d("PigFragment", "have new voice messages");
                 break;
         }
     }

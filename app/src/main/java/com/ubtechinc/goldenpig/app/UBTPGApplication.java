@@ -18,6 +18,7 @@ import com.tencent.TIMCustomElem;
 import com.tencent.TIMElem;
 import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
+import com.tencent.TIMSoundElem;
 import com.tencent.ai.tvs.LoginApplication;
 import com.tencent.ai.tvs.info.ProductManager;
 import com.tencent.ai.tvs.info.UserInfoManager;
@@ -436,6 +437,9 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                 if (tIMElem != null && tIMElem instanceof TIMCustomElem) {
                     TIMCustomElem elem = (TIMCustomElem) tIMElem;
                     dealMsg(elem.getData());
+                }else if(tIMElem != null && tIMElem instanceof TIMSoundElem){
+                    Event<Integer> event = new Event<>(EventBusUtil.NEW_MESSAGE_NOTIFICATION);
+                    EventBusUtil.sendEvent(event);
                 }
             }
         } catch (Exception e) {

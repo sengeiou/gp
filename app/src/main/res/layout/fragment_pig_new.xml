@@ -69,18 +69,6 @@
                         android:textColor="#7FFFFFFF"
                         android:textSize="13sp"
                         android:layout_marginLeft="@dimen/dp_5"/>
-
-                    <ImageView
-                        android:id="@+id/iv_unreadvoice"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignTop="@+id/ubt_tv_pig_title"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_toEndOf="@+id/ubt_tv_pig_title"
-                        android:src="@drawable/ic_weidu"
-                        android:visibility="invisible" />
-
                     <Button
                         android:id="@+id/btn_bt_binding"
                         style="@style/UBTMainItemMinTxtTheme"
@@ -124,7 +112,13 @@
                             android:id="@+id/iv_voice_message"
                             style="@style/UBTMainItemTabImageViewThemeTheme"
                             android:src="@drawable/ic_voicemail" />
-
+                        <ImageView
+                            android:id="@+id/iv_unreadvoice"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignEnd="@+id/iv_voice_message"
+                            android:src="@drawable/ic_weidu"
+                            android:visibility="visible" />
                         <TextView
                             style="@style/UBTMainItemTabTxtTheme"
                             android:layout_below="@+id/iv_voice_message"

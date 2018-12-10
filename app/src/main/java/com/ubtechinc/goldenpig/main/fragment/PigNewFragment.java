@@ -7,10 +7,12 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -59,6 +61,7 @@ import butterknife.OnClick;
 import static com.ubtechinc.goldenpig.app.Constant.SP_HAS_LOOK_LAST_RECORD;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CONTACT_PIC_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.INVISE_RECORD_POINT;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NEW_MESSAGE_NOTIFICATION;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.PAIR_PIG_UPDATE;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
 
@@ -96,6 +99,8 @@ public class PigNewFragment extends BaseFragment implements Observer {
     @BindView(R.id.rv_function_card)
     RecyclerView rvFunctionCard;
 
+    @BindView(R.id.iv_unreadvoice)
+    ImageView mVoiceUnRead;
     PigFragmentAdapter adapter;
     private List<String> list = new ArrayList<String>();
 
@@ -143,14 +148,14 @@ public class PigNewFragment extends BaseFragment implements Observer {
     }
 
     private void unReadVoiceMail(String setOnUbtTIMConver) {
-   /*     if (mVoiceUnRead == null) return;
+       if (mVoiceUnRead == null) return;
         Log.e(setOnUbtTIMConver, "unRead message " + UbtTIMManager.getInstance().unReadVoiceMailMessage());
         if (UbtTIMManager.getInstance().unReadVoiceMailMessage() >= 1) {
             Log.e(setOnUbtTIMConver, "unRead message " + UbtTIMManager.getInstance().unReadVoiceMailMessage());
             mVoiceUnRead.setVisibility(View.VISIBLE);
         } else {
             mVoiceUnRead.setVisibility(View.INVISIBLE);
-        }*/
+        }
     }
 
     @Override
@@ -493,6 +498,10 @@ public class PigNewFragment extends BaseFragment implements Observer {
                 break;
             case PAIR_PIG_UPDATE:
                 updatePigPair();
+                break;
+            case NEW_MESSAGE_NOTIFICATION:
+                LogUtils.d("PigNewFragment", "new voice message");
+                mVoiceUnRead.setVisibility(View.VISIBLE);
                 break;
         }
     }
