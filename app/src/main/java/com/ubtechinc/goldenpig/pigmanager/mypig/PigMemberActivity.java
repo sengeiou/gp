@@ -11,6 +11,9 @@ import android.widget.Button;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.tencent.TIMConversation;
+import com.tencent.TIMConversationType;
+import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
 import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
@@ -19,6 +22,7 @@ import com.ubtechinc.commlib.view.SpaceItemDecoration;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
+import com.ubtechinc.goldenpig.comm.entity.PairPig;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.view.WrapContentLinearLayoutManager;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
@@ -117,10 +121,27 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
     }
 
     private void imSyncRelationShip() {
-        //TODO 给自己的猪发
         if (AuthLive.getInstance().getCurrentPig().isAdmin) {
+            //TODO 给自己的猪发
             TIMMessage selfMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(3));
             UbtTIMManager.getInstance().sendTIM(selfMessage);
+
+            //TODO 如果有配对关系
+            PairPig pairPig = AuthLive.getInstance().getPairPig();
+            if (pairPig != null) {
+                //TODO 给配对的用户发
+                TIMConversation pairUserConversation = TIMManager.getInstance().getConversation(
+                        TIMConversationType.C2C, String.valueOf(pairPig.getPairUserId()));
+                TIMMessage pairUserMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(2));
+                UbtTIMManager.getInstance().sendTIM(pairUserMessage, pairUserConversation);
+
+                //TODO 给配对的猪发
+                TIMConversation pairPigConversation = TIMManager.getInstance().getConversation(
+                        TIMConversationType.C2C, pairPig.getPairSerialNumber());
+                TIMMessage pairPigMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(2));
+                UbtTIMManager.getInstance().sendTIM(pairPigMessage, pairPigConversation);
+
+            }
         }
     }
 

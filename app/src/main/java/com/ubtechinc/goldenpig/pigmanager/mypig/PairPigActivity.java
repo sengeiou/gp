@@ -1,6 +1,5 @@
 package com.ubtechinc.goldenpig.pigmanager.mypig;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.view.View;
@@ -16,8 +15,10 @@ import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
+import com.ubtechinc.goldenpig.comm.entity.PairPig;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
+import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.register.UnpairHttpProxy;
 
 /**
@@ -83,11 +84,11 @@ public class PairPigActivity extends BaseToolBarActivity implements View.OnClick
      * 初始化与配对八戒的用户列表
      */
     private void initData() {
-        Intent intent = getIntent();
-        if (intent != null) {
-            pairSerialNumber = intent.getStringExtra("pairSerialNumber");
-            pairUserId = intent.getStringExtra("pairUserId");
-            serialNumber = intent.getStringExtra("serialNumber");
+        PairPig pairPig = AuthLive.getInstance().getPairPig();
+        if (pairPig != null) {
+            pairSerialNumber = pairPig.getPairSerialNumber();
+            pairUserId = String.valueOf(pairPig.getPairUserId());
+            serialNumber = pairPig.getSerialNumber();
             memberNameTv.setText(pairSerialNumber);
         }
     }
@@ -119,6 +120,7 @@ public class PairPigActivity extends BaseToolBarActivity implements View.OnClick
     }
 
     private void onUnPairSuccess() {
+        AuthLive.getInstance().setPairPig(null);
         //TODO 给自己的猪发
         TIMConversation selfConversation = TIMManager.getInstance().getConversation(
                 TIMConversationType.C2C, serialNumber);

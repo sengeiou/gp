@@ -89,8 +89,6 @@ public class UBTPGApplication extends LoginApplication implements Observer {
     static Context mContext;
     public static boolean voiceMail_debug = false;
 
-    public static String mPairSerialNumber;
-
     private UBTBaseDialog mForceOfflineDialog;
 
     private UbtTIMManager mUbtTIMManager;

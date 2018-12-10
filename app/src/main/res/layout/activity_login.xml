@@ -53,8 +53,11 @@
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/tv_agreement_policy"
             android:layout_alignTop="@id/tv_agreement_policy"
-            android:layout_marginRight="@dimen/dp_5"
             android:layout_toLeftOf="@id/tv_agreement_policy"
+            android:paddingBottom="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_10"
+            android:paddingRight="@dimen/dp_5"
+            android:paddingTop="@dimen/dp_10"
             android:src="@drawable/selector_xuanze_radio" />
 
         <TextView
