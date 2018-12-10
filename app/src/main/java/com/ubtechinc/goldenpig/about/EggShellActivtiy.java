@@ -1,6 +1,7 @@
 package com.ubtechinc.goldenpig.about;
 
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.tencent.TIMConversation;
 import com.tencent.TIMConversationType;
@@ -12,6 +13,7 @@ import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.nets.utils.DeviceUtils;
 
 public class EggShellActivtiy extends BaseToolBarActivity {
 
@@ -37,6 +39,9 @@ public class EggShellActivtiy extends BaseToolBarActivity {
             //TODO 关闭adb
             openADB(false);
         });
+
+        TextView tvDevId = findViewById(R.id.tv_devId);
+        tvDevId.setText(getResources().getString(R.string.ubt_devid, DeviceUtils.getDeviceId(this)));
 
     }
 

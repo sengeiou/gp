@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
+import com.ubtechinc.goldenpig.comm.entity.PairPig;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.BleWebActivity;
@@ -22,6 +23,7 @@ import com.ubtechinc.goldenpig.personal.remind.RemindActivity;
 import com.ubtechinc.goldenpig.pigmanager.RecordActivity;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.pigmanager.mypig.PairPigActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.QRCodeActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.voiceChat.ui.ChatActivity;
@@ -76,7 +78,12 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
                 case PAIR:
                     HashMap<String, Boolean> param = new HashMap<>();
                     param.put("isPair", true);
-                    enterFunction(QRCodeActivity.class, param);
+                    PairPig pairPig = AuthLive.getInstance().getPairPig();
+                    if (pairPig != null) {
+                        enterFunction(PairPigActivity.class, param);
+                    } else {
+                        enterFunction(QRCodeActivity.class, param);
+                    }
                     break;
                 case ALARM:
                     enterFunction(AlarmListActivity.class, null);
