@@ -218,4 +218,6 @@
     <string name="main_bt_speaker">蓝牙音箱</string>
 
     <string name="ubt_bajie">BaJie_%1$s</string>
+    <string name="ubt_devid">设备ID：%1$s</string>
+
 </resources>

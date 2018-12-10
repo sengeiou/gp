@@ -245,6 +245,7 @@ public class PigNewFragment extends BaseFragment implements Observer {
             tvPigSn.setText(getString(R.string.ubt_bajie, name));
         } else {
             btnBinding.setVisibility(View.VISIBLE);
+            tvPigSn.setVisibility(View.GONE);
         }
     }
 

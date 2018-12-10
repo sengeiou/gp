@@ -30,9 +30,17 @@
         android:gravity="center_vertical|left"
         android:paddingEnd="@dimen/dp_16"
         android:paddingStart="@dimen/dp_16"
-        android:text="ABD关闭"
+        android:text="ADB关闭"
         android:textColor="@color/ubt_tips_txt_color"
         android:textSize="@dimen/sp_15" />
+
+    <TextView
+        android:id="@+id/tv_devId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_margin="@dimen/dp_14"
+        android:text="设备id"/>
 
 </LinearLayout>
 
