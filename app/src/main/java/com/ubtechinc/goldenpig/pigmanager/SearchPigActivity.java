@@ -423,7 +423,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
             HashMap<String, String> map = new HashMap<>();
             map.put("PigWifiName", mPigWifiName);
             ActivityRoute.toAnotherActivity(SearchPigActivity.this, PigWifiInfoActivity.class, map, false);
-        } else if (mPigMobileType != -1) {
+        } else if (mPigMobileType != -1 && mPigMobileType != 0) {
             ActivityRoute.toAnotherActivity(SearchPigActivity.this, PigWifiInfoActivity.class, false);
         } else {
             ActivityRoute.toAnotherActivity(SearchPigActivity.this, SetPigNetWorkActivity.class, false);
