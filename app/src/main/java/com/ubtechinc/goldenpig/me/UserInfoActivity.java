@@ -8,8 +8,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.tencent.ai.tvs.ConstantValues;
-import com.tencent.ai.tvs.info.UserInfoManager;
 import com.ubtech.utilcode.utils.StringUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.ActivityManager;
@@ -22,6 +20,7 @@ import com.ubtechinc.goldenpig.login.LoginModel;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.login.repository.UBTAuthRepository;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.utils.TvsUtil;
 
 /**
  * @auther :hqt
@@ -74,24 +73,13 @@ public class UserInfoActivity extends BaseToolBarActivity implements View.OnClic
         if (mUser != null) {
             if (!TextUtils.isEmpty(mUser.getNickName())) {
                 mUserNameTv.setText(StringUtils.utf8ToString(mUser.getNickName()));
-                mUserAccountTv.setText(currentPlatform());
+                mUserAccountTv.setText(TvsUtil.currentPlatformValue());
             }
             if (!TextUtils.isEmpty(mUser.getUserImage())) {
                 Glide.with(this).load(mUser.getUserImage()).centerCrop().transform(new GlideCircleTransform(this))
                         .placeholder(R.drawable.ic_sign_in).into(mPhotoImg);
 
             }
-        }
-    }
-
-    private String currentPlatform() {
-        switch (UserInfoManager.getInstance().idType) {
-            case ConstantValues.PLATFORM_WX:
-                return "微信";
-            case ConstantValues.PLATFORM_QQOPEN:
-                return "QQ";
-            default:
-                return "未知";
         }
     }
 
