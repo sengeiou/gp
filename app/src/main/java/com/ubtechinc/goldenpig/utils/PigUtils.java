@@ -59,8 +59,6 @@ public class PigUtils {
                             ubtTIMManager.loginTIM(userId, pigInfo.getRobotName(), com.ubt.imlibv2.BuildConfig
                                     .IM_Channel);
                         }
-                        Event<Integer> event = new Event<>(EventBusUtil.CONTACT_PIC_SUCCESS);
-                        EventBusUtil.sendEvent(event);
                     }
                 }
             } catch (JSONException e) {

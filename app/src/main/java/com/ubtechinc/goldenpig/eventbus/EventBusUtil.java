@@ -43,7 +43,9 @@ public class EventBusUtil {
     public static final int USER_PIG_UPDATE = 10018;
     public static final int PAIR_PIG_UPDATE = 10019;
     public static final int TVS_LOGOUT_SUCCESS = 10020;
-    public static final int NEW_MESSAGE_NOTIFICATION=20001;
+    public static final int NEW_MESSAGE_NOTIFICATION = 20001;
+    public static final int NEW_CALL_RECORD = 20002;
+    public static final int NETWORK_STATE_CHANGED = 20003;
 
     public static final int SERVER_RESPONSE_UNAUTHORIZED = 401;
 
