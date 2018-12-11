@@ -167,12 +167,11 @@ public class PigNewFragment extends BaseFragment {
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        if (isVisibleToUser) {
-            PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
-            if (pigInfo != null && pigInfo.isAdmin && pigInfo.isOnline()) {
-                unReadVoiceMail("setOnUbtTIMConver-DEBUG");
-            }
+    public void onResume() {
+        super.onResume();
+        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+        if (pigInfo != null && pigInfo.isAdmin) {
+            unReadVoiceMail("setOnUbtTIMConver-DEBUG");
         }
     }
 
