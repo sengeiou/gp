@@ -25,8 +25,11 @@ import com.tencent.ai.tvs.info.UserInfoManager;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
+import com.ubt.improtolib.UserRecords;
 import com.ubtech.utilcode.utils.ActivityTool;
 import com.ubtech.utilcode.utils.LogUtils;
+import com.ubtech.utilcode.utils.SPUtils;
+import com.ubtech.utilcode.utils.network.NetworkHelper;
 import com.ubtechinc.commlib.log.UBTLog;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.commlib.utils.ContextUtils;
@@ -70,10 +73,12 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.Executors;
 
+import static com.ubtechinc.goldenpig.app.Constant.SP_HAS_LOOK_LAST_RECORD;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.PUSH_MESSAGE_RECEIVED;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.PUSH_NOTIFICATION_RECEIVED;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SERVER_RESPONSE_UNAUTHORIZED;
@@ -103,6 +108,10 @@ public class UBTPGApplication extends LoginApplication implements Observer {
     public static final String TAG = "goldpig";
 
     private boolean isShowForceOfflineDialog;
+
+    NetworkHelper.NetworkInductor netWorkInductor = null;
+
+    public static boolean isNetAvailable = true;
 
     @Override
     public void onCreate() {
@@ -145,6 +154,22 @@ public class UBTPGApplication extends LoginApplication implements Observer {
         initTIMListener();
         HttpManager.interceptors.add(new ResponseInterceptor());
         initService();
+        initNetListener();
+    }
+
+    private void initNetListener() {
+        NetworkHelper.sharedHelper().addNetworkInductor(netWorkInductor = networkStatus -> {
+            LogUtils.d(TAG, "onNetworkChanged----net available :" + NetworkHelper.sharedHelper().isNetworkAvailable());
+            if (NetworkHelper.sharedHelper().isNetworkAvailable()) {
+                //TODO 网络可用
+                isNetAvailable = true;
+            } else {
+                //TODO 网络不可用
+                isNetAvailable = false;
+            }
+            EventBusUtil.sendEvent(new Event(EventBusUtil.NETWORK_STATE_CHANGED));
+        });
+        NetworkHelper.sharedHelper().registerNetworkSensor(getApplicationContext());
     }
 
     private void initSCADA() {
@@ -312,6 +337,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                     PushHttpProxy pushHttpProxy = new PushHttpProxy();
                     pushHttpProxy.bindToken(appId, pushToken, userId, appVersion, BuildConfig.product, authorization, null);
                 }
+                updatePigPair(true);
                 break;
             case TVS_LOGOUT_SUCCESS:
                 UbtTIMManager.getInstance().doTIMLogout();
@@ -423,6 +449,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
     public void onTerminate() {
         super.onTerminate();
         EventBusUtil.unregister(this);
+        NetworkHelper.sharedHelper().unregisterNetworkSensor(getApplicationContext());
     }
 
     public static UBTPGApplication getInstance() {
@@ -442,7 +469,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                 if (tIMElem != null && tIMElem instanceof TIMCustomElem) {
                     TIMCustomElem elem = (TIMCustomElem) tIMElem;
                     dealMsg(elem.getData());
-                }else if(tIMElem != null && tIMElem instanceof TIMSoundElem){
+                } else if (tIMElem != null && tIMElem instanceof TIMSoundElem) {
                     Event<Integer> event = new Event<>(EventBusUtil.NEW_MESSAGE_NOTIFICATION);
                     EventBusUtil.sendEvent(event);
                 }
@@ -462,6 +489,21 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                 int event = info.getEvent();
                 handleRelationShip(event);
             }
+        } else if (action.equals(ContactsProtoBuilder.IM_RECORD_LATEST)) {
+            List<UserRecords.Record> list = msg.getPayload().unpack(UserRecords.UserRecord
+                    .class).getRecordList();
+            boolean hasRecord = false;
+            if (list != null && !list.isEmpty()) {
+                if (list.get(0).getType() == 3) {
+                    hasRecord = true;
+                }
+                SPUtils.get().put(SP_HAS_LOOK_LAST_RECORD, list.get(0).getType());
+            }
+            if (hasRecord) {
+                Event<Boolean> event = new Event<>(EventBusUtil.NEW_CALL_RECORD);
+                event.setData(hasRecord);
+                EventBusUtil.sendEvent(event);
+            }
         }
     }
 
@@ -472,12 +514,12 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                 break;
             case 2:
                 //配对关系变化
-                updatePigPair();
+                updatePigPair(false);
                 break;
         }
     }
 
-    private void updatePigPair() {
+    private void updatePigPair(boolean initiative) {
         new GetPairPigQRHttpProxy().getPairPigQR(this, CookieInterceptor.get().getToken(), BuildConfig
                 .APP_ID, new GetPairPigQRHttpProxy.GetPairPigQRCallBack() {
             @Override
@@ -486,12 +528,13 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                 AuthLive.getInstance().setPairPig(null);
                 Event<Integer> event = new Event<>(EventBusUtil.PAIR_PIG_UPDATE);
                 EventBusUtil.sendEvent(event);
-                showUnpairPigDialog();
+                if (!initiative) {
+                    showUnpairPigDialog();
+                }
             }
 
             @Override
             public void onSuccess(String response) {
-
                 //TODO 刷新配对关系
                 if (!TextUtils.isEmpty(response)) {
                     try {

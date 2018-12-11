@@ -33,6 +33,8 @@ public class ContactsProtoBuilder {
 
     public static final String IM_SETTINGS_ABD = "/im/settings/adb";
 
+    public static final String IM_RECORD_LATEST = "/im/record/latest";
+
     public static byte[] getAddContactsInfo(String name, String number) {
 
         ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder()
