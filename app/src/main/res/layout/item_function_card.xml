@@ -1,18 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TextView
         android:id="@+id/tv_func_label"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:drawablePadding="@dimen/dp_10"
         android:drawableTop="@drawable/ic_bt_speaker"
         android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         android:text="语音留言"
         android:textColor="#FF454B59"
         android:padding="@dimen/dp_10"
         android:textSize="14sp" />
+
+    <ImageView
+        android:id="@+id/iv_red_point"
+        android:layout_width="@dimen/dp_7"
+        android:layout_height="@dimen/dp_7"
+        android:src="@drawable/ic_weidu"
+        android:layout_marginTop="@dimen/dp_14"
+        android:layout_marginRight="@dimen/dp_14"
+        app:layout_constraintTop_toTopOf="@+id/tv_func_label"
+        app:layout_constraintRight_toRightOf="@+id/tv_func_label"/>
 
 </android.support.constraint.ConstraintLayout>

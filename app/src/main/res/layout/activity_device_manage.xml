@@ -109,6 +109,7 @@
         android:layout_height="@dimen/dp_45"
         android:layout_marginTop="@dimen/dp_10"
         android:background="@color/ubt_white"
+        android:visibility="gone"
         android:orientation="horizontal">
 
         <TextView

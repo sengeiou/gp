@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.tencent.ai.tvs.AuthorizeListener;
+import com.tencent.ai.tvs.BindingListener;
 import com.tencent.ai.tvs.ConstantValues;
 import com.tencent.ai.tvs.LoginProxy;
 import com.tencent.ai.tvs.comm.CommOpInfo;
@@ -19,7 +20,6 @@ import com.tencent.ai.tvs.ui.UserCenterStateListener;
 import com.ubtechinc.tvlloginlib.entity.LoginInfo;
 
 import SmartService.EAIPushIdType;
-import qrom.component.push.base.utils.LogUtil;
 
 import static com.ubtechinc.tvlloginlib.TVSManager.DEVICE_OEM;
 import static com.ubtechinc.tvlloginlib.TVSManager.DEVICE_TYPE;
@@ -56,6 +56,31 @@ public abstract class BaseClient implements AuthorizeListener {
         this.platform = platform;
         this.listener = listener;
         loginInfoManager = proxy.getInfoManager(platform);
+        initListener();
+    }
+
+    private void initListener() {
+        proxy.setBindingListener(new BindingListener() {
+            @Override
+            public void onSuccess(int type, CommOpInfo commOpInfo) {
+                switch (type) {
+                    case BindingListener.SET_PUSH_MAP_INFOEX_TYPE:
+                        Log.d(TAG, "绑定成功：" + commOpInfo);
+                        break;
+                    default:
+                }
+            }
+
+            @Override
+            public void onError(int type, CommOpInfo commOpInfo) {
+                switch (type) {
+                    case BindingListener.SET_PUSH_MAP_INFOEX_TYPE:
+                        Log.d(TAG, "绑定失败：" + commOpInfo);
+                        break;
+                    default:
+                }
+            }
+        });
     }
 
     public boolean isTokenExist(Context context) {
@@ -324,14 +349,14 @@ public abstract class BaseClient implements AuthorizeListener {
         Log.d("hdf", "bindRobot");
         PushInfoManager pushManager = PushInfoManager.getInstance();
         DeviceManager deviceManager = new DeviceManager();
-        deviceManager.deviceOEM = DEVICE_OEM;
-        deviceManager.deviceType = DEVICE_TYPE;
+//        deviceManager.deviceOEM = DEVICE_OEM;
+//        deviceManager.deviceType = DEVICE_TYPE;
         deviceManager.productId = PRODUCT_ID;
         deviceManager.dsn = dsn;
         pushManager.idType = EAIPushIdType._ETVSSpeakerIdentifier;
         pushManager.idExtra = ConstantValues.PUSHMGR_IDEXTRA;
         proxy.requestSetPushMapInfoEx(platform, pushManager, deviceManager);
-        proxy.requestGetPushDeviceInfo(platform);
+//        proxy.requestGetPushDeviceInfo(platform);
     }
 
     public void unbindRobot(String dsn) {

@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ubtech.utilcode.utils.ToastUtils;
@@ -19,6 +20,7 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.BleWebActivity;
 import com.ubtechinc.goldenpig.personal.alarm.AlarmListActivity;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionActivity;
+import com.ubtechinc.goldenpig.personal.management.AddressBookActivity;
 import com.ubtechinc.goldenpig.personal.remind.RemindActivity;
 import com.ubtechinc.goldenpig.pigmanager.RecordActivity;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
@@ -54,6 +56,7 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
         holder.tvItem.setText(functionEnum.label);
         holder.tvItem.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(context, functionEnum.resIcon),
                 null, null);
+        holder.ivRedPoint.setVisibility(functionEnum.hasRedPoint ? View.VISIBLE : View.GONE);
         holder.itemView.setTag(functionEnum);
     }
 
@@ -76,12 +79,12 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
                     }
                     break;
                 case PAIR:
-                    HashMap<String, Boolean> param = new HashMap<>();
-                    param.put("isPair", true);
                     PairPig pairPig = AuthLive.getInstance().getPairPig();
                     if (pairPig != null) {
-                        enterFunction(PairPigActivity.class, param);
+                        enterFunction(PairPigActivity.class, null);
                     } else {
+                        HashMap<String, Boolean> param = new HashMap<>();
+                        param.put("isPair", true);
                         enterFunction(QRCodeActivity.class, param);
                     }
                     break;
@@ -97,11 +100,18 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
                 case CALL_RECORD:
                     enterFunction(RecordActivity.class, null);
                     break;
+                case MAIL_LIST:
+                    enterFunction(AddressBookActivity.class, null);
+                    break;
                 case BLE:
                     ActivityRoute.toAnotherActivity((Activity) context, BleWebActivity.class, false);
                     break;
             }
         }
+    }
+
+    public void notifyItemChanged(FunctionEnum functionEnum) {
+        notifyItemChanged(functionEnum.ordinal());
     }
 
     private void enterFunction(Class clazz, HashMap<String, ? extends Object> hashMap) {
@@ -141,10 +151,12 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
     class ViewHodler extends RecyclerView.ViewHolder {
 
         TextView tvItem;
+        ImageView ivRedPoint;
 
         public ViewHodler(View itemView) {
             super(itemView);
             tvItem = itemView.findViewById(R.id.tv_func_label);
+            ivRedPoint = itemView.findViewById(R.id.iv_red_point);
             itemView.setOnClickListener(MainFunctionAdapter.this);
         }
     }
@@ -157,15 +169,24 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
         REMIND("日程提醒", R.drawable.ic_scheduel),
         CUSTOM_QA("定制问答", R.drawable.ic_question_answer),
         CALL_RECORD("最近通话", R.drawable.ic_call_record),
+        MAIL_LIST("通讯录", R.drawable.ic_mail_list),
         BLE("蓝牙音箱", R.drawable.ic_bt_speaker),;
 
         String label;
         int resIcon;
+        boolean hasRedPoint;
 
         FunctionEnum(String label, int resIcon) {
             this.label = label;
             this.resIcon = resIcon;
         }
 
+        public boolean isHasRedPoint() {
+            return hasRedPoint;
+        }
+
+        public void setHasRedPoint(boolean hasRedPoint) {
+            this.hasRedPoint = hasRedPoint;
+        }
     }
 }

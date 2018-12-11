@@ -29,8 +29,7 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
 
     public static final String DEVICE_OEM = "wukong_robot";
     public static final String DEVICE_TYPE = "ROBOT";
-    public static final String PRODUCT_ID =
-            "fb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589";
+    public static final String PRODUCT_ID = "ffb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589";
 
     private BaseClient wxClient;
     private BaseClient qqClient;

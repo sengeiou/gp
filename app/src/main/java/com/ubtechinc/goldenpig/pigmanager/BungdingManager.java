@@ -29,7 +29,6 @@ import com.ubtechinc.goldenpig.pigmanager.observeable.RobotBindStateLive;
 import com.ubtechinc.goldenpig.pigmanager.register.RegisterPigRepository;
 import com.ubtechinc.goldenpig.utils.SCADAHelper;
 import com.ubtechinc.tvlloginlib.TVSManager;
-import com.ubtrobot.analytics.mobile.AnalyticsKit;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -379,6 +378,10 @@ public class BungdingManager {
         if (!TextUtils.isEmpty(clientTrans)) {
             UbtBluetoothManager.getInstance().sendMessageToBle(clientTrans);
         }
+
+        //TODO dsn注册音乐会员
+        TVSManager tvsManager = TVSManager.getInstance(mContext, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ);
+        tvsManager.bindRobot(mSerialId);
     }
 
 

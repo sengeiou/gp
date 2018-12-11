@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.text.TextUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -856,6 +857,23 @@ public class StringUtils {
             }
         }
         return str;
+    }
+
+    /**
+     * utf-8换成字符串
+     *
+     * @param str
+     * @return
+     */
+    public static String utf8ToString(String str) {
+        String result = null;
+        try {
+            result = URLDecoder.decode(str, "UTF-8");
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return result;
     }
 
     /**

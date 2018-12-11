@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.tencent.ai.tvs.ConstantValues;
 import com.tencent.ai.tvs.info.UserInfoManager;
+import com.ubtech.utilcode.utils.StringUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.ActivityManager;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
@@ -72,7 +73,7 @@ public class UserInfoActivity extends BaseToolBarActivity implements View.OnClic
 
         if (mUser != null) {
             if (!TextUtils.isEmpty(mUser.getNickName())) {
-                mUserNameTv.setText(mUser.getNickName());
+                mUserNameTv.setText(StringUtils.utf8ToString(mUser.getNickName()));
                 mUserAccountTv.setText(currentPlatform());
             }
             if (!TextUtils.isEmpty(mUser.getUserImage())) {

@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.ubtech.utilcode.utils.StringUtils;
 import com.ubtechinc.commlib.utils.ContextUtils;
 import com.ubtechinc.commlib.view.UbtSubTxtButton;
 import com.ubtechinc.goldenpig.R;
@@ -55,7 +56,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
 
     private View mToUserInfo;
     private View mSetNetBtn;   //绑定配网按钮
-    ;
+
     private View mFeedBackBtn; //反馈帮助
     private UbtSubTxtButton mAboutBtn; //关于页按钮
     private ImageView mPohtoImg;
@@ -196,7 +197,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                     .into(mPohtoImg);
 
             mNikenameTv = (TextView) getActivity().findViewById(R.id.ubt_tv_me_nikename);
-            mNikenameTv.setText(AuthLive.getInstance().getCurrentUser().getNickName());
+            mNikenameTv.setText(StringUtils.utf8ToString(AuthLive.getInstance().getCurrentUser().getNickName()));
         }
         mTitle = getActivity().findViewById(R.id.ubt_me_fragment_title);
         mCyanBg = getActivity().findViewById(R.id.ubt_me_normal_bg);

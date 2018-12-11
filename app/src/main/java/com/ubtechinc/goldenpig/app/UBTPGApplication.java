@@ -224,11 +224,16 @@ public class UBTPGApplication extends LoginApplication implements Observer {
         if (pigInfo != null && pigInfo.isAdmin) {
             ProductManager.getInstance().productId = BuildConfig.PRODUCT_ID;
             ProductManager.getInstance().dsn = pigInfo.getRobotName();
-            String clientId = TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ).getClientId();
+
+            TVSManager tvsManager = TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ);
+            String clientId = tvsManager.getClientId();
             TIMMessage selfMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getClientId(clientId));
             TIMConversation pigConversation = TIMManager.getInstance().getConversation(
                     TIMConversationType.C2C, pigInfo.getRobotName());
             mUbtTIMManager.sendTIM(selfMessage, pigConversation);
+
+            //TODO dsn注册音乐会员
+            tvsManager.bindRobot(pigInfo.getRobotName());
         }
     }
 

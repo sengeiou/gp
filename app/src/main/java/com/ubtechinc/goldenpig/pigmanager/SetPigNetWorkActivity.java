@@ -20,6 +20,7 @@ import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.commlib.utils.WifiUtils;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.app.ActivityManager;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.view.UbtPasswordEditText;
 import com.ubtechinc.goldenpig.comm.view.UbtWifiListEditText;
@@ -120,10 +121,12 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
             mTvSkip.postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    ActivityManager.getInstance().popAllActivity();
                     ActivityRoute.toAnotherActivity(SetPigNetWorkActivity.this, MainActivity.class, true);
                 }
             }, 1000);
         } else {
+            ActivityManager.getInstance().popAllActivity();
             ActivityRoute.toAnotherActivity(this, MainActivity.class, true);
         }
     }

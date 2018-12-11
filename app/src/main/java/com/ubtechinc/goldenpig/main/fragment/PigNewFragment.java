@@ -101,7 +101,9 @@ public class PigNewFragment extends BaseFragment implements Observer {
 
     @BindView(R.id.iv_unreadvoice)
     ImageView mVoiceUnRead;
+
     PigFragmentAdapter adapter;
+    MainFunctionAdapter mainFunctionAdapter;
     private List<String> list = new ArrayList<String>();
 
 
@@ -131,9 +133,20 @@ public class PigNewFragment extends BaseFragment implements Observer {
     }
 
     private void initFunctionCard() {
-        MainFunctionAdapter adapter = new MainFunctionAdapter(getActivity(), new ArrayList<>(Arrays.asList(MainFunctionAdapter.FunctionEnum.values())));
+        if (mainFunctionAdapter == null) {
+            mainFunctionAdapter = new MainFunctionAdapter(getActivity(), new ArrayList<>(Arrays.asList(MainFunctionAdapter.FunctionEnum.values())));
+        }
         rvFunctionCard.setLayoutManager(new GridLayoutManager(getActivity(), 4));
         rvFunctionCard.setAdapter(adapter);
+    }
+
+    /**
+     * 功能卡片更新样例
+     */
+    private void updateFunctionSample() {
+        MainFunctionAdapter.FunctionEnum ob = MainFunctionAdapter.FunctionEnum.VOICE_MAIL;
+        ob.hasRedPoint = true;
+        mainFunctionAdapter.notifyItemChanged(ob);
     }
 
     private void initRecycleList() {
