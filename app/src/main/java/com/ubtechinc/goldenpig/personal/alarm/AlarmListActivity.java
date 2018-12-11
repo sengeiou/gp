@@ -283,6 +283,20 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
 //                                        model.amOrpm = "上午";
 //                                        model.time = time;
 //                                    }
+//                                    }
+//                                    model.time = time;
+//                                    String[] times = time.split(":");
+//                                    int hour = Integer.parseInt(times[0]);
+//                                    if (hour >= 19) {
+//                                        model.amOrpm = "晚上";
+//                                        model.time = (hour - 12) + ":" + times[1];
+//                                    } else if (hour >= 13) {
+//                                        model.amOrpm = "下午";
+//                                        model.time = (hour - 12) + ":" + times[1];
+//                                    } else {
+//                                        model.amOrpm = "上午";
+//                                        model.time = time;
+//                                    }
                                 } catch (Exception e) {
                                 }
                                 list.add(model);
@@ -290,6 +304,7 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+
                         onRefreshSuccess(list);
                     }
 

@@ -115,9 +115,6 @@ public class PigFragment extends BaseFragment implements Observer {
     @BindView(R.id.iv_unreadrecord)
     ImageView iv_unreadrecord;
 
-    int pairUserId;
-    String serialNumber;
-    String pairSerialNumber;
     int userId;
 
     //TODO
@@ -297,9 +294,9 @@ public class PigFragment extends BaseFragment implements Observer {
                         if (jsonObject != null) {
                             JSONObject pairData = new JSONObject(jsonObject.optString("pairData"));
                             if (pairData != null) {
-                                pairUserId = pairData.optInt("pairUserId");
-                                serialNumber = pairData.optString("serialNumber");
-                                pairSerialNumber = pairData.optString("pairSerialNumber");
+                                int pairUserId = pairData.optInt("pairUserId");
+                                String serialNumber = pairData.optString("serialNumber");
+                                String pairSerialNumber = pairData.optString("pairSerialNumber");
                                 userId = pairData.optInt("userId");
                                 PairPig pairPig = new PairPig();
                                 pairPig.setPairUserId(pairUserId);
@@ -319,11 +316,6 @@ public class PigFragment extends BaseFragment implements Observer {
     }
 
     private void showPigPair(boolean hasPair) {
-        if (hasPair) {
-            UBTPGApplication.mPairSerialNumber = pairSerialNumber;
-        } else {
-            UBTPGApplication.mPairSerialNumber = null;
-        }
         if (viewPigPairInfo != null) {
             viewPigPairInfo.setVisibility(hasPair ? View.VISIBLE : View.GONE);
         }
@@ -378,11 +370,10 @@ public class PigFragment extends BaseFragment implements Observer {
                 break;
             case R.id.view_pig_pair_info:
                 //TODO 配对列表
-                HashMap<String, String> map = new HashMap<>();
-                map.put("serialNumber", serialNumber);
-                map.put("pairSerialNumber", pairSerialNumber);
-                map.put("pairUserId", String.valueOf(pairUserId));
-                ActivityRoute.toAnotherActivity(getActivity(), PairPigActivity.class, map, false);
+                PairPig pairPig = AuthLive.getInstance().getPairPig();
+                if (pairPig != null) {
+                    ActivityRoute.toAnotherActivity(getActivity(), PairPigActivity.class, false);
+                }
                 break;
             case R.id.ubt_bind_tv:
                 ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class, false);

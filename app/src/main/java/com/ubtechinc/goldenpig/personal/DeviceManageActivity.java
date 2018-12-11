@@ -3,7 +3,6 @@ package com.ubtechinc.goldenpig.personal;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -12,8 +11,8 @@ import com.ubt.qrcodelib.Constants;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
-import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
+import com.ubtechinc.goldenpig.comm.entity.PairPig;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
@@ -171,12 +170,9 @@ public class DeviceManageActivity extends BaseToolBarActivity implements View.On
                         .class, false);
                 break;
             case R.id.rl_pairing:
-                String pairSerialNumber = UBTPGApplication.mPairSerialNumber;
-                if (!TextUtils.isEmpty(pairSerialNumber)) {
-                    //TODO 配对列表
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put("pairSerialNumber", String.valueOf(pairSerialNumber));
-                    ActivityRoute.toAnotherActivity(this, PairPigActivity.class, map, false);
+                PairPig pairPig = AuthLive.getInstance().getPairPig();
+                if (pairPig != null) {
+                    ActivityRoute.toAnotherActivity(this, PairPigActivity.class, false);
                 } else {
                     HashMap<String, Boolean> param = new HashMap<>();
                     param.put("isPair", true);

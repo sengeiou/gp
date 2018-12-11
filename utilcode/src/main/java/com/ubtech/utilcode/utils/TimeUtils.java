@@ -1190,8 +1190,6 @@ public class TimeUtils {
             "MM-dd-HH-mm");
     public static final SimpleDateFormat DATE_FORMAT_ONLY_TIME_12 = new SimpleDateFormat(
             "h:mm");
-
-
     /**
      * 精确到毫秒
      */
@@ -1838,7 +1836,6 @@ public class TimeUtils {
     private static long toDay(long millis) {
         return (millis + TimeZone.getDefault().getOffset(millis)) / ONE_DAY;
     }
-
 
     /**
      * 将时间字符串转为时间戳
