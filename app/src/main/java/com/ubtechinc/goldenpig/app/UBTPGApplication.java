@@ -43,7 +43,6 @@ import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.LoginActivity;
 import com.ubtechinc.goldenpig.login.LoginModel;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
-import com.ubtechinc.goldenpig.login.repository.UBTAuthRepository;
 import com.ubtechinc.goldenpig.net.ResponseInterceptor;
 import com.ubtechinc.goldenpig.pigmanager.SetPigNetWorkActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
@@ -102,8 +101,6 @@ public class UBTPGApplication extends LoginApplication implements Observer {
 
     public static Activity mTopActivity;
 
-    private UBTAuthRepository ubtAuthRepository;
-
     public static final String TAG = "goldpig";
 
     private boolean isShowForceOfflineDialog;
@@ -138,8 +135,10 @@ public class UBTPGApplication extends LoginApplication implements Observer {
 
         //SCADA
         initSCADA();
+
         //bugly
         CrashReport.initCrashReport(getApplicationContext(), "85c6f36db6", BuildConfig.DEBUG);
+
         MultiDex.install(this);
         com.ubtech.utilcode.utils.Utils.init(this);
         instance = this;
@@ -221,7 +220,6 @@ public class UBTPGApplication extends LoginApplication implements Observer {
     }
 
     private void initTIMListener() {
-        ubtAuthRepository = new UBTAuthRepository();
         mUbtTIMManager = UbtTIMManager.getInstance();
         mUbtTIMManager.setMsgObserve(this);
         mUbtTIMManager.setUbtIMCallBack(new UbtTIMManager.UbtIMCallBack() {
@@ -280,7 +278,6 @@ public class UBTPGApplication extends LoginApplication implements Observer {
             @Override
             public void onRightButtonClick(View view) {
                 isShowForceOfflineDialog = false;
-//                ubtAuthRepository.logout(null);
                 doLogout();
             }
 
