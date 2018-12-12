@@ -1,5 +1,6 @@
 package com.ubtechinc.goldenpig.pigmanager.mypig;
 
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.tencent.TIMConversation;
@@ -9,24 +10,33 @@ import com.tencent.TIMMessage;
 import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.qrcodelib.QRScannerActivity;
+import com.ubtech.utilcode.utils.ActivityTool;
 import com.ubtech.utilcode.utils.ToastUtils;
-import com.ubtechinc.commlib.log.UBTLog;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.comm.entity.PairPig;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
-import com.ubtechinc.goldenpig.pigmanager.register.GetPairPigQRHttpProxy;
+import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
+import com.ubtechinc.goldenpig.eventbus.modle.Event;
+import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.register.PairPigHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.HashMap;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.PAIR_PIG_UPDATE;
 
 /**
  * @author ubt
  */
 public class PairQRScannerActivity extends QRScannerActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBusUtil.register(this);
+    }
 
     @Override
     protected String getQrTitle() {
@@ -44,94 +54,78 @@ public class PairQRScannerActivity extends QRScannerActivity {
                 BuildConfig.APP_ID, msg, new PairPigHttpProxy.PairPigCallback() {
                     @Override
                     public void onError(String error) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (!TextUtils.isEmpty(error)) {
-                                    setErrorTips(error);
-                                } else {
-                                    setErrorTips(getString(R.string.ubt_pair_pig_fialure));
-                                }
+                        runOnUiThread(() -> {
+                            if (!TextUtils.isEmpty(error)) {
+                                setErrorTips(error);
+                            } else {
+                                setErrorTips(getString(R.string.ubt_pair_pig_fialure));
                             }
                         });
-
                     }
 
                     @Override
                     public void onSuccess() {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                ToastUtils.showShortToast(R.string.ubt_pair_pig_success);
+                        runOnUiThread(() -> {
+                            ToastUtils.showShortToast(R.string.ubt_pair_pig_success);
 
-                                //TODO 配对八戒或解除配对后需要通过IM通知八戒本体功能
-                                getPigPair();
-                            }
+                            //TODO 触发更新配对信息
+                            EventBusUtil.sendEvent(new Event(EventBusUtil.DO_UPDATE_PAIR_PIG));
                         });
                     }
                 });
     }
 
-    private void getPigPair() {
-        new GetPairPigQRHttpProxy().getPairPigQR(this, CookieInterceptor.get().getToken(), BuildConfig
-                .APP_ID, new GetPairPigQRHttpProxy.GetPairPigQRCallBack() {
-            @Override
-            public void onError(String error) {
-
-                //TODO 获取配对数据失败
-                setErrorTips("获取配对数据失败");
-            }
-
-            @Override
-            public void onSuccess(String response) {
-
-                //TODO 刷新配对信息
-                if (!TextUtils.isEmpty(response)) {
-                    try {
-                        JSONObject jsonObject = new JSONObject(response);
-                        if (jsonObject != null) {
-                            JSONObject pairData = new JSONObject(jsonObject.optString("pairData"));
-                            if (pairData != null) {
-                                int userId = pairData.optInt("userId");
-                                String serialNumber = pairData.optString("serialNumber");
-                                int pairUserId = pairData.optInt("pairUserId");
-                                String pairSerialNumber = pairData.optString("pairSerialNumber");
-                                imSyncRelationShip(userId, serialNumber, pairUserId, pairSerialNumber);
-                            }
-                        }
-                    } catch (JSONException e) {
-                        UBTLog.e("pig", e.getMessage());
-                    }
-                }
-            }
-        });
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBusUtil.unregister(this);
     }
 
-    private void imSyncRelationShip(int userId, String serialNumber, int pairUserId, String pairSerialNumber) {
-        HashMap<String, String> map = new HashMap<>();
-        map.put("serialNumber", serialNumber);
-        map.put("pairSerialNumber", pairSerialNumber);
-        map.put("pairUserId", String.valueOf(pairUserId));
-        ActivityRoute.toAnotherActivity(PairQRScannerActivity.this, PairPigActivity.class, map, false);
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveEvent(Event event) {
+        if (event == null) return;
+        int code = event.getCode();
+        switch (code) {
+            case PAIR_PIG_UPDATE:
+                imSyncRelationShip();
+                break;
+        }
+    }
 
-        //TODO 给自己的猪发
-        TIMConversation selfConversation = TIMManager.getInstance().getConversation(
-                TIMConversationType.C2C, serialNumber);
-        TIMMessage selfMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(2));
-        UbtTIMManager.getInstance().sendTIM(selfMessage, selfConversation);
+    /**
+     * 配对八戒或解除配对后需要通过IM通知八戒本体功能
+     */
+    private void imSyncRelationShip() {
+        PairPig pairPig = AuthLive.getInstance().getPairPig();
+        if (pairPig != null) {
+            String serialNumber = pairPig.getSerialNumber();
+            int pairUserId = pairPig.getPairUserId();
+            String pairSerialNumber = pairPig.getPairSerialNumber();
 
-        //TODO 给配对的猪发
-        TIMConversation pairPigConversation = TIMManager.getInstance().getConversation(
-                TIMConversationType.C2C, pairSerialNumber);
-        TIMMessage pairPigMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(2));
-        UbtTIMManager.getInstance().sendTIM(pairPigMessage, pairPigConversation);
+            ActivityRoute.toAnotherActivity(PairQRScannerActivity.this, PairPigActivity.class, true);
+            ActivityTool.finishActivity(QRCodeActivity.class);
+
+            //TODO 给自己的猪发
+            TIMConversation selfConversation = TIMManager.getInstance().getConversation(
+                    TIMConversationType.C2C, serialNumber);
+            TIMMessage selfMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(2));
+            UbtTIMManager.getInstance().sendTIM(selfMessage, selfConversation);
+
+            //TODO 给配对的猪发
+            TIMConversation pairPigConversation = TIMManager.getInstance().getConversation(
+                    TIMConversationType.C2C, pairSerialNumber);
+            TIMMessage pairPigMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(2));
+            UbtTIMManager.getInstance().sendTIM(pairPigMessage, pairPigConversation);
 
 
-        //TODO 给配对的用户发
-        TIMConversation pairUserConversation = TIMManager.getInstance().getConversation(
-                TIMConversationType.C2C, String.valueOf(pairUserId));
-        TIMMessage pairUserMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(2));
-        UbtTIMManager.getInstance().sendTIM(pairUserMessage, pairUserConversation);
+            //TODO 给配对的用户发
+            TIMConversation pairUserConversation = TIMManager.getInstance().getConversation(
+                    TIMConversationType.C2C, String.valueOf(pairUserId));
+            TIMMessage pairUserMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(2));
+            UbtTIMManager.getInstance().sendTIM(pairUserMessage, pairUserConversation);
+        } else {
+            setErrorTips("获取配对数据失败");
+        }
     }
 
 }

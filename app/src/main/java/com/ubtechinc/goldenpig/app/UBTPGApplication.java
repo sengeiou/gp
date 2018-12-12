@@ -79,6 +79,7 @@ import java.util.Observer;
 import java.util.concurrent.Executors;
 
 import static com.ubtechinc.goldenpig.app.Constant.SP_HAS_LOOK_LAST_RECORD;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DO_UPDATE_PAIR_PIG;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.PUSH_MESSAGE_RECEIVED;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.PUSH_NOTIFICATION_RECEIVED;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SERVER_RESPONSE_UNAUTHORIZED;
@@ -327,10 +328,9 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                 AnalyticsKit.setDeviceInfo(userId, AppUtil.getMetaDataFromApp(this, "UMENG_CHANNEL"));
                 PushAppInfo pushAppInfo = AuthLive.getInstance().getPushAppInfo();
                 String pushToken = pushAppInfo.getPushToken();
-                if (!TextUtils.isEmpty(userId) && !TextUtils.isEmpty(pushToken)/* && !pushAppInfo.isBindStatus()*/) {
+                if (!TextUtils.isEmpty(userId) && !TextUtils.isEmpty(pushToken)) {
                     int appId = pushAppInfo.getAppId();
                     String authorization = pushAppInfo.getToken();
-                    AuthLive.getInstance().getUserId();
                     String appVersion = ContextUtils.getVerName(this);
                     PushHttpProxy pushHttpProxy = new PushHttpProxy();
                     pushHttpProxy.bindToken(appId, pushToken, userId, appVersion, BuildConfig.product, authorization, null);
@@ -346,9 +346,11 @@ public class UBTPGApplication extends LoginApplication implements Observer {
             case PUSH_MESSAGE_RECEIVED:
 
                 break;
+            case DO_UPDATE_PAIR_PIG:
+                updatePigPair(true);
+                break;
         }
     }
-
 
     private void showNewManagerDialog(String content) {
         updatePigList();
