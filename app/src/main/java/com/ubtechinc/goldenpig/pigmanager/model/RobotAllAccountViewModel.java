@@ -41,9 +41,9 @@ public class RobotAllAccountViewModel {
         mCheckRobotRepository = new CheckUserRepository();
     }
 
-    public RobotBindStateLive checkRobotBindState(String searialNumber,String token,String appId) {
+    public RobotBindStateLive checkRobotBindState(String searialNumber, String token, String appId) {
         final RobotBindStateLive robotBindStateLive = new RobotBindStateLive();
-        mCheckRobotRepository.getRobotBindUsers(searialNumber,token,appId,"1", new CheckUserRepository.ICheckBindStateCallBack() {
+        mCheckRobotRepository.getRobotBindUsers(searialNumber, token, appId, "", new CheckUserRepository.ICheckBindStateCallBack() {
             @Override
             public void onError(ThrowableWrapper e) {
                 robotBindStateLive.networkError();
@@ -52,7 +52,7 @@ public class RobotAllAccountViewModel {
 
             @Override
             public void onSuccess(CheckBindRobotModule.Response response) {
-                if (response!=null &&response.isSuccess()) {
+                if (response != null && response.isSuccess()) {
                     /*List<CheckBindRobotModule.User> bindUsers = response.getData().getResult();//机器人相关联的账号
                     if (bindUsers != null && bindUsers.size() > 0) {
                         boolean isMaster = checkRobotIsBanding(bindUsers);
@@ -73,28 +73,31 @@ public class RobotAllAccountViewModel {
                     List<CheckBindRobotModule.User> bindUsers = jsonToUserList(jsonStr);//机器人相关联的账号
                     if (bindUsers != null && bindUsers.size() > 0) {
                         int state = getUserRole(bindUsers);
-                        if (state==2) {
+                        if (state == 2) {
+                            //管理员
                             robotBindStateLive.bindByMyself();
-                        } else if (state==1){
+                        } else if (state == 1) {
+                            //普通成员
                             robotBindStateLive.bindByOthers(bindUsers);
-                        }else {
+                        } else {
+                            //非成员
                             robotBindStateLive.haventBind();
                         }
                         new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListHttpProxy.OnGetPigListLitener() {
                             @Override
                             public void onError(ThrowableWrapper e) {
-                                Log.e("getPigList",e.getMessage());
+                                Log.e("getPigList", e.getMessage());
                             }
 
                             @Override
                             public void onException(Exception e) {
-                                Log.e("getPigList",e.getMessage());
+                                Log.e("getPigList", e.getMessage());
                             }
 
                             @Override
                             public void onSuccess(String response) {
-                                Log.e("getPigList",response);
-                                PigUtils.getPigList(response,AuthLive.getInstance().getUserId(),AuthLive.getInstance().getCurrentPigList());
+                                Log.e("getPigList", response);
+                                PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance().getCurrentPigList());
                             }
                         });
                     } else {
@@ -107,7 +110,7 @@ public class RobotAllAccountViewModel {
     }
 
 
-    public LiveResult getBindUsers(String searialNumber){
+    public LiveResult getBindUsers(String searialNumber) {
         final LiveResult result = new LiveResult();
         mCheckRobotRepository.getRobotBindUsers(searialNumber, new CheckUserRepository.ICheckBindStateCallBack() {
             @Override
@@ -121,7 +124,7 @@ public class RobotAllAccountViewModel {
                 if (response.isSuccess()) {
                     List<CheckBindRobotModule.User> bindUsers = response.getData().getResult();//机器人相关联的账号
                     result.success(bindUsers);
-                }else{
+                } else {
                     result.setData(null);
                     result.fail("network error");
                 }
@@ -130,9 +133,9 @@ public class RobotAllAccountViewModel {
             @Override
             public void onSuccessWithJson(String jsonStr) {
                 if (!TextUtils.isEmpty(jsonStr)) {
-                    List<CheckBindRobotModule.User> bindUsers =jsonToUserList(jsonStr);//机器人相关联的账号
+                    List<CheckBindRobotModule.User> bindUsers = jsonToUserList(jsonStr);//机器人相关联的账号
                     result.success(bindUsers);
-                }else{
+                } else {
                     result.setData(null);
                     result.fail("network error");
                 }
@@ -175,7 +178,7 @@ public class RobotAllAccountViewModel {
 
             @Override
             public void onSuccessWithJson(String jsonStr) {
-                if (!TextUtils.isEmpty(jsonStr)){
+                if (!TextUtils.isEmpty(jsonStr)) {
                     List<CheckBindRobotModule.User> bindUsers = jsonToUserList(jsonStr);//机器人相关联的账号
                     if (bindUsers != null && bindUsers.size() > 0) {
                         boolean isMaster = checkRobotMaster(bindUsers);
@@ -199,13 +202,13 @@ public class RobotAllAccountViewModel {
     }
 
     public void doOnError(ThrowableWrapper e) {
-        UbtLogger.e(TAG, "",e);
+        UbtLogger.e(TAG, "", e);
     }
 
     private List<CheckBindRobotModule.User> getSlaverUsers(List<CheckBindRobotModule.User> bindUsers) {
         List<CheckBindRobotModule.User> robotOwners = new ArrayList<>();
         for (CheckBindRobotModule.User user : bindUsers) {
-            if (user.getRoleType()== 1) {
+            if (user.getRoleType() == 1) {
                 robotOwners.add(user);
             }
         }
@@ -215,7 +218,7 @@ public class RobotAllAccountViewModel {
     private boolean checkRobotMaster(List<CheckBindRobotModule.User> bindUsers) {
         boolean flag = false;
         for (CheckBindRobotModule.User user : bindUsers) {
-            if (user.getIsAdmin()==1 && String.valueOf(user.getUserId()).equalsIgnoreCase(AuthLive.getInstance().getUserId())) {
+            if (user.getIsAdmin() == 1 && String.valueOf(user.getUserId()).equalsIgnoreCase(AuthLive.getInstance().getUserId())) {
                 flag = true;
                 break;
             }
@@ -223,36 +226,41 @@ public class RobotAllAccountViewModel {
         return flag;
     }
 
-    private int getUserRole(List<CheckBindRobotModule.User> bindUsers){
-        int flag= 0;
+    private int getUserRole(List<CheckBindRobotModule.User> bindUsers) {
+        //TODO 不在列表里面
+        int flag = 0;
         for (CheckBindRobotModule.User user : bindUsers) {
-            if (String.valueOf(user.getUserId()).equalsIgnoreCase(AuthLive.getInstance().getUserId())){
-                flag=1;
-            }
-            if (user.getIsAdmin()==1 ) {
-                flag = 2;
-                break;
+            if (String.valueOf(user.getUserId()).equalsIgnoreCase(AuthLive.getInstance().getUserId())) {
+                //TODO 普通成员
+                flag = 1;
+                if (user.getIsAdmin() == 1) {
+                    //TODO 管理员
+                    flag = 2;
+                    break;
+                }
             }
         }
         return flag;
     }
+
     private boolean checkRobotIsBanding(List<CheckBindRobotModule.User> bindUsers) {
         boolean flag = false;
         for (CheckBindRobotModule.User user : bindUsers) {
-            if (String.valueOf(user.getUserId()).equalsIgnoreCase(AuthLive.getInstance().getUserId())&&user.getIsAdmin()==1) {
+            if (String.valueOf(user.getUserId()).equalsIgnoreCase(AuthLive.getInstance().getUserId()) && user.getIsAdmin() == 1) {
                 flag = true;
                 break;
             }
         }
         return flag;
     }
-    private List<CheckBindRobotModule.User> jsonToUserList(String jsonStr){
-        List<CheckBindRobotModule.User> result=null;
-        Gson gson=new Gson();
+
+    private List<CheckBindRobotModule.User> jsonToUserList(String jsonStr) {
+        List<CheckBindRobotModule.User> result = null;
+        Gson gson = new Gson();
         try {
             result = gson.fromJson(jsonStr, new TypeToken<List<CheckBindRobotModule.User>>() {
             }.getType());
-        }catch (RuntimeException e){
+        } catch (RuntimeException e) {
             e.printStackTrace();
         }
         return result;

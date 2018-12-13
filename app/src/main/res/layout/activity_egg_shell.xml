@@ -42,5 +42,13 @@
         android:layout_margin="@dimen/dp_14"
         android:text="设备id"/>
 
+    <TextView
+        android:id="@+id/tv_im_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_margin="@dimen/dp_14"
+        android:text="IM状态"/>
+
 </LinearLayout>
 

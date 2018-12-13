@@ -233,30 +233,33 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void changeItemAlpha() {
-        float alpha = 1f;
-        boolean isEnable = true;
-        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
-        if (pigInfo != null && pigInfo.isAdmin) {
-            alpha = 1f;
-            isEnable = true;
-        } else {
-            alpha = 0.5f;
-            isEnable = false;
-        }
+        try {
+            float alpha = 1f;
+            boolean isEnable = true;
+            PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+            if (pigInfo != null && pigInfo.isAdmin) {
+                alpha = 1f;
+                isEnable = true;
+            } else {
+                alpha = 0.5f;
+                isEnable = false;
+            }
 
-        mToHospotBtn.setAlpha(alpha);
-        mToHospotBtn.setEnabled(isEnable);
+            mToHospotBtn.setAlpha(alpha);
+            mToHospotBtn.setEnabled(isEnable);
         /*mDevMangerBtn.setAlpha(alpha);
         mDevMangerBtn.setEnabled(isEnable);*/
-        mAnswerBtn.setAlpha(alpha);
-        mAnswerBtn.setEnabled(isEnable);//isEnable
-        mClockBtn.setAlpha(alpha);
-        mClockBtn.setEnabled(isEnable);
-        mRemindBtn.setAlpha(alpha);
-        mRemindBtn.setEnabled(isEnable);
+            mAnswerBtn.setAlpha(alpha);
+            mAnswerBtn.setEnabled(isEnable);//isEnable
+            mClockBtn.setAlpha(alpha);
+            mClockBtn.setEnabled(isEnable);
+            mRemindBtn.setAlpha(alpha);
+            mRemindBtn.setEnabled(isEnable);
 //        mQQMusicBtn.setAlpha(alpha);
 //        mQQMusicBtn.setEnabled(isEnable);
+        } catch (Exception e) {
 
+        }
     }
 
     @Override

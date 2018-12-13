@@ -105,6 +105,7 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
         });
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setAllowFileAccess(true);
+        mWebView.getSettings().setTextZoom(100);
         processWeb();
 
         //开发稳定后需去掉该行代码

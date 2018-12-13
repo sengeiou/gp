@@ -88,7 +88,7 @@ public class PigNewFragment extends BaseFragment {
         list.add("“小猪小猪，放一首歌”");
         list.add("“小猪小猪，发送留言”");
         list.add("“小猪小猪，我好喜欢你”");
-        list.add("“小猪小猪，打电话给10000”");
+        list.add("“小猪小猪，打电话”");
         list.add("“小猪小猪，今天天气怎么样”");
         list.add("“小猪小猪，提醒我下午四点喝水”");
     }

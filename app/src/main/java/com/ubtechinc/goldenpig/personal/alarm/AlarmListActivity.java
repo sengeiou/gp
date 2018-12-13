@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -20,12 +19,12 @@ import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewImg;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
-import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.model.AlarmModel;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PigUtils;
+import com.ubtechinc.goldenpig.utils.TvsUtil;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.StateView;
 import com.ubtechinc.tvlloginlib.TVSManager;
@@ -183,12 +182,7 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
     }
 
     public void onRefresh() {
-        ELoginPlatform platform;
-        if (CookieInterceptor.get().getThridLogin().getLoginType().toLowerCase().equals("wx")) {
-            platform = ELoginPlatform.WX;
-        } else {
-            platform = ELoginPlatform.QQOpen;
-        }
+        ELoginPlatform platform = TvsUtil.currentPlatform();
         TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ)
                 .requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils
                         .getAlarmUniAccessinfo(0, 1, 0, 0), new TVSManager
@@ -412,12 +406,7 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
     public void deleteAlarm(int position) {
         AlarmModel model = mList.get(position);
         LoadingDialog.getInstance(this).show();
-        ELoginPlatform platform;
-        if (CookieInterceptor.get().getThridLogin().getLoginType().toLowerCase().equals("wx")) {
-            platform = ELoginPlatform.WX;
-        } else {
-            platform = ELoginPlatform.QQOpen;
-        }
+        ELoginPlatform platform = TvsUtil.currentPlatform();
         TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ)
                 .requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils
                         .getAlarmUniAccessinfo(2, model.eRepeatType, model.lAlarmId, model

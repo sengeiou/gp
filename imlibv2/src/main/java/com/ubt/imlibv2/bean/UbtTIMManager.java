@@ -220,11 +220,14 @@ public class UbtTIMManager {
         TIMManager.getInstance().logout(new TIMCallBack() {
             @Override
             public void onError(int i, String s) {
-
+                Log.e(TAG, "TIMCallBack|logout|onError:i:" + i + " s:" + s);
+                //TODO 兼容处理，IM退出成功
+                isLoginedTIM = false;
             }
 
             @Override
             public void onSuccess() {
+                Log.e(TAG, "TIMCallBack|logout|onSuccess");
                 isLoginedTIM = false;
             }
         });
@@ -279,6 +282,7 @@ public class UbtTIMManager {
     private TIMCallBack timCallBack = new TIMCallBack() {
         @Override
         public void onError(int i, String s) {
+            Log.e(TAG, "TIMCallBack|login|onError:i:" + i + " s:" + s);
             if (ubtIMCallBack != null) {
                 ubtIMCallBack.onLoginError(i, s);
             }
@@ -286,6 +290,7 @@ public class UbtTIMManager {
 
         @Override
         public void onSuccess() {
+            Log.d(TAG, "TIMCallBack|login|onSuccess");
             isLoginedTIM = true;
             setPigAccount(pigAccount);
             if (ubtIMCallBack != null) {
@@ -423,6 +428,7 @@ public class UbtTIMManager {
 
             @Override
             public void onError(int i, String s) {
+                Log.e(TAG, "TIMCallBack|sendTIM|onError:i:" + i + " s:" + s);
                 onSendMsgHook(false);
                 if (onUbtTIMConverListener != null) {
                     onUbtTIMConverListener.onError(i, s);
@@ -431,6 +437,7 @@ public class UbtTIMManager {
 
             @Override
             public void onSuccess(TIMMessage timMessage) {
+                Log.d(TAG, "TIMCallBack|sendTIM|onSuccess");
                 onSendMsgHook(true);
                 if (onUbtTIMConverListener != null) {
                     onUbtTIMConverListener.onSuccess();

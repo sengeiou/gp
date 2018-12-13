@@ -226,6 +226,7 @@ public class TransferAdminActivity extends BaseToolBarActivity implements View.O
         Map map = new HashMap();
         map.put("app_category", 1);
         pushHttpProxy.pushToken("", "您已被指定为管理员", userId, map, 1);
+        UbtTIMManager.getInstance().doTIMLogout();
     }
 
     private void imSyncRelationShip() {

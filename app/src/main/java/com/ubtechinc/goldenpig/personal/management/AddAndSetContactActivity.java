@@ -101,7 +101,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
         if (pigInfo != null) {
             UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
         } else {
-            UbtTIMManager.getInstance().setPigAccount("2cb9b9a3");
+//            UbtTIMManager.getInstance().setPigAccount("2cb9b9a3");
         }
         UbtTIMManager.getInstance().setMsgObserve(this);
         UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
@@ -443,6 +443,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                     cursor = contentResolver.query(uri,
                             new String[]{"display_name", "data1"}, null, null, null);
                 }
+                if (cursor == null) return;
                 while (cursor.moveToNext()) {
                     contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                     phoneNum = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));

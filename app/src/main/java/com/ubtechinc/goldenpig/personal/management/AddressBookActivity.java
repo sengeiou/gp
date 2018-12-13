@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.tencent.TIMCustomElem;
+import com.tencent.TIMElem;
 import com.tencent.TIMMessage;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
@@ -313,17 +314,19 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
     @Override
     public void update(Observable o, Object arg) {
         TIMMessage msg = (TIMMessage) arg;
-        for (int i = 0; i < msg.getElementCount(); ++i) {
-            TIMCustomElem elem = (TIMCustomElem) msg.getElement(i);
-            try {
-                dealMsg(elem.getData());
-            } catch (InvalidProtocolBufferException e) {
-                e.printStackTrace();
-                ToastUtils.showShortToast(getString(R.string.msg_error_toast));
-                mStateView.showRetry();
-                //refreshLayout.finishRefresh(true);
+        try {
+            for (int i = 0; i < msg.getElementCount(); ++i) {
+                TIMElem tIMElem = msg.getElement(i);
+                if (tIMElem != null && tIMElem instanceof TIMCustomElem) {
+                    TIMCustomElem elem = (TIMCustomElem) msg.getElement(i);
+                    dealMsg(elem.getData());
+                }
             }
+        } catch (Exception e) {
+            ToastUtils.showShortToast(getString(R.string.msg_error_toast));
+            mStateView.showRetry();
         }
+
     }
 
     /* <call path="/im/mail/add"/>

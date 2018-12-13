@@ -19,7 +19,9 @@ public class StartUpService extends Service {
     public void onCreate() {
         super.onCreate();
         LogUtils.d(UBTPGApplication.TAG, "StartUpService|onCreate");
-//        getPushToken();
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            startForeground(1, new Notification());
+//        }
     }
 
     @Nullable

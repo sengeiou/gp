@@ -142,7 +142,7 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
 
     @Override
     public void onSuccess(int i, CommOpInfo var2) {
-        Log.d(TAG, "tvs accessToken success : " + i);
+        Log.e(TAG, "TVSManager|onSuccess: type:" + i + " commOpInfo:" + var2);
         switch (i) {
             case AUTH_TYPE:
                 break;
@@ -192,7 +192,7 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
 
     @Override
     public void onError(int i, CommOpInfo var2) {
-        Log.e(TAG, "tvs accessToken error : " + i);
+        Log.e(TAG, "TVSManager|onError: type:" + i + " commOpInfo:" + var2);
         switch (i) {
             case AUTH_TYPE:
                 onLoginError();

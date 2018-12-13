@@ -23,6 +23,7 @@ import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.entity.PairPig;
+import com.ubtechinc.goldenpig.comm.entity.UserInfo;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.view.WrapContentLinearLayoutManager;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
@@ -168,12 +169,17 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
     }
 
     private boolean isCurrentAdmin() {
-        if (mUsertList != null) {
-            for (CheckBindRobotModule.User user : mUsertList) {
-                if (user.getIsAdmin() == 1 && user.getUserId() == Integer.valueOf(AuthLive.getInstance().getCurrentUser().getUserId())) {
-                    return true;
+        try {
+            UserInfo currentUser = AuthLive.getInstance().getCurrentUser();
+            if (mUsertList != null && currentUser != null) {
+                for (CheckBindRobotModule.User user : mUsertList) {
+                    if (user.getIsAdmin() == 1 && user.getUserId() == Integer.valueOf(currentUser.getUserId())) {
+                        return true;
+                    }
                 }
             }
+        } catch (Exception e) {
+            return false;
         }
         return false;
     }
@@ -543,6 +549,7 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
             Map map = new HashMap();
             map.put("app_category", 1);
             pushHttpProxy.pushToken("", "您已被指定为管理员", userId, map, 1);
+            UbtTIMManager.getInstance().doTIMLogout();
         } catch (Exception e) {
             //TODO
         }

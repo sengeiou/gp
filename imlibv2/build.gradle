@@ -31,7 +31,7 @@ android {
         debug {
             minifyEnabled false
             //IM登录渠道
-            buildConfigField "String","IM_Channel","\"A2\""
+            buildConfigField "String","IM_Channel","\"ALPHA1E\""
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             ndk {
                 // 需要将 x86 架构过滤掉

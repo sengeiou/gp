@@ -43,6 +43,9 @@ public class EggShellActivtiy extends BaseToolBarActivity {
         TextView tvDevId = findViewById(R.id.tv_devId);
         tvDevId.setText(getResources().getString(R.string.ubt_devid, DeviceUtils.getDeviceId(this)));
 
+        TextView tvIMStatus = findViewById(R.id.tv_im_status);
+        tvIMStatus.setText(getResources().getString(R.string.ubt_im_status, UbtTIMManager.getInstance().isLoginedTIM() ? "在线" : "离线"));
+
     }
 
     private void openADB(boolean open) {

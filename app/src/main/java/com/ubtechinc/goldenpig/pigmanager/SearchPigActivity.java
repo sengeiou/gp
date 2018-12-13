@@ -34,6 +34,7 @@ import com.ubtechinc.goldenpig.comm.widget.DrawableTextView;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
+import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
 import com.ubtechinc.goldenpig.net.RegisterRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.bean.BundingListenerAbster;
 import com.ubtechinc.goldenpig.pigmanager.bluetooth.BlueToothManager;
@@ -510,20 +511,25 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         @Override
         public void onMaster() {
             super.onMaster();
+            onBindCallback();
+        }
+
+        @Override
+        public void bindByOthers(CheckBindRobotModule.User user) {
+            super.bindByOthers(user);
+            onBindCallback();
+        }
+
+        @Override
+        public void onUnBind() {
+            super.onUnBind();
             if (pigListDialog != null) {
                 pigListDialog.dismiss();
             }
             if (mTimer != null) {
                 mTimer.cancel();
             }
-            checkPigWifi();
-        }
-
-        @Override
-        public void onUnBind() {
-            super.onUnBind();
-            //toSetWifi();
-            //ToastUtils.showShortToast(SearchPigActivity.this,"用户未绑定");
+            ToastUtils.showShortToast(SearchPigActivity.this,"用户绑定失败");
         }
 
         @Override
@@ -563,6 +569,16 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
             toSetWifi();
         }
     };
+
+    private void onBindCallback() {
+        if (pigListDialog != null) {
+            pigListDialog.dismiss();
+        }
+        if (mTimer != null) {
+            mTimer.cancel();
+        }
+        checkPigWifi();
+    }
 
     /**
      * 显示解绑对话框

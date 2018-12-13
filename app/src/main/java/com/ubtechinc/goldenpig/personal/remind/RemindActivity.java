@@ -19,12 +19,12 @@ import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewImg;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
-import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.model.RemindModel;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PigUtils;
+import com.ubtechinc.goldenpig.utils.TvsUtil;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.StateView;
 import com.ubtechinc.tvlloginlib.TVSManager;
@@ -184,12 +184,7 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
     }
 
     public void onRefresh() {
-        ELoginPlatform platform;
-        if (CookieInterceptor.get().getThridLogin().getLoginType().toLowerCase().equals("wx")) {
-            platform = ELoginPlatform.WX;
-        } else {
-            platform = ELoginPlatform.QQOpen;
-        }
+        ELoginPlatform platform = TvsUtil.currentPlatform();
         TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ)
                 .requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils.getRemindUniAccessinfo
                         ("", 0, 1, 0, 0), new TVSManager.TVSAlarmListener() {
@@ -383,12 +378,7 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
     public void deleteAlarm(int position) {
         RemindModel model = mList.get(position);
         LoadingDialog.getInstance(this).show();
-        ELoginPlatform platform;
-        if (CookieInterceptor.get().getThridLogin().getLoginType().toLowerCase().equals("wx")) {
-            platform = ELoginPlatform.WX;
-        } else {
-            platform = ELoginPlatform.QQOpen;
-        }
+        ELoginPlatform platform = TvsUtil.currentPlatform();
         TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ)
                 .requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils.getRemindUniAccessinfo
                         (model.sNote, 2, model.eRepeatType, model.lReminderId, model.lStartTimeStamp), new TVSManager

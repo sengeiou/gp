@@ -14,6 +14,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.tencent.TIMConversation;
 import com.tencent.TIMConversationType;
 import com.tencent.TIMCustomElem;
+import com.tencent.TIMElem;
 import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
 import com.ubt.imlibv2.bean.ContactsProtoBuilder;
@@ -160,7 +161,8 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
     }
 
     private void imSyncRelationShip() {
-        if (AuthLive.getInstance().getCurrentPig().isAdmin) {
+        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+        if (pigInfo != null && pigInfo.isAdmin) {
             //TODO 给自己的猪发
             TIMMessage selfMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.syncPairInfo(3));
             UbtTIMManager.getInstance().sendTIM(selfMessage);
@@ -389,15 +391,17 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
     @Override
     public void update(Observable o, Object arg) {
         TIMMessage msg = (TIMMessage) arg;
-        for (int i = 0; i < msg.getElementCount(); ++i) {
-            TIMCustomElem elem = (TIMCustomElem) msg.getElement(i);
-            try {
-                dealMsg(elem.getData());
-            } catch (InvalidProtocolBufferException e) {
-                e.printStackTrace();
-                com.ubtech.utilcode.utils.ToastUtils.showShortToast(getString(R.string.msg_error_toast));
-
+        try {
+            for (int i = 0; i < msg.getElementCount(); ++i) {
+                TIMElem tIMElem = msg.getElement(i);
+                if (tIMElem != null && tIMElem instanceof TIMCustomElem) {
+                    TIMCustomElem elem = (TIMCustomElem) tIMElem;
+                    dealMsg(elem.getData());
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            com.ubtech.utilcode.utils.ToastUtils.showShortToast(getString(R.string.msg_error_toast));
         }
     }
 

@@ -39,9 +39,9 @@
             android:gravity="center_vertical"
             android:inputType="number"
             android:maxLength="20"
-            android:textCursorDrawable="@drawable/color_cursor"
             android:singleLine="true"
             android:textColor="@color/ubt_tips_txt_color"
+            android:textCursorDrawable="@drawable/color_cursor"
             android:textSize="@dimen/sp_16" />
 
         <ImageView
@@ -58,8 +58,8 @@
             android:layout_width="@dimen/dp_1"
             android:layout_height="@dimen/dp_19"
             android:layout_gravity="center_vertical"
-            android:visibility="invisible"
-            android:background="@color/ubt_tab_btn_txt_color" />
+            android:background="@color/ubt_tab_btn_txt_color"
+            android:visibility="invisible" />
 
         <ImageView
             android:id="@+id/iv_add"
@@ -101,6 +101,7 @@
             android:maxLength="6"
             android:singleLine="true"
             android:textColor="@color/ubt_tips_txt_color"
+            android:textCursorDrawable="@drawable/color_cursor"
             android:textSize="@dimen/sp_16" />
 
         <ImageView

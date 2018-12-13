@@ -130,6 +130,8 @@ public class UBTPGApplication extends LoginApplication implements Observer {
 
     private void initAppForMainProcess() {
 
+//        new ScreenAdaptation(this, 720,1280).register();
+
         //add crash
         CrashHandlerUtil.getInstance().init(this, null, "BaJie_crash/");
 
@@ -176,7 +178,11 @@ public class UBTPGApplication extends LoginApplication implements Observer {
     }
 
     private void initService() {
-        startService(new Intent(this, StartUpService.class));
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            startForegroundService(new Intent(this, StartUpService.class));
+//        } else {
+            startService(new Intent(this, StartUpService.class));
+//        }
     }
 
     /**
@@ -249,6 +255,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
 
             TVSManager tvsManager = TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ);
             String clientId = tvsManager.getClientId();
+            Log.i(TAG, "sendClientIdToPig|clientId : " + clientId);
             TIMMessage selfMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getClientId(clientId));
             TIMConversation pigConversation = TIMManager.getInstance().getConversation(
                     TIMConversationType.C2C, pigInfo.getRobotName());

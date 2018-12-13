@@ -410,53 +410,45 @@ public class BungdingManager {
         RobotAllAccountViewModel mRobotAllAccountViewModel = new RobotAllAccountViewModel();
         mRobotAllAccountViewModel.checkRobotBindState(serialId, token, appId).observe(mContext, new
                 Observer<RobotBindStateLive>() {
-            @Override
-            public void onChanged(@Nullable RobotBindStateLive robotBindStateLive) {
+                    @Override
+                    public void onChanged(@Nullable RobotBindStateLive robotBindStateLive) {
 
-                switch (robotBindStateLive.getCurBindState()) {
-                    case Others:
-                        // UbtBluetoothManager.getInstance().closeConnectBle();
-                        List<CheckBindRobotModule.User> owerUsers = robotBindStateLive.getRobotOwners();
-                        CheckBindRobotModule.User user = null;
-                        for (CheckBindRobotModule.User user1 : owerUsers) {
-                            if (user1.getRoleType() == 0) {
-                                user = user1;
-                            }
+                        switch (robotBindStateLive.getCurBindState()) {
+                            case Others: //TODO 普通成员
+                                // UbtBluetoothManager.getInstance().closeConnectBle();
+                                List<CheckBindRobotModule.User> owerUsers = robotBindStateLive.getRobotOwners();
+                                CheckBindRobotModule.User user = null;
+                                for (CheckBindRobotModule.User user1 : owerUsers) {
+                                    if (user1.getRoleType() == 0) {
+                                        user = user1;
+                                    }
+                                }
+                                if (mBanddingListener != null) {
+                                    mBanddingListener.bindByOthers(user);
+                                }
+                                break;
+                            case MySelf: //TODO 如果IM未登录，进行IM登录
+                                doTIMLogin();
+                                sendClientIdToRobot(clientIdRecord);
+                                SCADAHelper.recordEvent(SCADAHelper.EVENET_APP_ROBOT_BIND, mSerialId);
+                                if (mBanddingListener != null) {
+                                    mBanddingListener.onMaster();
+                                }
+                                break;
+                            case HaventBind: //TODO 不在成员列表
+                                if (mBanddingListener != null) {
+                                    mBanddingListener.onUnBind();
+                                }
+                                break;
+                            case Networkerror:
+                                //UbtBluetoothManager.getInstance().closeConnectBle();
+                                if (mBanddingListener != null) {
+                                    mBanddingListener.onFaild(Constants.REGISTER_ROBOT_ERROR_CODE, "");
+                                }
+                                break;
                         }
-                        if (mBanddingListener != null) {
-                            mBanddingListener.bindByOthers(user);
-                        }
-                        break;
-                    case MySelf:
-                        //TODO 如果IM未登录，进行IM登录
-                        doTIMLogin();
-                        sendClientIdToRobot(clientIdRecord);
-                        SCADAHelper.recordEvent(SCADAHelper.EVENET_APP_ROBOT_BIND, mSerialId);
-                        if (mBanddingListener != null) {
-                            mBanddingListener.onMaster();
-                        }
-                        break;
-                    case HaventBind:
-                        /*if(mRobotWifiIsOk){
-                            getClientId(mPid,mSid);
-                        }else {
-                            if(mBanddingListener!=null){
-                                mBanddingListener.robotNotWifi();//配网
-                            }
-                        }*/
-                        if (mBanddingListener != null) {
-                            mBanddingListener.onUnBind();
-                        }
-                        break;
-                    case Networkerror:
-                        //UbtBluetoothManager.getInstance().closeConnectBle();
-                        if (mBanddingListener != null) {
-                            mBanddingListener.onFaild(Constants.REGISTER_ROBOT_ERROR_CODE, "");
-                        }
-                        break;
-                }
-            }
-        });
+                    }
+                });
     }
 
     private void doTIMLogin() {

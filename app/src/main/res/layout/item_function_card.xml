@@ -17,8 +17,9 @@
         app:layout_constraintRight_toRightOf="parent"
         android:text="语音留言"
         android:textColor="#FF454B59"
+        android:maxLines="1"
         android:padding="@dimen/dp_10"
-        android:textSize="14sp" />
+        android:textSize="13sp" />
 
     <ImageView
         android:id="@+id/iv_red_point"
