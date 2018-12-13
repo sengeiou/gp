@@ -236,8 +236,8 @@ public class RobotAllAccountViewModel {
                 if (user.getIsAdmin() == 1) {
                     //TODO 管理员
                     flag = 2;
-                    break;
                 }
+                break;
             }
         }
         return flag;
