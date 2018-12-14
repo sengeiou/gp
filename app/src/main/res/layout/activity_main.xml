@@ -56,6 +56,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@null"
+        android:overScrollMode="never"
         android:layout_above="@id/ubt_tab_decoration" />
 
     <include layout="@layout/include_tips"

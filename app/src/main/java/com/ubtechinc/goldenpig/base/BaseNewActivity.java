@@ -2,6 +2,8 @@ package com.ubtechinc.goldenpig.base;
 
 
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -136,5 +138,16 @@ public abstract class BaseNewActivity extends AppCompatActivity {
 
     public void initStateView(View view, Boolean hasActionbar) {
         mStateView = StateView.inject(view, hasActionbar);
+    }
+
+    @Override
+    public Resources getResources() {//还原字体大小
+        Resources res = super.getResources();
+        Configuration configuration = res.getConfiguration();
+        if (configuration.fontScale != 1.0f) {
+            configuration.fontScale = 1.0f;
+            res.updateConfiguration(configuration, res.getDisplayMetrics());
+        }
+        return res;
     }
 }

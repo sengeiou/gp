@@ -3,6 +3,8 @@ package com.ubtechinc.goldenpig.app;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.multidex.MultiDex;
 import android.support.v4.content.ContextCompat;
@@ -130,7 +132,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
 
     private void initAppForMainProcess() {
 
-//        new ScreenAdaptation(this, 720,1280).register();
+//        new ScreenAdaptation(this, 720, 1280).register();
 
         //add crash
         CrashHandlerUtil.getInstance().init(this, null, "BaJie_crash/");
@@ -181,7 +183,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 //            startForegroundService(new Intent(this, StartUpService.class));
 //        } else {
-            startService(new Intent(this, StartUpService.class));
+        startService(new Intent(this, StartUpService.class));
 //        }
     }
 
@@ -570,4 +572,25 @@ public class UBTPGApplication extends LoginApplication implements Observer {
             }
         });
     }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        if (newConfig.fontScale != 1) {
+            //非默认值
+            getResources();
+        }
+        super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public Resources getResources() {//还原字体大小
+        Resources res = super.getResources();
+        Configuration configuration = res.getConfiguration();
+        if (configuration.fontScale != 1.0f) {
+            configuration.fontScale = 1.0f;
+            res.updateConfiguration(configuration, res.getDisplayMetrics());
+        }
+        return res;
+    }
+
 }
