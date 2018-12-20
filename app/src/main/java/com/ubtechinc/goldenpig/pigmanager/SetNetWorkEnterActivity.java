@@ -35,6 +35,7 @@ public class SetNetWorkEnterActivity extends BaseToolBarActivity implements View
         udQPAB();
     }
 
+
     private void udQPAB() {
         boolean firstEnter = SharedPreferencesUtils.getBoolean(this, "firstEnter", true);
         boolean backable = firstEnter ? false : true;

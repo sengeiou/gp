@@ -22,9 +22,7 @@ import com.ubtechinc.goldenpig.base.BaseFragment;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
-import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
-import com.ubtechinc.goldenpig.route.ActivityRoute;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -139,7 +137,7 @@ public class PigNewFragment extends BaseFragment {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_bt_binding:
-                ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class, false);
+                toBleConfigActivity(null, false);
                 break;
         }
     }

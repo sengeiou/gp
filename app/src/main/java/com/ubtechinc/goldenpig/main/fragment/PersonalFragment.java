@@ -28,7 +28,6 @@ import com.ubtechinc.goldenpig.personal.DeviceManageActivity;
 import com.ubtechinc.goldenpig.personal.alarm.AlarmListActivity;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionActivity;
 import com.ubtechinc.goldenpig.personal.remind.RemindActivity;
-import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.hotspot.SetHotSpotActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
@@ -273,9 +272,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
                 HashMap<String, Boolean> params = new HashMap<>();
                 params.put("back", false);
                 params.put("skip", true);
-                ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class,
-                        params,
-                        false);
+                toBleConfigActivity(params, false);
                 break;
             case R.id.ubt_btn_person_hotspot:
                 if (AuthLive.getInstance().getCurrentPig() != null) {
@@ -301,7 +298,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
             case R.id.ubt_btn_person_qq:
                 ActivityRoute.toAnotherActivity(getActivity(), QQMusicWebActivity.class, false);
                 break;
-                default:
+            default:
         }
     }
 

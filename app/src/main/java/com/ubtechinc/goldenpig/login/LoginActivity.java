@@ -24,7 +24,7 @@ import com.ubtechinc.goldenpig.about.ServicePolicyActivity;
 import com.ubtechinc.goldenpig.base.BaseActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.MainActivity;
-import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
+import com.ubtechinc.goldenpig.pigmanager.BleConfigReadyActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
@@ -180,7 +180,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         tvAgreementPolicy.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
-    private BackgroundColorSpan getBgSpan(){
+    private BackgroundColorSpan getBgSpan() {
         return new BackgroundColorSpan(Color.parseColor("#F5F8FB"));
     }
 
@@ -204,11 +204,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         if (mLoginModel == null) {
             mLoginModel = new LoginModel();
         }
-        /*if (mLoginModel.checkToken(this)) {
-            handler.sendEmptyMessage(0);
-        }else*/
         if (!NetworkHelper.sharedHelper().isNetworkAvailable()) {
-            //mLoginModel.logoutTVS();
             return;
         } else {
             handler.sendEmptyMessage(1);
@@ -298,10 +294,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 }
                 switch (msg.what) {
                     case 0:
-                        ActivityRoute.toAnotherActivity(loginActivity, SetNetWorkEnterActivity.class, true);
+                        ActivityRoute.toAnotherActivity(loginActivity, BleConfigReadyActivity.class, true);
                         break;
                     case 1:
-                        ToastUtils.showShortToast(loginActivity, loginActivity.getString(R.string.ubt_net_error_tips));
+//                        ToastUtils.showShortToast(loginActivity, loginActivity.getString(R.string.ubt_net_error_tips));
                         break;
                 }
 

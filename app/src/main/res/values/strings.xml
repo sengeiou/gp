@@ -225,10 +225,13 @@
     <string name="ubt_im_status">IM通道：%1$s</string>
 
     <!-- 2018.12.18-->
+    <string name="ubt_ble_ready">蓝牙与位置信息</string>
+    <string name="ubt_ble_open">打开蓝牙</string>
+    <string name="ubt_ble_location">允许获取位置权限</string>
+    <string name="ubt_ble_ready_tip">请打开手机蓝牙，并允许八戒音箱\n获取你的位置信息，以便进行网络连接</string>
     <string name="ubt_next">下一步</string>
     <string name="ubt_startup_done">八戒已开机成功</string>
     <string name="ubt_notelepathic_title">没有感应到八戒音箱</string>
     <string name="ubt_notelepathic_tip">1.请确认音箱已开机，并处于配网模式；\n\n2.请让手机靠近音箱，确保手机与音箱的距离在30厘米以内；\n\n3.如果依然没反应，请尝试点击下方的手动连接音箱。</string>
-
 
 </resources>

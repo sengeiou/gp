@@ -1,5 +1,6 @@
 package com.ubtechinc.goldenpig.pigmanager;
 
+
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.location.LocationManager;
@@ -105,6 +106,12 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
                 case MSG_WATH_DISCONNECT_SUCCESS:
                     startScanBle(false);
                     UbtBluetoothManager.getInstance().connectBluetooth(mBluetoothDevice);
+                    if (isAutoScan) {
+                        LoadingDialog.getInstance(BleClosePigActivity.this).setTimeout(CONNECT_TIMEOUT)
+                                .setShowToast(true).show();
+                    }
+                    UbtBluetoothManager.getInstance().connectBluetooth(mBluetoothDevice);
+                    startScanBle(false);
                     break;
                 case MSG_CHECK_WIFI:
                     toSetWifi();
@@ -167,6 +174,7 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
      */
     private void startScanBle(boolean enable) {
         if (enable) {
+            UbtBluetoothManager.getInstance().closeConnectBle();
             if (!EventBus.getDefault().isRegistered(this)) {
                 EventBus.getDefault().register(this);
             }
@@ -205,6 +213,10 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
             if (disposable != null) {
                 disposable.dispose();
             }
+            if (disposable != null) {
+                disposable.dispose();
+            }
+            mUbtBluetoothManager.stopScanBluetooth();
         }
     }
 

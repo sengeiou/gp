@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/tv_box_startup_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_35"
+        android:text="@string/ubt_ble_ready"
+        android:textColor="#FF454B59"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/iv_box_startup"
+        android:layout_width="@dimen/ubt_set_net_logo_size"
+        android:layout_height="@dimen/ubt_set_net_logo_size"
+        android:layout_marginBottom="@dimen/dp_35"
+        android:src="@drawable/open_pig"
+        app:layout_constraintBottom_toTopOf="@id/tv_box_startup_title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_box_startup_tip1"
+        style="@style/UBTTipsTxtTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_15"
+        android:lineSpacingExtra="@dimen/dp_3"
+        android:text="@string/ubt_ble_ready_tip"
+        android:textColor="#FFB4C0C7"
+        android:textSize="14sp"
+        app:layout_constraintLeft_toLeftOf="@id/tv_box_startup_title"
+        app:layout_constraintRight_toRightOf="@id/tv_box_startup_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_box_startup_title" />
+
+    <TextView
+        android:id="@+id/tv_ble_open"
+        style="@style/UBTButtonTheme.Cyan"
+        android:layout_width="0dp"
+        android:layout_marginBottom="@dimen/dp_50"
+        android:text="@string/ubt_ble_open"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_ble_location"
+        style="@style/UBTButtonTheme.Cyan"
+        android:layout_marginBottom="@dimen/dp_12"
+        android:text="@string/ubt_ble_location"
+        app:layout_constraintBottom_toTopOf="@id/tv_ble_open"
+        app:layout_constraintLeft_toLeftOf="@id/tv_ble_open"
+        app:layout_constraintRight_toRightOf="@id/tv_ble_open" />
+
+</android.support.constraint.ConstraintLayout>
