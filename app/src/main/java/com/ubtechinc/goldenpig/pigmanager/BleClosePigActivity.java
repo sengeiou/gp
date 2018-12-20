@@ -16,7 +16,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
-import com.ubtechinc.bluetooth.Constants;
 import com.ubtechinc.bluetooth.UbtBluetoothDevice;
 import com.ubtechinc.bluetooth.UbtBluetoothManager;
 import com.ubtechinc.bluetooth.command.ICommandProduce;
@@ -162,9 +161,11 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
     @Override
     protected void onResume() {
         super.onResume();
-        isAutoScan = true;
-        isManualScan = false;
-        startScanBle(true);
+        if (checkBle()) {
+            isAutoScan = true;
+            isManualScan = false;
+            startScanBle(true);
+        }
     }
 
     /**
@@ -275,23 +276,24 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
         public void onFaild(int errorCode, String message) {
             super.onFaild(errorCode, message);
 
-            switch (errorCode) {
-                case 2041:
-                    if (pigListDialog != null && pigListDialog.isShowing()) {
-                        ToastUtils.showShortToast(BleClosePigActivity.this, R.string.ubt_one_user_one_pig);
-                    }
-                    break;
-                case 2040:
-                    ToastUtils.showShortToast(BleClosePigActivity.this, message);
-                    break;
-                default:
-                    ToastUtils.showShortToast(BleClosePigActivity.this, Constants.getErrorMsg(errorCode));
-                    break;
-            }
+//            switch (errorCode) {
+//                case 2041:
+//                    if (pigListDialog != null && pigListDialog.isShowing()) {
+//                        ToastUtils.showShortToast(BleClosePigActivity.this, R.string.ubt_one_user_one_pig);
+//                    }
+//                    break;
+//                case 2040:
+//                    ToastUtils.showShortToast(BleClosePigActivity.this, message);
+//                    break;
+//                default:
+//                    ToastUtils.showShortToast(BleClosePigActivity.this, Constants.getErrorMsg(errorCode));
+//                    break;
+//            }
             if (pigListDialog != null) {
                 pigListDialog.dismiss();
             }
             dismissLoadDialog();
+            showErrorDialog(message);
         }
 
         @Override
@@ -377,6 +379,36 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
         }
     };
 
+    /**
+     * 错误弹框
+     *
+     * @param message
+     */
+    private void showErrorDialog(String message) {
+        UBTBaseDialog errorDialog = new UBTBaseDialog(this);
+        errorDialog.setTips(message);
+        errorDialog.setLeftBtnShow(false);
+        errorDialog.setRightButtonTxt("我知道了");
+        errorDialog.setRightBtnColor(ContextCompat.getColor(this, R.color.ubt_tab_btn_txt_checked_color));
+        errorDialog.setOnUbtDialogClickLinsenter(new UBTBaseDialog.OnUbtDialogClickLinsenter() {
+
+            @Override
+            public void onLeftButtonClick(View view) {
+
+            }
+
+            @Override
+            public void onRightButtonClick(View view) {
+                isAutoScan = true;
+                isManualScan = false;
+                startScanBle(true);
+            }
+        });
+        if (!isDestroyed() && !isFinishing()) {
+            errorDialog.show();
+        }
+    }
+
     private void onBindCallback() {
         if (pigListDialog != null) {
             pigListDialog.dismiss();
@@ -395,32 +427,38 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.dtv_manual_search_pig:
-                checkBlueTooth();
+                if (checkBle()) {
+                    startSearchPig();
+                }
                 break;
             default:
                 break;
         }
     }
 
-    private void checkBlueTooth() {
+    private boolean checkBle() {
+        boolean isOpen = false;
         final byte state = BlueToothManager.getBluetoothState();
         switch (state) {
             case BlueToothManager.BLUETOOTH_STATE_OPEN:
                 //TODO 蓝牙已开启
-                startSearchPig();
+                isOpen = true;
                 break;
 
             case BlueToothManager.BLUETOOTH_STATE_CLOSED:
                 //TODO 蓝牙已关闭
+                isOpen = false;
                 break;
 
             case BlueToothManager.BLUETOOTH_STATE_NONE:
                 //TODO 蓝牙模块不存在
+                isOpen = false;
                 ToastUtils.showShortToast(this, getString(R.string.ubt_bluetooth_none));
                 break;
             default:
                 break;
         }
+        return isOpen;
     }
 
     private void startSearchPig() {

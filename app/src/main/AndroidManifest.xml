@@ -208,13 +208,6 @@
         <activity
             android:name=".pigmanager.BleClosePigActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".pigmanager.PigWifiInfoActivity" />
-        <activity
-            android:name=".pigmanager.PigWifiInfoActivity"
-            android:launchMode="singleTop" />
-        <activity
-            android:name=".pigmanager.BleClosePigActivity"
-            android:launchMode="singleTask" />
         <activity android:name=".pigmanager.BleConfigReadyActivity"
             android:launchMode="singleTop"/>
 

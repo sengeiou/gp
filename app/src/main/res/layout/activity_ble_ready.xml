@@ -20,10 +20,10 @@
 
     <pl.droidsonroids.gif.GifImageView
         android:id="@+id/iv_box_startup"
-        android:layout_width="@dimen/ubt_set_net_logo_size"
-        android:layout_height="@dimen/ubt_set_net_logo_size"
+        android:layout_width="@dimen/dp_258"
+        android:layout_height="@dimen/dp_258"
         android:layout_marginBottom="@dimen/dp_35"
-        android:src="@drawable/open_pig"
+        android:src="@drawable/ble_open"
         app:layout_constraintBottom_toTopOf="@id/tv_box_startup_title"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
@@ -42,23 +42,36 @@
         app:layout_constraintRight_toRightOf="@id/tv_box_startup_title"
         app:layout_constraintTop_toBottomOf="@id/tv_box_startup_title" />
 
-    <TextView
+    <com.ubtechinc.goldenpig.comm.widget.DrawableTextView
         android:id="@+id/tv_ble_open"
         style="@style/UBTButtonTheme.Cyan"
         android:layout_width="0dp"
         android:layout_marginBottom="@dimen/dp_50"
+        android:background="@drawable/selector_ubt_ble_ready_bg"
+        android:drawablePadding="@dimen/dp_5"
+        android:gravity="center"
         android:text="@string/ubt_ble_open"
+        android:textColor="@drawable/selector_ubt_ble_tx_bw"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:leftDrawableHeight="@dimen/dp_20"
+        app:leftDrawableWidth="@dimen/dp_20" />
 
-    <TextView
+    <com.ubtechinc.goldenpig.comm.widget.DrawableTextView
         android:id="@+id/tv_ble_location"
         style="@style/UBTButtonTheme.Cyan"
+        android:layout_width="0dp"
         android:layout_marginBottom="@dimen/dp_12"
+        android:background="@drawable/selector_ubt_ble_ready_bg"
+        android:drawablePadding="@dimen/dp_5"
+        android:gravity="center"
         android:text="@string/ubt_ble_location"
+        android:textColor="@drawable/selector_ubt_ble_tx_bw"
         app:layout_constraintBottom_toTopOf="@id/tv_ble_open"
-        app:layout_constraintLeft_toLeftOf="@id/tv_ble_open"
-        app:layout_constraintRight_toRightOf="@id/tv_ble_open" />
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:leftDrawableHeight="@dimen/dp_20"
+        app:leftDrawableWidth="@dimen/dp_20" />
 
 </android.support.constraint.ConstraintLayout>

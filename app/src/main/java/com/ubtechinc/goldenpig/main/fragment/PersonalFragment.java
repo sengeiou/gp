@@ -16,11 +16,13 @@ import com.ubtechinc.commlib.utils.ContextUtils;
 import com.ubtechinc.commlib.view.UbtSubTxtButton;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.about.UbtAboutActivtiy;
+import com.ubtechinc.goldenpig.app.ActivityManager;
 import com.ubtechinc.goldenpig.base.BaseFragment;
 import com.ubtechinc.goldenpig.comm.img.GlideCircleTransform;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.feedback.FeedBackActivity;
+import com.ubtechinc.goldenpig.login.LoginActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.QQMusicWebActivity;
 import com.ubtechinc.goldenpig.me.UserInfoActivity;
@@ -197,6 +199,9 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
 
             mNikenameTv = (TextView) getActivity().findViewById(R.id.ubt_tv_me_nikename);
             mNikenameTv.setText(StringUtils.utf8ToString(AuthLive.getInstance().getCurrentUser().getNickName()));
+        } else {
+            ActivityManager.getInstance().popAllActivityExcept(LoginActivity.class.getName());
+            ActivityRoute.toAnotherActivity(getActivity(), LoginActivity.class, true);
         }
         mTitle = getActivity().findViewById(R.id.ubt_me_fragment_title);
         mCyanBg = getActivity().findViewById(R.id.ubt_me_normal_bg);
