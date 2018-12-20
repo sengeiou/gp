@@ -19,6 +19,7 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.ubtech.utilcode.utils.StringUtils;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.commlib.view.UbtClearableEditText;
 import com.ubtechinc.goldenpig.R;
@@ -79,7 +80,7 @@ public class UbtWifiListEditText extends RelativeLayout implements View.OnClickL
 
     public String getText() {
         if (mWifiNameEdt != null) {
-            return mWifiNameEdt.getText().toString();
+            return StringUtils.utf8ToString(mWifiNameEdt.getText().toString());
         }
         return "";
     }

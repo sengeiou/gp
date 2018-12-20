@@ -866,7 +866,7 @@ public class StringUtils {
      * @return
      */
     public static String utf8ToString(String str) {
-        String result = null;
+        String result = "";
         try {
             result = URLDecoder.decode(str, "UTF-8");
         } catch (Exception e) {
