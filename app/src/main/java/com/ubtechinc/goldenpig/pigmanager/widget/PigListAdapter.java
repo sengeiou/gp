@@ -43,27 +43,23 @@ public class PigListAdapter extends RecyclerView.Adapter<PigListAdapter.PigHolde
         if (device != null) {
             String name = device.getDevice().getName();
             holder.pigNameTv.setText(name.substring(0, name.indexOf("_") + 1) + name.substring(name.length() - 4, name.length()));
-            if (clickedPos >= 0 && clickedPos == position) {
-                holder.pigPressor.setVisibility(View.VISIBLE);
+            if (clickedPos == -1) {
+
             } else {
-                holder.pigPressor.setVisibility(View.GONE);
+                if (clickedPos == position) {
+                    holder.tvBind.setVisibility(View.INVISIBLE);
+                    holder.pigPressor.setVisibility(View.VISIBLE);
+                } else {
+                    holder.pigPressor.setVisibility(View.INVISIBLE);
+                    holder.tvBind.setEnabled(false);
+                }
             }
-            holder.pigNameTv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                    if (clickedPos < 0 || clickedPos == position) {
-                        if (mItemClickListener != null && clickedPos < 0) {
-                            mItemClickListener.onClick(position, device);
-                        }
-                        clickedPos = position;
-                        holder.pigPressor.setVisibility(View.VISIBLE);
-                        holder.tvBind.setVisibility(View.GONE);
-                    } else {
-                        holder.pigPressor.setVisibility(View.INVISIBLE);
-                    }
-
-
+            holder.pigNameTv.setOnClickListener(v -> {
+                if (mItemClickListener != null) {
+                    clickedPos = position;
+                    mItemClickListener.onClick(position, device);
+                    notifyDataSetChanged();
                 }
             });
         }

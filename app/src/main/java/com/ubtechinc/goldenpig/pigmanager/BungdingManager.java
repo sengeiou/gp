@@ -209,7 +209,7 @@ public class BungdingManager {
             //UbtBluetoothManager.getInstance().closeConnectBle();
             if (mBanddingListener != null) {
                 // 发送失败
-                mBanddingListener.onFaild(Constants.BLUETOOTH_SEND_FIAL, "");
+//                mBanddingListener.onFaild(Constants.BLUETOOTH_SEND_FIAL, "");
             }
         }
 

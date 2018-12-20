@@ -22,8 +22,12 @@ import pl.droidsonroids.gif.GifImageView;
  * @changetime :2018/8/23 10:03
  */
 public class SetNetWorkEnterActivity extends BaseToolBarActivity implements View.OnClickListener {
-    private GifImageView mTipsImg;             //提示动画
-    private View mBtnStartSetNet;       //开始配网按钮
+
+    private GifImageView ivBoxStartup;
+
+    private View tvStartupNext;
+
+    private View tvStartupOperate;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,19 +54,10 @@ public class SetNetWorkEnterActivity extends BaseToolBarActivity implements View
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        hiddleTitle();
+        setToolBarTitle(getString(R.string.voice_box_open));
         initViews();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
 
     @Override
     protected void onDestroy() {
@@ -77,17 +72,17 @@ public class SetNetWorkEnterActivity extends BaseToolBarActivity implements View
     }
 
     private void initViews() {
-        mTipsImg = (GifImageView) findViewById(R.id.ubt_img_set_net_logo);
-        mTipsImg.post(new Runnable() {
-            @Override
-            public void run() {
-                //ImageUtils.showGif(SetNetWorkEnterActivity.this,mTipsImg,R.drawable.open_pig);
-                mTipsImg.setImageResource(R.drawable.open_pig);
-            }
+        ivBoxStartup = findViewById(R.id.iv_box_startup);
+        ivBoxStartup.post(() -> {
+            //ImageUtils.showGif(SetNetWorkEnterActivity.this,mTipsImg,R.drawable.open_pig);
+            ivBoxStartup.setImageResource(R.drawable.open_pig);
         });
 
-        mBtnStartSetNet = findViewById(R.id.ubt_btn_start_set_net);
-        mBtnStartSetNet.setOnClickListener(this);
+        tvStartupNext = findViewById(R.id.tv_startup_next);
+        tvStartupNext.setOnClickListener(this);
+
+        tvStartupOperate = findViewById(R.id.tv_startup_operate);
+        tvStartupOperate.setOnClickListener(this);
 
         mTvSkip = findViewById(R.id.ubt_tv_set_net_skip);
         mTvSkip.setVisibility(View.VISIBLE);
@@ -97,8 +92,11 @@ public class SetNetWorkEnterActivity extends BaseToolBarActivity implements View
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ubt_btn_start_set_net:
-                ActivityRoute.toAnotherActivity(this, SearchPigActivity.class, false);
+            case R.id.tv_startup_next:
+                ActivityRoute.toAnotherActivity(this, BleNetWorkConfigActivity.class, false);
+                break;
+            case R.id.tv_startup_operate:
+                onStartupChange();
                 break;
             case R.id.ubt_tv_set_net_skip:
                 ActivityRoute.toAnotherActivity(this, MainActivity.class, true);
@@ -106,5 +104,10 @@ public class SetNetWorkEnterActivity extends BaseToolBarActivity implements View
             default:
                 break;
         }
+    }
+
+    private void onStartupChange() {
+        tvStartupOperate.setSelected(!tvStartupOperate.isSelected());
+        tvStartupNext.setEnabled(tvStartupOperate.isSelected());
     }
 }

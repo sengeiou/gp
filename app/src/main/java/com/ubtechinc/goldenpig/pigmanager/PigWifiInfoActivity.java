@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,7 +14,6 @@ import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.main.MainActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
-import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
 
 public class PigWifiInfoActivity extends BaseToolBarActivity implements View.OnClickListener {
 
@@ -25,9 +23,9 @@ public class PigWifiInfoActivity extends BaseToolBarActivity implements View.OnC
 
     private TextView tvWifiInfo;
 
-    private Button btnConnWifi;
+    private TextView btnConnWifi;
 
-    private Button btnCurrWifi;
+    private TextView btnCurrWifi;
 
     @Override
     protected int getConentView() {
@@ -39,22 +37,6 @@ public class PigWifiInfoActivity extends BaseToolBarActivity implements View.OnC
         setToolBarTitle("选择连网方案");
         setTitleBack(true);
         initViews();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        SharedPreferencesUtils.putBoolean(this, "firstEnter", false);
     }
 
     private void initViews() {

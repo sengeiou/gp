@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/shape_ubt_btn_cyan_gb" android:state_enabled="true" />
+    <item android:drawable="@drawable/shape_ubt_btn_gray_gb" android:state_enabled="false" />
+</selector>

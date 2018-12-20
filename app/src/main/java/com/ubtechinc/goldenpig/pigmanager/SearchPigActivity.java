@@ -65,6 +65,7 @@ import pl.droidsonroids.gif.GifImageView;
  * @change :
  * @changetime :2018/8/23 18:52
  */
+@Deprecated
 public class SearchPigActivity extends BaseToolBarActivity implements View.OnClickListener {
     private GifImageView mGifImg;
     private Button mSearchBtn; ///开始搜索音箱
@@ -343,7 +344,6 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
         pigListDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
-                pigListDialog.onDismiss();
                 mSearchBtn.setText(R.string.research_pig);
                 mSearchBtn.setAlpha(1.0f);
                 if (disposable != null) {
