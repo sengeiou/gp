@@ -567,7 +567,7 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
     private void showNoManualScanDialog() {
         if (mNoDeviceDialog == null) {
             mNoDeviceDialog = new UBTBaseDialog(this);
-            mNoDeviceDialog.setTips("没找到八戒萌宠");
+            mNoDeviceDialog.setTips("没找到八戒");
             mNoDeviceDialog.setLeftButtonTxt("关闭");
             mNoDeviceDialog.setRightButtonTxt("重新搜索");
             mNoDeviceDialog.setRightBtnColor(ContextCompat.getColor(this, R.color.ubt_tab_btn_txt_checked_color));
