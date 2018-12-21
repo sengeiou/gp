@@ -141,7 +141,7 @@ public class Constants {
                 reuslt = "登录TVS错误";
                 break;
             case ALEARDY_CONNECT_ERROR_CODE:
-                reuslt = "已经有设备连接音箱";
+                reuslt = "已经有设备连接八戒";
                 break;
             case TVS_ERROR_CODE:
                 reuslt = "注册tvs失败";
@@ -150,7 +150,7 @@ public class Constants {
                 reuslt = "没有序列号错误";
                 break;
             case REGISTER_ROBOT_ERROR_CODE:
-                reuslt = "绑定音箱失败";
+                reuslt = "绑定八戒失败";
                 break;
             case GET_CLIENT_ID_ERROR_CODE:
                 reuslt = "获取clientId失败";

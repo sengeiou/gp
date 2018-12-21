@@ -15,7 +15,7 @@ import java.util.ArrayList;
 /**
  * @auther :hqt
  * @email :qiangta.huang@ubtrobot.com
- * @description :八戒音箱的蓝牙列表
+ * @description :八戒萌宠的蓝牙列表
  * @time :2018/8/25 14:14
  * @change :
  * @changetime :2018/8/25 14:14

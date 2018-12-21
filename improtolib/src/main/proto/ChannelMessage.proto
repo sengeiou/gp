@@ -47,9 +47,9 @@ message ChatMessage {
 }
 
 
-//header =2 时的payload字段 用于音箱推送到手机
+//header =2 时的payload字段 用于八戒推送到手机
 message Notify {
-    //提醒  用于音箱主动通知手机
+    //提醒  用于八戒主动通知手机
     int32 notifyType=1;
     google.protobuf.Any content=2;
 }

@@ -61,7 +61,7 @@ public class AddressBookActivity extends MVPBaseActivity<AddressBookContract.Vie
     private ArrayList<AddressBookmodel> mList;
     public int deletePosition = 0;
     /**
-     * 先拉取到数据，添加联系人时要在app端作对比后再提交给音箱
+     * 先拉取到数据，添加联系人时要在app端作对比后再提交给八戒
      */
     private Boolean hasLoadMsg = false;
 

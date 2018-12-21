@@ -51,11 +51,11 @@ public class PigWifiInfoActivity extends BaseToolBarActivity implements View.OnC
         }
         if (!TextUtils.isEmpty(mPigWifiName)) {
             ivWifiLogo.setImageResource(R.drawable.img_wifi);
-            tvWifiInfo.setText("音箱当前已连接“" + mPigWifiName + "”");
+            tvWifiInfo.setText("八戒当前已连接“" + mPigWifiName + "”");
             btnCurrWifi.setText("使用当前Wi-Fi");
         } else {
             ivWifiLogo.setImageResource(R.drawable.img_4g);
-            tvWifiInfo.setText("音箱当前已连接移动数据网络");
+            tvWifiInfo.setText("八戒当前已连接移动数据网络");
             btnCurrWifi.setText("使用移动数据");
         }
         btnConnWifi.setOnClickListener(this);
