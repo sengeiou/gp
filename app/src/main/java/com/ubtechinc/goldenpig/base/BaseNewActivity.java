@@ -7,16 +7,20 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.ubtechinc.commlib.utils.StatusBarUtil;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
+import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
+import com.ubtechinc.goldenpig.utils.PermissionPageUtils;
 import com.ubtechinc.goldenpig.view.StateView;
 import com.umeng.analytics.MobclickAgent;
+import com.yanzhenjie.permission.Permission;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -31,7 +35,10 @@ import butterknife.Unbinder;
  * @time :2018/9/12 16:03
  */
 public abstract class BaseNewActivity extends AppCompatActivity {
+
     Unbinder unbinder;
+
+    private UBTSubTitleDialog dialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -149,5 +156,44 @@ public abstract class BaseNewActivity extends AppCompatActivity {
             res.updateConfiguration(configuration, res.getDisplayMetrics());
         }
         return res;
+    }
+
+    protected void showPermissionDialog(String[] permission) {
+        String subTip = "";
+        if (permission == Permission.LOCATION) {
+            subTip = "使用该功能需要定位权限，请前往系统设置开启权限";
+        } else if (permission == Permission.CAMERA) {
+            subTip = "使用该功能需要拍照权限，请前往系统设置开启权限";
+        } else if (permission == Permission.CONTACTS) {
+            subTip = "使用该功能需要读取联系人权限，请前往系统设置开启权限";
+        }
+        if (dialog == null) {
+            dialog = new UBTSubTitleDialog(this);
+            dialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
+            dialog.setTips("权限申请");
+            dialog.setLeftButtonTxt(getString(R.string.ubt_cancel));
+            dialog.setRightButtonTxt(getString(R.string.go_setting));
+            dialog.setSubTips(subTip);
+            dialog.setOnUbtDialogClickLinsenter(new UBTSubTitleDialog.OnUbtDialogClickLinsenter() {
+                @Override
+                public void onLeftButtonClick(View view) {
+                    //TODO
+                }
+
+                @Override
+                public void onRightButtonClick(View view) {
+                    gotoSetting();
+                }
+            });
+            dialog.show();
+        }
+        if (dialog != null && !dialog.isShowing() && !isFinishing() && !isDestroyed()) {
+            dialog.show();
+        }
+    }
+
+    private void gotoSetting() {
+        //TODO 去应用管理设置权限页
+        PermissionPageUtils.getInstance(this).jumpPermissionPage();
     }
 }
