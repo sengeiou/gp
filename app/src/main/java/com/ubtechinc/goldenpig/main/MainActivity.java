@@ -32,12 +32,10 @@ import com.ubtechinc.goldenpig.main.fragment.PigNewFragment;
 import com.ubtechinc.goldenpig.main.fragment.SkillFragment;
 import com.ubtechinc.goldenpig.model.JsonCallback;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionModel;
-import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.nets.http.ThrowableWrapper;
-import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
 
 import java.util.ArrayList;
 
@@ -100,15 +98,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 GetPigListHttpProxy.OnGetPigListLitener() {
                     @Override
                     public void onError(ThrowableWrapper e) {
-                        SharedPreferencesUtils.putBoolean(MainActivity.this, "firstEnter", true);
-                        toBleConfigActivity(false);
+//                        SharedPreferencesUtils.putBoolean(MainActivity.this, "firstEnter", true);
+//                        toBleConfigActivity(false);
                         Log.e("getPigList", e.getMessage());
                     }
 
                     @Override
                     public void onException(Exception e) {
-                        SharedPreferencesUtils.putBoolean(MainActivity.this, "firstEnter", true);
-                        toBleConfigActivity(false);
+//                        SharedPreferencesUtils.putBoolean(MainActivity.this, "firstEnter", true);
+//                        toBleConfigActivity(false);
                         Log.e("getPigList", e.getMessage());
                     }
 
@@ -117,11 +115,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         Log.e("getPigList", response);
                         PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance()
                                 .getCurrentPigList());
-                        ArrayList<PigInfo> list = AuthLive.getInstance().getCurrentPigList();
-                        if (list == null || list.isEmpty()) {
-                            SharedPreferencesUtils.putBoolean(MainActivity.this, "firstEnter", true);
-                            toBleConfigActivity(false);
-                        }
+//                        ArrayList<PigInfo> list = AuthLive.getInstance().getCurrentPigList();
+//                        if (list == null || list.isEmpty()) {
+//                            SharedPreferencesUtils.putBoolean(MainActivity.this, "firstEnter", true);
+//                            toBleConfigActivity(false);
+//                        }
                     }
                 });
         personRbtn = (RadioButton) findViewById(R.id.ubt_rbt_me);
