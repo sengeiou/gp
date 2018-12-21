@@ -21,6 +21,7 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.login.repository.UBTAuthRepository;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.TvsUtil;
+import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
 
 /**
  * @auther :hqt
@@ -41,9 +42,6 @@ public class UserInfoActivity extends BaseToolBarActivity implements View.OnClic
     private View mLogoutBtn;
 
     private UBTAuthRepository ubtAuthRepository;
-
-    private UserInfo mUser;
-
 
     @Override
     protected int getConentView() {
@@ -67,19 +65,34 @@ public class UserInfoActivity extends BaseToolBarActivity implements View.OnClic
         mLogoutBtn = findViewById(R.id.ubt_btn_logout);
         mLogoutBtn.setOnClickListener(this);
 
-        AuthLive authLive = AuthLive.getInstance();
-        mUser = authLive.getCurrentUser();
+        fillAccountView();
+    }
 
-        if (mUser != null) {
-            if (!TextUtils.isEmpty(mUser.getNickName())) {
-                mUserNameTv.setText(StringUtils.utf8ToString(mUser.getNickName()));
-                mUserAccountTv.setText(TvsUtil.currentPlatformValue());
+    private void fillAccountView() {
+        UserInfo currentUser = AuthLive.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            mUserAccountTv.setText(TvsUtil.currentPlatformValue());
+            String nickName = SharedPreferencesUtils.getString(this, "tvs_nickName", "");
+            String headImgUrl = SharedPreferencesUtils.getString(this, "tvs_headImgUrl", "");
+            if (TextUtils.isEmpty(nickName)) {
+                nickName = currentUser.getNickName();
             }
-            if (!TextUtils.isEmpty(mUser.getUserImage())) {
-                Glide.with(this).load(mUser.getUserImage()).centerCrop().transform(new GlideCircleTransform(this))
-                        .placeholder(R.drawable.ic_sign_in).into(mPhotoImg);
+            if (TextUtils.isEmpty(headImgUrl)) {
+                headImgUrl = currentUser.getUserImage();
+            }
 
-            }
+            Glide.with(this)
+                    .load(headImgUrl)
+                    .asBitmap()
+                    .centerCrop()
+                    .transform(new GlideCircleTransform(this))
+                    .placeholder(R.drawable.ic_sign_in)
+                    .into(mPhotoImg);
+
+            mUserNameTv.setText(StringUtils.utf8ToString(nickName));
+        } else {
+            ActivityManager.getInstance().popAllActivityExcept(LoginActivity.class.getName());
+            ActivityRoute.toAnotherActivity(this, LoginActivity.class, true);
         }
     }
 

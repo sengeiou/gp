@@ -16,6 +16,7 @@ import com.tencent.ai.tvs.info.DeviceManager;
 import com.tencent.ai.tvs.info.UserInfoManager;
 import com.ubtech.utilcode.utils.network.NetworkHelper;
 import com.ubtechinc.tvlloginlib.entity.LoginInfo;
+import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,8 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
 
     private volatile static TVSManager instance;
 
+    private Context context;
+
     private LoginProxy proxy;
     private TVSAlarmListener mTVSAlarmListener;
     public LoginInfo info;
@@ -50,6 +53,7 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
     }
 
     private TVSManager(Context context, String wxId, String qqOpenId) {
+        this.context = context;
         proxy = LoginProxy.getInstance(wxId, qqOpenId, context);
         proxy.setLoginEnv(ELoginEnv.FORMAL);
         wxClient = new WXClient(proxy, this);
@@ -162,16 +166,10 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
 //                qqClient.onSuccess(i);
                 break;
             case USERINFORECV_TYPE:
-//                switch (UserInfoManager.getInstance().idType) {
-//                    case 0:
-//                        wxClient.onSuccess(i);
-//                        break;
-//                    case 1:
-//                        qqClient.onSuccess(i);
-//                        break;
-//                    default:
-//                        break;
-//                }
+                String nickName = UserInfoManager.getInstance().nickName;
+                String headImgUrl = UserInfoManager.getInstance().headImgUrl;
+                SharedPreferencesUtils.putString(context, "tvs_nickName", nickName);
+                SharedPreferencesUtils.putString(context, "tvs_headImgUrl", headImgUrl);
                 break;
             case UNIACCESS_TYPE:
                 if (mTVSAlarmListener != null) {

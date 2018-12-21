@@ -3,6 +3,7 @@ package com.ubtechinc.goldenpig.pigmanager.mypig;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -139,12 +140,12 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
             @Override
             public void onError(int i, String s) {
                 Log.e("setOnUbtTIMConver", s);
-                LoadingDialog.getInstance(MyPigActivity.this).dismiss();
-                if (AuthLive.getInstance().getCurrentPig() != null) {
+                dismissLoadDialog();
+//                if (AuthLive.getInstance().getCurrentPig() != null) {
 //                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("八戒未登录");
-                } else {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定八戒");
-                }
+//                } else {
+//                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定八戒");
+//                }
             }
 
             @Override
@@ -216,10 +217,20 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
     }
 
     private void getMember() {
+        showLoadingDialog();
         new CheckUserRepository().getRobotBindUsers(mPig.getRobotName(), CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new CheckUserRepository.ICheckBindStateCallBack() {
             @Override
             public void onError(ThrowableWrapper e) {
-//                ToastUtils.showShortToast(MyPigActivity.this, "获取成员列表失败");
+                runOnUiThread(() -> {
+                    LoadingDialog.dissMiss();
+                    if (e != null) {
+                        String errorMsg = e.getMessage();
+                        if (!TextUtils.isEmpty(errorMsg)) {
+                            ToastUtils.showShortToast(MyPigActivity.this, errorMsg);
+                        }
+                    }
+
+                });
             }
 
             @Override
@@ -312,6 +323,7 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
      */
     private void showConfirmDialog(boolean needTransfer) {
         runOnUiThread(() -> {
+            LoadingDialog.dissMiss();
             UBTSubTitleDialog dialog = new UBTSubTitleDialog(MyPigActivity.this);
             if (needTransfer) {
                 dialog.setTips(getString(R.string.ubt_transfer_admin_tips));

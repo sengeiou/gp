@@ -389,13 +389,13 @@ public class UbtTIMManager {
             @Override
             public void onError(int i, String s) {
                 UbtLogger.d("UbtTIMManager","1unRead message "+ UbtTIMManager.getInstance().unReadVoiceMailMessage());
+                if (onUbtTIMConverListener != null) {
+                    onUbtTIMConverListener.onError(i, s);
+                }
                 if (i == 6200) {
                     ToastUtils.showShortToast("网络异常");
                 } else {
                     onSendMsgHook(false);
-                    if (onUbtTIMConverListener != null) {
-                        onUbtTIMConverListener.onError(i, s);
-                    }
                 }
             }
 

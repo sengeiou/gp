@@ -1,7 +1,6 @@
 package com.ubtechinc.nets.http;
 
 import android.net.ParseException;
-import android.text.TextUtils;
 
 import com.google.gson.JsonParseException;
 import com.ubtech.utilcode.utils.LogUtils;
@@ -14,6 +13,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.net.ConnectException;
+import java.net.UnknownHostException;
 
 import okhttp3.ResponseBody;
 import retrofit2.HttpException;
@@ -114,6 +114,10 @@ public final class ErrorUtil {
         } else if (e instanceof NullPointerException) {
             ex = new ThrowableWrapper(e, ERROR.FORMAT_ERROR);
             ex.setMessage("数据格式错误");
+            return ex;
+        } else if (e instanceof UnknownHostException) {
+            ex = new ThrowableWrapper(e, ERROR.NETWORD_ERROR);
+            ex.setMessage("网络异常");
             return ex;
         } else if (e instanceof IOException){
             ex = new ThrowableWrapper(e, ERROR.FORMAT_ERROR);

@@ -3,6 +3,7 @@ package com.ubtechinc.goldenpig.main.fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.res.ResourcesCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.about.UbtAboutActivtiy;
 import com.ubtechinc.goldenpig.app.ActivityManager;
 import com.ubtechinc.goldenpig.base.BaseFragment;
+import com.ubtechinc.goldenpig.comm.entity.UserInfo;
 import com.ubtechinc.goldenpig.comm.img.GlideCircleTransform;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
@@ -33,6 +35,7 @@ import com.ubtechinc.goldenpig.personal.remind.RemindActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.hotspot.SetHotSpotActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -55,8 +58,7 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
 public class PersonalFragment extends BaseFragment implements View.OnClickListener {
 
 
-    private View mToUserInfo;
-    private View mSetNetBtn;   //绑定配网按钮
+    private View mSetNetBtn;
 
     private View mFeedBackBtn; //反馈帮助
     private UbtSubTxtButton mAboutBtn; //关于页按钮
@@ -131,54 +133,9 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
             savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_person, container, false);
         EventBusUtil.register(this);
-//        initView(view);
         return view;
     }
 
-    private void initView(View view) {
-        if (AuthLive.getInstance().getCurrentUser() != null) {
-            mPohtoImg = (ImageView) getActivity().findViewById(R.id.ubt_img_me_photo);
-            Glide.with(getActivity())
-                    .load(AuthLive.getInstance().getCurrentUser().getUserImage())
-                    .asBitmap()
-                    .centerCrop()
-                    .transform(new GlideCircleTransform(getActivity()))
-                    .into(mPohtoImg);
-
-            mNikenameTv = (TextView) getActivity().findViewById(R.id.ubt_tv_me_nikename);
-            mNikenameTv.setText(AuthLive.getInstance().getCurrentUser().getNickName());
-        }
-        mTitle = getActivity().findViewById(R.id.ubt_me_fragment_title);
-        mCyanBg = getActivity().findViewById(R.id.ubt_me_normal_bg);
-
-        mSetNetBtn = getActivity().findViewById(R.id.ubt_btn_person_set_wifi);
-        mSetNetBtn.setOnClickListener(this);
-
-        mFeedBackBtn = getActivity().findViewById(R.id.ubt_btn_person_feedback);
-        mFeedBackBtn.setOnClickListener(this);
-
-        mAboutBtn = (UbtSubTxtButton) getActivity().findViewById(R.id.ubt_btn_person_about);
-        mAboutBtn.setOnClickListener(this);
-
-        getActivity().findViewById(R.id.ubt_btn_person_clock).setOnClickListener(this);
-        getActivity().findViewById(R.id.ubt_btn_person_answer).setOnClickListener(this);
-
-        try {
-            String versionName = String.format(getString(R.string.ubt_version_format),
-                    ContextUtils.getVerName(getContext()));
-            mAboutBtn.setRightText(versionName);
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-        }
-        getActivity().findViewById(R.id.ubt_btn_device_manager).setOnClickListener(new View
-                .OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ActivityRoute.toAnotherActivity(getActivity(), DeviceManageActivity.class, false);
-            }
-        });
-//        changeItemAlpha();
-    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -187,25 +144,11 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
     }
 
     private void inits() {
-        if (AuthLive.getInstance().getCurrentUser() != null) {
-            mPohtoImg = (ImageView) getActivity().findViewById(R.id.ubt_img_me_photo);
-            Glide.with(getActivity())
-                    .load(AuthLive.getInstance().getCurrentUser().getUserImage())
-                    .asBitmap()
-                    .centerCrop()
-                    .transform(new GlideCircleTransform(getActivity()))
-                    .placeholder(R.drawable.ic_sign_in)
-                    .into(mPohtoImg);
+        mPohtoImg = getActivity().findViewById(R.id.ubt_img_me_photo);
+        mNikenameTv = getActivity().findViewById(R.id.ubt_tv_me_nikename);
 
-            mNikenameTv = (TextView) getActivity().findViewById(R.id.ubt_tv_me_nikename);
-            mNikenameTv.setText(StringUtils.utf8ToString(AuthLive.getInstance().getCurrentUser().getNickName()));
-        } else {
-            ActivityManager.getInstance().popAllActivityExcept(LoginActivity.class.getName());
-            ActivityRoute.toAnotherActivity(getActivity(), LoginActivity.class, true);
-        }
         mTitle = getActivity().findViewById(R.id.ubt_me_fragment_title);
         mCyanBg = getActivity().findViewById(R.id.ubt_me_normal_bg);
-        mToUserInfo = getActivity().findViewById(R.id.ubt_btn_go_login);
 
         mSetNetBtn = getActivity().findViewById(R.id.ubt_btn_person_set_wifi);
         mSetNetBtn.setOnClickListener(this);
@@ -213,7 +156,7 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
         mFeedBackBtn = getActivity().findViewById(R.id.ubt_btn_person_feedback);
         mFeedBackBtn.setOnClickListener(this);
 
-        mAboutBtn = (UbtSubTxtButton) getActivity().findViewById(R.id.ubt_btn_person_about);
+        mAboutBtn = getActivity().findViewById(R.id.ubt_btn_person_about);
         mAboutBtn.setOnClickListener(this);
 
         getActivity().findViewById(R.id.ubt_btn_person_clock).setOnClickListener(this);
@@ -226,14 +169,37 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
         } catch (RuntimeException e) {
             e.printStackTrace();
         }
-        getActivity().findViewById(R.id.ubt_btn_device_manager).setOnClickListener(new View
-                .OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                ActivityRoute.toAnotherActivity(getActivity(), DeviceManageActivity.class, false);
-            }
-        });
+        getActivity().findViewById(R.id.ubt_btn_device_manager).setOnClickListener(view -> ActivityRoute.toAnotherActivity(getActivity(), DeviceManageActivity.class, false));
         changeItemAlpha();
+
+        fillAccountView();
+    }
+
+    private void fillAccountView() {
+        UserInfo currentUser = AuthLive.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String nickName = SharedPreferencesUtils.getString(getActivity(), "tvs_nickName", "");
+            String headImgUrl = SharedPreferencesUtils.getString(getActivity(), "tvs_headImgUrl", "");
+            if (TextUtils.isEmpty(nickName)) {
+                nickName = currentUser.getNickName();
+            }
+            if (TextUtils.isEmpty(headImgUrl)) {
+                headImgUrl = currentUser.getUserImage();
+            }
+
+            Glide.with(getActivity())
+                    .load(headImgUrl)
+                    .asBitmap()
+                    .centerCrop()
+                    .transform(new GlideCircleTransform(getActivity()))
+                    .placeholder(R.drawable.ic_sign_in)
+                    .into(mPohtoImg);
+
+            mNikenameTv.setText(StringUtils.utf8ToString(nickName));
+        } else {
+            ActivityManager.getInstance().popAllActivityExcept(LoginActivity.class.getName());
+            ActivityRoute.toAnotherActivity(getActivity(), LoginActivity.class, true);
+        }
     }
 
     private void changeItemAlpha() {
@@ -251,16 +217,12 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
 
             mToHospotBtn.setAlpha(alpha);
             mToHospotBtn.setEnabled(isEnable);
-        /*mDevMangerBtn.setAlpha(alpha);
-        mDevMangerBtn.setEnabled(isEnable);*/
             mAnswerBtn.setAlpha(alpha);
             mAnswerBtn.setEnabled(isEnable);//isEnable
             mClockBtn.setAlpha(alpha);
             mClockBtn.setEnabled(isEnable);
             mRemindBtn.setAlpha(alpha);
             mRemindBtn.setEnabled(isEnable);
-//        mQQMusicBtn.setAlpha(alpha);
-//        mQQMusicBtn.setEnabled(isEnable);
         } catch (Exception e) {
 
         }
@@ -313,7 +275,6 @@ public class PersonalFragment extends BaseFragment implements View.OnClickListen
         int code = event.getCode();
         switch (code) {
             case USER_PIG_UPDATE:
-//                showTips();
                 changeItemAlpha();
                 break;
         }
