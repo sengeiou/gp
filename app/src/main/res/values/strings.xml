@@ -170,7 +170,7 @@
     <string name="ubt_get_qr_pair_pig_fialure">获取配对八戒二维码失败</string>
     <string name="ubt_get_qr_join_group_fialure">获取加入成员组二维码失败</string>
     <string name="ubt_scann_qr_tips">将二维码放入框内，即可自动扫描</string>
-    <string name="ubt_scann_qr_join_group">扫描进群</string>
+    <string name="ubt_scann_qr_join_group">扫码进组</string>
     <string name="ubt_scann_qr">扫描二维码</string>
     <string name="ubt_pair_pig_fialure">配对失败</string>
     <string name="ubt_add_member_success">添加成员成功</string>

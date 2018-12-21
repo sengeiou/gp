@@ -103,8 +103,6 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_WATH_DISCONNECT_SUCCESS:
-                    startScanBle(false);
-                    UbtBluetoothManager.getInstance().connectBluetooth(mBluetoothDevice);
                     if (isAutoScan) {
                         LoadingDialog.getInstance(BleClosePigActivity.this).setTimeout(CONNECT_TIMEOUT)
                                 .setShowToast(true).show();
@@ -214,10 +212,6 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
             if (disposable != null) {
                 disposable.dispose();
             }
-            if (disposable != null) {
-                disposable.dispose();
-            }
-            mUbtBluetoothManager.stopScanBluetooth();
         }
     }
 
@@ -243,7 +237,6 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
             float distance = getDistance(ubtBleDevice.getRssi());
             Log.d("gold_ble", "distance:" + distance);
             if (distance < 2.0) {
-                startScanBle(false);
                 connectBleDevice(ubtBleDevice);
             }
         } else if (isManualScan) {
