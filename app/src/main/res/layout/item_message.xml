@@ -64,7 +64,7 @@
                 <TextView
                     android:id="@+id/left_voice_time_other"
                     android:layout_width="30dp"
-                    android:layout_height="15dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
                     android:layout_toRightOf="@+id/leftMessage"
                     android:layout_toEndOf="@+id/leftMessage"

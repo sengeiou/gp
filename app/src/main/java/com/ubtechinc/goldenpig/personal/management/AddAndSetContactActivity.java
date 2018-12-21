@@ -27,6 +27,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.tencent.TIMCustomElem;
+import com.tencent.TIMElem;
 import com.tencent.TIMMessage;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
@@ -501,17 +502,18 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
 
     @Override
     public void update(Observable o, Object arg) {
-        LogUtils.d("dsadsadaa");
         LoadingDialog.getInstance(AddAndSetContactActivity.this).dismiss();
-        TIMMessage msg = (TIMMessage) arg;
-        for (int i = 0; i < msg.getElementCount(); ++i) {
-            TIMCustomElem elem = (TIMCustomElem) msg.getElement(i);
-            try {
-                dealMsg(elem.getData());
-            } catch (InvalidProtocolBufferException e) {
-                e.printStackTrace();
-                ToastUtils.showShortToast(getString(R.string.msg_error_toast));
+        try {
+            TIMMessage msg = (TIMMessage) arg;
+            for (int i = 0; i < msg.getElementCount(); ++i) {
+                TIMElem tIMElem = msg.getElement(i);
+                if (tIMElem instanceof TIMCustomElem) {
+                    TIMCustomElem elem = (TIMCustomElem) tIMElem;
+                    dealMsg(elem.getData());
+                }
             }
+        } catch (Exception e) {
+
         }
     }
 
