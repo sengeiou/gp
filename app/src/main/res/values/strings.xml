@@ -233,6 +233,7 @@
     <string name="ubt_next">下一步</string>
     <string name="ubt_startup_done">八戒已开机成功</string>
     <string name="ubt_notelepathic_title">没有感应到八戒</string>
+    <string name="ubt_bind_success">绑定成功</string>
     <string name="ubt_notelepathic_tip">1.请确认八戒已开机，并处于配网模式；\n\n2.请让手机靠近八戒，确保手机与八戒的距离在30厘米以内；\n\n3.如果依然没反应，请尝试点击下方的手动连接八戒。</string>
 
 </resources>

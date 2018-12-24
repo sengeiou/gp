@@ -141,7 +141,7 @@ public class Constants {
                 reuslt = "登录TVS错误";
                 break;
             case ALEARDY_CONNECT_ERROR_CODE:
-                reuslt = "已经有设备连接八戒";
+                reuslt = "有其他设备正在连接机器，请断开其他设备的连接后再重试";
                 break;
             case TVS_ERROR_CODE:
                 reuslt = "注册tvs失败";

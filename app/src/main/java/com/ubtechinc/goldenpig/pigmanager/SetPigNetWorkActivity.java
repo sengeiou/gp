@@ -56,6 +56,8 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
 
     private boolean isPigConnectNet = false;
 
+    private String comingSource;
+
     @Override
     protected int getConentView() {
         return R.layout.activity_set_pig_network;
@@ -88,6 +90,10 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
         bungdingManager = new BungdingManager(this);
         bungdingManager.setBangdingListener(mBandingListenerAbster);
         checkPigWifi();
+        Intent intent = getIntent();
+        if (intent != null) {
+            comingSource = intent.getStringExtra("source");
+        }
     }
 
     @Override
@@ -362,7 +368,9 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
     @Override
     protected void onBackCallBack() {
         super.onBackCallBack();
-//        UbtBluetoothManager.getInstance().closeConnectBle();
+        if ("closepig".equals(comingSource)) {
+            UbtBluetoothManager.getInstance().closeConnectBle();
+        }
     }
 
     private void updateDefaultSsid() {

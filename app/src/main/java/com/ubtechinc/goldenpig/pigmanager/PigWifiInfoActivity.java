@@ -15,6 +15,8 @@ import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.main.MainActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 
+import java.util.HashMap;
+
 public class PigWifiInfoActivity extends BaseToolBarActivity implements View.OnClickListener {
 
     private String mPigWifiName;
@@ -66,7 +68,9 @@ public class PigWifiInfoActivity extends BaseToolBarActivity implements View.OnC
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.btn_conn_wifi:
-                ActivityRoute.toAnotherActivity(PigWifiInfoActivity.this, SetPigNetWorkActivity.class, false);
+                HashMap<String, String> map = new HashMap<>();
+                map.put("comingSource", "pigwifi");
+                ActivityRoute.toAnotherActivity(PigWifiInfoActivity.this, SetPigNetWorkActivity.class, map, false);
                 break;
             case R.id.btn_curr_wifi:
                 doSkip();
