@@ -121,7 +121,7 @@ public class PigInfo implements Serializable {
 
     @Override
     public String toString() {
-        return "{robotUserId = " + robotUserId + "onlineState=" + onlineState + "connectState" + connectionState + "}";
+        return "{robotUserId = " + robotUserId + " onlineState=" + onlineState + " connectState=" + connectionState + " isAdmin=" + isAdmin + "}";
     }
 
     public String getUserId() {

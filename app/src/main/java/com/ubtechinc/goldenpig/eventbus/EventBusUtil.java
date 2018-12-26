@@ -47,6 +47,8 @@ public class EventBusUtil {
     public static final int NEW_MESSAGE_NOTIFICATION = 20001;
     public static final int NEW_CALL_RECORD = 20002;
     public static final int NETWORK_STATE_CHANGED = 20003;
+    public static final int DO_GET_NATIVE_INFO = 20004;
+    public static final int RECEIVE_NATIVE_INFO = 20005;
 
     public static final int SERVER_RESPONSE_UNAUTHORIZED = 401;
 

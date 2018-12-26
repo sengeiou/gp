@@ -196,4 +196,9 @@
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/white</item>
     </style>
+
+    <style name="pop_view">
+        <item name="android:windowEnterAnimation">@anim/pop_view_show</item>
+        <item name="android:windowExitAnimation">@anim/pop_view_hide</item>
+    </style>
 </resources>

@@ -366,6 +366,13 @@ public class UbtTIMManager {
         sendTIM(msg);
     }
 
+    /**
+     * 查询金猪基本消息
+     */
+    public void queryNativeInfo(){
+        sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getNativeInfo()));
+    }
+
     public void sendTIM(TIMMessage msg) {
         if (!isLoginedTIM) {
             return;

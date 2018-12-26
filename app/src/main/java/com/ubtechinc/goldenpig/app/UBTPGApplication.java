@@ -67,6 +67,7 @@ import com.ubtechinc.tvlloginlib.TVSManager;
 import com.ubtrobot.analytics.mobile.AnalyticsKit;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.ubtrobot.channelservice.proto.GPRelationshipContainer;
+import com.ubtrobot.info.NativeInfoContainer;
 import com.vise.utils.handler.CrashHandlerUtil;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -240,6 +241,8 @@ public class UBTPGApplication extends LoginApplication implements Observer {
             public void onLoginSuccess() {
                 AuthLive.getInstance().timLogined();
                 sendClientIdToPig();
+
+                EventBusUtil.sendEvent(new Event(EventBusUtil.DO_GET_NATIVE_INFO));
             }
 
             @Override
@@ -508,6 +511,14 @@ public class UBTPGApplication extends LoginApplication implements Observer {
             if (hasRecord) {
                 Event<Boolean> event = new Event<>(EventBusUtil.NEW_CALL_RECORD);
                 event.setData(hasRecord);
+                EventBusUtil.sendEvent(event);
+            }
+        } else if(action.equals(ContactsProtoBuilder.GET_NATIVE_INFO)){
+            NativeInfoContainer.NativeInfo nativeInfo = msg.getPayload().unpack(NativeInfoContainer.NativeInfo.class);
+            Log.d(TAG,"nativeInfo = " + nativeInfo);
+            if(nativeInfo != null){
+                Event<NativeInfoContainer.NativeInfo> event = new Event<>(EventBusUtil.RECEIVE_NATIVE_INFO);
+                event.setData(nativeInfo);
                 EventBusUtil.sendEvent(event);
             }
         }

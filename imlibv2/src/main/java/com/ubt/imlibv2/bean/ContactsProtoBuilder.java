@@ -26,6 +26,7 @@ public class ContactsProtoBuilder {
     public static final String UPAT_HOTSPOT = "/im/HotSpot/receiver"; /// 修改热点
     public static final String GET_HOTSPOT = "/im/HotSpot/Account"; ///查询热点
 
+    public static final String GET_NATIVE_INFO = "/im/native_info"; //查询小猪基本信息
 
     public static final String IM_RELATIONSHIP_CHANGED = "/im/relationShip/changed";
 
@@ -236,6 +237,14 @@ public class ContactsProtoBuilder {
                 .setPayload(Any.pack(message))
                 .build();
         return channelMessage.toByteArray();
+    }
+
+    /**
+     * 查询小猪基本信息
+     * @return
+     */
+    public static byte[] getNativeInfo(){
+        return createBaseData(GET_NATIVE_INFO);
     }
 
     public static byte[] getHotSpot() {

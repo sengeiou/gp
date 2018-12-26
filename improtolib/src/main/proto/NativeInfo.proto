@@ -1,0 +1,38 @@
+syntax = "proto3";
+option java_package="com.ubtrobot.info";
+option java_outer_classname="NativeInfoContainer";
+import "google/protobuf/any.proto";
+
+message NativeInfo {
+   google.protobuf.Any batteryStatus = 1; // 电池状态
+   google.protobuf.Any bleStatus = 2;   //蓝牙状态
+   google.protobuf.Any simStatus = 3;   //sim 卡状态
+   google.protobuf.Any networkStatus = 4; // 网络状态
+}
+
+message BatteryStatus{
+   int32 electricity = 1; //电量
+}
+
+message BleStatus{
+   bool open = 1 ;   // true 打开 ，false 关闭
+   bool connected =2 ; // true 已连接 ，false 未连接
+}
+
+message SimStatus{
+   bool inserted = 1 ;// true 已经插卡 ，false 未插卡
+   int32 level = 2 ; // 信号强度
+}
+
+message NetworkStatus{
+   bool wifiState = 1 ; // true连接wifi，false 未连接wifi
+   string ssid = 2 ; // wifi ssid 当前连接的wifi
+   int32 mobileState = 3; // 0未连接移动网，2 2G,3 3G,4 4G
+   int32 level=4 ; // wifi 信号强度
+}
+
+
+
+
+
+

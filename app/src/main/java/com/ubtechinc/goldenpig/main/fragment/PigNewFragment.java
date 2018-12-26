@@ -1,6 +1,8 @@
 package com.ubtechinc.goldenpig.main.fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,18 +13,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.SPUtils;
+import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseFragment;
+import com.ubtechinc.goldenpig.comm.widget.CustomPopupWindow;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtrobot.info.NativeInfoContainer;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -32,13 +40,17 @@ import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 import static com.ubtechinc.goldenpig.app.Constant.SP_HAS_LOOK_LAST_RECORD;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DO_GET_NATIVE_INFO;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.INVISE_RECORD_POINT;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NETWORK_STATE_CHANGED;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NEW_CALL_RECORD;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NEW_MESSAGE_NOTIFICATION;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_NATIVE_INFO;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
 
 /**
@@ -50,6 +62,10 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
  * @changTime :2018/8/17 18:00
  */
 public class PigNewFragment extends BaseFragment {
+
+    private static final String TAG = PigNewFragment.class.getSimpleName();
+
+    private static final int GET_NATIVE_INFO = 1;
 
     @BindView(R.id.tv_pig_sn)
     TextView tvPigSn;
@@ -66,11 +82,54 @@ public class PigNewFragment extends BaseFragment {
     @BindView(R.id.rv_function_card)
     RecyclerView rvFunctionCard;
 
+    @BindView(R.id.iv_ble)
+    ImageView ivBle;
+    @BindView(R.id.iv_signal)
+    ImageView ivSignal;
+    @BindView(R.id.tv_battery)
+    TextView tvBattery;
+    @BindView(R.id.tv_wifi_name)
+    TextView tvWifiName;
+    @BindView(R.id.iv_up_down)
+    ImageView ivUpDown;
+    @BindView(R.id.rl_wifi)
+    RelativeLayout rlWifi;
+    @BindView(R.id.rl_native_info)
+    RelativeLayout rlNativeInfo;
+    @BindView(R.id.iv_sim_net)
+    ImageView ivSimNet;
+    @BindView(R.id.iv_wifi)
+    ImageView ivWifi;
+    Unbinder unbinder;
+
     PigFragmentAdapter adapter;
 
     MainFunctionAdapter mainFunctionAdapter;
+    private CustomPopupWindow mCustomPopupWindow = null;
 
     private List<String> list = new ArrayList<>();
+
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case GET_NATIVE_INFO:
+                    PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+                    Log.d(TAG, "queryNativeInfo pigInfo = " + pigInfo);
+                    if (pigInfo != null && pigInfo.isAdmin && pigInfo.isOnline()) {
+                        UbtTIMManager.getInstance().queryNativeInfo();
+                        if(mHandler.hasMessages(GET_NATIVE_INFO)){
+                            mHandler.removeMessages(GET_NATIVE_INFO);
+                        }
+                        mHandler.sendEmptyMessageDelayed(GET_NATIVE_INFO, 60 * 1000);
+                    }else {
+                        hideNativeInfo();
+                    }
+                    break;
+            }
+        }
+    };
 
     @Nullable
     @Override
@@ -78,6 +137,7 @@ public class PigNewFragment extends BaseFragment {
         View view = inflater.inflate(R.layout.fragment_pig_new, container, false);
         EventBusUtil.register(this);
         initSkillData();
+        unbinder = ButterKnife.bind(this, view);
         return view;
     }
 
@@ -128,16 +188,30 @@ public class PigNewFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Log.d(TAG, "onActivityCreated");
         updateUserPig();
         initFunctionCard();
         initRecycleList();
     }
 
-    @OnClick({R.id.btn_bt_binding})
+    @OnClick({R.id.btn_bt_binding, R.id.rl_wifi})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_bt_binding:
                 toBleConfigActivity(null, false);
+                break;
+            case R.id.rl_wifi:
+                mCustomPopupWindow = new CustomPopupWindow(getActivity())
+                        .showAtBottom(rlWifi)
+                        .setShowVal(tvWifiName.getText().toString())
+                        .setCallback(new CustomPopupWindow.Callback() {
+                            @Override
+                            public void onDismiss() {
+                                ivUpDown.setImageResource(R.drawable.ic_arrow_down);
+                                mCustomPopupWindow = null;
+                            }
+                        });
+                ivUpDown.setImageResource(R.drawable.ic_arrow_up);
                 break;
         }
     }
@@ -146,6 +220,7 @@ public class PigNewFragment extends BaseFragment {
         if (!UBTPGApplication.isNetAvailable) {
             tvNetTip.setVisibility(View.VISIBLE);
             btnBinding.setVisibility(View.GONE);
+            hideNativeInfo();
         } else {
             tvNetTip.setVisibility(View.GONE);
             PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
@@ -160,6 +235,30 @@ public class PigNewFragment extends BaseFragment {
             } else {
                 btnBinding.setVisibility(View.VISIBLE);
                 tvPigSn.setVisibility(View.GONE);
+                hideNativeInfo();
+            }
+        }
+    }
+
+    /**
+     * 隐藏小猪基本状态信息栏
+     */
+    private void hideNativeInfo(){
+        rlNativeInfo.setVisibility(View.GONE);
+        if(mCustomPopupWindow != null){
+            mCustomPopupWindow.dismiss();
+        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Log.d(TAG, "setUserVisibleHint = " + isVisibleToUser);
+        if (isVisibleToUser) {
+            mHandler.sendEmptyMessage(GET_NATIVE_INFO);
+        } else {
+            if (mHandler.hasMessages(GET_NATIVE_INFO)) {
+                mHandler.removeMessages(GET_NATIVE_INFO);
             }
         }
     }
@@ -167,6 +266,8 @@ public class PigNewFragment extends BaseFragment {
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume ");
+
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null && pigInfo.isAdmin) {
             unReadVoiceMail("setOnUbtTIMConver-DEBUG");
@@ -196,7 +297,13 @@ public class PigNewFragment extends BaseFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        Log.d(TAG, "onDestroyView");
+        if (mHandler.hasMessages(GET_NATIVE_INFO)) {
+            mHandler.removeMessages(GET_NATIVE_INFO);
+        }
+
         EventBusUtil.unregister(this);
+        unbinder.unbind();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -221,6 +328,82 @@ public class PigNewFragment extends BaseFragment {
             case NETWORK_STATE_CHANGED:
                 updateUserPig();
                 break;
+            case RECEIVE_NATIVE_INFO:
+                UpdateNativeInfo((NativeInfoContainer.NativeInfo)event.getData());
+                break;
+            case DO_GET_NATIVE_INFO:
+                mHandler.sendEmptyMessage(GET_NATIVE_INFO);
+                break;
+        }
+    }
+
+    /**
+     * 更新小猪基本信息
+     * @param data
+     */
+    private void UpdateNativeInfo(NativeInfoContainer.NativeInfo data) {
+        NativeInfoContainer.NativeInfo nativeInfo = data;
+        try {
+            NativeInfoContainer.BleStatus bleStatus = nativeInfo.getBleStatus().unpack(NativeInfoContainer.BleStatus.class);
+            NativeInfoContainer.SimStatus simStatus = nativeInfo.getSimStatus().unpack(NativeInfoContainer.SimStatus.class);
+            NativeInfoContainer.BatteryStatus batteryStatus = nativeInfo.getBatteryStatus().unpack(NativeInfoContainer.BatteryStatus.class);
+            NativeInfoContainer.NetworkStatus networkStatus = nativeInfo.getNetworkStatus().unpack(NativeInfoContainer.NetworkStatus.class);
+
+            if(rlNativeInfo.getVisibility() != View.VISIBLE){
+                rlNativeInfo.setVisibility(View.VISIBLE);
+            }
+
+            //更新蓝牙
+            if (bleStatus.getOpen()) {
+                ivBle.setImageResource(R.drawable.ic_bt_connected);
+            } else {
+                ivBle.setImageResource(R.drawable.ic_bt_disconnected);
+            }
+
+            //更新sim卡信号
+            if (simStatus.getInserted()) {
+                int level = simStatus.getLevel() - 1;
+                if (level > 4) {
+                    level = 4;
+                }
+                if (level < 1) {
+                    level = 1;
+                }
+                ivSignal.setImageLevel(level);
+            } else {
+                ivSignal.setImageLevel(0);
+            }
+
+            //更新电量
+            tvBattery.setText(batteryStatus.getElectricity() + "%");
+
+            //更新网络连接信息
+            if (networkStatus.getWifiState()) {
+                rlWifi.setVisibility(View.VISIBLE);
+                ivSimNet.setVisibility(View.GONE);
+
+                ivWifi.setImageLevel(networkStatus.getLevel());
+                tvWifiName.setText(networkStatus.getSsid());
+            } else {
+                if(networkStatus.getMobileState() == 0){
+                    rlWifi.setVisibility(View.VISIBLE);
+                    ivSimNet.setVisibility(View.GONE);
+                }else {
+                    rlWifi.setVisibility(View.GONE);
+                    ivSimNet.setVisibility(View.VISIBLE);
+                    int simNetLevel = networkStatus.getMobileState() - 2;
+                    if(simNetLevel < 0){
+                        simNetLevel = 0;
+                    }
+                    ivSimNet.setImageLevel(simNetLevel);
+                }
+            }
+
+            Log.d(TAG, "batteryStatus " + batteryStatus + " bleStatus = " + bleStatus + " simStatus = " + simStatus + " networkStatus = " + networkStatus);
+        } catch (InvalidProtocolBufferException e) {
+            Log.e(TAG,"e = " + e.getMessage());
+            e.printStackTrace();
+            ToastUtils.showLongToast("获取基本信息失败");
         }
     }
 
