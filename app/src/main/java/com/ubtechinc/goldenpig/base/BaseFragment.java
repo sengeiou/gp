@@ -57,7 +57,8 @@ public abstract class BaseFragment extends Fragment {
       /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getActivity().getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View
+            .SYSTEM_UI_FLAG_LAYOUT_STABLE);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
         }*/
@@ -136,7 +137,8 @@ public abstract class BaseFragment extends Fragment {
                 window.setStatusBarColor(Color.TRANSPARENT);
             }
             //设置window的状态栏不可见
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View
+                    .SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
         } else {
             //如果为半透明模式，添加设置Window半透明的Flag
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -200,4 +202,7 @@ public abstract class BaseFragment extends Fragment {
     protected abstract void onHasPig();
 
     protected abstract void onSetedNet();
+
+    protected void hasNewVersion() {
+    }
 }
