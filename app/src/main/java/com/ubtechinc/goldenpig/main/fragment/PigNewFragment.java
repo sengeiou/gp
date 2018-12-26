@@ -369,6 +369,9 @@ public class PigNewFragment extends BaseFragment {
             case DO_GET_NATIVE_INFO:
                 mHandler.sendEmptyMessage(GET_NATIVE_INFO);
                 break;
+            case UPDATE_HOME_FUNCTION_CARD:
+                updateFunctionCard((FunctionModel) event.getData());
+                break;
         }
     }
 
@@ -439,9 +442,6 @@ public class PigNewFragment extends BaseFragment {
             Log.e(TAG,"e = " + e.getMessage());
             e.printStackTrace();
             ToastUtils.showLongToast("获取基本信息失败");
-            case UPDATE_HOME_FUNCTION_CARD:
-                updateFunctionCard((FunctionModel) event.getData());
-                break;
         }
     }
 
