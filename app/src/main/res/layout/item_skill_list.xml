@@ -13,7 +13,7 @@
         android:background="@drawable/item_skill_bg"
         android:textColor="#FF29AAFF"
         android:textSize="15sp"
-        android:text="“小猪小猪，放一首歌”"
+        android:text="“八戒八戒，放一首歌”"
         android:paddingTop="@dimen/dp_8"
         android:paddingBottom="@dimen/dp_8"
         android:paddingLeft="@dimen/dp_13"

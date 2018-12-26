@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.Window;
+import android.widget.TextView;
 
 import com.ubtechinc.bluetooth.UbtBluetoothDevice;
 import com.ubtechinc.goldenpig.R;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 /**
  * @auther :hqt
  * @email :qiangta.huang@ubtrobot.com
- * @description :八戒音箱列表
+ * @description :八戒机器人列表
  * @time :2018/8/24 20:44
  * @change :
  * @changetime :2018/8/24 20:44
@@ -26,6 +27,7 @@ public class PigListDialog extends BaseDialog {
     private ArrayList<UbtBluetoothDevice> mLeList;
     private RecyclerView mPigRycView;
     private PigListAdapter mPigAdapter;
+    private TextView mPigClose;
 
     public PigListDialog(@NonNull Context context) {
         super(context);
@@ -37,12 +39,17 @@ public class PigListDialog extends BaseDialog {
 
         Window dialogWindow = getWindow();
         dialogWindow.setBackgroundDrawableResource(R.color.ubt_transparent);
+
+        setCanceledOnTouchOutside(false);
         this.setContentView(root);
         mLeList = new ArrayList<>();
         mPigRycView = findViewById(R.id.ubt_pig_list_ryv);
+        mPigClose = findViewById(R.id.ube_tv_close);
         mPigRycView.setLayoutManager(new WrapContentLinearLayoutManager(getContext()));
         mPigAdapter = new PigListAdapter(mLeList);
         mPigRycView.setAdapter(mPigAdapter);
+
+        mPigClose.setOnClickListener(v -> cancel());
     }
 
     public void setBluetoothItemClickListener(OnPigListItemClickListener listener) {

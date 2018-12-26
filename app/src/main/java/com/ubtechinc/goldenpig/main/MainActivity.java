@@ -75,12 +75,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     }
 
     private void disConnectBle() {
-        getWindow().getDecorView().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                UbtBluetoothManager.getInstance().closeConnectBle();
-            }
-        }, 5000);
+        getWindow().getDecorView().postDelayed(() -> UbtBluetoothManager.getInstance().closeConnectBle(), 5000);
     }
 
 
@@ -122,6 +117,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //                        }
                     }
                 });
+
         personRbtn = (RadioButton) findViewById(R.id.ubt_rbt_me);
         personRbtn.setOnClickListener(this);
 

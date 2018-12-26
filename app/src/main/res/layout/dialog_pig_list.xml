@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/shape_loading_dialog_pig"
+    android:divider="@drawable/divider"
+    android:showDividers="middle"
     android:gravity="center"
     android:maxHeight="@dimen/ubt_blue_tooth_list_maxheight"
     android:orientation="vertical">
@@ -13,4 +15,14 @@
         android:layout_height="match_parent"
         android:layout_marginStart="@dimen/ubt_16dp"
         android:layout_marginEnd="@dimen/ubt_16dp" />
-</FrameLayout>
+
+    <TextView
+        android:id="@+id/ube_tv_close"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/dp_9"
+        android:gravity="center"
+        android:text="关闭"
+        android:textColor="#FF29AAFF"
+        android:textSize="17sp"/>
+</LinearLayout>

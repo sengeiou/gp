@@ -60,7 +60,7 @@ import pl.droidsonroids.gif.GifImageView;
 /**
  * @auther :hqt
  * @email :qiangta.huang@ubtrobot.com
- * @description :搜索音箱界面
+ * @description :搜索八戒界面
  * @time :2018/8/23 18:52
  * @change :
  * @changetime :2018/8/23 18:52
@@ -68,7 +68,7 @@ import pl.droidsonroids.gif.GifImageView;
 @Deprecated
 public class SearchPigActivity extends BaseToolBarActivity implements View.OnClickListener {
     private GifImageView mGifImg;
-    private Button mSearchBtn; ///开始搜索音箱
+    private Button mSearchBtn; ///开始搜索八戒
     private TextView mTipsTv;
     private final int BLUETOOTH_REQUESTCODE = 100; //权限申请后的返回码
 
@@ -180,7 +180,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
 //        if (isSearched) {
 //            mSearchBtn.setText("重新搜索");
 //        } else {
-//            mSearchBtn.setText("搜索音箱");
+//            mSearchBtn.setText("搜索八戒");
 //        }
     }
 
@@ -253,7 +253,7 @@ public class SearchPigActivity extends BaseToolBarActivity implements View.OnCli
                 public void onFinish() {
 //                    if (pigListDialog != null && pigListDialog.isShowing()) {
 //                        if (pigListDialog.getBleCount() < 1) {
-//                            showNotify("未搜到音箱，请确认已按照引导视频正确操作");
+//                            showNotify("未搜到八戒，请确认已按照引导视频正确操作");
 //                        } else if (isClicked) {
 //                            ToastUtils.showLongToast(SearchPigActivity.this, R.string.ubt_bunding_ping_timeout);
 //                        }

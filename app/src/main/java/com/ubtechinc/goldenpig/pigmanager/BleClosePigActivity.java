@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
+import com.ubtechinc.bluetooth.Constants;
 import com.ubtechinc.bluetooth.UbtBluetoothDevice;
 import com.ubtechinc.bluetooth.UbtBluetoothManager;
 import com.ubtechinc.bluetooth.command.ICommandProduce;
@@ -34,6 +35,7 @@ import com.ubtechinc.goldenpig.pigmanager.bean.BundingListenerAbster;
 import com.ubtechinc.goldenpig.pigmanager.bluetooth.BlueToothManager;
 import com.ubtechinc.goldenpig.pigmanager.widget.PigListDialog;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 import com.yanzhenjie.permission.PermissionListener;
@@ -77,6 +79,8 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
     private UBTBaseDialog mGpsTipDialog;
 
     private UBTBaseDialog mNoDeviceDialog;
+
+    private UBTBaseDialog mErrorDialog;
 
     private UBTSubTitleDialog mNoTelepathicDialog;
 
@@ -130,7 +134,9 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
         } else if (mPigMobileType != -1 && mPigMobileType != 0) {
             ActivityRoute.toAnotherActivity(BleClosePigActivity.this, PigWifiInfoActivity.class, false);
         } else {
-            ActivityRoute.toAnotherActivity(BleClosePigActivity.this, SetPigNetWorkActivity.class, false);
+            HashMap<String, String> map = new HashMap<>();
+            map.put("comingSource", "closepig");
+            ActivityRoute.toAnotherActivity(BleClosePigActivity.this, SetPigNetWorkActivity.class, map, false);
         }
     }
 
@@ -269,19 +275,21 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
         public void onFaild(int errorCode, String message) {
             super.onFaild(errorCode, message);
 
-//            switch (errorCode) {
-//                case 2041:
-//                    if (pigListDialog != null && pigListDialog.isShowing()) {
+            switch (errorCode) {
+                case 2041:
+                    if (pigListDialog != null && pigListDialog.isShowing()) {
+                        message = getResources().getString(R.string.ubt_one_user_one_pig);
 //                        ToastUtils.showShortToast(BleClosePigActivity.this, R.string.ubt_one_user_one_pig);
-//                    }
-//                    break;
-//                case 2040:
+                    }
+                    break;
+                case 2040:
 //                    ToastUtils.showShortToast(BleClosePigActivity.this, message);
-//                    break;
-//                default:
+                    break;
+                default:
+                    message = Constants.getErrorMsg(errorCode);
 //                    ToastUtils.showShortToast(BleClosePigActivity.this, Constants.getErrorMsg(errorCode));
-//                    break;
-//            }
+                    break;
+            }
             if (pigListDialog != null) {
                 pigListDialog.dismiss();
             }
@@ -305,7 +313,11 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
         public void connectFailed() {
             super.connectFailed();
             dismissLoadDialog();
-            ToastUtils.showShortToast(BleClosePigActivity.this, R.string.failed_retry);
+            if (pigListDialog != null) {
+                pigListDialog.dismiss();
+            }
+            showErrorDialog("连接失败");
+//            ToastUtils.showShortToast(BleClosePigActivity.this, R.string.failed_retry);
         }
 
         @Override
@@ -331,7 +343,8 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
             if (pigListDialog != null) {
                 pigListDialog.dismiss();
             }
-            ToastUtils.showShortToast(BleClosePigActivity.this, "用户绑定失败");
+            showErrorDialog("绑定失败");
+//            ToastUtils.showShortToast(BleClosePigActivity.this, "用户绑定失败");
         }
 
         @Override
@@ -374,31 +387,32 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
 
     /**
      * 错误弹框
-     *
      * @param message
      */
     private void showErrorDialog(String message) {
-        UBTBaseDialog errorDialog = new UBTBaseDialog(this);
-        errorDialog.setTips(message);
-        errorDialog.setLeftBtnShow(false);
-        errorDialog.setRightButtonTxt("我知道了");
-        errorDialog.setRightBtnColor(ContextCompat.getColor(this, R.color.ubt_tab_btn_txt_checked_color));
-        errorDialog.setOnUbtDialogClickLinsenter(new UBTBaseDialog.OnUbtDialogClickLinsenter() {
+        if (mErrorDialog == null) {
+            mErrorDialog = new UBTBaseDialog(this);
+            mErrorDialog.setTips("连接失败");
+            mErrorDialog.setLeftBtnShow(false);
+            mErrorDialog.setRightButtonTxt("我知道了");
+            mErrorDialog.setRightBtnColor(ContextCompat.getColor(this, R.color.ubt_tab_btn_txt_checked_color));
+            mErrorDialog.setOnUbtDialogClickLinsenter(new UBTBaseDialog.OnUbtDialogClickLinsenter() {
 
-            @Override
-            public void onLeftButtonClick(View view) {
+                @Override
+                public void onLeftButtonClick(View view) {
 
-            }
+                }
 
-            @Override
-            public void onRightButtonClick(View view) {
-                isAutoScan = true;
-                isManualScan = false;
-                startScanBle(true);
-            }
-        });
-        if (!isDestroyed() && !isFinishing()) {
-            errorDialog.show();
+                @Override
+                public void onRightButtonClick(View view) {
+                    isAutoScan = true;
+                    isManualScan = false;
+                    startScanBle(true);
+                }
+            });
+        }
+        if (!isDestroyed() && !isFinishing() && !mErrorDialog.isShowing()) {
+            mErrorDialog.show();
         }
     }
 
@@ -406,6 +420,7 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
         if (pigListDialog != null) {
             pigListDialog.dismiss();
         }
+        UbtToastUtils.showCustomToast(this, getString(R.string.ubt_bind_success));
         checkPigWifi();
     }
 
@@ -554,7 +569,7 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
                 }
             });
         }
-        if (!isDestroyed() && !isFinishing()) {
+        if (!isDestroyed() && !isFinishing() && !mNoTelepathicDialog.isShowing()) {
             startScanBle(false);
             mNoTelepathicDialog.show();
         }
@@ -567,7 +582,7 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
     private void showNoManualScanDialog() {
         if (mNoDeviceDialog == null) {
             mNoDeviceDialog = new UBTBaseDialog(this);
-            mNoDeviceDialog.setTips("没找到八戒音箱");
+            mNoDeviceDialog.setTips("没找到八戒");
             mNoDeviceDialog.setLeftButtonTxt("关闭");
             mNoDeviceDialog.setRightButtonTxt("重新搜索");
             mNoDeviceDialog.setRightBtnColor(ContextCompat.getColor(this, R.color.ubt_tab_btn_txt_checked_color));
@@ -587,7 +602,7 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
 
             });
         }
-        if (!isDestroyed() && !isFinishing()) {
+        if (!isDestroyed() && !isFinishing() && !mNoDeviceDialog.isShowing()) {
             startScanBle(false);
             mNoDeviceDialog.show();
         }
@@ -616,6 +631,9 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
 
                 @Override
                 public void onRightButtonClick(View view) {
+                    isAutoScan = true;
+                    isManualScan = false;
+                    startScanBle(true);
                 }
             });
         }

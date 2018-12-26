@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">八戒音箱</string>
+    <string name="app_name">八戒机器人</string>
     <string name="ubt_qq_login">QQ登录</string>
     <string name="ubt_wechat_login">微信登录</string>
     <string name="ubt_tab_little_pig">八戒</string>
@@ -16,11 +16,11 @@
     <string name="ubt_startup_tip">开机过程需要60秒左右\n当听到开机音效时即开机成功</string>
     <string name="ubt_start_set_net">开始绑定与配网</string>
     <string name="ubt_bind">绑定</string>
-    <string name="ubt_pig_match">音箱配对</string>
-    <string name="voice_box_open">音箱开机</string>
-    <string name="ubt_pig_bind">音箱绑定</string>
-    <string name="ubt_search_pig">搜索音箱</string>
-    <string name="searching_pig">搜索音箱中</string>
+    <string name="ubt_pig_match">八戒配对</string>
+    <string name="voice_box_open">八戒开机</string>
+    <string name="ubt_pig_bind">八戒绑定</string>
+    <string name="ubt_search_pig">搜索八戒</string>
+    <string name="searching_pig">搜索八戒中</string>
     <string name="research_pig">重新搜索</string>
     <string name="researching_pig">重新搜索中</string>
     <string name="ubt_press_mute_btn_tips">长按八戒的热点键，进入配网模式</string>
@@ -34,16 +34,16 @@
     <string name="ubt_open_wifif_tips">获取wifi列表需要打开本机wifi开关</string>
     <string name="ubt_enter">确认</string>
     <string name="ubt_wifi_no_pwd_tips">确认此Wi-Fi无密码？</string>
-    <string name="ubt_set_pig_net">音箱配网</string>
+    <string name="ubt_set_pig_net">八戒配网</string>
     <string name="ubt_bunding_ping_timeout">绑定八戒超时，请稍后重试</string>
-    <string name="ubt_one_user_one_pig">一个账号已被绑定音箱</string>
+    <string name="ubt_one_user_one_pig">一个账号已被绑定八戒</string>
     <string name="ubt_set_net_success">配网成功</string>
     <string name="ubt_connecting">连接中</string>
     <string name="ubt_mina">我的</string>
     <string name="ubt_pig">八戒</string>
-    <string name="ubt_unbund_pig">未绑定音箱，</string>
+    <string name="ubt_unbund_pig">未绑定八戒，</string>
     <string name="ubt_my_pig">我的八戒</string>
-    <string name="ubt_send_voice">给自己的音箱发送语音留言</string>
+    <string name="ubt_send_voice">给自己的八戒发送语音留言</string>
     <string name="ubt_skills_manual">技能手册</string>
     <string name="ubt_skills_detail">技能详情</string>
     <string name="ubt_more_funtions">了解更多功能</string>
@@ -74,13 +74,13 @@
     <string name="ubt_off_line">离线</string>
     <string name="ubt_unbind">解除绑定</string>
     <string name="ubt_device_update">设备升级</string>
-    <string name="ubt_unbing_tips">解绑后，将不能通过app使用此音箱</string>
-    <string name="ubt_pig_serialno">音箱序列号：%1$s</string>
-    <string name="ubt_pig_version_format">音箱当前版本：%1$s</string>
+    <string name="ubt_unbing_tips">解绑后，将不能通过app使用此八戒</string>
+    <string name="ubt_pig_serialno">八戒序列号：%1$s</string>
+    <string name="ubt_pig_version_format">八戒当前版本：%1$s</string>
     <string name="ubt_ubbind_success">成功解除绑定</string>
     <string name="ubt_transfer_admin_tips">你是管理员，解绑前请先转让管理员权限</string>
     <string name="ubt_exit_group_tips">你是管理员，退出成员组请先转让管理员权限</string>
-    <string name="ubt_pig_unset_net">音箱未配网，</string>
+    <string name="ubt_pig_unset_net">八戒未配网，</string>
     <string name="ubt_click_for_bind">点击绑定</string>
     <string name="ubt_click_for_net">点击配网</string>
     <string name="ubt_hotspot_name">热点名称</string>
@@ -103,15 +103,15 @@
     <string name="contact_limit">通讯录已满10人,如需新增请先删除联系人</string>
     <string name="ubt_add_pig">配对八戒</string>
     <string name="my_pig">我的八戒</string>
-    <string name="ubt_add_pig_sub">配对音箱之间的语音留言</string>
-    <string name="ubt_pig_voice_box">八戒音箱</string>
+    <string name="ubt_add_pig_sub">配对八戒之间的语音留言</string>
+    <string name="ubt_pig_voice_box">八戒机器人</string>
     <string name="ubt_no_pigs">没有绑定八戒</string>
     <string name="ubt_menber_group">成员组</string>
     <string name="ubt_admin">管理员</string>
     <string name="ubt_trans_admin">转让管理员</string>
     <string name="ubt_delete">删除</string>
     <string name="ubt_add_member">添加成员</string>
-    <string name="ubt_addmember_desc">·请让需绑定此音箱的用户，打开八戒APP-我的-设备管理-加入成员组：\n·扫描上面的二维码，加入成员组；\n·加入成员组后用户即与此音箱绑定，可正常使用此APP功能；</string>
+    <string name="ubt_addmember_desc">·请让需绑定此八戒的用户，打开八戒APP-我的-设备管理-加入成员组：\n·扫描上面的二维码，加入成员组；\n·加入成员组后用户即与此八戒绑定，可正常使用此APP功能；</string>
     <string name="ubt_coming_soon">敬请期待</string>
     <string name="ubt_pair_pig">配对八戒</string>
     <string name="ubt_pair_pig_desc">·请让配对设备的管理员打开八戒APP-我的-设备管理-配对八戒；\n·点击右上角“扫一扫”，扫描上面的二维码，配对八戒；\n·配对成功的八戒可以相互发送语音留言；</string>
@@ -122,7 +122,7 @@
     <string name="ubt_unbind_fialure">退出群组失败</string>
     <string name="ubt_trans_permission">转让权限</string>
     <string name="ubt_delte_member_tips">删除此成员？</string>
-    <string name="ubt_transfer_tips">注意：音箱中的闹钟、提醒、定制问答、配对八戒等个人数据将会清除</string>
+    <string name="ubt_transfer_tips">注意：八戒中的闹钟、提醒、定制问答、配对八戒等个人数据将会清除</string>
     <string name="ubt_trandfer_admin_tips">将管理员权限转让给此账号？</string>
     <string name="ubt_join_group">加入成员组</string>
     <string name="ubt_complete">完成</string>
@@ -182,12 +182,12 @@
     <string name="pair_pig">配对八戒</string>
     <string name="pair_pig_voice">管理已配对的八戒</string>
 
-    <string name="unbind_pig_dialog_tip">绑定新音箱前，需解绑现有音箱</string>
+    <string name="unbind_pig_dialog_tip">绑定新八戒前，需解绑现有八戒</string>
     <string name="unbind_pig_dialog_sub_tip">解绑入口：设备管理-我的八戒</string>
     <string name="i_know_text">我知道了</string>
-    <string name="close_pig_tip">将手机靠近音箱，可快速绑定</string>
-    <string name="ubt_manual_ble_pig">手动连接音箱</string>
-    <string name="no_search_pig_tip">未搜到音箱，请确认已按照引导视频正确操作</string>
+    <string name="close_pig_tip">将手机靠近八戒，可快速绑定</string>
+    <string name="ubt_manual_ble_pig">手动连接八戒</string>
+    <string name="no_search_pig_tip">未搜到八戒，请确认已按照引导视频正确操作</string>
     <string name="failed_retry">操作失败，请重试</string>
 
     <string name="ubt_page_bottom">优必选科技有限公司   版权所有</string>
@@ -196,8 +196,8 @@
     <string name="ubt_login_agree_policy">同意《优必选服务协议》与《隐私协议》</string>
     <string name="ubt_login_agree_policy_tip">请确认并同意《优必选服务协议》与《隐私协议》</string>
 
-    <string name="wifi_connect_tip">音箱已连接“%1$s”无线网络，“跳过”也可完成配网</string>
-    <string name="mobile_net_connect_tip">音箱已连接移动网络，“跳过”也可完成配网</string>
+    <string name="wifi_connect_tip">八戒已连接“%1$s”无线网络，“跳过”也可完成配网</string>
+    <string name="mobile_net_connect_tip">八戒已连接移动网络，“跳过”也可完成配网</string>
 
     <string name="reload_error">加载失败</string>
     <string name="reload">重新加载</string>
@@ -205,7 +205,7 @@
     <string name="msg_error_toast">当前数据异常，请稍后重试</string>
     <string name="timeout_error_toast">请求超时，请重试</string>
 
-    <string name="pair_pig_voice_tip">说“小猪小猪，发送留言给小猪”即可留言互动</string>
+    <string name="pair_pig_voice_tip">说“八戒八戒，发送留言给八戒”即可留言互动</string>
 
     <string name="ubt_latest_version_format">最新版本:%1$s</string>
     <string name="ubt_ota_status_3">系统正处于升级状态，升级包会在连接无线网络时自动下载安装</string>
@@ -230,10 +230,11 @@
     <string name="ubt_ble_ready">蓝牙与位置信息</string>
     <string name="ubt_ble_open">打开蓝牙</string>
     <string name="ubt_ble_location">允许获取位置权限</string>
-    <string name="ubt_ble_ready_tip">请打开手机蓝牙，并允许八戒音箱\n获取你的位置信息，以便进行网络连接</string>
+    <string name="ubt_ble_ready_tip">请打开手机蓝牙，并允许八戒机器人APP\n获取你的位置信息，以便进行网络连接</string>
     <string name="ubt_next">下一步</string>
     <string name="ubt_startup_done">八戒已开机成功</string>
-    <string name="ubt_notelepathic_title">没有感应到八戒音箱</string>
-    <string name="ubt_notelepathic_tip">1.请确认音箱已开机，并处于配网模式；\n\n2.请让手机靠近音箱，确保手机与音箱的距离在30厘米以内；\n\n3.如果依然没反应，请尝试点击下方的手动连接音箱。</string>
+    <string name="ubt_notelepathic_title">没有感应到八戒</string>
+    <string name="ubt_bind_success">绑定成功</string>
+    <string name="ubt_notelepathic_tip">1.请确认八戒已开机，并处于配网模式；\n\n2.请让手机靠近八戒，确保手机与八戒的距离在30厘米以内；\n\n3.如果依然没反应，请尝试点击下方的手动连接八戒。</string>
 
 </resources>

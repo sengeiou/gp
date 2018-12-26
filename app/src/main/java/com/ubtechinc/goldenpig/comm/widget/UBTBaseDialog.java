@@ -45,6 +45,7 @@ public class UBTBaseDialog extends BaseDialog implements View.OnClickListener{
         Window dialogWindow = getWindow();
         dialogWindow.setBackgroundDrawableResource(R.color.ubt_transparent);
 
+        setCanceledOnTouchOutside(false);
 
         this.setContentView(root);
         mLeftBtn=(Button) findViewById(R.id.ubt_dialog_left_btn);

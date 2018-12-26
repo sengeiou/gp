@@ -9,15 +9,16 @@
         style="@style/UBTDialogTipsTheme"
         android:layout_marginBottom="@dimen/dp_12"
         />
-    <TextView
+    <com.ubtechinc.goldenpig.comm.widget.PerfectTextView
         android:id="@+id/ubt_tv_dialog_subtips"
         android:layout_below="@+id/ubt_tv_dialog_tips"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:textSize="@dimen/sp_14"
         android:textColor="@color/ubt_version_color"
         android:layout_marginStart="@dimen/dp_16"
         android:layout_marginEnd="@dimen/dp_16"
         android:layout_marginBottom="@dimen/dp_18"
+        android:layout_centerHorizontal="true"
         android:gravity="center"
         android:layout_height="wrap_content" />
     <View
@@ -57,9 +58,5 @@
 
             />
     </LinearLayout>
-
-
-
-
 
 </RelativeLayout>

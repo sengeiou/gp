@@ -2,23 +2,31 @@ package com.ubtechinc.goldenpig.main.fragment;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseActivity;
 import com.ubtechinc.goldenpig.comm.entity.PairPig;
+import com.ubtechinc.goldenpig.comm.img.GlideCircleTransform;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.BleWebActivity;
+import com.ubtechinc.goldenpig.main.FunctionModel;
 import com.ubtechinc.goldenpig.personal.alarm.AlarmListActivity;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionActivity;
 import com.ubtechinc.goldenpig.personal.management.AddressBookActivity;
@@ -30,13 +38,25 @@ import com.ubtechinc.goldenpig.pigmanager.mypig.QRCodeActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.voiceChat.ui.ChatActivity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.ALARM;
+import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.BLE;
+import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.CALL_RECORD;
+import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.CUSTOM_QA;
+import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.MAIL_LIST;
+import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.PAIR;
+import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.REMIND;
+import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.VOICE_MAIL;
 
 public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapter.ViewHodler> implements View.OnClickListener {
 
     private List<FunctionEnum> list;
     private Context context;
+
+    private boolean isDynamicData;
 
     public MainFunctionAdapter(Context context, List<FunctionEnum> list) {
         this.list = list;
@@ -53,9 +73,27 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHodler holder, int position) {
         FunctionEnum functionEnum = list.get(position);
-        holder.tvItem.setText(functionEnum.label);
-        holder.tvItem.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(context, functionEnum.resIcon),
-                null, null);
+        if (isDynamicData) {
+            holder.tvItem.setText(functionEnum.name);
+            Glide.with(context)
+                    .load(functionEnum.icoUrl)
+                    .asBitmap()
+                    .centerCrop()
+                    .transform(new GlideCircleTransform(context))
+                    .placeholder(R.drawable.ic_sign_in)
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            BitmapDrawable drawable = new BitmapDrawable(context.getResources(), resource);
+                            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                            holder.tvItem.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
+                        }
+                    });
+        } else {
+            holder.tvItem.setText(functionEnum.label);
+            holder.tvItem.setCompoundDrawablesWithIntrinsicBounds(null, ContextCompat.getDrawable(context, functionEnum.resIcon),
+                    null, null);
+        }
         holder.ivRedPoint.setVisibility(functionEnum.hasRedPoint ? View.VISIBLE : View.GONE);
         holder.itemView.setTag(functionEnum);
     }
@@ -130,6 +168,7 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
         dialog.setRightBtnColor(ContextCompat.getColor(context, R.color.ubt_tab_btn_txt_checked_color));
         dialog.setTips("请完成绑定与配网");
         dialog.setSubTips("完成后即可使用各项技能");
+        dialog.setSubTipGravity(Gravity.CENTER);
         dialog.setLeftButtonTxt("取消");
         dialog.setRightButtonTxt("确认");
         dialog.setOnUbtDialogClickLinsenter(new UBTSubTitleDialog.OnUbtDialogClickLinsenter() {
@@ -142,11 +181,69 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
             public void onRightButtonClick(View view) {
                 //TODO goto ble bind config
                 if (context instanceof BaseActivity) {
-                    ((BaseActivity)context).toBleConfigActivity(false);
+                    ((BaseActivity) context).toBleConfigActivity(false);
                 }
             }
         });
         dialog.show();
+    }
+
+    public synchronized void updateData(FunctionModel mFunctionModel) {
+        List<FunctionModel.CategorysModel> categorys = mFunctionModel.catetory.categorys;
+        if (categorys != null && !categorys.isEmpty()) {
+            List<FunctionEnum> tempList = new ArrayList<>();
+            for (FunctionModel.CategorysModel categorysModel : categorys) {
+                FunctionEnum functionEnum = parseModel(categorysModel);
+                tempList.add(functionEnum);
+            }
+            if (list != null) {
+                list.clear();
+            } else {
+                list = new ArrayList<>();
+            }
+            isDynamicData = true;
+            list.addAll(tempList);
+            notifyDataSetChanged();
+        }
+    }
+
+    private FunctionEnum parseModel(FunctionModel.CategorysModel categorysModel) {
+        int type = Integer.parseInt(categorysModel.type);
+        FunctionEnum functionEnum = null;
+        switch (type) {
+            case 1:
+                functionEnum = VOICE_MAIL;
+                break;
+            case 2:
+                functionEnum = PAIR;
+                break;
+            case 3:
+                functionEnum = ALARM;
+                break;
+            case 4:
+                functionEnum = REMIND;
+                break;
+            case 5:
+                functionEnum = CUSTOM_QA;
+                break;
+            case 6:
+                functionEnum = CALL_RECORD;
+                break;
+            case 7:
+                functionEnum = MAIL_LIST;
+                break;
+            case 8:
+                functionEnum = BLE;
+                break;
+            default:
+        }
+        if (functionEnum != null) {
+            functionEnum.name = categorysModel.name;
+            functionEnum.icoUrl = categorysModel.icoUrl;
+            functionEnum.type = categorysModel.type;
+            functionEnum.url = categorysModel.url;
+        }
+        return functionEnum;
     }
 
 
@@ -177,6 +274,21 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
         String label;
         int resIcon;
         boolean hasRedPoint;
+
+        /**
+         * start fro server
+         */
+        public String name;
+
+        public String icoUrl;
+
+        public String type;
+
+        public String url;
+
+        /**
+         * end fro server
+         */
 
         FunctionEnum(String label, int resIcon) {
             this.label = label;
