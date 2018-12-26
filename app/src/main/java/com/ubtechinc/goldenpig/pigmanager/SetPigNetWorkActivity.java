@@ -84,9 +84,9 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
             mWifiNamEdt.setText(phoneSsid);
         }
         mWifiPwdEdt = (UbtPasswordEditText) findViewById(R.id.ubt_edt_wifi_password);
-        mTvSkip = findViewById(R.id.ubt_tv_set_net_skip);
-        mTvSkip.setVisibility(View.VISIBLE);
-        mTvSkip.setOnClickListener(this);
+//        mTvSkip = findViewById(R.id.ubt_tv_set_net_skip);
+//        mTvSkip.setVisibility(View.VISIBLE);
+//        mTvSkip.setOnClickListener(this);
         bungdingManager = new BungdingManager(this);
         bungdingManager.setBangdingListener(mBandingListenerAbster);
         checkPigWifi();
@@ -123,14 +123,14 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
             findViewById(R.id.ubt_layout_setnet).setVisibility(View.GONE);
             findViewById(R.id.ubt_img_success).setVisibility(View.VISIBLE);
             findViewById(R.id.ubt_tv_set_net_success).setVisibility(View.VISIBLE);
-            mTvSkip.setEnabled(false);
-            mTvSkip.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    ActivityManager.getInstance().popAllActivity();
-                    ActivityRoute.toAnotherActivity(SetPigNetWorkActivity.this, MainActivity.class, true);
-                }
-            }, 1000);
+//            mTvSkip.setEnabled(false);
+//            mTvSkip.postDelayed(new Runnable() {
+//                @Override
+//                public void run() {
+//                    ActivityManager.getInstance().popAllActivity();
+//                    ActivityRoute.toAnotherActivity(SetPigNetWorkActivity.this, MainActivity.class, true);
+//                }
+//            }, 1000);
         } else {
             ActivityManager.getInstance().popAllActivity();
             ActivityRoute.toAnotherActivity(this, MainActivity.class, true);
@@ -307,14 +307,8 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
             findViewById(R.id.ubt_layout_setnet).setVisibility(View.GONE);
             findViewById(R.id.ubt_img_success).setVisibility(View.VISIBLE);
             findViewById(R.id.ubt_tv_set_net_success).setVisibility(View.VISIBLE);
-            mTvSkip.setEnabled(false);
-            mTvSkip.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    ActivityRoute.toAnotherActivity(SetPigNetWorkActivity.this, MainActivity.class, true);
-                }
-            }, 1000);
-
+//            mTvSkip.setEnabled(false);
+            mSendWifiInfoBtn.postDelayed(() -> ActivityRoute.toAnotherActivity(SetPigNetWorkActivity.this, MainActivity.class, true), 1000);
         }
 
         @Override
@@ -334,7 +328,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
                     if (wifi_info != null) {
                         String wifiName = wifi_info.optString("s");
                         if (!TextUtils.isEmpty(wifiName)) {
-                            showNotify(getResources().getString(R.string.wifi_connect_tip, wifiName));
+//                            showNotify(getResources().getString(R.string.wifi_connect_tip, wifiName));
                             isPigConnectNet = true;
                             return;
                         }
@@ -344,7 +338,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
                     if (mobile_info != null) {
                         int mobileType = mobile_info.optInt("m");
                         if (mobileType != 0) {
-                            showNotify(getResources().getString(R.string.mobile_net_connect_tip));
+//                            showNotify(getResources().getString(R.string.mobile_net_connect_tip));
                             isPigConnectNet = true;
                             return;
                         }
