@@ -47,6 +47,7 @@ public class UBTSubTitleDialog extends BaseDialog implements View.OnClickListene
         Window dialogWindow = getWindow();
         dialogWindow.setBackgroundDrawableResource(R.color.ubt_transparent);
 
+        setCanceledOnTouchOutside(false);
 
         this.setContentView(root);
         ubtBtnDecor = findViewById(R.id.ubt_btn_decor);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">八戒萌宠</string>
+    <string name="app_name">八戒机器人</string>
     <string name="ubt_qq_login">QQ登录</string>
     <string name="ubt_wechat_login">微信登录</string>
     <string name="ubt_tab_little_pig">八戒</string>
@@ -104,7 +104,7 @@
     <string name="ubt_add_pig">配对八戒</string>
     <string name="my_pig">我的八戒</string>
     <string name="ubt_add_pig_sub">配对八戒之间的语音留言</string>
-    <string name="ubt_pig_voice_box">八戒萌宠</string>
+    <string name="ubt_pig_voice_box">八戒机器人</string>
     <string name="ubt_no_pigs">没有绑定八戒</string>
     <string name="ubt_menber_group">成员组</string>
     <string name="ubt_admin">管理员</string>
@@ -205,7 +205,7 @@
     <string name="msg_error_toast">当前数据异常，请稍后重试</string>
     <string name="timeout_error_toast">请求超时，请重试</string>
 
-    <string name="pair_pig_voice_tip">说“小猪小猪，发送留言给八戒”即可留言互动</string>
+    <string name="pair_pig_voice_tip">说“八戒八戒，发送留言给八戒”即可留言互动</string>
 
     <string name="ubt_latest_version_format">最新版本:%1$s</string>
     <string name="ubt_ota_status_3">系统正处于升级状态，升级包会在连接无线网络时自动下载安装</string>
@@ -230,7 +230,7 @@
     <string name="ubt_ble_ready">蓝牙与位置信息</string>
     <string name="ubt_ble_open">打开蓝牙</string>
     <string name="ubt_ble_location">允许获取位置权限</string>
-    <string name="ubt_ble_ready_tip">请打开手机蓝牙，并允许八戒萌宠APP\n获取你的位置信息，以便进行网络连接</string>
+    <string name="ubt_ble_ready_tip">请打开手机蓝牙，并允许八戒机器人APP\n获取你的位置信息，以便进行网络连接</string>
     <string name="ubt_next">下一步</string>
     <string name="ubt_startup_done">八戒已开机成功</string>
     <string name="ubt_notelepathic_title">没有感应到八戒</string>

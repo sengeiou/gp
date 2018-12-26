@@ -22,7 +22,10 @@ import com.ubtechinc.goldenpig.base.BaseFragment;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
+import com.ubtechinc.goldenpig.main.FunctionModel;
+import com.ubtechinc.goldenpig.main.HomeDataHttpProxy;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -39,6 +42,7 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.INVISE_RECORD_POINT;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NETWORK_STATE_CHANGED;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NEW_CALL_RECORD;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NEW_MESSAGE_NOTIFICATION;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.UPDATE_HOME_FUNCTION_CARD;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
 
 /**
@@ -66,11 +70,18 @@ public class PigNewFragment extends BaseFragment {
     @BindView(R.id.rv_function_card)
     RecyclerView rvFunctionCard;
 
-    PigFragmentAdapter adapter;
+    @BindView(R.id.tv_statement_title)
+    TextView tvStatementTitle;
 
-    MainFunctionAdapter mainFunctionAdapter;
+    PigFragmentAdapter catetoryAdapter;
+
+    MainFunctionAdapter statementAdapter;
+
+    private boolean hasRefreshFromServer;
 
     private List<String> list = new ArrayList<>();
+
+    private FunctionModel mFunctionModel;
 
     @Nullable
     @Override
@@ -83,36 +94,38 @@ public class PigNewFragment extends BaseFragment {
 
     private void initSkillData() {
         //TODO 后续该数据从后台获取
-        list.add("“小猪小猪，放一首歌”");
-        list.add("“小猪小猪，发送留言”");
-        list.add("“小猪小猪，我好喜欢你”");
-        list.add("“小猪小猪，打电话”");
-        list.add("“小猪小猪，今天天气怎么样”");
-        list.add("“小猪小猪，提醒我下午四点喝水”");
-    }
-
-    private void initFunctionCard() {
-        if (mainFunctionAdapter == null) {
-            mainFunctionAdapter = new MainFunctionAdapter(getActivity(), new ArrayList<>(Arrays.asList(MainFunctionAdapter.FunctionEnum.values())));
-        }
-        rvFunctionCard.setLayoutManager(new GridLayoutManager(getActivity(), 4));
-        rvFunctionCard.setAdapter(mainFunctionAdapter);
+        list.add("“八戒八戒，放一首歌”");
+        list.add("“八戒八戒，发送留言”");
+        list.add("“八戒八戒，我好喜欢你”");
+        list.add("“八戒八戒，打电话”");
+        list.add("“八戒八戒，今天天气怎么样”");
+        list.add("“八戒八戒，提醒我下午四点喝水”");
     }
 
     /**
      * 功能卡片更新
      */
     private void showFunctionRedPoint(MainFunctionAdapter.FunctionEnum functionEnum, boolean isShow) {
-        if (mainFunctionAdapter != null) {
+        if (statementAdapter != null) {
             functionEnum.hasRedPoint = isShow;
-            mainFunctionAdapter.notifyItemChanged(functionEnum);
+            statementAdapter.notifyItemChanged(functionEnum);
         }
     }
 
+    private void initFunctionCard() {
+        if (statementAdapter == null) {
+            statementAdapter = new MainFunctionAdapter(getActivity(), new ArrayList<>(Arrays.asList(MainFunctionAdapter.FunctionEnum.values())));
+        }
+        rvFunctionCard.setLayoutManager(new GridLayoutManager(getActivity(), 4));
+        rvFunctionCard.setAdapter(statementAdapter);
+    }
+
     private void initRecycleList() {
-        adapter = new PigFragmentAdapter(getActivity(), list);
+        if (catetoryAdapter == null) {
+            catetoryAdapter = new PigFragmentAdapter(getActivity(), list);
+        }
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(catetoryAdapter);
     }
 
     private void unReadVoiceMail(String setOnUbtTIMConver) {
@@ -131,6 +144,26 @@ public class PigNewFragment extends BaseFragment {
         updateUserPig();
         initFunctionCard();
         initRecycleList();
+        fetchFunctionCardData();
+        refreshData();
+    }
+
+    private void fetchFunctionCardData() {
+        String md5_category = SharedPreferencesUtils.getString(getActivity(), "md5_category", "");
+        String md5_statement = SharedPreferencesUtils.getString(getActivity(), "md5_statement", "");
+        new HomeDataHttpProxy().getData(getActivity(), md5_category, md5_statement, new HomeDataHttpProxy.GetFunctionCallback() {
+            @Override
+            public void onError(String error) {
+
+            }
+
+            @Override
+            public void onSuccess(FunctionModel functionModel) {
+                Event<FunctionModel> event = new Event<>(EventBusUtil.UPDATE_HOME_FUNCTION_CARD);
+                event.setData(functionModel);
+                EventBusUtil.sendEvent(event);
+            }
+        });
     }
 
     @OnClick({R.id.btn_bt_binding})
@@ -221,6 +254,32 @@ public class PigNewFragment extends BaseFragment {
             case NETWORK_STATE_CHANGED:
                 updateUserPig();
                 break;
+            case UPDATE_HOME_FUNCTION_CARD:
+                updateFunctionCard((FunctionModel) event.getData());
+                break;
+        }
+    }
+
+    private void updateFunctionCard(FunctionModel functionModel) {
+        this.mFunctionModel = functionModel;
+        if (catetoryAdapter != null && statementAdapter != null) {
+            hasRefreshFromServer = false;
+            refreshData();
+        } else {
+            hasRefreshFromServer = false;
+        }
+    }
+
+    private void refreshData() {
+        try {
+            if (!hasRefreshFromServer && mFunctionModel != null) {
+                catetoryAdapter.updateData(mFunctionModel);
+                statementAdapter.updateData(mFunctionModel);
+                tvStatementTitle.setText(mFunctionModel.statement.title);
+                hasRefreshFromServer = true;
+            }
+        } catch (Exception e) {
+            LogUtils.d("PigNewFragment", "refreshData:" + e.getMessage());
         }
     }
 

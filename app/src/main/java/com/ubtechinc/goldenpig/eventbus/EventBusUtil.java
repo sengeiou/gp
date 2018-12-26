@@ -44,6 +44,7 @@ public class EventBusUtil {
     public static final int PAIR_PIG_UPDATE = 10019;
     public static final int TVS_LOGOUT_SUCCESS = 10020;
     public static final int DO_UPDATE_PAIR_PIG = 10021;
+    public static final int UPDATE_HOME_FUNCTION_CARD = 10022;
     public static final int NEW_MESSAGE_NOTIFICATION = 20001;
     public static final int NEW_CALL_RECORD = 20002;
     public static final int NETWORK_STATE_CHANGED = 20003;

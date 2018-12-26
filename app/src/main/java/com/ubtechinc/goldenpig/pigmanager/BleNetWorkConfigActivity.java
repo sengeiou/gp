@@ -3,6 +3,7 @@ package com.ubtechinc.goldenpig.pigmanager;
 import android.os.Bundle;
 import android.view.View;
 
+import com.ubtechinc.bluetooth.UbtBluetoothManager;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
@@ -33,6 +34,12 @@ public class BleNetWorkConfigActivity extends BaseToolBarActivity implements Vie
         setToolBarTitle(getString(R.string.ubt_pig_bind));
         setTitleBack(true);
         initViews();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        UbtBluetoothManager.getInstance().closeConnectBle();
     }
 
     private void initViews() {

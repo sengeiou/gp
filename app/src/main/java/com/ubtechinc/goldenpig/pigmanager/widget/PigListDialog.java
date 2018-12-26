@@ -18,7 +18,7 @@ import java.util.ArrayList;
 /**
  * @auther :hqt
  * @email :qiangta.huang@ubtrobot.com
- * @description :八戒萌宠列表
+ * @description :八戒机器人列表
  * @time :2018/8/24 20:44
  * @change :
  * @changetime :2018/8/24 20:44
@@ -39,6 +39,8 @@ public class PigListDialog extends BaseDialog {
 
         Window dialogWindow = getWindow();
         dialogWindow.setBackgroundDrawableResource(R.color.ubt_transparent);
+
+        setCanceledOnTouchOutside(false);
         this.setContentView(root);
         mLeList = new ArrayList<>();
         mPigRycView = findViewById(R.id.ubt_pig_list_ryv);

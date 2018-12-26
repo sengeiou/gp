@@ -9,7 +9,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.main.FunctionModel;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PigFragmentAdapter extends RecyclerView.Adapter<PigFragmentAdapter.ViewHodler> {
@@ -17,6 +20,7 @@ public class PigFragmentAdapter extends RecyclerView.Adapter<PigFragmentAdapter.
     private final String TAG = "PigFragmentAdapter";
 
     private List<String> list;
+
     private Context context;
 
     public PigFragmentAdapter(Context context, List<String> list) {
@@ -41,13 +45,25 @@ public class PigFragmentAdapter extends RecyclerView.Adapter<PigFragmentAdapter.
         return list.size();
     }
 
-    class ViewHodler extends RecyclerView.ViewHolder {
+    public synchronized void updateData(FunctionModel mFunctionModel) {
+        String[] statements = mFunctionModel.statement.statements;
+        if (statements != null) {
+            if (list != null) {
+                list.clear();
+            } else {
+                list = new ArrayList<>();
+            }
+            list.addAll(new ArrayList<>(Arrays.asList(statements)));
+            notifyDataSetChanged();
+        }
+    }
 
+    class ViewHodler extends RecyclerView.ViewHolder {
         TextView tvItem;
 
         public ViewHodler(View itemView) {
             super(itemView);
-            tvItem = (TextView) itemView.findViewById(R.id.tv_item_skill);
+            tvItem = itemView.findViewById(R.id.tv_item_skill);
         }
     }
 }

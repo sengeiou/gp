@@ -117,6 +117,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 //                        }
                     }
                 });
+
         personRbtn = (RadioButton) findViewById(R.id.ubt_rbt_me);
         personRbtn.setOnClickListener(this);
 

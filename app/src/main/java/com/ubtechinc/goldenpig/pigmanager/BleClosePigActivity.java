@@ -631,6 +631,9 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
 
                 @Override
                 public void onRightButtonClick(View view) {
+                    isAutoScan = true;
+                    isManualScan = false;
+                    startScanBle(true);
                 }
             });
         }
