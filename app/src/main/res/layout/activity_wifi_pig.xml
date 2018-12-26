@@ -26,18 +26,20 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/iv_wifi_logo" />
 
-    <Button
+    <TextView
         android:id="@+id/btn_conn_wifi"
         style="@style/UBTButtonTheme.Purple"
+        android:layout_width="0dp"
         android:layout_marginBottom="@dimen/dp_100"
         android:text="切换Wi-Fi"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
-    <Button
+    <TextView
         android:id="@+id/btn_curr_wifi"
         style="@style/UBTButtonTheme.Cyan"
+        android:layout_width="0dp"
         android:layout_marginBottom="@dimen/dp_15"
         android:text="使用当前Wi-Fi"
         app:layout_constraintBottom_toTopOf="@id/btn_conn_wifi"

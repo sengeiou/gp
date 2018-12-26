@@ -18,6 +18,8 @@ import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.ActivityManager;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
+import com.ubtechinc.goldenpig.pigmanager.BleConfigReadyActivity;
+import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PermissionPageUtils;
 import com.umeng.analytics.MobclickAgent;
 import com.yanzhenjie.permission.Permission;
@@ -174,6 +176,10 @@ public abstract class BaseActivity extends AppCompatActivity {
             res.updateConfiguration(configuration, res.getDisplayMetrics());
         }
         return res;
+    }
+
+    public void toBleConfigActivity(boolean closeSlf) {
+        ActivityRoute.toAnotherActivity(this, BleConfigReadyActivity.class, closeSlf);
     }
 
 }

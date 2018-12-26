@@ -33,7 +33,6 @@ import com.ubtechinc.goldenpig.main.fragment.PigNewFragment;
 import com.ubtechinc.goldenpig.main.fragment.SkillFragment;
 import com.ubtechinc.goldenpig.model.JsonCallback;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionModel;
-import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
@@ -103,14 +102,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     @Override
                     public void onError(ThrowableWrapper e) {
                         SharedPreferencesUtils.putBoolean(MainActivity.this, "firstEnter", true);
-                        ActivityRoute.toAnotherActivity(MainActivity.this, SetNetWorkEnterActivity.class, false);
+                        toBleConfigActivity(false);
                         Log.e("getPigList", e.getMessage());
                     }
 
                     @Override
                     public void onException(Exception e) {
                         SharedPreferencesUtils.putBoolean(MainActivity.this, "firstEnter", true);
-                        ActivityRoute.toAnotherActivity(MainActivity.this, SetNetWorkEnterActivity.class, false);
+                        toBleConfigActivity(false);
                         Log.e("getPigList", e.getMessage());
                     }
 
@@ -122,7 +121,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                         ArrayList<PigInfo> list = AuthLive.getInstance().getCurrentPigList();
                         if (list == null || list.isEmpty()) {
                             SharedPreferencesUtils.putBoolean(MainActivity.this, "firstEnter", true);
-                            ActivityRoute.toAnotherActivity(MainActivity.this, SetNetWorkEnterActivity.class, false);
+                            toBleConfigActivity(false);
                         }
                     }
                 });

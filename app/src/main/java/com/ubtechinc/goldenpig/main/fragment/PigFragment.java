@@ -34,7 +34,6 @@ import com.ubtechinc.goldenpig.personal.alarm.AlarmListActivity;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionActivity;
 import com.ubtechinc.goldenpig.personal.remind.RemindActivity;
 import com.ubtechinc.goldenpig.pigmanager.RecordActivity;
-import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.bean.RecordModel;
 import com.ubtechinc.goldenpig.pigmanager.mypig.PairPigActivity;
@@ -376,7 +375,7 @@ public class PigFragment extends BaseFragment implements Observer {
                 }
                 break;
             case R.id.ubt_bind_tv:
-                ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class, false);
+                toBleConfigActivity(null, false);
                 break;
             case R.id.ll_record: {
                 PigInfo myPig = AuthLive.getInstance().getCurrentPig();

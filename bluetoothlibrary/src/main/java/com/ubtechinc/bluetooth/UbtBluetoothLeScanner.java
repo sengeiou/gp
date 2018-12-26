@@ -66,7 +66,7 @@ import java.util.ArrayList;
   void scanLeDevice(final ScanCallback scanCallback) {
     this.mOuterScanCallback = scanCallback;
     synchronized (mLock) {
-      if (mScanning) {
+      if (mScanning || mScanner == null) {
         return;
       }
       Log.w("Logic", "开始扫描蓝牙....");

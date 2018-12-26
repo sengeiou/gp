@@ -13,7 +13,7 @@
         <item name="android:windowBackground">@drawable/splash_icon</item>
     </style>
     <!--彩色按钮基础样式-->
-    <style name="UBTButtonTheme" parent="Widget.AppCompat.Button">
+    <style name="UBTButtonTheme">
         <item name="android:layout_marginRight">@dimen/ubt_login_btn_margin</item>
         <item name="android:layout_marginLeft">@dimen/ubt_login_btn_margin</item>
         <item name="android:layout_width">@dimen/ubt_btn_width</item>

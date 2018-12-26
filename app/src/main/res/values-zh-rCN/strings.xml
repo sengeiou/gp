@@ -12,16 +12,19 @@
     <string name="ubt_network_unconnect">网络不可用，请检测试手机网络</string>
     <string name="ubt_net_error_tips">网络不给力，请稍后重试</string>
     <string name="ubt_skip">跳过</string>
-    <string name="ubt_long_press_pig">请长按电源键，确认音箱已开机</string>
+    <string name="ubt_long_press_pig">请确保八戒已开机</string>
+    <string name="ubt_startup_tip">开机过程需要60秒左右\n当听到开机音效时即开机成功</string>
     <string name="ubt_start_set_net">开始绑定与配网</string>
     <string name="ubt_bind">绑定</string>
     <string name="ubt_pig_match">音箱配对</string>
+    <string name="voice_box_open">音箱开机</string>
     <string name="ubt_pig_bind">音箱绑定</string>
     <string name="ubt_search_pig">搜索音箱</string>
     <string name="searching_pig">搜索音箱中</string>
     <string name="research_pig">重新搜索</string>
     <string name="researching_pig">重新搜索中</string>
-    <string name="ubt_press_mute_btn_tips">在音箱开机时，长按热点键，进入配网模式</string>
+    <string name="ubt_press_mute_btn_tips">长按八戒的热点键，进入配网模式</string>
+    <string name="ubt_ble_close_pig_tip">将手机靠近八戒</string>
     <string name="ubt_bluetooth_none">蓝牙模块不存在，不能使用</string>
     <string name="ubt_want_open_bluetooth">八戒想要打开蓝牙</string>
     <string name="ubt_cancel">取消</string>
@@ -179,10 +182,11 @@
     <string name="pair_pig">配对八戒</string>
     <string name="pair_pig_voice">管理已配对的八戒</string>
 
-    <string name="unbind_pig_dialog_tip">绑定新音箱前，需解绑当前音箱</string>
+    <string name="unbind_pig_dialog_tip">绑定新音箱前，需解绑现有音箱</string>
     <string name="unbind_pig_dialog_sub_tip">解绑入口：设备管理-我的八戒</string>
     <string name="i_know_text">我知道了</string>
     <string name="close_pig_tip">将手机靠近音箱，可快速绑定</string>
+    <string name="ubt_manual_ble_pig">手动连接音箱</string>
     <string name="no_search_pig_tip">未搜到音箱，请确认已按照引导视频正确操作</string>
     <string name="failed_retry">操作失败，请重试</string>
 
@@ -220,5 +224,15 @@
     <string name="ubt_bajie">BaJie_%1$s</string>
     <string name="ubt_devid">设备ID：%1$s</string>
     <string name="ubt_im_status">IM通道：%1$s</string>
+
+    <!-- 2018.12.18-->
+    <string name="ubt_ble_ready">蓝牙与位置信息</string>
+    <string name="ubt_ble_open">打开蓝牙</string>
+    <string name="ubt_ble_location">允许获取位置权限</string>
+    <string name="ubt_ble_ready_tip">请打开手机蓝牙，并允许八戒音箱\n获取你的位置信息，以便进行网络连接</string>
+    <string name="ubt_next">下一步</string>
+    <string name="ubt_startup_done">八戒已开机成功</string>
+    <string name="ubt_notelepathic_title">没有感应到八戒音箱</string>
+    <string name="ubt_notelepathic_tip">1.请确认音箱已开机，并处于配网模式；\n\n2.请让手机靠近音箱，确保手机与音箱的距离在30厘米以内；\n\n3.如果依然没反应，请尝试点击下方的手动连接音箱。</string>
 
 </resources>

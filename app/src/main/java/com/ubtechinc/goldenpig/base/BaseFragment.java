@@ -19,7 +19,7 @@ import com.ubtechinc.bluetooth.UbtBluetoothManager;
 import com.ubtechinc.bluetooth.command.JsonCommandProduce;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
-import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
+import com.ubtechinc.goldenpig.pigmanager.BleConfigReadyActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.umeng.analytics.MobclickAgent;
@@ -57,8 +57,7 @@ public abstract class BaseFragment extends Fragment {
       /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = getActivity().getWindow();
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View
-            .SYSTEM_UI_FLAG_LAYOUT_STABLE);
+            window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(Color.TRANSPARENT);
         }*/
@@ -73,49 +72,11 @@ public abstract class BaseFragment extends Fragment {
         if (mTipsView != null) {
             final PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
             if (pigInfo == null) {
-//                mTipsView.setVisibility(View.VISIBLE);
                 onNoPig();
-//                mTipsTv.setText(R.string.ubt_unbund_pig);
-//                if (mTipsClickView != null) {
-//                    mTipsClickView.setText(R.string.ubt_click_for_bind);
-//                }
-//                if (mTipsClickView != null) {
-//                    mTipsClickView.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            tipsClickForBind();
-//                        }
-//                    });
-//                }
             } else {
-//                mTipsView.setVisibility(View.GONE);
                 onHasPig();
             }
         }
-    }
-
-    /**
-     * 获取用户是否绑定八戒或八戒是否有联网
-     */
-    protected int getUsetPigState() {
-
-        return 0;
-    }
-
-    protected void tipsClickForBind() {
-        if (AuthLive.getInstance().getCurrentPig() == null) {
-            HashMap<String, Boolean> params = new HashMap<>();
-            params.put("back", false);
-            params.put("skip", true);
-            ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class, params, false);
-        }
-    }
-
-    protected void tipsClickForNet() {
-        HashMap<String, Boolean> params = new HashMap<>();
-        params.put("back", false);
-        params.put("skip", true);
-        ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class, params, false);
     }
 
     /**
@@ -205,4 +166,10 @@ public abstract class BaseFragment extends Fragment {
 
     protected void hasNewVersion() {
     }
+
+    public void toBleConfigActivity(HashMap<String, ? extends Object> hashMap, boolean closeSlf) {
+        ActivityRoute.toAnotherActivity(getActivity(), BleConfigReadyActivity.class, hashMap, closeSlf);
+    }
+
+
 }

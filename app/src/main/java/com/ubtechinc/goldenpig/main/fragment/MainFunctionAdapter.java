@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
+import com.ubtechinc.goldenpig.base.BaseActivity;
 import com.ubtechinc.goldenpig.comm.entity.PairPig;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
@@ -23,7 +24,6 @@ import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionActivity;
 import com.ubtechinc.goldenpig.personal.management.AddressBookActivity;
 import com.ubtechinc.goldenpig.personal.remind.RemindActivity;
 import com.ubtechinc.goldenpig.pigmanager.RecordActivity;
-import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.mypig.PairPigActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.QRCodeActivity;
@@ -140,8 +140,10 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
 
             @Override
             public void onRightButtonClick(View view) {
-                //TODO do管理员权限转让
-                ActivityRoute.toAnotherActivity((Activity) context, SetNetWorkEnterActivity.class, false);
+                //TODO goto ble bind config
+                if (context instanceof BaseActivity) {
+                    ((BaseActivity)context).toBleConfigActivity(false);
+                }
             }
         });
         dialog.show();

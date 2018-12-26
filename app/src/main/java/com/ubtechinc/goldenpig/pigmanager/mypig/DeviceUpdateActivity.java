@@ -76,6 +76,12 @@ public class DeviceUpdateActivity extends BaseToolBarActivity implements Observe
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UbtTIMManager.getInstance().deleteMsgObserve(this);
+    }
+
     private void initIM() {
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null) {
