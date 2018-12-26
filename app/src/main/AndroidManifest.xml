@@ -210,6 +210,8 @@
             android:launchMode="singleTask" />
         <activity android:name=".pigmanager.BleConfigReadyActivity"
             android:launchMode="singleTop"/>
+        <activity android:name=".personal.PigManageDetailActivity"
+            android:launchMode="singleTop"/>
 
         <service android:name=".app.StartUpService" />
     </application>

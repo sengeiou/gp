@@ -29,6 +29,7 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.QQMusicWebActivity;
 import com.ubtechinc.goldenpig.me.UserInfoActivity;
 import com.ubtechinc.goldenpig.personal.DeviceManageActivity;
+import com.ubtechinc.goldenpig.personal.PigManageDetailActivity;
 import com.ubtechinc.goldenpig.personal.alarm.AlarmListActivity;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionActivity;
 import com.ubtechinc.goldenpig.personal.remind.RemindActivity;
@@ -230,7 +231,8 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
     }
 
     @Override
-    @OnClick({R.id.rl_login_info, /*R.id.ubt_btn_person_hotspot, R.id.ubt_btn_person_remind,*/ R.id.ubt_btn_person_qq})
+    @OnClick({R.id.rl_login_info, /*R.id.ubt_btn_person_hotspot, R.id.ubt_btn_person_remind,*/ R.id
+            .ubt_btn_person_qq, R.id.rl_pig_state})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_login_info:
@@ -267,6 +269,9 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
                 break;
             case R.id.ubt_btn_person_qq:
                 ActivityRoute.toAnotherActivity(getActivity(), QQMusicWebActivity.class, false);
+                break;
+            case R.id.rl_pig_state:
+                ActivityRoute.toAnotherActivity(getActivity(), PigManageDetailActivity.class, false);
                 break;
             default:
         }

@@ -52,4 +52,6 @@
     <!-- 2018-11-30-->
     <color name="ubt_main_item_tab_color">#FF454B59</color>
 
+    <color name="no_network">#FFF5E2E2</color>
+    <color name="no_network_text">#FF3B30</color>
 </resources>
