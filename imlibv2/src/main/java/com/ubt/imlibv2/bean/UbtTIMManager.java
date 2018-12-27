@@ -370,7 +370,9 @@ public class UbtTIMManager {
      * 查询金猪基本消息
      */
     public void queryNativeInfo(){
-        sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getNativeInfo()));
+        if (isLoginedTIM) {
+            sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getNativeInfo()));
+        }
     }
 
     public void sendTIM(TIMMessage msg) {
@@ -395,6 +397,7 @@ public class UbtTIMManager {
 
             @Override
             public void onError(int i, String s) {
+                UbtLogger.d("UbtTIMManager","sendTIM|onError");
                 UbtLogger.d("UbtTIMManager","1unRead message "+ UbtTIMManager.getInstance().unReadVoiceMailMessage());
                 if (onUbtTIMConverListener != null) {
                     onUbtTIMConverListener.onError(i, s);
@@ -409,6 +412,7 @@ public class UbtTIMManager {
             @Override
             public void onSuccess(TIMMessage timMessage) {
                 onSendMsgHook(true);
+                UbtLogger.d("UbtTIMManager","sendTIM|onSuccess");
                 UbtLogger.d("UbtTIMManager","unRead message"+ UbtTIMManager.getInstance().unReadVoiceMailMessage());
                 if (onUbtTIMConverListener != null) {
                     onUbtTIMConverListener.onSuccess();
