@@ -197,7 +197,7 @@ public class PigManageDetailActivity extends BaseNewActivity implements Observer
                     rl.setEnabled(false);
                 }
                 for (TextView tv : listTv) {
-                    tv.setTextColor(getResources().getColor(R.color.line));
+                    tv.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
                 }
             }
             tv_dsn.setText(mPig.getRobotName());
