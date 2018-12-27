@@ -1,7 +1,9 @@
 package com.ubtechinc.goldenpig.main.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -16,12 +18,15 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.ubtech.utilcode.utils.ScreenUtils;
 import com.ubtech.utilcode.utils.StringUtils;
+import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.commlib.utils.ContextUtils;
 import com.ubtechinc.commlib.view.UbtSubTxtButton;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.about.UbtAboutActivtiy;
+import com.ubtechinc.goldenpig.base.BaseActivity;
 import com.ubtechinc.goldenpig.base.BaseFragment;
 import com.ubtechinc.goldenpig.comm.img.GlideCircleTransform;
+import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.feedback.FeedBackActivity;
@@ -33,6 +38,7 @@ import com.ubtechinc.goldenpig.personal.PigManageDetailActivity;
 import com.ubtechinc.goldenpig.personal.alarm.AlarmListActivity;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionActivity;
 import com.ubtechinc.goldenpig.personal.remind.RemindActivity;
+import com.ubtechinc.goldenpig.pigmanager.BleConfigReadyActivity;
 import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.hotspot.SetHotSpotActivity;
@@ -67,8 +73,8 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
     RelativeLayout rl_pig_state;
     @BindView(R.id.tv_pig)
     TextView tv_pig;
-    @BindView(R.id.tv_pig_state)
-    TextView tv_pig_state;
+    //    @BindView(R.id.tv_pig_state)
+//    TextView tv_pig_state;
     @BindView(R.id.ubt_tv_pig_name)
     TextView ubt_tv_pig_name;
     @BindView(R.id.ll_version)
@@ -104,7 +110,7 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     protected void onNoPig() {
-        tv_pig_state.setVisibility(View.GONE);
+        //tv_pig_state.setVisibility(View.GONE);
         tv_manager.setVisibility(View.INVISIBLE);
         ll_bind.setVisibility(View.VISIBLE);
         ll_function.setVisibility(View.GONE);
@@ -121,8 +127,8 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     protected void onNoSetNet() {
-        tv_pig_state.setVisibility(View.VISIBLE);
-        tv_pig_state.setText("(离线)");
+//        tv_pig_state.setVisibility(View.VISIBLE);
+//        tv_pig_state.setText("(离线)");
         tv_manager.setVisibility(View.INVISIBLE);
         ll_bind.setVisibility(View.VISIBLE);
         ll_function.setVisibility(View.GONE);
@@ -193,12 +199,13 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
         mNikenameTv.setText(StringUtils.utf8ToString(AuthLive.getInstance().getCurrentUser().getNickName()));
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null) {
+            tv_manager.setVisibility(View.VISIBLE);
             if (pigInfo.isAdmin) {
-                tv_manager.setVisibility(View.VISIBLE);
+                tv_manager.setText("管理员");
             } else {
-                tv_manager.setVisibility(View.INVISIBLE);
+                tv_manager.setText("普通成员");
             }
-            tv_pig_state.setVisibility(View.VISIBLE);
+            //tv_pig_state.setVisibility(View.VISIBLE);
             String name = pigInfo.getRobotName();
             if (!TextUtils.isEmpty(name) && name.length() >= 4) {
                 name = name.substring(name.length() - 4, name.length());
@@ -211,6 +218,8 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
             ubt_tv_pig_name.setVisibility(View.GONE);
             ll_bind.setVisibility(View.VISIBLE);
             ll_function.setVisibility(View.GONE);
+            tv_manager.setVisibility(View.GONE);
+            //tv_pig_state.setVisibility(View.GONE);
         }
         mFeedBackBtn.setOnClickListener(this);
         mAboutBtn.setOnClickListener(this);
@@ -231,8 +240,7 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
     }
 
     @Override
-    @OnClick({R.id.rl_login_info, /*R.id.ubt_btn_person_hotspot, R.id.ubt_btn_person_remind,*/ R.id
-            .ubt_btn_person_qq, R.id.rl_pig_state})
+    @OnClick({R.id.rl_login_info, R.id.ubt_btn_person_qq, R.id.rl_pig_state, R.id.ll_bind, R.id.ll_wifi, R.id.ll_4g})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_login_info:
@@ -273,6 +281,32 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
             case R.id.rl_pig_state:
                 ActivityRoute.toAnotherActivity(getActivity(), PigManageDetailActivity.class, false);
                 break;
+            case R.id.ll_bind:
+                ActivityRoute.toAnotherActivity(getActivity(), BleConfigReadyActivity.class, false);
+                break;
+            case R.id.ll_wifi:
+                PigInfo myPig = AuthLive.getInstance().getCurrentPig();
+                if (myPig == null) {
+                    break;
+                }
+                if (myPig.isAdmin) {
+
+                } else {
+                    ActivityRoute.toAnotherActivity(getActivity(), BleConfigReadyActivity.class, false);
+                }
+                break;
+            case R.id.ll_4g:
+                ToastUtils.showShortToast("点击蜂窝网络");
+                //enterFunction();
+                break;
+            case R.id.ll_hot_pwd:
+                ToastUtils.showShortToast("点击热点");
+                //enterFunction();
+                break;
+            case R.id.ll_duihua:
+                ToastUtils.showShortToast("点击连续对话");
+                //enterFunction();
+                break;
             default:
         }
     }
@@ -286,5 +320,40 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
                 inits();
                 break;
         }
+    }
+
+    private void enterFunction(Class clazz, HashMap<String, ? extends Object> hashMap) {
+        PigInfo myPig = AuthLive.getInstance().getCurrentPig();
+        if (myPig == null) {
+            showBindTipDialog();
+        } else if (myPig.isAdmin) {
+            ActivityRoute.toAnotherActivity(getActivity(), clazz, hashMap, false);
+        } else {
+            ToastUtils.showShortToast(R.string.only_admin_operate);
+        }
+    }
+
+    private void showBindTipDialog() {
+        UBTSubTitleDialog dialog = new UBTSubTitleDialog(getActivity());
+        dialog.setRightBtnColor(ContextCompat.getColor(getActivity(), R.color.ubt_tab_btn_txt_checked_color));
+        dialog.setTips("请完成绑定与配网");
+        dialog.setSubTips("完成后即可使用各项技能");
+        dialog.setLeftButtonTxt("取消");
+        dialog.setRightButtonTxt("确认");
+        dialog.setOnUbtDialogClickLinsenter(new UBTSubTitleDialog.OnUbtDialogClickLinsenter() {
+            @Override
+            public void onLeftButtonClick(View view) {
+
+            }
+
+            @Override
+            public void onRightButtonClick(View view) {
+                //TODO goto ble bind config
+                if (getActivity() instanceof BaseActivity) {
+                    ((BaseActivity) getActivity()).toBleConfigActivity(false);
+                }
+            }
+        });
+        dialog.show();
     }
 }
