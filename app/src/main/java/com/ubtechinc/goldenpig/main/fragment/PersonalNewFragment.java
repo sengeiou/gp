@@ -240,7 +240,8 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
     }
 
     @Override
-    @OnClick({R.id.rl_login_info, R.id.ubt_btn_person_qq, R.id.rl_pig_state, R.id.ll_bind, R.id.ll_wifi, R.id.ll_4g})
+    @OnClick({R.id.rl_login_info, R.id.ubt_btn_person_qq, R.id.rl_pig_state, R.id.ll_bind, R.id.ll_wifi, R.id.ll_4g,
+            R.id.ll_hot_pwd, R.id.ll_duihua})
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_login_info:
@@ -296,15 +297,15 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
                 }
                 break;
             case R.id.ll_4g:
-                ToastUtils.showShortToast("点击蜂窝网络");
+                //ToastUtils.showShortToast("点击蜂窝网络");
                 //enterFunction();
                 break;
             case R.id.ll_hot_pwd:
-                ToastUtils.showShortToast("点击热点");
+                //ToastUtils.showShortToast("点击热点");
                 //enterFunction();
                 break;
             case R.id.ll_duihua:
-                ToastUtils.showShortToast("点击连续对话");
+                //ToastUtils.showShortToast("点击连续对话");
                 //enterFunction();
                 break;
             default:
