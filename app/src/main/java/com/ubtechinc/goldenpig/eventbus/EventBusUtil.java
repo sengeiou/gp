@@ -50,6 +50,7 @@ public class EventBusUtil {
     public static final int NETWORK_STATE_CHANGED = 20003;
     public static final int DO_GET_NATIVE_INFO = 20004;
     public static final int RECEIVE_NATIVE_INFO = 20005;
+    public static final int RECEIVE_PIG_VERSION = 20006;
 
     public static final int SERVER_RESPONSE_UNAUTHORIZED = 401;
 

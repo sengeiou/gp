@@ -152,7 +152,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".pigmanager.mypig.PigLastVersionActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:launchMode="singleTask"/>
         <activity android:name=".pigmanager.mypig.PigMemberActivity" />
         <activity
             android:name=".about.PrivacyPolicyActivity"
@@ -213,6 +214,7 @@
             android:launchMode="singleTop"/>
         <activity android:name=".personal.PigManageDetailActivity"
             android:launchMode="singleTop"/>
+        <activity android:name=".personal.AboutBleBJActivity" />
 
         <service android:name=".app.StartUpService" />
     </application>

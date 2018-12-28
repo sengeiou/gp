@@ -71,6 +71,18 @@
                         android:textColor="#7FFFFFFF"
                         android:textSize="13sp" />
 
+                    <TextView
+                        android:id="@+id/tv_pig_tip"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:layout_alignStart="@+id/ubt_tv_pig_title"
+                        android:layout_below="@+id/ubt_tv_pig_title"
+                        android:text="你的智能语音小伙伴"
+                        android:textStyle="bold"
+                        android:visibility="gone"
+                        android:textSize="@dimen/sp_13" />
+
                     <Button
                         android:id="@+id/btn_bt_binding"
                         style="@style/UBTMainItemMinTxtTheme"

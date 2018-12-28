@@ -27,7 +27,6 @@ import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.login.LoginActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.fragment.MainFragmentAdpater;
-import com.ubtechinc.goldenpig.main.fragment.PersonalFragment;
 import com.ubtechinc.goldenpig.main.fragment.PersonalNewFragment;
 import com.ubtechinc.goldenpig.main.fragment.PigNewFragment;
 import com.ubtechinc.goldenpig.main.fragment.SkillFragment;

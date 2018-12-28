@@ -10,7 +10,7 @@
         android:id="@+id/ubt_toolbar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ubt_toolbar_height"
-        android:background="@null">
+        android:background="@color/ubt_white">
 
         <TextView
             android:id="@+id/ubt_tv_toolbar_title"

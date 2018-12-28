@@ -68,6 +68,7 @@ import com.ubtrobot.analytics.mobile.AnalyticsKit;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.ubtrobot.channelservice.proto.GPRelationshipContainer;
 import com.ubtrobot.info.NativeInfoContainer;
+import com.ubtrobot.upgrade.VersionInformation;
 import com.vise.utils.handler.CrashHandlerUtil;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -519,6 +520,14 @@ public class UBTPGApplication extends LoginApplication implements Observer {
             if(nativeInfo != null){
                 Event<NativeInfoContainer.NativeInfo> event = new Event<>(EventBusUtil.RECEIVE_NATIVE_INFO);
                 event.setData(nativeInfo);
+                EventBusUtil.sendEvent(event);
+            }
+        } else if (action.equals(ContactsProtoBuilder.GET_VERSION_ACTION)) {
+            VersionInformation.UpgradeInfo info = msg.getPayload().unpack(VersionInformation.UpgradeInfo.class);
+            if (info != null) {
+                String version = info.getCurrentVersion();
+                Event<String> event = new Event<>(EventBusUtil.RECEIVE_PIG_VERSION);
+                event.setData(version);
                 EventBusUtil.sendEvent(event);
             }
         }

@@ -25,7 +25,6 @@ import com.ubtech.utilcode.utils.SPUtils;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
-import com.ubtechinc.goldenpig.about.UbtAboutActivtiy;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewTv;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
 import com.ubtechinc.goldenpig.comm.entity.PairPig;
@@ -36,6 +35,7 @@ import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
+import com.ubtechinc.goldenpig.pigmanager.BleConfigReadyActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.hotspot.SetHotSpotActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.DeviceUpdateActivity;
@@ -211,8 +211,7 @@ public class PigManageDetailActivity extends BaseNewActivity implements Observer
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_wifi:
-//                ActivityRoute.toAnotherActivity(PigManageDetailActivity.this, MyPigActivity
-//                        .class, false);
+                ActivityRoute.toAnotherActivity(this, BleConfigReadyActivity.class, false);
                 break;
             case R.id.rl_4g:
                 break;
@@ -226,14 +225,21 @@ public class PigManageDetailActivity extends BaseNewActivity implements Observer
                 ActivityRoute.toAnotherActivity(this, PigMemberActivity.class, false);
                 break;
             case R.id.rl_about:
-                ActivityRoute.toAnotherActivity(this, UbtAboutActivtiy.class, false);
+                ActivityRoute.toAnotherActivity(this, AboutBleBJActivity.class, false);
                 break;
             case R.id.rl_update:
+                //TODO 系统升级
+                getPigVersionState();
                 break;
             case R.id.tv_unbind:
                 doCheck();
                 break;
         }
+    }
+
+    private void getPigVersionState() {
+        showLoadingDialog();
+        UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getPigVersionState()));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

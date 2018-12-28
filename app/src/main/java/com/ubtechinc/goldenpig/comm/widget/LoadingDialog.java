@@ -51,8 +51,8 @@ public class LoadingDialog extends Dialog {
     }
 
     private LoadingDialog(Context context) {
-        super(context, R.style.UBTLoaddialogTheme);
-
+        super(context);
+//        super(context, R.style.UBTLoaddialogTheme);
     }
 
     @TargetApi(19)
@@ -103,8 +103,10 @@ public class LoadingDialog extends Dialog {
                 (getContext()));
 //		txt_dia_msg = (TextView) root.findViewById(R.id.txt_dia_msg);
         this.setContentView(root);
+
         ColorDrawable colorDrawable = new ColorDrawable(Color.argb(0, 0, 0, 0));
 //        this.getWindow().setBackgroundDrawable(colorDrawable);
+        getWindow().setBackgroundDrawableResource(R.color.ubt_transparent);
         setTranslucentStatus(false);
         this.setCancelable(false);
     }

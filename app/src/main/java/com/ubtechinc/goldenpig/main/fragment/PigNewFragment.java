@@ -110,6 +110,9 @@ public class PigNewFragment extends BaseFragment {
     @BindView(R.id.tv_statement_title)
     TextView tvStatementTitle;
 
+    @BindView(R.id.tv_pig_tip)
+    TextView tvPigTip;
+
     PigFragmentAdapter catetoryAdapter;
 
     MainFunctionAdapter mainFunctionAdapter;
@@ -130,11 +133,16 @@ public class PigNewFragment extends BaseFragment {
                     Log.d(TAG, "queryNativeInfo pigInfo = " + pigInfo);
                     if (pigInfo != null && pigInfo.isAdmin && pigInfo.isOnline()) {
                         UbtTIMManager.getInstance().queryNativeInfo();
-                        if(mHandler.hasMessages(GET_NATIVE_INFO)){
+                        if (rlNativeInfo != null && rlNativeInfo.getVisibility() == View.VISIBLE) {
+                            tvPigTip.setVisibility(View.GONE);
+                        } else {
+                            tvPigTip.setVisibility(View.VISIBLE);
+                        }
+                        if (mHandler.hasMessages(GET_NATIVE_INFO)) {
                             mHandler.removeMessages(GET_NATIVE_INFO);
                         }
                         mHandler.sendEmptyMessageDelayed(GET_NATIVE_INFO, 60 * 1000);
-                    }else {
+                    } else {
                         hideNativeInfo();
                     }
                     break;
@@ -278,9 +286,9 @@ public class PigNewFragment extends BaseFragment {
     /**
      * 隐藏小猪基本状态信息栏
      */
-    private void hideNativeInfo(){
+    private void hideNativeInfo() {
         rlNativeInfo.setVisibility(View.GONE);
-        if(mCustomPopupWindow != null){
+        if (mCustomPopupWindow != null) {
             mCustomPopupWindow.dismiss();
         }
     }
@@ -364,7 +372,7 @@ public class PigNewFragment extends BaseFragment {
                 updateUserPig();
                 break;
             case RECEIVE_NATIVE_INFO:
-                UpdateNativeInfo((NativeInfoContainer.NativeInfo)event.getData());
+                UpdateNativeInfo((NativeInfoContainer.NativeInfo) event.getData());
                 break;
             case DO_GET_NATIVE_INFO:
                 mHandler.sendEmptyMessage(GET_NATIVE_INFO);
@@ -377,6 +385,7 @@ public class PigNewFragment extends BaseFragment {
 
     /**
      * 更新小猪基本信息
+     *
      * @param data
      */
     private void UpdateNativeInfo(NativeInfoContainer.NativeInfo data) {
@@ -387,7 +396,8 @@ public class PigNewFragment extends BaseFragment {
             NativeInfoContainer.BatteryStatus batteryStatus = nativeInfo.getBatteryStatus().unpack(NativeInfoContainer.BatteryStatus.class);
             NativeInfoContainer.NetworkStatus networkStatus = nativeInfo.getNetworkStatus().unpack(NativeInfoContainer.NetworkStatus.class);
 
-            if(rlNativeInfo.getVisibility() != View.VISIBLE){
+            tvPigTip.setVisibility(View.GONE);
+            if (rlNativeInfo.getVisibility() != View.VISIBLE) {
                 rlNativeInfo.setVisibility(View.VISIBLE);
             }
 
@@ -423,14 +433,14 @@ public class PigNewFragment extends BaseFragment {
                 ivWifi.setImageLevel(networkStatus.getLevel());
                 tvWifiName.setText(networkStatus.getSsid());
             } else {
-                if(networkStatus.getMobileState() == 0){
+                if (networkStatus.getMobileState() == 0) {
                     rlWifi.setVisibility(View.VISIBLE);
                     ivSimNet.setVisibility(View.GONE);
-                }else {
+                } else {
                     rlWifi.setVisibility(View.GONE);
                     ivSimNet.setVisibility(View.VISIBLE);
                     int simNetLevel = networkStatus.getMobileState() - 2;
-                    if(simNetLevel < 0){
+                    if (simNetLevel < 0) {
                         simNetLevel = 0;
                     }
                     ivSimNet.setImageLevel(simNetLevel);
@@ -439,7 +449,7 @@ public class PigNewFragment extends BaseFragment {
 
             Log.d(TAG, "batteryStatus " + batteryStatus + " bleStatus = " + bleStatus + " simStatus = " + simStatus + " networkStatus = " + networkStatus);
         } catch (InvalidProtocolBufferException e) {
-            Log.e(TAG,"e = " + e.getMessage());
+            Log.e(TAG, "e = " + e.getMessage());
             e.printStackTrace();
             ToastUtils.showLongToast("获取基本信息失败");
         }

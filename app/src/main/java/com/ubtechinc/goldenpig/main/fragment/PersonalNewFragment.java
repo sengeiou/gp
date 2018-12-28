@@ -1,10 +1,8 @@
 package com.ubtechinc.goldenpig.main.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +31,6 @@ import com.ubtechinc.goldenpig.feedback.FeedBackActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.QQMusicWebActivity;
 import com.ubtechinc.goldenpig.me.UserInfoActivity;
-import com.ubtechinc.goldenpig.personal.DeviceManageActivity;
 import com.ubtechinc.goldenpig.personal.PigManageDetailActivity;
 import com.ubtechinc.goldenpig.personal.alarm.AlarmListActivity;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionActivity;
@@ -291,7 +288,8 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
                     break;
                 }
                 if (myPig.isAdmin) {
-
+                    //TODO 后续改为切换 WIFI
+                    ActivityRoute.toAnotherActivity(getActivity(), BleConfigReadyActivity.class, false);
                 } else {
                     ActivityRoute.toAnotherActivity(getActivity(), BleConfigReadyActivity.class, false);
                 }
@@ -301,6 +299,8 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
                 //enterFunction();
                 break;
             case R.id.ll_hot_pwd:
+                ActivityRoute.toAnotherActivity(getActivity(), SetHotSpotActivity.class,
+                        false);
                 //ToastUtils.showShortToast("点击热点");
                 //enterFunction();
                 break;

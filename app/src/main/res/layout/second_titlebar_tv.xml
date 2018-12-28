@@ -25,9 +25,7 @@
         android:maxWidth="250dp"
         android:singleLine="true"
         android:text="@null"
-        android:textColor="@color/ubt_tips_txt_color"
-        android:textSize="@dimen/sp_16"
-        android:textStyle="normal" />
+        style="@style/UBTToolBarTitleTheme" />
 
     <TextView
         android:id="@+id/tv_right"

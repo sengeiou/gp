@@ -3,16 +3,12 @@ package com.ubtechinc.goldenpig.comm.widget;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseDialog;
 
@@ -50,6 +46,8 @@ public class UBTBaseDialog extends BaseDialog implements View.OnClickListener {
 
         Window dialogWindow = getWindow();
         dialogWindow.setBackgroundDrawableResource(R.color.ubt_transparent);
+
+        setCanceledOnTouchOutside(false);
 
         this.setContentView(root);
         mLeftBtn = (Button) findViewById(R.id.ubt_dialog_left_btn);
