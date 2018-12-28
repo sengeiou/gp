@@ -38,10 +38,12 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordHold
     @Override
     public void onBindViewHolder(final RecordHolder holder, final int position) {
         RecordModel model = mList.get(position);
-        if (TextUtils.isEmpty(model.name)) {
+        if (!TextUtils.isEmpty(model.name)) {
+            holder.tv_content.setText(model.name);
+        } else if (!TextUtils.isEmpty(model.number)) {
             holder.tv_content.setText(model.number);
         } else {
-            holder.tv_content.setText(model.name);
+            holder.tv_content.setText("未知号码");
         }
         holder.iv.setVisibility(model.type == 2 ? View.VISIBLE : View.INVISIBLE);
         if (model.type == 3) {

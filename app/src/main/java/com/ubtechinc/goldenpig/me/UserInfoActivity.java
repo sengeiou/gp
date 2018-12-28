@@ -50,7 +50,7 @@ public class UserInfoActivity extends BaseToolBarActivity implements View.OnClic
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        setToolBarBackground(0xF5F8FB);
+        setToolBarBackground(getResources().getColor(R.color.ubt_white));
         setToolBarTitle(getString(R.string.ubt_user_info));
         setTitleBack(true);
         ubtAuthRepository = new UBTAuthRepository();
@@ -108,7 +108,7 @@ public class UserInfoActivity extends BaseToolBarActivity implements View.OnClic
     }
 
     private void showLogoutDialog() {
-        UBTBaseDialog dialog = new UBTBaseDialog(this);
+        UBTBaseDialog dialog = new UBTBaseDialog(UserInfoActivity.this);
         dialog.setTips(getString(R.string.logout_tip));
         dialog.setLeftButtonTxt(getString(R.string.ubt_cancel));
         dialog.setRightButtonTxt(getString(R.string.ubt_enter));

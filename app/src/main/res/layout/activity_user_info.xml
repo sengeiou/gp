@@ -4,83 +4,105 @@
     android:layout_height="match_parent"
     android:background="@null">
 
+    <View
+        android:id="@+id/top_curline"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ubt_1px"
+        android:layout_marginBottom="@dimen/dp_15"
+        android:background="@color/ubt_wifi_list_divider" />
+
+    <View
+        android:id="@+id/top_curline2"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ubt_1px"
+        android:layout_below="@+id/top_curline"
+        android:background="@color/ubt_wifi_list_divider" />
+
     <RelativeLayout
         android:id="@+id/ubt_layout_userinfo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dp_16"
-        android:layout_marginStart="@dimen/dp_16"
-        android:layout_marginTop="@dimen/dp_5"
-        android:background="@drawable/shape_ubt_me_item_bg"
-        android:padding="@dimen/dp_10">
+        android:layout_height="@dimen/dp_64"
+        android:layout_below="@+id/top_curline2"
+        android:background="@color/ubt_white">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_15"
             android:text="@string/ubt_photo"
             android:textColor="@color/ubt_tips_txt_color"
-            android:textSize="16sp" />
+            android:textSize="@dimen/dp_15" />
 
         <ImageView
             android:id="@+id/ubt_img_photo"
-            android:layout_width="@dimen/ubt_userinfo_photo_size"
-            android:layout_height="@dimen/ubt_userinfo_photo_size"
+            android:layout_width="@dimen/dp_41"
+            android:layout_height="@dimen/dp_41"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_15"
             android:src="@drawable/ic_sign_in" />
 
+        <View
+            android:id="@+id/top_curline_user"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/ubt_1px"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:background="@color/ubt_wifi_list_divider" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/ubt_layout_username"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dp_64"
         android:layout_below="@id/ubt_layout_userinfo"
-        android:layout_marginEnd="@dimen/dp_16"
-        android:layout_marginStart="@dimen/dp_16"
-        android:layout_marginTop="@dimen/dp_5"
-        android:background="@drawable/shape_ubt_me_item_bg"
-        android:padding="@dimen/dp_10">
+        android:background="@color/ubt_white">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_15"
             android:text="@string/ubt_nikename"
             android:textColor="@color/ubt_tips_txt_color"
-            android:textSize="16sp" />
+            android:textSize="@dimen/dp_15" />
 
         <TextView
             android:id="@+id/ubt_user_name"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/ubt_userinfo_photo_size"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_15"
             android:gravity="center_vertical"
             android:src="@drawable/ic_sign_in"
-            android:textColor="@color/ubt_version_color" />
+            android:textColor="@color/ubt_version_color"
+            android:textSize="@dimen/dp_13" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/ubt_1px"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:background="@color/ubt_wifi_list_divider" />
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/ubt_layout_useraccount"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/dp_64"
         android:layout_below="@id/ubt_layout_username"
-        android:layout_marginEnd="@dimen/dp_16"
-        android:layout_marginStart="@dimen/dp_16"
-        android:layout_marginTop="@dimen/dp_5"
-        android:background="@drawable/shape_ubt_me_item_bg"
-        android:padding="@dimen/dp_10">
+        android:background="@color/ubt_white">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_15"
             android:text="@string/ubt_account"
             android:textColor="@color/ubt_tips_txt_color"
-            android:textSize="16sp" />
+            android:textSize="@dimen/dp_15" />
 
         <TextView
             android:id="@+id/ubt_user_account"
@@ -88,21 +110,31 @@
             android:layout_height="@dimen/ubt_userinfo_photo_size"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_13"
             android:gravity="center_vertical"
             android:src="@drawable/ic_sign_in"
-            android:textColor="@color/ubt_version_color" />
+            android:textColor="@color/ubt_version_color"
+            android:textSize="@dimen/dp_13" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/ubt_1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/ubt_wifi_list_divider" />
     </RelativeLayout>
 
-    <Button
+    <TextView
         android:id="@+id/ubt_btn_logout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="@dimen/ubt_logout_btn_marginbottom"
-        android:background="@drawable/selector_ubt_logout_btn"
+        android:layout_marginLeft="@dimen/dp_67"
+        android:layout_marginRight="@dimen/dp_67"
+        android:gravity="center"
+        android:background="@drawable/rect__round_bg_red"
         android:text="@string/ubt_logout"
         android:textColor="@color/ubt_dialog_btn_txt_color"
-        android:textSize="15sp" />
+        android:textSize="@dimen/dp_15" />
 </RelativeLayout>
