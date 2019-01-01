@@ -12,6 +12,7 @@ import com.ubtechinc.bluetooth.UbtBluetoothDevice;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseDialog;
 import com.ubtechinc.goldenpig.comm.view.WrapContentLinearLayoutManager;
+import com.yanzhenjie.recyclerview.swipe.widget.DefaultItemDecoration;
 
 import java.util.ArrayList;
 
@@ -46,6 +47,7 @@ public class PigListDialog extends BaseDialog {
         mPigRycView = findViewById(R.id.ubt_pig_list_ryv);
         mPigClose = findViewById(R.id.ube_tv_close);
         mPigRycView.setLayoutManager(new WrapContentLinearLayoutManager(getContext()));
+        mPigRycView.addItemDecoration(new DefaultItemDecoration(getContext().getResources().getColor(R.color.ubt_wifi_list_divider)));
         mPigAdapter = new PigListAdapter(mLeList);
         mPigRycView.setAdapter(mPigAdapter);
 

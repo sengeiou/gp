@@ -69,6 +69,7 @@ import static com.ubtechinc.goldenpig.app.Constant.SP_LAST_RECORD;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
 
 public class PigManageDetailActivity extends BaseNewActivity implements Observer, View.OnClickListener {
+
     @BindView(R.id.rl_titlebar)
     SecondTitleBarViewTv rl_titlebar;
     @BindViews({R.id.tv_4g, R.id.tv_hot_point, R.id.tv_continuity_voice, R.id.tv_about, R.id.tv_update})

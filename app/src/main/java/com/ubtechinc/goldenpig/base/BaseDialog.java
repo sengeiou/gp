@@ -3,10 +3,8 @@ package com.ubtechinc.goldenpig.base;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
@@ -18,20 +16,18 @@ public class BaseDialog extends Dialog {
     private Context mContext;
 
     public BaseDialog(@NonNull Context context) {
-        this(context, -1);
-//        setDialogWidth();
+        super(context);
+        this.mContext = context;
     }
 
     public BaseDialog(@NonNull Context context, int themeResId) {
         super(context, themeResId);
         this.mContext = context;
-//        setDialogWidth();
     }
 
     protected BaseDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
         super(context, cancelable, cancelListener);
         this.mContext = context;
-//        setDialogWidth();
     }
 
     @Override

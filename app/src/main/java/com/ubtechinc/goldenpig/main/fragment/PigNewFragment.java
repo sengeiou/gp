@@ -131,7 +131,7 @@ public class PigNewFragment extends BaseFragment {
                 case GET_NATIVE_INFO:
                     PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
                     Log.d(TAG, "queryNativeInfo pigInfo = " + pigInfo);
-                    if (pigInfo != null && pigInfo.isAdmin && pigInfo.isOnline()) {
+                    if (pigInfo != null && pigInfo.isAdmin) {
                         UbtTIMManager.getInstance().queryNativeInfo();
                         if (rlNativeInfo != null && rlNativeInfo.getVisibility() == View.VISIBLE) {
                             tvPigTip.setVisibility(View.GONE);
@@ -275,8 +275,10 @@ public class PigNewFragment extends BaseFragment {
                 }
                 tvPigSn.setText(getString(R.string.ubt_bajie, name));
                 tvPigSn.setVisibility(View.VISIBLE);
+                tvPigTip.setVisibility(View.VISIBLE);
             } else {
                 btnBinding.setVisibility(View.VISIBLE);
+                tvPigTip.setVisibility(View.GONE);
                 tvPigSn.setVisibility(View.GONE);
                 hideNativeInfo();
             }

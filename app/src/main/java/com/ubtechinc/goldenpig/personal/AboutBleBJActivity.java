@@ -37,7 +37,7 @@ public class AboutBleBJActivity extends BaseToolBarActivity {
     @Override
     protected void init(Bundle savedInstanceState) {
         EventBusUtil.register(this);
-        setToolBarTitle("关于八戒音箱");
+        setToolBarTitle("关于八戒机器人");
         setTitleBack(true);
         initViews();
     }
