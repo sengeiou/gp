@@ -35,8 +35,8 @@ android {
         applicationId "com.ubtechinc.goldenpig"
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
-        versionCode 29
-        versionName "1.0.4"
+        versionCode 30
+        versionName "1.0.5"
         multiDexEnabled true
 
         manifestPlaceholders = [
@@ -210,4 +210,6 @@ dependencies {
 
     //add crash widget
     implementation 'com.vise.xiaoyaoyou:viseutils:1.1.0'
+
+    implementation 'com.github.zcweng:switch-button:0.0.3@aar'
 }

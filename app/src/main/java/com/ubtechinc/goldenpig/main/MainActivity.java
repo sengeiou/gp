@@ -60,6 +60,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private boolean sendCid = false;
 
+    public boolean isNoSim;
+    public boolean isBeeHiveOpen;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

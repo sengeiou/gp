@@ -29,8 +29,12 @@ import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.feedback.FeedBackActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
+import com.ubtechinc.goldenpig.main.MainActivity;
 import com.ubtechinc.goldenpig.main.QQMusicWebActivity;
 import com.ubtechinc.goldenpig.me.UserInfoActivity;
+import com.ubtechinc.goldenpig.personal.BeeHiveMobileActivity;
+import com.ubtechinc.goldenpig.personal.ContinuousVoiceActivity;
+import com.ubtechinc.goldenpig.personal.NoSimActivity;
 import com.ubtechinc.goldenpig.personal.PigManageDetailActivity;
 import com.ubtechinc.goldenpig.personal.alarm.AlarmListActivity;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionActivity;
@@ -240,6 +244,7 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
     @OnClick({R.id.rl_login_info, R.id.ubt_btn_person_qq, R.id.rl_pig_state, R.id.ll_bind, R.id.ll_wifi, R.id.ll_4g,
             R.id.ll_hot_pwd, R.id.ll_duihua})
     public void onClick(View v) {
+        boolean isNoSim = ((MainActivity)getActivity()).isNoSim;
         switch (v.getId()) {
             case R.id.rl_login_info:
                 ActivityRoute.toAnotherActivity(getActivity(), UserInfoActivity.class, false);
@@ -295,22 +300,27 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
                 }
                 break;
             case R.id.ll_4g:
-                //ToastUtils.showShortToast("点击蜂窝网络");
-                //enterFunction();
+                if (isNoSim) {
+                    ActivityRoute.toAnotherActivity(getActivity(), NoSimActivity.class, false);
+                } else {
+                    ActivityRoute.toAnotherActivity(getActivity(), BeeHiveMobileActivity.class, false);
+                }
                 break;
             case R.id.ll_hot_pwd:
-                ActivityRoute.toAnotherActivity(getActivity(), SetHotSpotActivity.class,
-                        false);
-                //ToastUtils.showShortToast("点击热点");
-                //enterFunction();
+                if (isNoSim) {
+                    ActivityRoute.toAnotherActivity(getActivity(), NoSimActivity.class, false);
+                } else {
+                    ActivityRoute.toAnotherActivity(getActivity(), SetHotSpotActivity.class, false);
+                }
                 break;
             case R.id.ll_duihua:
-                //ToastUtils.showShortToast("点击连续对话");
-                //enterFunction();
+                ActivityRoute.toAnotherActivity(getActivity(), ContinuousVoiceActivity.class, false);
                 break;
             default:
         }
     }
+
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Event event) {

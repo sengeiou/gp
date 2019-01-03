@@ -215,6 +215,9 @@
         <activity android:name=".personal.PigManageDetailActivity"
             android:launchMode="singleTop"/>
         <activity android:name=".personal.AboutBleBJActivity" />
+        <activity android:name=".personal.ContinuousVoiceActivity" />
+        <activity android:name=".personal.BeeHiveMobileActivity" />
+        <activity android:name=".personal.NoSimActivity" />
 
         <service android:name=".app.StartUpService" />
     </application>

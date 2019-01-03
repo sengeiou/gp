@@ -8,6 +8,7 @@ import com.ubt.improtolib.UserRecords;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.ubtrobot.channelservice.proto.GPADBSettingContainer;
 import com.ubtrobot.channelservice.proto.GPRelationshipContainer;
+import com.ubtrobot.gold.GPSwitchContainer;
 import com.ubtrobot.tvs.proto.ClientIdUpdateContainer;
 
 import java.util.List;
@@ -35,6 +36,13 @@ public class ContactsProtoBuilder {
     public static final String IM_SETTINGS_ABD = "/im/settings/adb";
 
     public static final String IM_RECORD_LATEST = "/im/record/latest";
+
+    /** 连续语音对话 */
+    public static final String IM_DIALOG_SWITCH = "/im/dialog/switch";
+    public static final String IM_DIALOG_REQUEST = "/im/dialog/request";
+
+    /** 八戒机器人信息 */
+    public static final String IM_DEVICE_INFO = "/im/device_info";
 
     public static byte[] getAddContactsInfo(String name, String number) {
 
@@ -275,4 +283,34 @@ public class ContactsProtoBuilder {
         return channelMessage.toByteArray();
 
     }
+
+    /**
+     * 连续语音对话
+     * @return
+     */
+    public static byte[] requestContinuousVoiceState() {
+        return createBaseData(IM_DIALOG_REQUEST);
+    }
+
+    public static byte[] requestContinuousVoiceSwitch(boolean state) {
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction(IM_DIALOG_SWITCH)
+                .setTime(System.currentTimeMillis()).build();
+        GPSwitchContainer.Switch.Builder builder = GPSwitchContainer.Switch.newBuilder();
+        builder.setState(state);
+        GPSwitchContainer.Switch message = builder.build();
+        ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer.ChannelMessage.newBuilder()
+                .setHeader(header)
+                .setPayload(Any.pack(message))
+                .build();
+        return channelMessage.toByteArray();
+    }
+
+    /**
+     * 获取八戒机器人信息
+     * @return
+     */
+    public static byte[] getPigDeviceInfo() {
+        return createBaseData(IM_DEVICE_INFO);
+    }
+
 }

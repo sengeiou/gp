@@ -11,20 +11,30 @@ import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtrobot.info.DeviceInfoContainer;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_PIG_DEVICE_INFO;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_PIG_VERSION;
 
 /**
- * @Description: 关于八戒音箱
+ * @Description: 关于八戒机器人
  * @Author: zhijunzhou
  * @CreateDate: 2018/12/28 15:52
  */
 public class AboutBleBJActivity extends BaseToolBarActivity {
 
     private TextView tvDsnValue;
+
+    private TextView tvMeidValue;
+
+    private TextView tvImeiValue;
+
+    private TextView tvWfmacValue;
+
+    private TextView tvBlemacValue;
 
     private TextView tvVersionValue;
 
@@ -44,6 +54,10 @@ public class AboutBleBJActivity extends BaseToolBarActivity {
 
     private void initViews() {
         tvDsnValue = findViewById(R.id.tv_dsn_value);
+        tvMeidValue = findViewById(R.id.tv_meid_value);
+        tvImeiValue = findViewById(R.id.tv_imei_value);
+        tvWfmacValue = findViewById(R.id.tv_wfmac_value);
+        tvBlemacValue = findViewById(R.id.tv_blemac_value);
         tvVersionValue = findViewById(R.id.tv_version_value);
 
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
@@ -52,6 +66,7 @@ public class AboutBleBJActivity extends BaseToolBarActivity {
             tvDsnValue.setText(name);
         }
         getPigVersion();
+        getPigDeviceInfo();
     }
 
     @Override
@@ -64,6 +79,10 @@ public class AboutBleBJActivity extends BaseToolBarActivity {
         UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getPigVersion()));
     }
 
+    private void getPigDeviceInfo() {
+        UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getPigDeviceInfo()));
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveEvent(Event event) {
         if (event == null) return;
@@ -74,6 +93,33 @@ public class AboutBleBJActivity extends BaseToolBarActivity {
                     tvVersionValue.setText((String) event.getData());
                 }
                 break;
+            case RECEIVE_PIG_DEVICE_INFO:
+                DeviceInfoContainer.DeviceInfo deviceInfo = (DeviceInfoContainer.DeviceInfo) event.getData();
+                updateUI(deviceInfo);
+                break;
+        }
+    }
+
+    private void updateUI(DeviceInfoContainer.DeviceInfo deviceInfo) {
+        String serialNumber = deviceInfo.getSerialNumber();
+        updateTvValue(tvDsnValue, serialNumber);
+
+        String meid = deviceInfo.getMeid();
+        updateTvValue(tvMeidValue, meid);
+
+        String imei = deviceInfo.getImei();
+        updateTvValue(tvImeiValue, imei);
+
+        String wifiMac = deviceInfo.getWifiMac();
+        updateTvValue(tvWfmacValue, wifiMac);
+
+        String bleMac = deviceInfo.getBleMac();
+        updateTvValue(tvBlemacValue, bleMac);
+    }
+
+    private void updateTvValue(TextView textView, String value) {
+        if (textView != null) {
+            textView.setText(value);
         }
     }
 

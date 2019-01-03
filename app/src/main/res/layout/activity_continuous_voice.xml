@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFF5F8FB"
+    android:orientation="vertical">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="#FFFFFFFF"
+        android:padding="15dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_centerVertical="true"
+            android:text="@string/continuous_voice"
+            android:textStyle="bold"
+            android:textColor="#FF454B59"
+            android:textSize="15sp" />
+
+        <com.suke.widget.SwitchButton
+            android:id="@+id/switch_voice"
+            android:layout_width="@dimen/dp_50"
+            android:layout_height="@dimen/dp_29"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_alignParentRight="true"
+            app:layout_constraintRight_toRightOf="parent"
+            app:sb_checked_color="#29AAFF"
+            app:sb_show_indicator="false" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_10"
+        android:text="@string/continuous_voice_tip1"
+        android:textColor="#FF454B59"
+        android:textSize="14sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_15"
+        android:lineSpacingExtra="@dimen/dp_3"
+        android:text="@string/continuous_voice_tip2"
+        android:textColor="#FF454B59"
+        android:textSize="14sp" />
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_15">
+
+        <ImageView
+            android:id="@+id/iv_tip"
+            android:layout_width="@dimen/dp_18"
+            android:layout_height="@dimen/dp_18"
+            android:src="@drawable/ic_tip" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_5"
+            android:text="@string/continuous_voice_tip3"
+            android:textColor="#FFB4C0C7"
+            android:textSize="14sp"
+            app:layout_constraintLeft_toRightOf="@id/iv_tip" />
+
+    </android.support.constraint.ConstraintLayout>
+
+
+</LinearLayout>

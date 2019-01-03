@@ -51,6 +51,9 @@ public class EventBusUtil {
     public static final int DO_GET_NATIVE_INFO = 20004;
     public static final int RECEIVE_NATIVE_INFO = 20005;
     public static final int RECEIVE_PIG_VERSION = 20006;
+    public static final int RECEIVE_CONTINUOUS_VOICE_STATE = 20007;
+    public static final int RECEIVE_CONTINUOUS_VOICE_RESPONSE = 20008;
+    public static final int RECEIVE_PIG_DEVICE_INFO = 20009;
 
     public static final int SERVER_RESPONSE_UNAUTHORIZED = 401;
 

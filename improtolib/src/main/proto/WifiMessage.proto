@@ -1,0 +1,25 @@
+syntax = "proto3";
+option java_package="com.ubtrobot.wifi";
+option java_outer_classname="WifiMessageContainer";
+import "google/protobuf/any.proto";
+
+//wifi列表
+message WifiList {
+   google.protobuf.Any wifiList = 1; // 以json格式放在any里面
+}
+
+//指定连接wifi的基本信息
+message WifiMessage{
+   string ssid = 1; //ssid
+   string secure = 2; // 加密方式
+   string password = 3; // 密码
+}
+
+
+//返回信息，wifi连接状态
+message ConnectStatus{
+   bool connect = 1 ; // true 连接到指定wifi，false 未连接到指定wifi
+   string currentSsid = 2 ; // 当前连接的wifi
+}
+
+

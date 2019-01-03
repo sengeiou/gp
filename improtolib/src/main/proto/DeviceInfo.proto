@@ -1,0 +1,13 @@
+syntax = "proto3";
+option java_package="com.ubtrobot.info";
+option java_outer_classname="DeviceInfoContainer";
+import "google/protobuf/any.proto";
+
+message DeviceInfo {
+   string serialNumber  = 1;
+   string meid = 2;
+   string imei = 3 ;
+   string wifiMac = 4 ;
+   string bleMac = 5;
+   string version = 6 ;
+}

@@ -31,6 +31,7 @@ import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.FunctionModel;
 import com.ubtechinc.goldenpig.main.HomeDataHttpProxy;
+import com.ubtechinc.goldenpig.main.MainActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtrobot.info.NativeInfoContainer;
 import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
@@ -412,6 +413,7 @@ public class PigNewFragment extends BaseFragment {
 
             //更新sim卡信号
             if (simStatus.getInserted()) {
+                ((MainActivity)getActivity()).isNoSim = false;
                 int level = simStatus.getLevel() - 1;
                 if (level > 4) {
                     level = 4;
@@ -421,6 +423,7 @@ public class PigNewFragment extends BaseFragment {
                 }
                 ivSignal.setImageLevel(level);
             } else {
+                ((MainActivity)getActivity()).isNoSim = true;
                 ivSignal.setImageLevel(0);
             }
 

@@ -27,6 +27,7 @@ import com.tencent.ai.tvs.info.UserInfoManager;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
+import com.ubt.improtolib.GPResponse;
 import com.ubt.improtolib.UserRecords;
 import com.ubtech.utilcode.utils.ActivityTool;
 import com.ubtech.utilcode.utils.LogUtils;
@@ -67,6 +68,8 @@ import com.ubtechinc.tvlloginlib.TVSManager;
 import com.ubtrobot.analytics.mobile.AnalyticsKit;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.ubtrobot.channelservice.proto.GPRelationshipContainer;
+import com.ubtrobot.gold.GPSwitchContainer;
+import com.ubtrobot.info.DeviceInfoContainer;
 import com.ubtrobot.info.NativeInfoContainer;
 import com.ubtrobot.upgrade.VersionInformation;
 import com.vise.utils.handler.CrashHandlerUtil;
@@ -514,10 +517,10 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                 event.setData(hasRecord);
                 EventBusUtil.sendEvent(event);
             }
-        } else if(action.equals(ContactsProtoBuilder.GET_NATIVE_INFO)){
+        } else if (action.equals(ContactsProtoBuilder.GET_NATIVE_INFO)) {
             NativeInfoContainer.NativeInfo nativeInfo = msg.getPayload().unpack(NativeInfoContainer.NativeInfo.class);
-            Log.d(TAG,"nativeInfo = " + nativeInfo);
-            if(nativeInfo != null){
+            Log.d(TAG, "nativeInfo = " + nativeInfo);
+            if (nativeInfo != null) {
                 Event<NativeInfoContainer.NativeInfo> event = new Event<>(EventBusUtil.RECEIVE_NATIVE_INFO);
                 event.setData(nativeInfo);
                 EventBusUtil.sendEvent(event);
@@ -530,6 +533,22 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                 event.setData(version);
                 EventBusUtil.sendEvent(event);
             }
+        } else if (action.equals(ContactsProtoBuilder.IM_DIALOG_REQUEST)) {
+            GPSwitchContainer.Switch switchInfo = msg.getPayload().unpack(GPSwitchContainer.Switch.class);
+            boolean state = switchInfo.getState();
+            Event<Boolean> event = new Event<>(EventBusUtil.RECEIVE_CONTINUOUS_VOICE_STATE);
+            event.setData(state);
+            EventBusUtil.sendEvent(event);
+        } else if (action.equals(ContactsProtoBuilder.IM_DIALOG_SWITCH)) {
+            final boolean result = msg.getPayload().unpack(GPResponse.Response.class).getResult();
+            Event<Boolean> event = new Event<>(EventBusUtil.RECEIVE_CONTINUOUS_VOICE_RESPONSE);
+            event.setData(result);
+            EventBusUtil.sendEvent(event);
+        } else if (action.equals(ContactsProtoBuilder.IM_DEVICE_INFO)) {
+            DeviceInfoContainer.DeviceInfo deviceInfo = msg.getPayload().unpack(DeviceInfoContainer.DeviceInfo.class);
+            Event<DeviceInfoContainer.DeviceInfo> event = new Event<>(EventBusUtil.RECEIVE_PIG_DEVICE_INFO);
+            event.setData(deviceInfo);
+            EventBusUtil.sendEvent(event);
         }
     }
 

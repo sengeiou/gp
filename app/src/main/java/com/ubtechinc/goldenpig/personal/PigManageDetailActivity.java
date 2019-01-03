@@ -49,6 +49,7 @@ import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.ubtechinc.nets.http.ThrowableWrapper;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
+import com.ubtrobot.info.NativeInfoContainer;
 import com.ubtrobot.upgrade.VersionInformation;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -82,9 +83,19 @@ public class PigManageDetailActivity extends BaseNewActivity implements Observer
     TextView tv_manager_state;
     @BindView(R.id.tv_dsn)
     TextView tv_dsn;
+
+    @BindView(R.id.tv_beehive_close)
+    TextView tvBeehiveClose;
+
+    @BindView(R.id.tv_no_sim)
+    TextView tvNoSim;
+
     private PigInfo mPig;
     private UnbindPigProxy.UnBindPigCallback unBindPigCallback;
     CheckBindRobotModule.User ManagerUser;
+
+    private boolean isNoSim;
+    private boolean isBeeHiveOpen;
 
     @Override
     protected int getContentViewId() {
@@ -178,6 +189,7 @@ public class PigManageDetailActivity extends BaseNewActivity implements Observer
             public void onSuccess() {
             }
         });
+
     }
 
     @Override
@@ -186,6 +198,7 @@ public class PigManageDetailActivity extends BaseNewActivity implements Observer
         mPig = AuthLive.getInstance().getCurrentPig();
         if (mPig != null) {
             if (mPig.isAdmin) {
+                UbtTIMManager.getInstance().queryNativeInfo();
                 tv_manager_state.setText("管理员：");
                 for (RelativeLayout rl : listRl) {
                     rl.setEnabled(true);
@@ -215,12 +228,21 @@ public class PigManageDetailActivity extends BaseNewActivity implements Observer
                 ActivityRoute.toAnotherActivity(this, BleConfigReadyActivity.class, false);
                 break;
             case R.id.rl_4g:
+                if (isNoSim) {
+                    ActivityRoute.toAnotherActivity(this, NoSimActivity.class, false);
+                } else {
+                    ActivityRoute.toAnotherActivity(this, BeeHiveMobileActivity.class, false);
+                }
                 break;
             case R.id.rl_hotpoint:
-                ActivityRoute.toAnotherActivity(this, SetHotSpotActivity.class,
-                        false);
+                if (isNoSim) {
+                    ActivityRoute.toAnotherActivity(this, NoSimActivity.class, false);
+                } else {
+                    ActivityRoute.toAnotherActivity(this, SetHotSpotActivity.class, false);
+                }
                 break;
             case R.id.rl_continuity_voice:
+                ActivityRoute.toAnotherActivity(this, ContinuousVoiceActivity.class, false);
                 break;
             case R.id.rl_member_group:
                 ActivityRoute.toAnotherActivity(this, PigMemberActivity.class, false);
@@ -406,6 +428,45 @@ public class PigManageDetailActivity extends BaseNewActivity implements Observer
                         break;
                 }
             }
+        } else if (action.equals(ContactsProtoBuilder.GET_NATIVE_INFO)) {
+            NativeInfoContainer.NativeInfo nativeInfo = msg.getPayload().unpack(NativeInfoContainer.NativeInfo.class);
+            UpdateNativeInfo(nativeInfo);
+        }
+    }
+
+    private void UpdateNativeInfo(NativeInfoContainer.NativeInfo data) {
+        NativeInfoContainer.NativeInfo nativeInfo = data;
+        try {
+            NativeInfoContainer.SimStatus simStatus = nativeInfo.getSimStatus().unpack(NativeInfoContainer.SimStatus.class);
+            NativeInfoContainer.NetworkStatus networkStatus = nativeInfo.getNetworkStatus().unpack(NativeInfoContainer.NetworkStatus.class);
+            if (networkStatus.getMobileState() == 0) {
+                isBeeHiveOpen = false;
+            } else {
+                isBeeHiveOpen = true;
+            }
+            if (simStatus.getInserted()) {
+                isNoSim = false;
+            } else {
+                isNoSim = true;
+            }
+
+            if (isNoSim) {
+                tvBeehiveClose.setVisibility(View.VISIBLE);
+                tvNoSim.setVisibility(View.VISIBLE);
+            } else {
+                tvNoSim.setVisibility(View.GONE);
+                if (isBeeHiveOpen) {
+                    tvBeehiveClose.setVisibility(View.GONE);
+                } else {
+                    tvBeehiveClose.setText("已关闭");
+                    tvBeehiveClose.setVisibility(View.VISIBLE);
+                }
+            }
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

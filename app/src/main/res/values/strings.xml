@@ -236,4 +236,12 @@
     <string name="ubt_bind_success">绑定成功</string>
     <string name="ubt_notelepathic_tip">1.请确认八戒已开机，并处于配网模式；\n\n2.请让手机靠近八戒，确保手机与八戒的距离在30厘米以内；\n\n3.如果依然没反应，请尝试点击下方的手动连接八戒。</string>
 
+    <string name="continuous_voice">连续对话</string>
+    <string name="continuous_voice_tip1">开启后，只要唤醒1次即可和八戒多次对话</string>
+    <string name="continuous_voice_tip2">对话期间：\n如果想让八戒停止说话，短按电源键即可：\n如果八戒在10秒内没有听到声音，则需重新唤醒。</string>
+    <string name="continuous_voice_tip3">关闭开关时，每次对话都需要唤醒。</string>
+
+    <string name="beehive_mobile_tip1">开启蜂窝移动数据后，八戒可通过移动网络访问互联网若八戒同时连接了Wi-Fi,则默认使用Wi-Fi网络</string>
+    <string name="beehive_mobile_tip2">如想打开或关闭蜂窝移动数据\n请对八戒说\n“八戒八戒，打开蜂窝移动数据”\n“八戒八戒，关闭蜂窝移动数据”</string>
+
 </resources>
