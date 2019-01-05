@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,16 +25,11 @@ import com.ubt.improtolib.GPResponse;
 import com.ubt.improtolib.UserContacts;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
-import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewImg;
-import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewTv;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.model.AddressBookmodel;
-import com.ubtechinc.goldenpig.mvp.MVPBaseActivity;
-import com.ubtechinc.goldenpig.pigmanager.EditRecordActivity;
-import com.ubtechinc.goldenpig.pigmanager.RecordActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.StateView;
@@ -55,20 +51,18 @@ import butterknife.BindView;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CONTACT_CHECK_SUCCESS;
 
-public class AddressBookActivity extends BaseNewActivity implements Observer {
-    @BindView(R.id.iv_left)
-    ImageView iv_left;
+public class EditAddressBookActivity extends BaseNewActivity implements Observer {
     @BindView(R.id.tv_left)
     TextView tv_left;
     @BindView(R.id.tv_right)
     TextView tv_right;
     @BindView(R.id.recycler)
-    SwipeMenuRecyclerView recycler;
-    AddressBookAdapter adapter;
+    RecyclerView recycler;
+    EditAddressBookAdapter adapter;
     private ArrayList<AddressBookmodel> mList;
     public int deletePosition = 0;
     /**
-     * 先拉取到数据，添加联系人时要在app端作对比后再提交给八戒
+     * 先拉取到数据，添加联系人时要在app端作对比后再提交给音箱
      */
     private Boolean hasLoadMsg = false;
 
@@ -88,7 +82,7 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
                 if (mWeakReference.get() != null) {
                     //((AddressBookActivity) mWeakReference.get()).refreshLayout.finishRefresh(true);
                     ToastUtils.showShortToast(mWeakReference.get().getString(R.string.timeout_error_toast));
-                    ((AddressBookActivity) mWeakReference.get()).mStateView.showRetry();
+                    ((EditAddressBookActivity) mWeakReference.get()).mStateView.showRetry();
                 }
             }
         }
@@ -96,7 +90,7 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
 
     @Override
     protected int getContentViewId() {
-        return R.layout.activity_address_book;
+        return R.layout.activity_edit_address_book;
     }
 
     @Override
@@ -108,68 +102,18 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mHandler = new MyHandler(this);
-        initStateView(true);
-        mStateView.setOnRetryClickListener(new StateView.OnRetryClickListener() {
-            @Override
-            public void onRetryClick() {
-                //refreshLayout.autoRefresh();
-                refresh();
-            }
-        });
-        mStateView.setEmptyResource(R.layout.adapter_mall_list_empty);
-        mStateView.setOnEmptyClickListener(new StateView.OnEmptyClickListener() {
-            @Override
-            public void onEmptyClick() {
-                //                if (!hasLoadMsg) {
-//                    ToastUtils.showShortToast("请先加载联系人成功后再添加");
-//                    return;
-//                }
-                if (mList.size() < 10) {
-                    Intent it = new Intent(AddressBookActivity.this, AddAndSetContactActivity
-                            .class);
-                    it.putParcelableArrayListExtra("list", mList);
-                    startActivity(it);
-                } else {
-                    ToastUtils.showShortToast(getString(R.string.contact_limit));
-                }
-            }
-        });
-        iv_left.setOnClickListener(new View.OnClickListener() {
+        mList = getIntent().getParcelableArrayListExtra("list");
+        tv_left.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+
             }
         });
-        tv_right.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                ArrayList<AddressBookmodel> list = new ArrayList<>();
-//                for (int i = 0; i < mList.size(); i++) {
-//                    if (mList.get(i).type == 0) {
-//                        list.add(mList.get(i));
-//                    }
-//                }
-//                Intent it = new Intent(AddressBookActivity.this, EditRecordActivity.class);
-//                it.putParcelableArrayListExtra("list", list);
-//                startActivity(it);
-            }
-        });
-//        refreshLayout.setEnableAutoLoadMore(false);
-//        refreshLayout.setOnRefreshListener(this);
-        mList = new ArrayList<>();
-        // adapter = new AddressBookAdapter(this, mList);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recycler.setLayoutManager(linearLayoutManager);
         recycler.setHasFixedSize(true);
-//        Divider divider = new Divider(new ColorDrawable(getResources().getColor(R.color
-//                .ubt_wifi_list_divider)),
-//                OrientationHelper.VERTICAL);
-//        divider.setHeight((int) getResources().getDimension(R.dimen.ubt_1px));
-//        recycler.addItemDecoration(divider);
-        recycler.setSwipeMenuCreator(swipeMenuCreator);
-        recycler.setSwipeMenuItemClickListener(mMenuItemClickListener);
-        adapter = new AddressBookAdapter(this, mList);
+        adapter = new EditAddressBookAdapter(this, mList);
         recycler.setAdapter(adapter);
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null) {
@@ -180,11 +124,11 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
             @Override
             public void onError(int i, String s) {
                 Log.e("setOnUbtTIMConver", s);
-                LoadingDialog.getInstance(AddressBookActivity.this).dismiss();
+                LoadingDialog.getInstance(EditAddressBookActivity.this).dismiss();
                 if (AuthLive.getInstance().getCurrentPig() != null) {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("八戒未登录");
+                    ToastUtils.showShortToast("八戒未登录");
                 } else {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定八戒");
+                    ToastUtils.showShortToast("未绑定八戒");
                 }
             }
 
@@ -193,20 +137,7 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
                 Log.e("setOnUbtTIMConver", "sss");
             }
         });
-        //refreshLayout.autoRefresh();
-        refresh();
     }
-
-//    @Override
-//    public void onRefresh(RefreshLayout refreshLayout) {
-//        mStateView.showLoading();
-//        if (mHandler.hasMessages(1)) {
-//            mHandler.removeMessages(1);
-//        }
-//        mHandler.sendEmptyMessageDelayed(1, 20 * 1000);// 20s 秒后检查加载框是否还在
-//        UbtTIMManager.getInstance().queryUser();
-//    }
-
 
     public void onRefreshSuccess(List<AddressBookmodel> list) {
         if (mHandler.hasMessages(1)) {
@@ -285,7 +216,7 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
 //                        .setWidth(width)
 //                        .setHeight(height);
 //                swipeRightMenu.addMenuItem(addItem); // 添加菜单到右侧。
-                SwipeMenuItem deleteItem = new SwipeMenuItem(AddressBookActivity.this)
+                SwipeMenuItem deleteItem = new SwipeMenuItem(EditAddressBookActivity.this)
                         .setBackgroundColor(getResources().getColor(R.color
                                 .ubt_dialog_btn_txt_color))
                         .setText("删除")
@@ -314,23 +245,9 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
                     UbtTIMManager.getInstance().deleteUser(mList.get(adapterPosition).name, mList
                             .get(adapterPosition).phone, mList.get(adapterPosition).id + "");
                     deletePosition = adapterPosition;
-                    LoadingDialog.getInstance(AddressBookActivity.this).setTimeout(20)
+                    LoadingDialog.getInstance(EditAddressBookActivity.this).setTimeout(20)
                             .setShowToast(true).show();
                 }
-//                if (menuPosition == 0) {
-//                    Intent it = new Intent(AddressBookActivity.this, AddAndSetContactActivity
-//                            .class);
-//                    it.putParcelableArrayListExtra("list", mList);
-//                    it.putExtra("type", 1);
-//                    it.putExtra("position", adapterPosition);
-//                    startActivity(it);
-//                } else if (menuPosition == 1) {
-//                    UbtTIMManager.getInstance().deleteUser(mList.get(adapterPosition).name, mList
-//                            .get(adapterPosition).phone, mList.get(adapterPosition).id + "");
-//                    deletePosition = adapterPosition;
-//                    LoadingDialog.getInstance(AddressBookActivity.this).setTimeout(20)
-//                            .setShowToast(true).show();
-//                }
             }
         }
     };
@@ -389,7 +306,7 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
 
             case "/im/mail/delete":
                 Boolean flag = msg.getPayload().unpack(GPResponse.Response.class).getResult();
-                LoadingDialog.getInstance(AddressBookActivity.this).dismiss();
+                LoadingDialog.getInstance(EditAddressBookActivity.this).dismiss();
                 if (flag) {
                     mList.remove(deletePosition);
                     try {

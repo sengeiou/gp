@@ -9,6 +9,9 @@ public class AddressBookmodel implements Parcelable, MultiItemEntity {
     public String name;
     public String phone;
     public long id;
+    /**
+     * 0为默认数据，1为尾部，2为头部
+     */
     public int type = 0;
 
     public AddressBookmodel() {

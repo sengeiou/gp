@@ -54,4 +54,5 @@
 
     <color name="no_network">#FFF5E2E2</color>
     <color name="no_network_text">#FF3B30</color>
+    <color name="empty_color">#9DA7AD</color>
 </resources>
