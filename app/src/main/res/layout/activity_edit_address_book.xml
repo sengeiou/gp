@@ -14,17 +14,6 @@
         android:layout_height="@dimen/dp_45"
         android:background="@color/ubt_white">
 
-        <ImageView
-            android:id="@+id/iv_left"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:contentDescription="@null"
-            android:paddingBottom="@dimen/dp_11"
-            android:paddingLeft="@dimen/dp_4"
-            android:paddingTop="@dimen/dp_11"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_back" />
-
         <TextView
             android:id="@+id/tv_left"
             android:layout_width="wrap_content"
@@ -36,7 +25,7 @@
             android:text="取消"
             android:textColor="@color/ubt_tips_txt_color"
             android:textSize="@dimen/sp_15"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <TextView
             android:id="@+id/tv_center"
@@ -61,10 +50,10 @@
             android:gravity="center"
             android:paddingLeft="@dimen/dp_20"
             android:paddingRight="@dimen/dp_20"
-            android:text="编辑"
+            android:text="完成"
             android:textColor="@color/ubt_tab_btn_txt_checked_color"
             android:textSize="@dimen/sp_15"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
     </RelativeLayout>
 
@@ -73,29 +62,10 @@
         android:layout_height="@dimen/ubt_1px"
         android:background="@color/ubt_wifi_list_divider" />
 
-    <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:overScrollMode="never" />
 
-    <!--<com.scwang.smartrefresh.layout.SmartRefreshLayout-->
-    <!--android:id="@+id/refreshLayout"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--app:layout_constraintBottom_toTopOf="@+id/ll_add"-->
-    <!--app:layout_constraintLeft_toLeftOf="parent"-->
-    <!--app:layout_constraintRight_toRightOf="parent"-->
-    <!--app:layout_constraintTop_toBottomOf="@+id/carview"-->
-    <!--app:srlEnableHeaderTranslationContent="false"-->
-    <!--app:srlPrimaryColor="@color/ubt_tips_txt_color">-->
-
-    <!--<com.scwang.smartrefresh.header.MaterialHeader-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content" />-->
-    <!--<com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView-->
-    <!--android:id="@+id/recycler"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"/>-->
-    <!--</com.scwang.smartrefresh.layout.SmartRefreshLayout>-->
 </LinearLayout>

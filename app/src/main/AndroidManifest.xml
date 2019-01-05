@@ -212,6 +212,8 @@
             android:launchMode="singleTop"/>
         <activity android:name=".personal.PigManageDetailActivity"
             android:launchMode="singleTop"/>
+        <activity android:name=".personal.management.EditAddressBookActivity"
+            android:launchMode="singleTop"/>
 
         <service android:name=".app.StartUpService" />
     </application>
