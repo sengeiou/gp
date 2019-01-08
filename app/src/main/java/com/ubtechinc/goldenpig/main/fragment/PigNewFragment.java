@@ -264,6 +264,7 @@ public class PigNewFragment extends BaseFragment {
         if (!UBTPGApplication.isNetAvailable) {
             tvNetTip.setVisibility(View.VISIBLE);
             btnBinding.setVisibility(View.GONE);
+            tvPigTip.setVisibility(View.GONE);
             hideNativeInfo();
         } else {
             tvNetTip.setVisibility(View.GONE);
@@ -414,7 +415,7 @@ public class PigNewFragment extends BaseFragment {
             //更新sim卡信号
             if (simStatus.getInserted()) {
                 ((MainActivity)getActivity()).isNoSim = false;
-                int level = simStatus.getLevel() - 1;
+                int level = simStatus.getLevel();
                 if (level > 4) {
                     level = 4;
                 }

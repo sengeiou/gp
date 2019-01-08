@@ -96,7 +96,7 @@
     <string name="ubt_click_for_bind">点击绑定</string>
     <string name="ubt_click_for_net">点击配网</string>
     <string name="ubt_hotspot_name">热点名称</string>
-    <string name="ubt_device_version_update">设备版本升级</string>
+    <string name="ubt_device_version_update">系统升级</string>
     <string name="ubt_upgrade_now">立即升级</string>
     <string name="ubt_pig_updateing">收到升级请求，八戒会在连接无线网络的情况下自动下载和安装</string>
     <string name="ubt_pig_update_failure">升级失败，请重试</string>
@@ -206,7 +206,7 @@
 
     <string name="pair_pig_voice_tip">说“八戒八戒，发送留言给八戒”即可留言互动</string>
 
-    <string name="ubt_latest_version_format">最新版本:%1$s</string>
+    <string name="ubt_latest_version_format">检查到有新版本%1$s</string>
     <string name="ubt_ota_status_3">系统正处于升级状态，升级包会在连接无线网络时自动下载安装</string>
 
     <string name="go_setting">去设置</string>
@@ -243,5 +243,10 @@
 
     <string name="beehive_mobile_tip1">开启蜂窝移动数据后，八戒可通过移动网络访问互联网若八戒同时连接了Wi-Fi,则默认使用Wi-Fi网络</string>
     <string name="beehive_mobile_tip2">如想打开或关闭蜂窝移动数据\n请对八戒说\n“八戒八戒，打开蜂窝移动数据”\n“八戒八戒，关闭蜂窝移动数据”</string>
+
+    <string name="switch_wifi_tip1">如想打开或关闭Wi-Fi\n请对八戒说\n“八戒八戒，打开Wi-Fi”\n“八戒八戒，关闭Wi-Fi”</string>
+    <string name="switch_wifi_tip2">请谨慎关闭八戒的Wi-Fi，关闭后\n若未连接移动数据，八戒会断开网络无法使用</string>
+
+    <string name="connect_wifi">连接Wi-Fi</string>
 
 </resources>

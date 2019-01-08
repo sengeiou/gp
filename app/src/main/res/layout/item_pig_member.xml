@@ -1,35 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/dp_64"
-    android:background="@drawable/shape_ubt_member_item_bg"
     android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:paddingTop="@dimen/dp_12"
+    android:paddingBottom="@dimen/dp_12">
 
     <ImageView
         android:id="@+id/ubt_img_member_photo"
         android:layout_width="@dimen/dp_40"
-        android:layout_height="@dimen/dp_40"
-        android:layout_marginStart="@dimen/dp_15" />
+        android:layout_height="@dimen/dp_40" />
 
     <TextView
         android:id="@+id/ubt_tv_member_name"
-        android:layout_width="0px"
-        android:layout_height="@dimen/dp_64"
-        android:layout_marginStart="@dimen/dp_15"
-        android:layout_weight="0.8"
-        android:gravity="center_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_12"
         android:lines="1"
-        android:text="TextView"
-        android:textColor="@color/ubt_tips_txt_color"
-        android:textSize="@dimen/sp_16" />
+        android:text="偷穿鞋的猫"
+        android:textColor="#FF454B59"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@id/ubt_img_member_photo"
+        app:layout_constraintLeft_toRightOf="@id/ubt_img_member_photo"
+        app:layout_constraintTop_toTopOf="@id/ubt_img_member_photo" />
 
     <TextView
         android:id="@+id/ubt_tv_admin"
+        android:layout_width="@dimen/dp_45"
+        android:layout_height="@dimen/dp_16"
+        android:layout_marginLeft="@dimen/dp_8"
+        android:background="@drawable/shape_ubt_blue_gb"
+        android:gravity="center"
+        android:text="@string/ubt_admin"
+        android:textColor="#FFF7FCFF"
+        android:textSize="10sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@id/ubt_img_member_photo"
+        app:layout_constraintLeft_toRightOf="@id/ubt_tv_member_name"
+        app:layout_constraintTop_toTopOf="@id/ubt_img_member_photo" />
+
+    <TextView
+        android:id="@+id/ubt_tv_me"
+        android:layout_width="@dimen/dp_34"
+        android:layout_height="@dimen/dp_16"
+        android:layout_marginLeft="@dimen/dp_6"
+        android:background="@drawable/shape_ubt_gray_gb"
+        android:gravity="center"
+        android:text="我"
+        android:textColor="#FFF7FCFF"
+        android:textSize="10sp"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@id/ubt_img_member_photo"
+        app:layout_constraintLeft_toRightOf="@id/ubt_tv_admin"
+        app:layout_constraintTop_toTopOf="@id/ubt_img_member_photo" />
+
+    <TextView
+        android:id="@+id/tv_exit_group"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/dp_15"
-        android:text="@string/ubt_admin"
-        android:visibility="invisible" />
-</LinearLayout>
+        android:text="退出群组"
+        android:textColor="#FFFF3A30"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@id/ubt_img_member_photo"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ubt_img_member_photo" />
+
+    <ImageView
+        android:id="@+id/iv_oper_more"
+        android:layout_width="@dimen/dp_32"
+        android:layout_height="@dimen/dp_32"
+        android:src="@drawable/ic_more_dot"
+        app:layout_constraintBottom_toBottomOf="@id/ubt_img_member_photo"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ubt_img_member_photo" />
+</android.support.constraint.ConstraintLayout>

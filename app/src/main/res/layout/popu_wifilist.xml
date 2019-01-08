@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:background="@drawable/shape_wifi_list_bg"
-    android:maxHeight="@dimen/ubt_wifi_list_maxheight"
-    android:layout_height="match_parent">
+    android:maxHeight="@dimen/dp_222"
+    android:minHeight="@dimen/dp_222">
+
     <android.support.v7.widget.RecyclerView
-        android:layout_marginStart="@dimen/ubt_wifi_list_padding"
-        android:layout_marginEnd="@dimen/ubt_wifi_list_padding"
         android:id="@+id/ubt_wifi_list_ryc"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="@dimen/dp_222"
+        android:overScrollMode="never"
+        android:layout_marginStart="@dimen/ubt_wifi_list_padding"
+        android:layout_marginEnd="@dimen/ubt_wifi_list_padding" />
+
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/ubt_wifi_loading"
+        android:layout_width="@dimen/dp_96"
+        android:layout_height="@dimen/dp_96"
+        android:layout_centerInParent="true"
+        android:src="@drawable/pig_load"
+        android:visibility="visible" />
+
 </RelativeLayout>

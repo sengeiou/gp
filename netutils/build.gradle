@@ -83,6 +83,10 @@ android {
                 buildConfigField 'String', 'PUSH_HOST', "\"https://apis.ubtrobot.com\""
                 buildConfigField 'String', 'IM_HOST', "\"https://apis.ubtrobot.com\""
 
+//                buildConfigField 'String', 'HOST', "\"https://testwx.ubtrobot.com\""
+//                buildConfigField 'String', 'PUSH_HOST', "\"https://testwx.ubtrobot.com\""
+//                buildConfigField 'String', 'IM_HOST', "\"https://testwx.ubtrobot.com\""
+
                 buildConfigField 'String', 'USER_HOST', props['user_host']
                 buildConfigField 'String', 'XINGE_HOST', props['xinge_host']
                 buildConfigField 'String', 'UPDATE', props['update']

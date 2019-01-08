@@ -1,13 +1,11 @@
 package com.ubtechinc.commlib.view;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-
-import com.ubtechinc.commlib.R;
+import android.view.View;
 
 /**
  * @auther :hqt
@@ -18,6 +16,8 @@ import com.ubtechinc.commlib.R;
  * @changetime :2018/8/30 9:57
  */
 public class UbtClearableEditText extends UbtIconEditText {
+
+    protected View mClearLine;
 
 
     public UbtClearableEditText(Context context) {
@@ -48,6 +48,16 @@ public class UbtClearableEditText extends UbtIconEditText {
     protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
         super.onFocusChanged(focused, direction, previouslyFocusedRect);
         setIconVisible(focused && length() > 0);
+    }
+
+    public void setClearLine(View line) {
+        this.mClearLine = line;
+    }
+
+    private void showClearLine(boolean isShow) {
+        if (mClearLine != null) {
+            mClearLine.setVisibility(isShow ? View.VISIBLE : View.GONE);
+        }
     }
 
     @Override

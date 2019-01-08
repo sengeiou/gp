@@ -220,6 +220,7 @@
         <activity android:name=".personal.ContinuousVoiceActivity" />
         <activity android:name=".personal.BeeHiveMobileActivity" />
         <activity android:name=".personal.NoSimActivity" />
+        <activity android:name=".personal.SwitchWifiActivity" />
 
         <service android:name=".app.StartUpService" />
     </application>

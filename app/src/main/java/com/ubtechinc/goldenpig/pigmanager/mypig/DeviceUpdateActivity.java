@@ -55,7 +55,7 @@ public class DeviceUpdateActivity extends BaseToolBarActivity implements Observe
         setTitleBack(true);
         setToolBarTitle(R.string.ubt_device_version_update);
 
-        mVersionTv = findViewById(R.id.ubt_tv_version_name);
+        mVersionTv = findViewById(R.id.tv_new_version);
         mMsgTv = findViewById(R.id.ubt_tv_version_msg);
         mUpdateBtn = findViewById(R.id.ubt_btn_dev_update);
         mUpdateBtn.setOnClickListener(this);

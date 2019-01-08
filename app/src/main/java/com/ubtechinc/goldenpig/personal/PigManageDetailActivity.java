@@ -35,7 +35,6 @@ import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
-import com.ubtechinc.goldenpig.pigmanager.BleConfigReadyActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.hotspot.SetHotSpotActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.DeviceUpdateActivity;
@@ -216,6 +215,8 @@ public class PigManageDetailActivity extends BaseNewActivity implements Observer
                 }
             }
             tv_dsn.setText(mPig.getRobotName());
+        } else {
+            finish();
         }
         //getmanager();
     }
@@ -225,7 +226,12 @@ public class PigManageDetailActivity extends BaseNewActivity implements Observer
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.rl_wifi:
-                ActivityRoute.toAnotherActivity(this, BleConfigReadyActivity.class, false);
+                PigInfo myPig = AuthLive.getInstance().getCurrentPig();
+                if (myPig.isAdmin) {
+                    ActivityRoute.toAnotherActivity(this, SwitchWifiActivity.class, false);
+                } else {
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast(R.string.only_admin_operate);
+                }
                 break;
             case R.id.rl_4g:
                 if (isNoSim) {
@@ -387,8 +393,13 @@ public class PigManageDetailActivity extends BaseNewActivity implements Observer
             }
         } catch (Exception e) {
             e.printStackTrace();
-            com.ubtech.utilcode.utils.ToastUtils.showShortToast(getString(R.string.msg_error_toast));
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UbtTIMManager.getInstance().deleteMsgObserve(this);
     }
 
     private void dealMsg(Object arg) throws InvalidProtocolBufferException {
@@ -410,15 +421,15 @@ public class PigManageDetailActivity extends BaseNewActivity implements Observer
                 int status = info.getStatus();
                 String updateMessage = info.getUpdateMessage();
                 String latestVersion = info.getLatestVersion();
+                HashMap<String, String> map = new HashMap<>();
+                map.put("latestVersion", latestVersion);
+                map.put("updateMessage", updateMessage);
                 switch (status) {
                     case 1:
-                        HashMap<String, String> map = new HashMap<>();
-                        map.put("latestVersion", latestVersion);
-                        map.put("updateMessage", updateMessage);
                         ActivityRoute.toAnotherActivity(this, DeviceUpdateActivity.class, map, false);
                         break;
                     case 2:
-                        ActivityRoute.toAnotherActivity(this, PigLastVersionActivity.class, false);
+                        ActivityRoute.toAnotherActivity(this, PigLastVersionActivity.class, map, false);
                         break;
                     case 3:
                         UbtToastUtils.showCustomToast(this, getString(R.string.ubt_ota_status_3));
@@ -462,7 +473,6 @@ public class PigManageDetailActivity extends BaseNewActivity implements Observer
                     tvBeehiveClose.setVisibility(View.VISIBLE);
                 }
             }
-
 
 
         } catch (Exception e) {
