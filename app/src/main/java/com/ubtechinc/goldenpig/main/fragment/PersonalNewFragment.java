@@ -289,7 +289,12 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
                 ActivityRoute.toAnotherActivity(getActivity(), BleConfigReadyActivity.class, false);
                 break;
             case R.id.ll_wifi:
-                enterFunction(SwitchWifiActivity.class, null);
+                PigInfo myPig = AuthLive.getInstance().getCurrentPig();
+                if (myPig.isAdmin) {
+                    ActivityRoute.toAnotherActivity(getActivity(), SwitchWifiActivity.class, false);
+                } else {
+                    ActivityRoute.toAnotherActivity(getActivity(), BleConfigReadyActivity.class, false);
+                }
                 break;
             case R.id.ll_4g:
                 if (isNoSim) {

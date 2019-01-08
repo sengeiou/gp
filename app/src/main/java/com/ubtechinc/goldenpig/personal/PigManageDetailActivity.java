@@ -35,6 +35,7 @@ import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
+import com.ubtechinc.goldenpig.pigmanager.BleConfigReadyActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.hotspot.SetHotSpotActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.DeviceUpdateActivity;
@@ -230,7 +231,7 @@ public class PigManageDetailActivity extends BaseNewActivity implements Observer
                 if (myPig.isAdmin) {
                     ActivityRoute.toAnotherActivity(this, SwitchWifiActivity.class, false);
                 } else {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast(R.string.only_admin_operate);
+                    ActivityRoute.toAnotherActivity(this, BleConfigReadyActivity.class, false);
                 }
                 break;
             case R.id.rl_4g:
