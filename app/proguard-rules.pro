@@ -125,3 +125,6 @@
 -keep public class com.ubtechinc.goldenpig.R$*{
 public static final int *;
 }
+
+-keep class com.ubtechinc.goldenpig.model.** { *; }  ##这里需要改成解析到哪个  javabean
+-keep class com.ubt.imlibv2.bean.AddressBook { *; }  ##这里需要改成解析到哪个  javabean

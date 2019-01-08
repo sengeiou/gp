@@ -54,6 +54,7 @@ import java.util.Observer;
 import butterknife.BindView;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CONTACT_CHECK_SUCCESS;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_DELETE_CONTACTS;
 
 public class AddressBookActivity extends BaseNewActivity implements Observer {
     @BindView(R.id.iv_left)
@@ -66,7 +67,8 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
     SwipeMenuRecyclerView recycler;
     AddressBookAdapter adapter;
     private ArrayList<AddressBookmodel> mList;
-    public int deletePosition = 0;
+    public int deletePosition = -1;
+    public Boolean card = false;
     /**
      * 先拉取到数据，添加联系人时要在app端作对比后再提交给八戒
      */
@@ -108,6 +110,7 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mHandler = new MyHandler(this);
+        card = getIntent().getBooleanExtra("card", false);
         initStateView(true);
         mStateView.setOnRetryClickListener(new StateView.OnRetryClickListener() {
             @Override
@@ -143,15 +146,16 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
         tv_right.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                ArrayList<AddressBookmodel> list = new ArrayList<>();
-//                for (int i = 0; i < mList.size(); i++) {
-//                    if (mList.get(i).type == 0) {
-//                        list.add(mList.get(i));
-//                    }
-//                }
-//                Intent it = new Intent(AddressBookActivity.this, EditRecordActivity.class);
-//                it.putParcelableArrayListExtra("list", list);
-//                startActivity(it);
+                ArrayList<AddressBookmodel> list = new ArrayList<>();
+                for (int i = 0; i < mList.size(); i++) {
+                    if (mList.get(i).type == 0) {
+                        list.add(mList.get(i));
+                    }
+                }
+                Intent it = new Intent(AddressBookActivity.this, EditAddressBookActivity.class);
+                it.putParcelableArrayListExtra("list", list);
+                it.putExtra("card", card);
+                startActivity(it);
             }
         });
 //        refreshLayout.setEnableAutoLoadMore(false);
@@ -221,6 +225,7 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
             tv_right.setVisibility(View.GONE);
         } else if (mList.size() >= 10) {
             AddressBookmodel ab2 = new AddressBookmodel();
+            ab2.card = card;
             ab2.type = 2;
             mList.add(ab2);
             mList.addAll(list);
@@ -391,11 +396,12 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
                 Boolean flag = msg.getPayload().unpack(GPResponse.Response.class).getResult();
                 LoadingDialog.getInstance(AddressBookActivity.this).dismiss();
                 if (flag) {
-                    mList.remove(deletePosition);
                     try {
+                        mList.remove(deletePosition);
                         if (mList.get(mList.size() - 1).type == 1) {
                             mList.remove(mList.size() - 1);
                         }
+                        deletePosition = -1;
                     } catch (Exception e) {
                     }
                     if (mList.size() == 0) {
@@ -416,11 +422,24 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
     }
 
     @Override
-    protected void onReceiveStickyEvent(Event event) {
-        super.onReceiveStickyEvent(event);
+    protected void onReceiveEvent(Event event) {
+        super.onReceiveEvent(event);
         if (event.getCode() == CONTACT_CHECK_SUCCESS) {
             //refreshLayout.autoRefresh();
             refresh();
+        } else if (event.getCode() == RECEIVE_DELETE_CONTACTS) {
+            List<AddressBookmodel> list = (List<AddressBookmodel>) event.getData();
+            if (list != null && list.size() > 0) {
+                for (int i = 0; i < list.size(); i++) {
+                    for (int j = 0; j < mList.size(); j++) {
+                        if (list.get(i).id == mList.get(j).id) {
+                            mList.remove(j);
+                            break;
+                        }
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
         }
     }
 

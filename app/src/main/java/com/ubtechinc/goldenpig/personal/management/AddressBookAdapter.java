@@ -115,7 +115,7 @@ public class AddressBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             aHolder.tv_content.setText(mContext.getString(R.string.contact_limit));
         } else {
             AddressBookHolder3 aHolder = (AddressBookHolder3) holder;
-            if (hasCard == 0) {
+            if (!mList.get(position).card) {
                 aHolder.tv_has_card.setVisibility(View.VISIBLE);
             } else {
                 aHolder.tv_has_card.setVisibility(View.GONE);

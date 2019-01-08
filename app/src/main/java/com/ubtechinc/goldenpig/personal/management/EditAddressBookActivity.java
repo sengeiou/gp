@@ -1,6 +1,7 @@
 package com.ubtechinc.goldenpig.personal.management;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -9,7 +10,9 @@ import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -19,18 +22,25 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.tencent.TIMCustomElem;
 import com.tencent.TIMElem;
 import com.tencent.TIMMessage;
+import com.ubt.imlibv2.bean.AddressBook;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubt.improtolib.GPResponse;
 import com.ubt.improtolib.UserContacts;
+import com.ubt.improtolib.UserRecords;
 import com.ubtech.utilcode.utils.ToastUtils;
+import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
+import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.model.AddressBookmodel;
+import com.ubtechinc.goldenpig.pigmanager.EditRecordActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.utils.CommendUtil;
+import com.ubtechinc.goldenpig.utils.DialogUtil;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.StateView;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
@@ -50,6 +60,8 @@ import java.util.Observer;
 import butterknife.BindView;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CONTACT_CHECK_SUCCESS;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_DELETE_CONTACTS;
+import static com.ubtechinc.goldenpig.utils.CommendUtil.TIMEOUT;
 
 public class EditAddressBookActivity extends BaseNewActivity implements Observer {
     @BindView(R.id.tv_left)
@@ -67,6 +79,8 @@ public class EditAddressBookActivity extends BaseNewActivity implements Observer
     private Boolean hasLoadMsg = false;
 
     private MyHandler mHandler;
+    public Boolean card = false;
+    public Boolean hasSelect = false;
 
     private class MyHandler extends Handler {
         WeakReference<Activity> mWeakReference;
@@ -102,18 +116,58 @@ public class EditAddressBookActivity extends BaseNewActivity implements Observer
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mHandler = new MyHandler(this);
-        mList = getIntent().getParcelableArrayListExtra("list");
+        ArrayList list = getIntent().getParcelableArrayListExtra("list");
+        card = getIntent().getBooleanExtra("card", false);
+        if (mList == null) {
+            mList = new ArrayList<>();
+        }
+        if (list != null) {
+            AddressBookmodel ab2 = new AddressBookmodel();
+            ab2.card = card;
+            ab2.type = 2;
+            mList.add(ab2);
+            mList.addAll(list);
+        }
         tv_left.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if (hasSelect) {
+                    showDeleteDialog();
+                }
+            }
+        });
+        tv_right.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         recycler.setLayoutManager(linearLayoutManager);
         recycler.setHasFixedSize(true);
-        adapter = new EditAddressBookAdapter(this, mList);
+        adapter = new EditAddressBookAdapter(this, mList, new EditAddressBookAdapter.EditABListener() {
+            @Override
+            public void clearAll() {
+                hasSelect = true;
+                tv_left.setTextColor(getResources().getColor(R.color.gold_red_color));
+                tv_left.setText("清空");
+            }
+
+            @Override
+            public void delete() {
+                hasSelect = true;
+                tv_left.setTextColor(getResources().getColor(R.color.gold_red_color));
+                tv_left.setText("删除");
+            }
+
+            @Override
+            public void nothing() {
+                hasSelect = false;
+                tv_left.setTextColor(getResources().getColor(R.color.empty_color));
+                tv_left.setText("删除");
+            }
+        });
         recycler.setAdapter(adapter);
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null) {
@@ -308,19 +362,24 @@ public class EditAddressBookActivity extends BaseNewActivity implements Observer
                 Boolean flag = msg.getPayload().unpack(GPResponse.Response.class).getResult();
                 LoadingDialog.getInstance(EditAddressBookActivity.this).dismiss();
                 if (flag) {
-                    mList.remove(deletePosition);
-                    try {
-                        if (mList.get(mList.size() - 1).type == 1) {
-                            mList.remove(mList.size() - 1);
+                    List<AddressBookmodel> list1 = new ArrayList<>();
+                    for (int i = 1; i < mList.size(); i++) {
+                        if (TextUtils.isEmpty(mList.get(i).phone)) {
+                            continue;
                         }
-                    } catch (Exception e) {
+                        if (mList.get(i).select) {
+                            list1.add(mList.get(i));
+                        }
                     }
-                    if (mList.size() == 0) {
-                        mStateView.showEmpty();
-                        tv_right.setVisibility(View.GONE);
-                    }
-                    updateTitlebarRightIcon(true);
+                    mList.removeAll(list1);
+                    mList.get(0).selectAll = false;
+                    hasSelect = false;
+                    tv_left.setTextColor(getResources().getColor(R.color.empty_color));
+                    tv_left.setText("删除");
                     adapter.notifyDataSetChanged();
+                    Event<List<AddressBookmodel>> event = new Event<>(RECEIVE_DELETE_CONTACTS);
+                    event.setData(list1);
+                    EventBusUtil.sendEvent(event);
                 } else {
                     ToastUtils.showShortToast("删除失败，请重试");
                 }
@@ -348,5 +407,50 @@ public class EditAddressBookActivity extends BaseNewActivity implements Observer
         }
         mHandler.sendEmptyMessageDelayed(1, 20 * 1000);// 20s 秒后检查加载框是否还在
         UbtTIMManager.getInstance().queryUser();
+    }
+
+    private Dialog picDialog;
+
+    private View picView;
+
+    public void showDeleteDialog() {
+        if (picDialog == null) {
+            picView = LayoutInflater.from(this).inflate(
+                    R.layout.dialog_view_eab_bottom2, null);
+            picDialog = DialogUtil.getMenuDialog(this, picView);
+        }
+        picDialog.show();
+        final TextView tv_delete = (TextView) picView.findViewById(R.id.tv_delete);
+        tv_delete.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {//
+                picDialog.dismiss();
+                List<AddressBook> list = new ArrayList<>();
+                for (int i = 0; i < mList.size(); i++) {
+                    if (TextUtils.isEmpty(mList.get(i).phone)) {
+                        continue;
+                    }
+                    if (mList.get(i).select) {
+                        AddressBook book = new AddressBook();
+                        book.nikeName = mList.get(i).name;
+                        book.number = mList.get(i).phone;
+                        book.userId = mList.get(i).id + "";
+                        list.add(book);
+                    }
+                }
+                UbtTIMManager.getInstance().deleteUser(list);
+                LoadingDialog.getInstance(EditAddressBookActivity.this).setTimeout(20)
+                        .setShowToast(true).show();
+            }
+        });
+        TextView tv_cancel = (TextView) picView.findViewById(R.id.tv_cancel);
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                picDialog.dismiss();
+            }
+        });
     }
 }

@@ -264,7 +264,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
 
                 if (mList != null && !mList.isEmpty()) {
                     int newPos = curPosition;
-                    for(int i = 0; i < mList.size(); i++) {
+                    for (int i = 0; i < mList.size(); i++) {
                         String value = mList.get(i);
                         if (!TextUtils.isEmpty(value) && value.equals(strName)) {
                             newPos = i;
@@ -393,14 +393,16 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (AndPermission.hasPermission(this, Manifest.permission.READ_CONTACTS)) {
                 intentToContact();
-            } else if (AndPermission.hasAlwaysDeniedPermission(this, Arrays.asList(Manifest.permission.READ_CONTACTS))) {
+            } else if (AndPermission.hasAlwaysDeniedPermission(this, Arrays.asList(Manifest.permission.READ_CONTACTS)
+            )) {
                 showPermissionDialog(Permission.CONTACTS);
             } else {
                 ActivityCompat.requestPermissions(AddAndSetContactActivity.this,
                         new String[]{android.Manifest.permission.READ_CONTACTS},
                         GlobalVariable.REQUEST_CONTACTS_READ_PERMISSON);
             }
-//            if (ContextCompat.checkSelfPermission(AddAndSetContactActivity.this, android.Manifest.permission.READ_CONTACTS)
+//            if (ContextCompat.checkSelfPermission(AddAndSetContactActivity.this, android.Manifest.permission
+// .READ_CONTACTS)
 //                    != PackageManager.PERMISSION_GRANTED) {
 //                // 若不为GRANTED(即为DENIED)则要申请权限了
 //                // 申请权限 第一个为context 第二个可以指定多个请求的权限 第三个参数为请求码
@@ -418,7 +420,8 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[]
+            grantResults) {
         if (requestCode == GlobalVariable.REQUEST_CONTACTS_READ_PERMISSON) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 intentToContact();
@@ -456,7 +459,8 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                 }
                 if (cursor == null) return;
                 while (cursor.moveToNext()) {
-                    contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                    contactName = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone
+                            .DISPLAY_NAME));
                     phoneNum = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
                 }
                 cursor.close();
@@ -489,6 +493,9 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
 
     private boolean checkOldList() {
         for (int i = 0; i < oldList.size(); i++) {
+            if (TextUtils.isEmpty(oldList.get(i).phone)) {
+                continue;
+            }
             if (type == 1 && i == updatePosition) {
                 continue;
             }

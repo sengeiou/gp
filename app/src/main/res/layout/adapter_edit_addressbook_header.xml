@@ -79,6 +79,7 @@
         android:layout_below="@+id/card"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/dp_14"
         android:paddingTop="@dimen/dp_5">
 
         <ImageView
@@ -88,14 +89,15 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp_15"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_choose2" />
+            android:src="@drawable/ic_choose1" />
 
         <TextView
+            android:id="@+id/tv_select_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_10"
             android:text="全选"
-            android:textColor="@color/ubt_main_item_tab_color"
+            android:textColor="@color/empty_color"
             android:textSize="@dimen/dp_14" />
     </LinearLayout>
 </RelativeLayout>

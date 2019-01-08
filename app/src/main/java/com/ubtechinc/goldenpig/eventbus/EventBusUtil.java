@@ -54,6 +54,7 @@ public class EventBusUtil {
     public static final int RECEIVE_CONTINUOUS_VOICE_STATE = 20007;
     public static final int RECEIVE_CONTINUOUS_VOICE_RESPONSE = 20008;
     public static final int RECEIVE_PIG_DEVICE_INFO = 20009;
+    public static final int RECEIVE_DELETE_CONTACTS = 20010;
 
     public static final int SERVER_RESPONSE_UNAUTHORIZED = 401;
 

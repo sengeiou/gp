@@ -13,6 +13,9 @@ public class AddressBookmodel implements Parcelable, MultiItemEntity {
      * 0为默认数据，1为尾部，2为头部
      */
     public int type = 0;
+    public Boolean card = false;
+    public Boolean selectAll = false;
+    public Boolean select = false;
 
     public AddressBookmodel() {
     }

@@ -353,6 +353,12 @@ public class UbtTIMManager {
         sendTIM(msg);
     }
 
+    public void deleteUser(List<AddressBook> list) {
+        byte[] data = ContactsProtoBuilder.getDeleteContactsInfo(list);
+        TIMMessage msg = creatElem(data);
+        sendTIM(msg);
+    }
+
     public void updateUser(String nikeName, String number, String userId) {
 
         byte[] data = ContactsProtoBuilder.getUpdateContactsInfo(nikeName, number, userId);

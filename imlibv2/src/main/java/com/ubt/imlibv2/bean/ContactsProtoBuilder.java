@@ -37,11 +37,15 @@ public class ContactsProtoBuilder {
 
     public static final String IM_RECORD_LATEST = "/im/record/latest";
 
-    /** 连续语音对话 */
+    /**
+     * 连续语音对话
+     */
     public static final String IM_DIALOG_SWITCH = "/im/dialog/switch";
     public static final String IM_DIALOG_REQUEST = "/im/dialog/request";
 
-    /** 八戒机器人信息 */
+    /**
+     * 八戒机器人信息
+     */
     public static final String IM_DEVICE_INFO = "/im/device_info";
 
     public static byte[] getAddContactsInfo(String name, String number) {
@@ -101,6 +105,29 @@ public class ContactsProtoBuilder {
         UserContacts.User user = builder.build();
         userContactBuilder.addUser(user);
 
+        UserContacts.UserContact contact = userContactBuilder.build();
+        ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer
+                .ChannelMessage.newBuilder()
+                .setHeader(header)
+                .setPayload(Any.pack(contact))
+                .build();
+
+        return channelMessage.toByteArray();
+    }
+
+    public static byte[] getDeleteContactsInfo(List<AddressBook> list) {
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder()
+                .setAction("/im/mail/delete").setTime(System.currentTimeMillis()).build();
+        UserContacts.UserContact.Builder userContactBuilder = UserContacts.UserContact.newBuilder();
+        for (int i = 0; i < list.size(); i++) {
+            AddressBook book = list.get(i);
+            UserContacts.User.Builder builder = UserContacts.User.newBuilder();
+            builder.setName(book.nikeName);
+            builder.setNumber(book.number);
+            builder.setId(Integer.valueOf(book.userId));
+            UserContacts.User user = builder.build();
+            userContactBuilder.addUser(user);
+        }
         UserContacts.UserContact contact = userContactBuilder.build();
         ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer
                 .ChannelMessage.newBuilder()
@@ -205,11 +232,13 @@ public class ContactsProtoBuilder {
 
     /**
      * 1更新绑定关系 2更新配对关系 3全部更新
+     *
      * @param event
      * @return
      */
     public static byte[] syncPairInfo(int event) {
-        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction(IM_RELATIONSHIP_CHANGED)
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction
+                (IM_RELATIONSHIP_CHANGED)
                 .setTime(System.currentTimeMillis()).build();
         GPRelationshipContainer.RelationShip.Builder builder = GPRelationshipContainer.RelationShip.newBuilder();
         builder.setEvent(event);
@@ -222,7 +251,8 @@ public class ContactsProtoBuilder {
     }
 
     public static byte[] getClientId(String clientId) {
-        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction(IM_ACCOUNT_CLIENTID)
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction
+                (IM_ACCOUNT_CLIENTID)
                 .setTime(System.currentTimeMillis()).build();
         ClientIdUpdateContainer.ClientIdUpdate.Builder builder = ClientIdUpdateContainer.ClientIdUpdate.newBuilder();
         builder.setClientId(clientId);
@@ -249,9 +279,10 @@ public class ContactsProtoBuilder {
 
     /**
      * 查询小猪基本信息
+     *
      * @return
      */
-    public static byte[] getNativeInfo(){
+    public static byte[] getNativeInfo() {
         return createBaseData(GET_NATIVE_INFO);
     }
 
@@ -286,6 +317,7 @@ public class ContactsProtoBuilder {
 
     /**
      * 连续语音对话
+     *
      * @return
      */
     public static byte[] requestContinuousVoiceState() {
@@ -307,6 +339,7 @@ public class ContactsProtoBuilder {
 
     /**
      * 获取八戒机器人信息
+     *
      * @return
      */
     public static byte[] getPigDeviceInfo() {

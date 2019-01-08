@@ -27,6 +27,7 @@ import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.BleWebActivity;
 import com.ubtechinc.goldenpig.main.FunctionModel;
+import com.ubtechinc.goldenpig.main.MainActivity;
 import com.ubtechinc.goldenpig.personal.alarm.AlarmListActivity;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionActivity;
 import com.ubtechinc.goldenpig.personal.management.AddressBookActivity;
@@ -139,6 +140,8 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
                     enterFunction(RecordActivity.class, null);
                     break;
                 case MAIL_LIST:
+                    HashMap<String,Boolean> map = new HashMap<>();
+                    map.put("card",((MainActivity)context).isNoSim);
                     enterFunction(AddressBookActivity.class, null);
                     break;
                 case BLE:
