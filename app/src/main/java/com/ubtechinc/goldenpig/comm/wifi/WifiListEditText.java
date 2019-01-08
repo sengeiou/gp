@@ -184,6 +184,13 @@ public class WifiListEditText extends RelativeLayout implements View.OnClickList
             mWifiRyc.setVisibility(View.VISIBLE);
         }
         if (isHasWifi(wifiInfo) < 0) {
+            if (TextUtils.isEmpty(mCurrSsid)) {
+                mCurrSsid = wifiInfo.getSsid();
+                mCurrCtype = wifiInfo.getEncryptionKey();
+                if (mWifiNameEdt != null) {
+                    mWifiNameEdt.setText(mCurrSsid);
+                }
+            }
             mWifiList.add(wifiInfo);
             if (mWifiListAdapter != null) {
                 mWifiListAdapter.updateList(mWifiList);

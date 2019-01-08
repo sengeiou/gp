@@ -92,7 +92,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
         setToolBarTitle(getString(R.string.ubt_set_pig_net));
         commandProduce = new JsonCommandProduce();
         setTitleBack(true);
-        mSendWifiInfoBtn = (Button) findViewById(R.id.ubt_btn_connect_wifi);
+        mSendWifiInfoBtn = findViewById(R.id.ubt_btn_connect_wifi);
         mSendWifiInfoBtn.setOnClickListener(this);
         mWifiNamEdt = findViewById(R.id.ubt_edt_wifi_name);
         mWetWifiName = findViewById(R.id.wet_wifi_name);
@@ -100,7 +100,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
         if (!TextUtils.isEmpty(phoneSsid)) {
             mWifiNamEdt.setText(phoneSsid);
         }
-        mWifiPwdEdt = (UbtPasswordEditText) findViewById(R.id.ubt_edt_wifi_password);
+        mWifiPwdEdt = findViewById(R.id.ubt_edt_wifi_password);
 //        mTvSkip = findViewById(R.id.ubt_tv_set_net_skip);
 //        mTvSkip.setVisibility(View.VISIBLE);
 //        mTvSkip.setOnClickListener(this);
