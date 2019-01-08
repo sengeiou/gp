@@ -10,6 +10,7 @@ import com.ubtrobot.channelservice.proto.GPADBSettingContainer;
 import com.ubtrobot.channelservice.proto.GPRelationshipContainer;
 import com.ubtrobot.gold.GPSwitchContainer;
 import com.ubtrobot.tvs.proto.ClientIdUpdateContainer;
+import com.ubtrobot.wifi.WifiMessageContainer;
 
 import java.util.List;
 
@@ -47,6 +48,11 @@ public class ContactsProtoBuilder {
      * 八戒机器人信息
      */
     public static final String IM_DEVICE_INFO = "/im/device_info";
+
+    /** 机器人配网 */
+    public static final String IM_CONNECT_WIFI = "/connect/wifi";
+
+    public static final String IM_REQUEST_WIFI_LIST = "/request/wifi/list";
 
     public static byte[] getAddContactsInfo(String name, String number) {
 
@@ -344,6 +350,36 @@ public class ContactsProtoBuilder {
      */
     public static byte[] getPigDeviceInfo() {
         return createBaseData(IM_DEVICE_INFO);
+    }
+
+    /**
+     * 获取八戒Wifi列表
+     * @return
+     */
+    public static byte[] getWifiList() {
+        return createBaseData(IM_REQUEST_WIFI_LIST);
+    }
+
+    /**
+     * 给机器人配网
+     * @param wifiName
+     * @param wifiPwd
+     * @param wifiCtype
+     * @return
+     */
+    public static byte[] setWifi(String wifiName, String wifiPwd, String wifiCtype) {
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction(IM_CONNECT_WIFI)
+                .setTime(System.currentTimeMillis()).build();
+        WifiMessageContainer.WifiMessage.Builder builder = WifiMessageContainer.WifiMessage.newBuilder();
+        builder.setSsid(wifiName);
+        builder.setPassword(wifiPwd);
+        builder.setSecure(wifiCtype);
+        WifiMessageContainer.WifiMessage message = builder.build();
+        ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer.ChannelMessage.newBuilder()
+                .setHeader(header)
+                .setPayload(Any.pack(message))
+                .build();
+        return channelMessage.toByteArray();
     }
 
 }

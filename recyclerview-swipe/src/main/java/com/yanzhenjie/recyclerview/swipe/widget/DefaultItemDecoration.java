@@ -158,7 +158,10 @@ public class DefaultItemDecoration extends RecyclerView.ItemDecoration {
     @Override
     public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
         drawHorizontal(c, parent);
-        drawVertical(c, parent);
+        int columnCount = getSpanCount(parent);
+        if (columnCount != 1) {
+            drawVertical(c, parent);
+        }
     }
 
     public void drawHorizontal(Canvas c, RecyclerView parent) {
@@ -168,7 +171,8 @@ public class DefaultItemDecoration extends RecyclerView.ItemDecoration {
             final View child = parent.getChildAt(i);
             int childPosition = parent.getChildAdapterPosition(child);
             if (childPosition < 0) continue;
-            if (mViewTypeList.contains(parent.getAdapter().getItemViewType(childPosition))) continue;
+            if (mViewTypeList.contains(parent.getAdapter().getItemViewType(childPosition)))
+                continue;
             if (child instanceof SwipeMenuRecyclerView.LoadMoreView) continue;
             final int left = child.getLeft();
             final int top = child.getBottom();
@@ -187,7 +191,8 @@ public class DefaultItemDecoration extends RecyclerView.ItemDecoration {
             final View child = parent.getChildAt(i);
             int childPosition = parent.getChildAdapterPosition(child);
             if (childPosition < 0) continue;
-            if (mViewTypeList.contains(parent.getAdapter().getItemViewType(childPosition))) continue;
+            if (mViewTypeList.contains(parent.getAdapter().getItemViewType(childPosition)))
+                continue;
             if (child instanceof SwipeMenuRecyclerView.LoadMoreView) continue;
             final int left = child.getRight();
             final int top = child.getTop();

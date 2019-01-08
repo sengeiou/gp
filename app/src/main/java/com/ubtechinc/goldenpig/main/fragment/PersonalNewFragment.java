@@ -36,6 +36,7 @@ import com.ubtechinc.goldenpig.personal.BeeHiveMobileActivity;
 import com.ubtechinc.goldenpig.personal.ContinuousVoiceActivity;
 import com.ubtechinc.goldenpig.personal.NoSimActivity;
 import com.ubtechinc.goldenpig.personal.PigManageDetailActivity;
+import com.ubtechinc.goldenpig.personal.SwitchWifiActivity;
 import com.ubtechinc.goldenpig.personal.alarm.AlarmListActivity;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionActivity;
 import com.ubtechinc.goldenpig.personal.remind.RemindActivity;
@@ -288,39 +289,29 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
                 ActivityRoute.toAnotherActivity(getActivity(), BleConfigReadyActivity.class, false);
                 break;
             case R.id.ll_wifi:
-                PigInfo myPig = AuthLive.getInstance().getCurrentPig();
-                if (myPig == null) {
-                    break;
-                }
-                if (myPig.isAdmin) {
-                    //TODO 后续改为切换 WIFI
-                    ActivityRoute.toAnotherActivity(getActivity(), BleConfigReadyActivity.class, false);
-                } else {
-                    ActivityRoute.toAnotherActivity(getActivity(), BleConfigReadyActivity.class, false);
-                }
+                enterFunction(SwitchWifiActivity.class, null);
                 break;
             case R.id.ll_4g:
                 if (isNoSim) {
+                    enterFunction(NoSimActivity.class, null);
                     ActivityRoute.toAnotherActivity(getActivity(), NoSimActivity.class, false);
                 } else {
-                    ActivityRoute.toAnotherActivity(getActivity(), BeeHiveMobileActivity.class, false);
+                    enterFunction(BeeHiveMobileActivity.class, null);
                 }
                 break;
             case R.id.ll_hot_pwd:
                 if (isNoSim) {
-                    ActivityRoute.toAnotherActivity(getActivity(), NoSimActivity.class, false);
+                    enterFunction(NoSimActivity.class, null);
                 } else {
-                    ActivityRoute.toAnotherActivity(getActivity(), SetHotSpotActivity.class, false);
+                    enterFunction(SetHotSpotActivity.class, null);
                 }
                 break;
             case R.id.ll_duihua:
-                ActivityRoute.toAnotherActivity(getActivity(), ContinuousVoiceActivity.class, false);
+                enterFunction(ContinuousVoiceActivity.class, null);
                 break;
             default:
         }
     }
-
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Event event) {

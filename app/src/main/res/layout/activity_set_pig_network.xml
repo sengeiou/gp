@@ -25,6 +25,14 @@
             android:layout_height="wrap_content"
             android:inputType="textPersonName" />
 
+        <com.ubtechinc.goldenpig.comm.wifi.WifiListEditText
+            android:id="@+id/wet_wifi_name"
+            style="@style/UBTSetWifiEditTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:inputType="textPersonName" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/ubt_1px"

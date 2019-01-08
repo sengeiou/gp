@@ -5,7 +5,7 @@ import "google/protobuf/any.proto";
 
 //wifi列表
 message WifiList {
-   google.protobuf.Any wifiList = 1; // 以json格式放在any里面
+   string wifiList = 1; // json格式
 }
 
 //指定连接wifi的基本信息

@@ -19,12 +19,14 @@ import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 
-public class PigMemberAdapter extends RecyclerView.Adapter<PigMemberAdapter.MemberHolder> {
+public class PigMemberAdapter extends RecyclerView.Adapter<PigMemberAdapter.MemberHolder> implements View.OnClickListener {
 
     private ArrayList<CheckBindRobotModule.User> mUserList;
     private boolean isAdminUser;
     private SoftReference<Activity> activityRefer;
     private boolean isAdmin;
+
+    private OnMemberClickListener mOnMemberClickListener;
 
     public PigMemberAdapter(Activity context, ArrayList<CheckBindRobotModule.User> userList) {
         this.mUserList = userList;
@@ -55,11 +57,37 @@ public class PigMemberAdapter extends RecyclerView.Adapter<PigMemberAdapter.Memb
                 }
                 if (user.getIsAdmin() == 1) {
                     checkCurUserIsAdmin(user.getUserId());
-                    holder.adminFlageView.setVisibility(View.VISIBLE);
+                    holder.adminFlagView.setVisibility(View.VISIBLE);
                 } else {
-                    holder.adminFlageView.setVisibility(View.INVISIBLE);
+                    holder.adminFlagView.setVisibility(View.GONE);
+                }
+                if (isSelf(user.getUserId())) {
+                    holder.meFlagView.setVisibility(View.VISIBLE);
+                    holder.tvExitGroup.setVisibility(View.VISIBLE);
+                    holder.tvExitGroup.setTag(String.valueOf(user.getUserId()));
+                    holder.tvExitGroup.setOnClickListener(this);
+                    holder.ivOperMore.setVisibility(View.GONE);
+                } else {
+                    holder.meFlagView.setVisibility(View.GONE);
+                    holder.tvExitGroup.setVisibility(View.GONE);
+                    if (isAdmin) {
+                        holder.ivOperMore.setVisibility(View.VISIBLE);
+                        holder.ivOperMore.setTag(String.valueOf(user.getUserId()));
+                        holder.ivOperMore.setOnClickListener(this);
+                    } else {
+                        holder.ivOperMore.setVisibility(View.GONE);
+                    }
                 }
             }
+        }
+    }
+
+    private boolean isSelf(int userId) {
+        String currentUserId = AuthLive.getInstance().getUserId();
+        if (!TextUtils.isEmpty(currentUserId) && currentUserId.equals(String.valueOf(userId))) {
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -97,16 +125,49 @@ public class PigMemberAdapter extends RecyclerView.Adapter<PigMemberAdapter.Memb
         isAdminUser = adminUser;
     }
 
+    @Override
+    public void onClick(View v) {
+        String userId = (String) v.getTag();
+        switch (v.getId()) {
+            case R.id.tv_exit_group:
+                if (mOnMemberClickListener != null) {
+                    mOnMemberClickListener.onClickExitGroup(v, userId);
+                }
+                break;
+            case R.id.iv_oper_more:
+                if (mOnMemberClickListener != null) {
+                    mOnMemberClickListener.onClickOperMore(v, userId);
+                }
+                break;
+        }
+    }
+
     protected static class MemberHolder extends RecyclerView.ViewHolder {
         public TextView userNameTv;
         public ImageView userPoto;
-        public View adminFlageView;
+        public View adminFlagView;
+        public View meFlagView;
+        public View tvExitGroup;
+        public View ivOperMore;
 
         public MemberHolder(View itemView) {
             super(itemView);
             userNameTv = itemView.findViewById(R.id.ubt_tv_member_name);
             userPoto = itemView.findViewById(R.id.ubt_img_member_photo);
-            adminFlageView = itemView.findViewById(R.id.ubt_tv_admin);
+            adminFlagView = itemView.findViewById(R.id.ubt_tv_admin);
+            meFlagView = itemView.findViewById(R.id.ubt_tv_me);
+            tvExitGroup = itemView.findViewById(R.id.tv_exit_group);
+            ivOperMore = itemView.findViewById(R.id.iv_oper_more);
         }
     }
+
+    public void setmOnMemberClickListener(OnMemberClickListener mOnMemberClickListener) {
+        this.mOnMemberClickListener = mOnMemberClickListener;
+    }
+
+    public interface OnMemberClickListener {
+        void onClickExitGroup(View view, String userId);
+        void onClickOperMore(View view, String userId);
+    }
+
 }

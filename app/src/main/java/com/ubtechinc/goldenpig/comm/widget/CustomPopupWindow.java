@@ -73,7 +73,7 @@ public class CustomPopupWindow extends PopupWindow {
         mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
-                toggleBright();
+//                toggleBright();
 
                 mCallback.onDismiss();
                 mCallback = null;
@@ -105,7 +105,7 @@ public class CustomPopupWindow extends PopupWindow {
         Log.d(TAG,"showAtBottom");
         //弹窗位置设置
         mPopupWindow.showAsDropDown(view, Math.abs((view.getWidth() - getWidth()) / 2), 5);
-        toggleBright();
+//        toggleBright();
         return mPopupWindow;
     }
 

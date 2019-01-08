@@ -72,6 +72,7 @@ import com.ubtrobot.gold.GPSwitchContainer;
 import com.ubtrobot.info.DeviceInfoContainer;
 import com.ubtrobot.info.NativeInfoContainer;
 import com.ubtrobot.upgrade.VersionInformation;
+import com.ubtrobot.wifi.WifiMessageContainer;
 import com.vise.utils.handler.CrashHandlerUtil;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -548,6 +549,19 @@ public class UBTPGApplication extends LoginApplication implements Observer {
             DeviceInfoContainer.DeviceInfo deviceInfo = msg.getPayload().unpack(DeviceInfoContainer.DeviceInfo.class);
             Event<DeviceInfoContainer.DeviceInfo> event = new Event<>(EventBusUtil.RECEIVE_PIG_DEVICE_INFO);
             event.setData(deviceInfo);
+            EventBusUtil.sendEvent(event);
+        } else if (action.equals(ContactsProtoBuilder.IM_REQUEST_WIFI_LIST)) {
+            //TODO wifi列表
+            WifiMessageContainer.WifiList wifiList = msg.getPayload().unpack(WifiMessageContainer.WifiList.class);
+            Event<WifiMessageContainer.WifiList> event = new Event<>(EventBusUtil.RECEIVE_PIG_WIFI_LIST);
+            event.setData(wifiList);
+            EventBusUtil.sendEvent(event);
+
+        } else if (action.equals(ContactsProtoBuilder.IM_CONNECT_WIFI)) {
+            //TODO wifi切换
+            WifiMessageContainer.ConnectStatus connectStatus = msg.getPayload().unpack(WifiMessageContainer.ConnectStatus.class);
+            Event<WifiMessageContainer.ConnectStatus> event = new Event<>(EventBusUtil.RECEIVE_PIG_WIFI_CONNECT);
+            event.setData(connectStatus);
             EventBusUtil.sendEvent(event);
         }
     }

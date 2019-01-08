@@ -19,6 +19,19 @@
         android:textSize="@dimen/sp_15"
         app:defaultIcon="@drawable/ic_close" />
 
+    <View
+        android:id="@+id/view_clear_line"
+        android:layout_width="@dimen/dp_1"
+        android:layout_height="@dimen/dp_19"
+        android:layout_gravity="center_vertical"
+        android:layout_toLeftOf="@+id/ubt_btn_pwd_visual"
+        android:layout_marginRight="@dimen/dp_10"
+        android:layout_marginLeft="@dimen/dp_10"
+        android:layout_alignTop="@+id/ubt_btn_pwd_visual"
+        android:layout_alignBottom="@+id/ubt_btn_pwd_visual"
+        android:visibility="gone"
+        android:background="#E2E2E2" />
+
     <ImageView
         android:id="@+id/ubt_btn_pwd_visual"
         android:layout_width="wrap_content"

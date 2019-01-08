@@ -3,11 +3,14 @@ package com.ubtechinc.goldenpig.pigmanager.mypig;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -18,20 +21,19 @@ import com.tencent.TIMMessage;
 import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtechinc.commlib.utils.ToastUtils;
-import com.ubtechinc.commlib.view.SpaceItemDecoration;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.entity.PairPig;
 import com.ubtechinc.goldenpig.comm.entity.UserInfo;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
-import com.ubtechinc.goldenpig.comm.view.WrapContentLinearLayoutManager;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
+import com.ubtechinc.goldenpig.main.fragment.MenuPopupView;
 import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.adpater.PigMemberAdapter;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
@@ -48,6 +50,7 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
+import com.yanzhenjie.recyclerview.swipe.widget.DefaultItemDecoration;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -70,7 +73,7 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
  * @change :
  * @changetime :2018/9/19 21:11
  */
-public class PigMemberActivity extends BaseToolBarActivity implements View.OnClickListener {
+public class PigMemberActivity extends BaseToolBarActivity implements View.OnClickListener, PigMemberAdapter.OnMemberClickListener {
     private SwipeMenuRecyclerView mMemberRcy;
     private PigMemberAdapter adapter;
     private Button mUnbindBtn;
@@ -78,6 +81,8 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
     private ArrayList<CheckBindRobotModule.User> mUsertList = new ArrayList<>();
     private boolean isDownloadedUserList;
     private UnbindPigProxy.UnBindPigCallback unBindPigCallback;
+
+    private TextView tvMemberTip;
 
     @Override
     protected int getConentView() {
@@ -98,24 +103,16 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
 
             @Override
             public void onError(String msg) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ToastUtils.showShortToast(PigMemberActivity.this, msg);
-                    }
-                });
+                runOnUiThread(() -> ToastUtils.showShortToast(PigMemberActivity.this, msg));
             }
 
             @Override
             public void onSuccess() {
                 imSyncRelationShip();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        isDownloadedUserList = false;
-                        updatePigList();
-                        getMember("1");
-                    }
+                runOnUiThread(() -> {
+                    isDownloadedUserList = false;
+                    updatePigList();
+                    getMember("1");
                 });
             }
         };
@@ -155,16 +152,24 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
         mToolbarRightBtn.setOnClickListener(this);
 
         mPig = AuthLive.getInstance().getCurrentPig();
+        tvMemberTip = findViewById(R.id.tv_member_tip);
+        if (mPig != null && mPig.isAdmin) {
+            tvMemberTip.setText("HI，你是八戒机器人的管理员，可管理成员组");
+        } else {
+            tvMemberTip.setText("HI，欢迎加入八戒的成员组，你可以给八戒配置网络");
+        }
 
         adapter = new PigMemberAdapter(this, mUsertList);
-        mMemberRcy.setLayoutManager(new WrapContentLinearLayoutManager(this));
-        mMemberRcy.addItemDecoration(new SpaceItemDecoration(getResources().getDimensionPixelOffset(R.dimen.dp_5), false));
+        adapter.setmOnMemberClickListener(this);
+        mMemberRcy.setLayoutManager(new LinearLayoutManager(this));
+//        mMemberRcy.addItemDecoration(new SpaceItemDecoration(getResources().getDimensionPixelOffset(R.dimen.dp_5), false));
+        mMemberRcy.addItemDecoration(new DefaultItemDecoration(ContextCompat.getColor(this, R.color.ubt_wifi_list_divider)));
         mMemberRcy.setSwipeMenuCreator(swipeMenuCreator);
         mMemberRcy.setSwipeMenuItemClickListener(mMenuItemClickListener);
         mMemberRcy.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
-        setAddBtnEnable(isCurrentAdmin());
+//        setAddBtnEnable(isCurrentAdmin());
 
     }
 
@@ -193,7 +198,7 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
 
     private synchronized void getMember(String admin) {
         if (isDownloadedUserList) {
-            setAddBtnEnable(isCurrentAdmin());
+//            setAddBtnEnable(isCurrentAdmin());
             if (adapter != null) {
                 Set<CheckBindRobotModule.User> set = new TreeSet<>((o1, o2) -> String.valueOf(o1.getUserId()).compareTo(String.valueOf(o2.getUserId())));
                 set.addAll(mUsertList);
@@ -372,7 +377,10 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
     private SwipeMenuCreator swipeMenuCreator = new SwipeMenuCreator() {
         @Override
         public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
-            if (viewType == 1) {
+//            if (viewType == 1) {
+//                return;
+//            }
+            if (viewType != -1) {
                 return;
             }
             int width = getResources().getDimensionPixelSize(R.dimen.dp_65);
@@ -605,5 +613,49 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
                 getMember("1");
                 break;
         }
+    }
+
+    @Override
+    public void onClickExitGroup(View view, String userId) {
+        doUnbind(AuthLive.getInstance().getUserId());
+    }
+
+    @Override
+    public void onClickOperMore(View view, String userId) {
+        showOperatePop(view, userId);
+    }
+
+    private MenuPopupView mMenuPopupView;
+
+    private void showOperatePop(View view, final String userId) {
+        List<String> menuVal = new ArrayList<>();
+        menuVal.add("转让管理员");
+        menuVal.add("删除该成员");
+        menuVal.add("取消");
+        mMenuPopupView = new MenuPopupView(this, menuVal)
+                .showAtBottom(view)
+                .setCallback(new MenuPopupView.MenuCallback() {
+                    @Override
+                    public void onDismiss() {
+
+                    }
+
+                    @Override
+                    public void onClickMenu(int position, View view, String value) {
+                        switch (position) {
+                            case 0:
+                                showTransferAdminDialog(userId);
+                                mMenuPopupView.dismiss();
+                                break;
+                            case 1:
+                                showDeleteMember(userId);
+                                mMenuPopupView.dismiss();
+                                break;
+                            case 2:
+                                mMenuPopupView.dismiss();
+                                break;
+                        }
+                    }
+                });
     }
 }
