@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:state_enabled="false"><shape>
+            <solid android:color="@color/ubt_main_bg_color" />
+
+            <corners android:radius="@dimen/dp_5" />
+        </shape></item>
+    <item android:state_focused="true"><shape>
+            <solid android:color="@color/ubt_main_bg_color" />
+
+            <corners android:radius="@dimen/dp_5" />
+        </shape></item>
+    <item android:state_pressed="true"><shape>
+            <solid android:color="@color/ubt_main_bg_color" />
+
+            <corners android:radius="@dimen/dp_5" />
+        </shape></item>
+    <item><shape>
+            <solid android:color="@color/ubt_white" />
+
+            <corners android:radius="@dimen/dp_5" />
+        </shape></item>
+
+</selector>
