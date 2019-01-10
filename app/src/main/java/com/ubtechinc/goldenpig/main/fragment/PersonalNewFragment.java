@@ -21,6 +21,7 @@ import com.ubtechinc.commlib.utils.ContextUtils;
 import com.ubtechinc.commlib.view.UbtSubTxtButton;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.about.UbtAboutActivtiy;
+import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseActivity;
 import com.ubtechinc.goldenpig.base.BaseFragment;
 import com.ubtechinc.goldenpig.comm.img.GlideCircleTransform;
@@ -54,6 +55,7 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_ONLINE_STATE;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
 
 /**
@@ -75,8 +77,8 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
     RelativeLayout rl_pig_state;
     @BindView(R.id.tv_pig)
     TextView tv_pig;
-    //    @BindView(R.id.tv_pig_state)
-//    TextView tv_pig_state;
+    @BindView(R.id.tv_pig_state)
+    TextView tv_pig_state;
     @BindView(R.id.ubt_tv_pig_name)
     TextView ubt_tv_pig_name;
     @BindView(R.id.ll_version)
@@ -200,6 +202,7 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
                 .into(mPohtoImg);
         mNikenameTv.setText(StringUtils.utf8ToString(AuthLive.getInstance().getCurrentUser().getNickName()));
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+        updateOnLineStateUI();
         if (pigInfo != null) {
             tv_manager.setVisibility(View.VISIBLE);
             if (pigInfo.isAdmin) {
@@ -239,6 +242,20 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
 //                ActivityRoute.toAnotherActivity(getActivity(), DeviceManageActivity.class, false);
 //            }
 //        });
+    }
+
+    private void updateOnLineStateUI() {
+        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+        if (pigInfo != null && pigInfo.isAdmin) {
+            tv_pig_state.setVisibility(View.VISIBLE);
+            if (UBTPGApplication.isRobotOnline) {
+                tv_pig_state.setText("(在线)");
+            } else {
+                tv_pig_state.setText("(离线)");
+            }
+        } else {
+            tv_pig_state.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -324,6 +341,9 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
         switch (code) {
             case USER_PIG_UPDATE:
                 inits();
+                break;
+            case RECEIVE_ROBOT_ONLINE_STATE:
+                updateOnLineStateUI();
                 break;
         }
     }

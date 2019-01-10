@@ -27,6 +27,7 @@ import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewTv;
+import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
 import com.ubtechinc.goldenpig.comm.entity.PairPig;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
@@ -232,7 +233,7 @@ public class PigManageDetailActivity extends BaseNewActivity implements Observer
         switch (v.getId()) {
             case R.id.rl_wifi:
                 PigInfo myPig = AuthLive.getInstance().getCurrentPig();
-                if (myPig.isAdmin) {
+                if (myPig.isAdmin && UBTPGApplication.isRobotOnline) {
                     ActivityRoute.toAnotherActivity(this, SwitchWifiActivity.class, false);
                 } else {
                     ActivityRoute.toAnotherActivity(this, BleConfigReadyActivity.class, false);

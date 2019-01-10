@@ -49,6 +49,7 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.net.ResponseInterceptor;
 import com.ubtechinc.goldenpig.pigmanager.SetPigNetWorkActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.pigmanager.mypig.CheckRobotOnlineStateProxy;
 import com.ubtechinc.goldenpig.pigmanager.mypig.PairPigActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.QRCodeActivity;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPairPigQRHttpProxy;
@@ -118,6 +119,8 @@ public class UBTPGApplication extends LoginApplication implements Observer {
     public static boolean isNetAvailable = true;
 
     public static boolean hasShowedMobileFlowTip;
+
+    public static boolean isRobotOnline = false;
 
     @Override
     public void onCreate() {
@@ -248,6 +251,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
             public void onLoginSuccess() {
                 AuthLive.getInstance().timLogined();
                 sendClientIdToPig();
+                checkRobotStateCategory();
 
                 EventBusUtil.sendEvent(new Event(EventBusUtil.DO_GET_NATIVE_INFO));
             }
@@ -257,6 +261,41 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                 showForceOfflineDialog("你的账号于其它设备上登录");
             }
         });
+    }
+
+    private void checkRobotStateCategory() {
+        new Thread(() -> {
+            try {
+                while (true) {
+                    doGetRobotOnlineState();
+                    Thread.sleep(10 * 1000);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
+
+    /**
+     * 获取小猪在线状态
+     */
+    private void doGetRobotOnlineState() {
+        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+        if (pigInfo != null && pigInfo.isAdmin) {
+            CheckRobotOnlineStateProxy proxy = new CheckRobotOnlineStateProxy();
+            proxy.check(pigInfo.getRobotName(), new CheckRobotOnlineStateProxy.RobotStateCallback() {
+                @Override
+                public void onError(String msg) {
+                    isRobotOnline = false;
+                }
+
+                @Override
+                public void onSuccess(boolean isOnline) {
+                    isRobotOnline = isOnline;
+                    EventBusUtil.sendEvent(new Event(EventBusUtil.RECEIVE_ROBOT_ONLINE_STATE));
+                }
+            });
+        }
     }
 
     private void sendClientIdToPig() {
