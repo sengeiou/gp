@@ -68,7 +68,8 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
     AddressBookAdapter adapter;
     private ArrayList<AddressBookmodel> mList;
     public int deletePosition = -1;
-    public Boolean card = false;
+    public Boolean noCard = false;
+    public String pigPhoneNumber = "";
     /**
      * 先拉取到数据，添加联系人时要在app端作对比后再提交给八戒
      */
@@ -110,7 +111,8 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mHandler = new MyHandler(this);
-        card = getIntent().getBooleanExtra("card", false);
+        noCard = getIntent().getBooleanExtra("noCard", false);
+        pigPhoneNumber = getIntent().getStringExtra("pigPhoneNumber");
         initStateView(true);
         mStateView.setOnRetryClickListener(new StateView.OnRetryClickListener() {
             @Override
@@ -154,7 +156,8 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
                 }
                 Intent it = new Intent(AddressBookActivity.this, EditAddressBookActivity.class);
                 it.putParcelableArrayListExtra("list", list);
-                it.putExtra("card", card);
+                it.putExtra("noCard", noCard);
+                it.putExtra("pigPhoneNumber", pigPhoneNumber);
                 startActivity(it);
             }
         });
@@ -225,7 +228,8 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
             tv_right.setVisibility(View.GONE);
         } else if (mList.size() >= 10) {
             AddressBookmodel ab2 = new AddressBookmodel();
-            ab2.card = card;
+            ab2.noCard = noCard;
+            ab2.phone = pigPhoneNumber;
             ab2.type = 2;
             mList.add(ab2);
             mList.addAll(list);
@@ -236,6 +240,8 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
             tv_right.setVisibility(View.VISIBLE);
         } else {
             AddressBookmodel ab2 = new AddressBookmodel();
+            ab2.noCard = noCard;
+            ab2.phone = pigPhoneNumber;
             ab2.type = 2;
             mList.add(ab2);
             mList.addAll(list);

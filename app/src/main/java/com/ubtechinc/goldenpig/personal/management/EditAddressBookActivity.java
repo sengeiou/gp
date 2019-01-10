@@ -79,9 +79,9 @@ public class EditAddressBookActivity extends BaseNewActivity implements Observer
     private Boolean hasLoadMsg = false;
 
     private MyHandler mHandler;
-    public Boolean card = false;
+    public Boolean noCard = false;
     public Boolean hasSelect = false;
-
+    public String pigPhoneNumber = "";
     private class MyHandler extends Handler {
         WeakReference<Activity> mWeakReference;
 
@@ -117,13 +117,15 @@ public class EditAddressBookActivity extends BaseNewActivity implements Observer
         super.onCreate(savedInstanceState);
         mHandler = new MyHandler(this);
         ArrayList list = getIntent().getParcelableArrayListExtra("list");
-        card = getIntent().getBooleanExtra("card", false);
+        noCard = getIntent().getBooleanExtra("noCard", false);
+        pigPhoneNumber = getIntent().getStringExtra("pigPhoneNumber");
         if (mList == null) {
             mList = new ArrayList<>();
         }
         if (list != null) {
             AddressBookmodel ab2 = new AddressBookmodel();
-            ab2.card = card;
+            ab2.noCard = noCard;
+            ab2.phone = pigPhoneNumber;
             ab2.type = 2;
             mList.add(ab2);
             mList.addAll(list);

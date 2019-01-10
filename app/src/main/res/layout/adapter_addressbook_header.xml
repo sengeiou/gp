@@ -53,6 +53,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/dp_2"
+                    android:ellipsize="start"
                     android:singleLine="true"
                     android:text="未插入SIM卡"
                     android:textColor="@color/ubt_tab_btn_txt_checked_color"

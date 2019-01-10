@@ -3,6 +3,7 @@ package com.ubtechinc.goldenpig.personal.management;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -115,10 +116,11 @@ public class AddressBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             aHolder.tv_content.setText(mContext.getString(R.string.contact_limit));
         } else {
             AddressBookHolder3 aHolder = (AddressBookHolder3) holder;
-            if (!mList.get(position).card) {
-                aHolder.tv_has_card.setVisibility(View.VISIBLE);
+            if (mList.get(position).noCard) {
+                aHolder.tv_has_card.setText("未插入SIM卡");
             } else {
-                aHolder.tv_has_card.setVisibility(View.GONE);
+                aHolder.tv_has_card.setText(TextUtils.isEmpty(mList.get(position).phone) ? "" : "八戒号码:"+mList.get(position)
+                        .phone);
             }
             aHolder.iv_add.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -140,9 +140,10 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
                     enterFunction(RecordActivity.class, null);
                     break;
                 case MAIL_LIST:
-                    HashMap<String,Boolean> map = new HashMap<>();
-                    map.put("card",((MainActivity)context).isNoSim);
-                    enterFunction(AddressBookActivity.class, null);
+                    HashMap<String,Object> map = new HashMap<>();
+                    map.put("noCard",((MainActivity)context).isNoSim);
+                    map.put("pigPhoneNumber",((MainActivity)context).pigPhoneNumber);
+                    enterFunction(AddressBookActivity.class, map);
                     break;
                 case BLE:
                     ActivityRoute.toAnotherActivity((Activity) context, BleWebActivity.class, false);
