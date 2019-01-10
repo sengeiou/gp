@@ -117,6 +117,8 @@ public class UBTPGApplication extends LoginApplication implements Observer {
 
     public static boolean isNetAvailable = true;
 
+    public static boolean hasShowedMobileFlowTip;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -355,7 +357,8 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                 UbtTIMManager.getInstance().doTIMLogout();
                 break;
             case PUSH_NOTIFICATION_RECEIVED:
-                showNewManagerDialog(((UbtPushModel) event.getData()).getContent());
+                updatePigList();
+                showIKnowDialog(((UbtPushModel) event.getData()).getContent());
                 break;
             case PUSH_MESSAGE_RECEIVED:
 
@@ -366,17 +369,17 @@ public class UBTPGApplication extends LoginApplication implements Observer {
         }
     }
 
-    private void showNewManagerDialog(String content) {
-        updatePigList();
+
+    private void showIKnowDialog(String content) {
         if (mTopActivity == null) return;
-        UBTBaseDialog managerDialog = new UBTBaseDialog(mTopActivity);
-        managerDialog.setCancelable(false);
-        managerDialog.setCanceledOnTouchOutside(false);
-        managerDialog.setTips(content);
-        managerDialog.setLeftBtnShow(false);
-        managerDialog.setRightButtonTxt("我知道了");
-        managerDialog.setRightBtnColor(ContextCompat.getColor(this, R.color.ubt_tab_btn_txt_checked_color));
-        managerDialog.setOnUbtDialogClickLinsenter(new UBTBaseDialog.OnUbtDialogClickLinsenter() {
+        UBTBaseDialog iknowDialog = new UBTBaseDialog(mTopActivity);
+        iknowDialog.setCancelable(false);
+        iknowDialog.setCanceledOnTouchOutside(false);
+        iknowDialog.setTips(content);
+        iknowDialog.setLeftBtnShow(false);
+        iknowDialog.setRightButtonTxt("我知道了");
+        iknowDialog.setRightBtnColor(ContextCompat.getColor(this, R.color.ubt_tab_btn_txt_checked_color));
+        iknowDialog.setOnUbtDialogClickLinsenter(new UBTBaseDialog.OnUbtDialogClickLinsenter() {
 
             @Override
             public void onLeftButtonClick(View view) {
@@ -389,7 +392,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
 
         });
         if (!mTopActivity.isDestroyed() && !mTopActivity.isFinishing()) {
-            managerDialog.show();
+            iknowDialog.show();
         }
     }
 
@@ -563,7 +566,43 @@ public class UBTPGApplication extends LoginApplication implements Observer {
             Event<WifiMessageContainer.ConnectStatus> event = new Event<>(EventBusUtil.RECEIVE_PIG_WIFI_CONNECT);
             event.setData(connectStatus);
             EventBusUtil.sendEvent(event);
+        } else if (action.equals(ContactsProtoBuilder.IM_CLEAR_REQUEST)) {
+            //TODO 本体信息清除
+            final boolean result = msg.getPayload().unpack(GPResponse.Response.class).getResult();
+            Event<Boolean> event = new Event<>(EventBusUtil.RECEIVE_CLEAR_PIG_INFO);
+            event.setData(result);
+            EventBusUtil.sendEvent(event);
+        } else if (action.equals(ContactsProtoBuilder.UPATE_VERSION_ACTION)) {
+            final int result = msg.getPayload().unpack(VersionInformation.UpgradeInfo.class).getStatus();
+            handleOTADialog(result);
         }
+    }
+
+    private void handleOTADialog(int result) {
+        String tip = "";
+        switch (result) {
+            case 3:
+                tip = "系统正处于升级状态，升级包会在连接无线网络时自动下载安装";
+                break;
+            case 4:
+                tip = "收到升级请求，八戒会在连接\n" +
+                        "Wi-Fi且电量充足时自动升级";
+                break;
+            case 5:
+                tip = "系统升级失败";
+                break;
+            case 6:
+                tip = "系统升级成功";
+                break;
+            case 7:
+                tip = "升级包异常，系统升级失败";
+                break;
+            case 8:
+                tip = "服务异常，无法升级\n" +
+                        "请稍后重试";
+                break;
+        }
+        showIKnowDialog(tip);
     }
 
     private void handleRelationShip(int event) {

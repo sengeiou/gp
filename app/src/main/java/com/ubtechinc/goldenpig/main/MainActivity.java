@@ -32,6 +32,7 @@ import com.ubtechinc.goldenpig.main.fragment.PigNewFragment;
 import com.ubtechinc.goldenpig.main.fragment.SkillFragment;
 import com.ubtechinc.goldenpig.model.JsonCallback;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionModel;
+import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PigUtils;
@@ -61,6 +62,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private boolean sendCid = false;
 
     public boolean isNoSim;
+    public String pigPhoneNumber;
     public boolean isBeeHiveOpen;
 
     @Override
@@ -79,6 +81,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private void disConnectBle() {
         getWindow().getDecorView().postDelayed(() -> UbtBluetoothManager.getInstance().closeConnectBle(), 5000);
+        PigInfo myPig = AuthLive.getInstance().getCurrentPig();
+        if (myPig != null && myPig.isAdmin) {
+            UbtTIMManager.getInstance().queryNativeInfo();
+        }
     }
 
 

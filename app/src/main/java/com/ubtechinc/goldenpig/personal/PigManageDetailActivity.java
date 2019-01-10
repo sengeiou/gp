@@ -2,6 +2,7 @@ package com.ubtechinc.goldenpig.personal;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.View;
@@ -30,6 +31,7 @@ import com.ubtechinc.goldenpig.base.BaseNewActivity;
 import com.ubtechinc.goldenpig.comm.entity.PairPig;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
+import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
@@ -46,7 +48,6 @@ import com.ubtechinc.goldenpig.pigmanager.mypig.UnbindPigProxy;
 import com.ubtechinc.goldenpig.pigmanager.register.CheckUserRepository;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
-import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.ubtechinc.nets.http.ThrowableWrapper;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.ubtrobot.info.NativeInfoContainer;
@@ -90,6 +91,9 @@ public class PigManageDetailActivity extends BaseNewActivity implements Observer
     @BindView(R.id.tv_no_sim)
     TextView tvNoSim;
 
+    @BindView(R.id.tv_wifi_name)
+    TextView tvWifiName;
+
     private PigInfo mPig;
     private UnbindPigProxy.UnBindPigCallback unBindPigCallback;
     CheckBindRobotModule.User ManagerUser;
@@ -109,7 +113,7 @@ public class PigManageDetailActivity extends BaseNewActivity implements Observer
     }
 
     private void initView() {
-        rl_titlebar.setTitleText("八戒详情");
+        rl_titlebar.setTitleText("机器人详情");
         rl_titlebar.setLeftOnclickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -420,11 +424,14 @@ public class PigManageDetailActivity extends BaseNewActivity implements Observer
             if (info != null) {
                 dismissLoadDialog();
                 int status = info.getStatus();
+                String currentVersion = info.getCurrentVersion();
                 String updateMessage = info.getUpdateMessage();
                 String latestVersion = info.getLatestVersion();
                 HashMap<String, String> map = new HashMap<>();
+                map.put("currentVersion", currentVersion);
                 map.put("latestVersion", latestVersion);
                 map.put("updateMessage", updateMessage);
+                map.put("status", String.valueOf(status));
                 switch (status) {
                     case 1:
                         ActivityRoute.toAnotherActivity(this, DeviceUpdateActivity.class, map, false);
@@ -433,16 +440,47 @@ public class PigManageDetailActivity extends BaseNewActivity implements Observer
                         ActivityRoute.toAnotherActivity(this, PigLastVersionActivity.class, map, false);
                         break;
                     case 3:
-                        UbtToastUtils.showCustomToast(this, getString(R.string.ubt_ota_status_3));
+                        ActivityRoute.toAnotherActivity(this, DeviceUpdateActivity.class, map, false);
+//                        UbtToastUtils.showCustomToast(this, getString(R.string.ubt_ota_status_3));
                         break;
                     default:
-                        UbtToastUtils.showCustomToast(this, "异常错误，请重试");
+                        showIKnowDialog("异常错误，请重试");
+//                        UbtToastUtils.showCustomToast(this, "异常错误，请重试");
                         break;
                 }
             }
         } else if (action.equals(ContactsProtoBuilder.GET_NATIVE_INFO)) {
             NativeInfoContainer.NativeInfo nativeInfo = msg.getPayload().unpack(NativeInfoContainer.NativeInfo.class);
             UpdateNativeInfo(nativeInfo);
+        }
+    }
+
+    private UBTBaseDialog mIKnowDialog;
+
+    private void showIKnowDialog(String content) {
+        if (mIKnowDialog == null) {
+            mIKnowDialog = new UBTBaseDialog(this);
+            mIKnowDialog.setCancelable(false);
+            mIKnowDialog.setCanceledOnTouchOutside(false);
+            mIKnowDialog.setLeftBtnShow(false);
+            mIKnowDialog.setRightButtonTxt("我知道了");
+            mIKnowDialog.setRightBtnColor(ContextCompat.getColor(this, R.color.ubt_tab_btn_txt_checked_color));
+            mIKnowDialog.setOnUbtDialogClickLinsenter(new UBTBaseDialog.OnUbtDialogClickLinsenter() {
+
+                @Override
+                public void onLeftButtonClick(View view) {
+
+                }
+
+                @Override
+                public void onRightButtonClick(View view) {
+                }
+
+            });
+        }
+        mIKnowDialog.setTips(content);
+        if (!isDestroyed() && !isFinishing() && !mIKnowDialog.isShowing()) {
+            mIKnowDialog.show();
         }
     }
 
@@ -462,6 +500,8 @@ public class PigManageDetailActivity extends BaseNewActivity implements Observer
                 isNoSim = true;
             }
 
+            tvWifiName.setText(networkStatus.getSsid());
+
             if (isNoSim) {
                 tvBeehiveClose.setVisibility(View.VISIBLE);
                 tvNoSim.setVisibility(View.VISIBLE);
@@ -474,8 +514,6 @@ public class PigManageDetailActivity extends BaseNewActivity implements Observer
                     tvBeehiveClose.setVisibility(View.VISIBLE);
                 }
             }
-
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -505,32 +543,6 @@ public class PigManageDetailActivity extends BaseNewActivity implements Observer
 
             }
         }
-    }
-
-    public void getmanager() {
-        CheckUserRepository repository = new CheckUserRepository();
-        repository.getRobotBindUsers(mPig.getRobotName(), CookieInterceptor.get().getToken(), BuildConfig.APP_ID,
-                "1", new CheckUserRepository.ICheckBindStateCallBack() {
-                    @Override
-                    public void onError(ThrowableWrapper e) {
-                        ToastUtils.showShortToast(PigManageDetailActivity.this, "获取管理员失败");
-                    }
-
-                    @Override
-                    public void onSuccess(CheckBindRobotModule.Response response) {
-                        ToastUtils.showShortToast(PigManageDetailActivity.this, "获取管理员成功");
-                    }
-
-                    @Override
-                    public void onSuccessWithJson(String jsonStr) {
-                        LoadingDialog.getInstance(PigManageDetailActivity.this).dismiss();
-                        final List<CheckBindRobotModule.User> bindUsers = jsonToUserList(jsonStr);
-                        if (bindUsers != null && bindUsers.size() > 0) {
-                            ManagerUser = bindUsers.get(0);
-                            tv_manager.setText(ManagerUser.getNickName());
-                        }
-                    }
-                });
     }
 
 }

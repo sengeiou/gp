@@ -299,7 +299,6 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
             case R.id.ll_4g:
                 if (isNoSim) {
                     enterFunction(NoSimActivity.class, null);
-                    ActivityRoute.toAnotherActivity(getActivity(), NoSimActivity.class, false);
                 } else {
                     enterFunction(BeeHiveMobileActivity.class, null);
                 }

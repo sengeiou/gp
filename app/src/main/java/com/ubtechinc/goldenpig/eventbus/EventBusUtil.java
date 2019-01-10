@@ -57,6 +57,7 @@ public class EventBusUtil {
     public static final int RECEIVE_DELETE_CONTACTS = 20010;
     public static final int RECEIVE_PIG_WIFI_LIST = 20011;
     public static final int RECEIVE_PIG_WIFI_CONNECT = 20012;
+    public static final int RECEIVE_CLEAR_PIG_INFO = 20013;
 
     public static final int SERVER_RESPONSE_UNAUTHORIZED = 401;
 

@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -29,6 +28,7 @@ import com.ubtechinc.goldenpig.comm.entity.UserInfo;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
+import com.ubtechinc.goldenpig.comm.widget.UBTFunctionDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
@@ -44,6 +44,7 @@ import com.ubtechinc.goldenpig.push.PushHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.nets.http.ThrowableWrapper;
+import com.ubtrobot.clear.ClearContainer;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
@@ -63,6 +64,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_CLEAR_PIG_INFO;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
 
 /**
@@ -76,7 +78,6 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
 public class PigMemberActivity extends BaseToolBarActivity implements View.OnClickListener, PigMemberAdapter.OnMemberClickListener {
     private SwipeMenuRecyclerView mMemberRcy;
     private PigMemberAdapter adapter;
-    private Button mUnbindBtn;
     private PigInfo mPig;
     private ArrayList<CheckBindRobotModule.User> mUsertList = new ArrayList<>();
     private boolean isDownloadedUserList;
@@ -145,8 +146,6 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
 
     private void initViews() {
         mMemberRcy = findViewById(R.id.ubt_rcy_member);
-        mUnbindBtn = findViewById(R.id.ubt_btn_unbind_member);
-        mUnbindBtn.setOnClickListener(this);
 
         mToolbarRightBtn = findViewById(R.id.ubt_imgbtn_add);
         mToolbarRightBtn.setOnClickListener(this);
@@ -272,62 +271,67 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
         }
     }
 
-    private void doUnbind(final String userId) {
-        if (mPig == null) {
-            return;
-        }
-        ///操作用户是唯一或只是一般成员可好直接弹框点击确认退出
-        //否则要跳转到权限转让界面操作
-        if (mUsertList.size() > 1 && isCurrentAdmin()) {
-//            HashMap<String, ArrayList<CheckBindRobotModule.User>> param = new HashMap<>();
-//            param.put("users", mUsertList);
-//            ActivityRoute.toAnotherActivity(this, TransferAdminActivity.class, param, false);
-
-            UBTSubTitleDialog dialog = new UBTSubTitleDialog(this);
-            dialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
-            dialog.setTips(getString(R.string.ubt_exit_group_tips));
-            dialog.setLeftButtonTxt(getString(R.string.ubt_cancel));
-            dialog.setRightButtonTxt(getString(R.string.ubt_enter));
-            dialog.setSubTips(getString(R.string.ubt_transfer_tips));
-            dialog.setOnUbtDialogClickLinsenter(new UBTSubTitleDialog.OnUbtDialogClickLinsenter() {
-                @Override
-                public void onLeftButtonClick(View view) {
-
-                }
-
-                @Override
-                public void onRightButtonClick(View view) {
-                    ActivityRoute.toAnotherActivity(PigMemberActivity.this, TransferAdminActivity.class,
-                            0x01, false);
-                }
-            });
-            dialog.show();
-
-        } else {
-            UBTBaseDialog dialog = new UBTBaseDialog(this);
-            dialog.setRightButtonTxt(getString(R.string.ubt_enter));
-            dialog.setLeftButtonTxt(getString(R.string.ubt_cancel));
-            dialog.setTips(getString(R.string.ubt_drop_up_tips));
-
-            dialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
-            dialog.setOnUbtDialogClickLinsenter(new UBTBaseDialog.OnUbtDialogClickLinsenter() {
-                @Override
-                public void onLeftButtonClick(View view) {
-
-                }
-
-                @Override
-                public void onRightButtonClick(View view) {
-                    UnbindPigProxy pigProxy = new UnbindPigProxy();
-                    final String serialNo = AuthLive.getInstance().getCurrentPig().getRobotName();
-
-                    final String token = CookieInterceptor.get().getToken();
-                    pigProxy.unbindPig(serialNo, userId, token, BuildConfig.APP_ID, unBindPigCallback);
-                }
-            });
-            dialog.show();
-        }
-    }
+//    private void doUnbind(final String userId) {
+//        if (mPig == null) {
+//            return;
+//        }
+//        ///操作用户是唯一或只是一般成员可好直接弹框点击确认退出
+//        //否则要跳转到权限转让界面操作
+//        if (mUsertList.size() > 1 && isCurrentAdmin()) {
+////            HashMap<String, ArrayList<CheckBindRobotModule.User>> param = new HashMap<>();
+////            param.put("users", mUsertList);
+////            ActivityRoute.toAnotherActivity(this, TransferAdminActivity.class, param, false);
+//
+//            UBTSubTitleDialog dialog = new UBTSubTitleDialog(this);
+//            dialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
+//            dialog.setTips(getString(R.string.ubt_exit_group_tips));
+//            dialog.setLeftButtonTxt(getString(R.string.ubt_cancel));
+//            dialog.setRightButtonTxt(getString(R.string.ubt_enter));
+//            dialog.setSubTips(getString(R.string.ubt_transfer_tips));
+//            dialog.setOnUbtDialogClickLinsenter(new UBTSubTitleDialog.OnUbtDialogClickLinsenter() {
+//                @Override
+//                public void onLeftButtonClick(View view) {
+//
+//                }
+//
+//                @Override
+//                public void onRightButtonClick(View view) {
+//                    ActivityRoute.toAnotherActivity(PigMemberActivity.this, TransferAdminActivity.class,
+//                            0x01, false);
+//                }
+//            });
+//            dialog.show();
+//
+//        } else {
+//            UBTFunctionDialog dialog = new UBTFunctionDialog(this);
+//            dialog.setFunc1Txt(getString(R.string.exit_unbind));
+//            dialog.setFunc2Txt(getString(R.string.ubt_cancel));
+//            dialog.setTips(getString(R.string.ubt_drop_up_tips));
+//
+//            dialog.setOnUbtDialogClickLinsenter(new UBTFunctionDialog.OnUbtDialogClickLinsenter() {
+//                @Override
+//                public void onFunc1Click(View view) {
+//                    UnbindPigProxy pigProxy = new UnbindPigProxy();
+//                    final String serialNo = AuthLive.getInstance().getCurrentPig().getRobotName();
+//
+//                    final String token = CookieInterceptor.get().getToken();
+//                    pigProxy.unbindPig(serialNo, userId, token, BuildConfig.APP_ID, unBindPigCallback);
+//
+//                }
+//
+//                @Override
+//                public void onFunc2Click(View view) {
+//                    dialog.cancel();
+//                }
+//
+//                @Override
+//                public void onClose(View view) {
+//
+//                }
+//            });
+//            dialog.show();
+//        }
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -357,12 +361,8 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
                 param.put("isPair", false);
                 ActivityRoute.toAnotherActivity(this, QRCodeActivity.class, param, false);
                 break;
-            case R.id.ubt_btn_unbind_member:
-                doUnbind(AuthLive.getInstance().getUserId());
-                break;
             default:
         }
-
     }
 
     @Override
@@ -612,12 +612,165 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
                 isDownloadedUserList = false;
                 getMember("1");
                 break;
+            case RECEIVE_CLEAR_PIG_INFO:
+                if ((boolean) event.getData()) {
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("八戒数据清除成功");
+                    doUnbind();
+                } else {
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("八戒数据清除失败");
+                }
+                break;
         }
     }
 
     @Override
     public void onClickExitGroup(View view, String userId) {
-        doUnbind(AuthLive.getInstance().getUserId());
+        if (mUsertList.size() == 1) {
+            //TODO 肯定是管理员
+            UBTFunctionDialog dialog = new UBTFunctionDialog(this);
+            dialog.setFunc1Txt(getString(R.string.exit_unbind));
+            dialog.setFunc2Txt(getString(R.string.ubt_cancel));
+            dialog.setTips(getString(R.string.ubt_drop_up_tips));
+
+            dialog.setOnUbtDialogClickLinsenter(new UBTFunctionDialog.OnUbtDialogClickLinsenter() {
+                @Override
+                public void onFunc1Click(View view) {
+                    showUnBindConfirmDialog(userId);
+                }
+
+                @Override
+                public void onFunc2Click(View view) {
+                    dialog.cancel();
+                }
+
+                @Override
+                public void onClose(View view) {
+                    dialog.cancel();
+                }
+            });
+            dialog.show();
+        } else {
+            //TODO 判断是否为管理
+            PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+            if (pigInfo != null && pigInfo.isAdmin) {
+                UBTFunctionDialog dialog = new UBTFunctionDialog(this);
+                dialog.setFunc1Txt(getString(R.string.unbind_only_self));
+                dialog.setFunc2Txt(getString(R.string.unbind_all));
+                dialog.showCloseIcon(true);
+                dialog.setTips(getString(R.string.ubt_unbind_group_tips));
+
+                dialog.setOnUbtDialogClickLinsenter(new UBTFunctionDialog.OnUbtDialogClickLinsenter() {
+                    @Override
+                    public void onFunc1Click(View view) {
+                        ActivityRoute.toAnotherActivity(PigMemberActivity.this, TransferAdminActivity.class, 0x01, false);
+                    }
+
+                    @Override
+                    public void onFunc2Click(View view) {
+                        doUnbindAllMember();
+                    }
+
+                    @Override
+                    public void onClose(View view) {
+                        dialog.cancel();
+                    }
+                });
+                dialog.show();
+            } else {
+                UBTFunctionDialog dialog = new UBTFunctionDialog(this);
+                dialog.setFunc1Txt(getString(R.string.ubt_enter));
+                dialog.setFunc2Txt(getString(R.string.ubt_cancel));
+                dialog.setTips(getString(R.string.ubt_exit_group_common));
+
+                dialog.setOnUbtDialogClickLinsenter(new UBTFunctionDialog.OnUbtDialogClickLinsenter() {
+                    @Override
+                    public void onFunc1Click(View view) {
+                        doUnbind();
+                    }
+
+                    @Override
+                    public void onFunc2Click(View view) {
+                        dialog.cancel();
+                    }
+
+                    @Override
+                    public void onClose(View view) {
+                        dialog.cancel();
+                    }
+                });
+                dialog.show();
+            }
+        }
+    }
+
+    /**
+     * 全部成员解绑
+     */
+    private void doUnbindAllMember() {
+        UnbindAllMemberProxy proxy = new UnbindAllMemberProxy();
+        final String serialNo = AuthLive.getInstance().getCurrentPig().getRobotName();
+        proxy.unbind(serialNo, new UnbindAllMemberProxy.UnBindPigCallback() {
+            @Override
+            public void onError(String msg) {
+                runOnUiThread(() -> ToastUtils.showShortToast(PigMemberActivity.this, msg));
+            }
+
+            @Override
+            public void onSuccess() {
+                imSyncRelationShip();
+                runOnUiThread(() -> updatePigList());
+            }
+        });
+    }
+
+    private boolean mClearPigFlag = false;
+
+    private void showUnBindConfirmDialog(final String userId) {
+        UBTSubTitleDialog unBindConfirmDialog = new UBTSubTitleDialog(this);
+        unBindConfirmDialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
+        unBindConfirmDialog.setSubTipColor(ContextCompat.getColor(this, R.color.ubt_tips_txt_color));
+        unBindConfirmDialog.setTips(getString(R.string.unbind_confirm));
+        unBindConfirmDialog.setNoTipText(getString(R.string.unbind_confirm_tip2));
+        unBindConfirmDialog.setRightButtonTxt(getString(R.string.ubt_enter));
+        unBindConfirmDialog.setSubTips(getString(R.string.unbind_confirm_tip));
+        unBindConfirmDialog.setOnUbtDialogClickLinsenter(new UBTSubTitleDialog.OnUbtDialogClickLinsenter() {
+            @Override
+            public void onLeftButtonClick(View view) {
+
+            }
+
+            @Override
+            public void onRightButtonClick(View view) {
+                if (mClearPigFlag) {
+                    doClearInfoByIM();
+                } else {
+                    doUnbind();
+                }
+            }
+        });
+        unBindConfirmDialog.setOnUbtDialogContentClickLinsenter(view -> {
+            mClearPigFlag = view.isSelected();
+        });
+        unBindConfirmDialog.show();
+    }
+
+    private void doUnbind() {
+        UnbindPigProxy pigProxy = new UnbindPigProxy();
+        String userId = AuthLive.getInstance().getUserId();
+        final String serialNo = AuthLive.getInstance().getCurrentPig().getRobotName();
+        final String token = CookieInterceptor.get().getToken();
+        pigProxy.unbindPig(serialNo, userId, token, BuildConfig.APP_ID, unBindPigCallback);
+    }
+
+    private void doClearInfoByIM() {
+        List<ClearContainer.Categories.Builder> categorys = new ArrayList<>();
+        ClearContainer.Categories.Builder categoryBuilder1 = ClearContainer.Categories.newBuilder();
+        categoryBuilder1.setName("Contact.deleteContact");
+        ClearContainer.Categories.Builder categoryBuilder2 = ClearContainer.Categories.newBuilder();
+        categoryBuilder2.setName("Record.deleteData");
+        categorys.add(categoryBuilder1);
+        categorys.add(categoryBuilder2);
+        UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.clearInfo(categorys)));
     }
 
     @Override

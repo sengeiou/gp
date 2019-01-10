@@ -1,0 +1,13 @@
+syntax = "proto3";
+option java_package="com.ubtrobot.clear";
+option java_outer_classname="ClearContainer";
+import "google/protobuf/any.proto";
+
+message Clear {
+    repeated Categories categorie = 1;
+}
+
+message Categories {
+    int64 id = 1;
+    string name = 2;
+}

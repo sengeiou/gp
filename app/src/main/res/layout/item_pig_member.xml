@@ -18,10 +18,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dp_12"
-        android:lines="1"
+        android:maxLines="1"
+        android:maxEms="7"
         android:text="偷穿鞋的猫"
         android:textColor="#FF454B59"
         android:textSize="15sp"
+        android:ellipsize="end"
         app:layout_constraintBottom_toBottomOf="@id/ubt_img_member_photo"
         app:layout_constraintLeft_toRightOf="@id/ubt_img_member_photo"
         app:layout_constraintTop_toTopOf="@id/ubt_img_member_photo" />

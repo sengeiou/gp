@@ -165,6 +165,9 @@ public class WifiListEditText extends RelativeLayout implements View.OnClickList
             mWifiLoading.setVisibility(View.GONE);
             mWifiRyc.setVisibility(View.VISIBLE);
             mWifiListAdapter.updateList(mWifiList);
+        } else {
+            mWifiLoading.setVisibility(View.VISIBLE);
+            mWifiRyc.setVisibility(View.GONE);
         }
 
     }

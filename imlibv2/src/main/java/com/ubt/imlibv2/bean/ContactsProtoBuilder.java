@@ -8,6 +8,7 @@ import com.ubt.improtolib.UserRecords;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.ubtrobot.channelservice.proto.GPADBSettingContainer;
 import com.ubtrobot.channelservice.proto.GPRelationshipContainer;
+import com.ubtrobot.clear.ClearContainer;
 import com.ubtrobot.gold.GPSwitchContainer;
 import com.ubtrobot.tvs.proto.ClientIdUpdateContainer;
 import com.ubtrobot.wifi.WifiMessageContainer;
@@ -52,7 +53,11 @@ public class ContactsProtoBuilder {
     /** 机器人配网 */
     public static final String IM_CONNECT_WIFI = "/connect/wifi";
 
+    /** 机器人wifi列表 */
     public static final String IM_REQUEST_WIFI_LIST = "/request/wifi/list";
+
+    /** 清除本体信息 */
+    public static final String IM_CLEAR_REQUEST = "/im/clear/request";
 
     public static byte[] getAddContactsInfo(String name, String number) {
 
@@ -380,6 +385,28 @@ public class ContactsProtoBuilder {
                 .setPayload(Any.pack(message))
                 .build();
         return channelMessage.toByteArray();
+    }
+
+    public static byte[] clearInfo(List<ClearContainer.Categories.Builder> categorys) {
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction(IM_CLEAR_REQUEST)
+                .setTime(System.currentTimeMillis()).build();
+        ClearContainer.Clear.Builder clearBuilder = ClearContainer.Clear.newBuilder();
+        for (ClearContainer.Categories.Builder builder : categorys) {
+            clearBuilder.addCategorie(builder.build());
+        }
+//        ClearContainer.Categories.Builder categoryBuilder1 = ClearContainer.Categories.newBuilder();
+//        categoryBuilder1.setName("");
+//        ClearContainer.Categories.Builder categoryBuilder2 = ClearContainer.Categories.newBuilder();
+//        categoryBuilder2.setName("");
+//        clearBuilder.addCategorie(categoryBuilder1.build());
+//        clearBuilder.addCategorie(categoryBuilder2.build());
+        ClearContainer.Clear clear = clearBuilder.build();
+        ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer.ChannelMessage.newBuilder()
+                .setHeader(header)
+                .setPayload(Any.pack(clear))
+                .build();
+        return channelMessage.toByteArray();
+
     }
 
 }

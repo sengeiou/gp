@@ -22,6 +22,7 @@ message BleStatus{
 message SimStatus{
    bool inserted = 1 ;// true 已经插卡 ，false 未插卡
    int32 level = 2 ; // 信号强度
+   string phoneNumber = 3 ; // 电话号码
 }
 
 message NetworkStatus{

@@ -26,21 +26,4 @@
         android:paddingStart="@dimen/dp_16"
         android:paddingEnd="@dimen/dp_16" />
 
-    <Button
-        android:id="@+id/ubt_btn_unbind_member"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/dp_30"
-        android:background="@drawable/selector_ubt_logout_btn"
-        android:text="@string/exit_group"
-        android:textColor="@color/ubt_dialog_btn_txt_color"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
-
-
 </RelativeLayout>

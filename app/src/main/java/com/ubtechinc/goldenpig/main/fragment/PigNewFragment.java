@@ -1,14 +1,18 @@
 package com.ubtechinc.goldenpig.main.fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +30,7 @@ import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseFragment;
 import com.ubtechinc.goldenpig.comm.widget.CustomPopupWindow;
+import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
@@ -33,8 +38,8 @@ import com.ubtechinc.goldenpig.main.FunctionModel;
 import com.ubtechinc.goldenpig.main.HomeDataHttpProxy;
 import com.ubtechinc.goldenpig.main.MainActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
-import com.ubtrobot.info.NativeInfoContainer;
 import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
+import com.ubtrobot.info.NativeInfoContainer;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -121,6 +126,8 @@ public class PigNewFragment extends BaseFragment {
     MainFunctionAdapter statementAdapter;
 
     private boolean hasRefreshFromServer;
+
+    private UBTSubTitleDialog mMobileFlowDialog;
 
     private List<String> list = new ArrayList<>();
 
@@ -415,6 +422,7 @@ public class PigNewFragment extends BaseFragment {
             //更新sim卡信号
             if (simStatus.getInserted()) {
                 ((MainActivity)getActivity()).isNoSim = false;
+                ((MainActivity)getActivity()).pigPhoneNumber = simStatus.getPhoneNumber();
                 int level = simStatus.getLevel();
                 if (level > 4) {
                     level = 4;
@@ -423,8 +431,12 @@ public class PigNewFragment extends BaseFragment {
                     level = 1;
                 }
                 ivSignal.setImageLevel(level);
+                if (!networkStatus.getWifiState() && networkStatus.getMobileState() != 0) {
+                    showMobileFlowDialog();
+                }
             } else {
                 ((MainActivity)getActivity()).isNoSim = true;
+                ((MainActivity)getActivity()).pigPhoneNumber = "";
                 ivSignal.setImageLevel(0);
             }
 
@@ -481,6 +493,38 @@ public class PigNewFragment extends BaseFragment {
             }
         } catch (Exception e) {
             LogUtils.d("PigNewFragment", "refreshData:" + e.getMessage());
+        }
+    }
+
+    private void showMobileFlowDialog() {
+        if (!UBTPGApplication.hasShowedMobileFlowTip && !SharedPreferencesUtils.getBoolean(getActivity(), "mobileFlowTip", false)) {
+            if (mMobileFlowDialog == null) {
+                mMobileFlowDialog = new UBTSubTitleDialog(getActivity());
+                mMobileFlowDialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
+                mMobileFlowDialog.setSubTipColor(ContextCompat.getColor(getActivity(), R.color.ubt_tips_txt_color));
+                mMobileFlowDialog.setTips(getString(R.string.mobile_flow_title));
+                mMobileFlowDialog.showNoTip(true);
+                mMobileFlowDialog.setOnlyOneButton();
+                mMobileFlowDialog.setRightButtonTxt(getString(R.string.i_know_text));
+                mMobileFlowDialog.setSubTips(getString(R.string.mobile_flow_tip));
+                mMobileFlowDialog.setSubTipGravity(Gravity.LEFT);
+                mMobileFlowDialog.setOnUbtDialogClickLinsenter(new UBTSubTitleDialog.OnUbtDialogClickLinsenter() {
+                    @Override
+                    public void onLeftButtonClick(View view) {
+
+                    }
+
+                    @Override
+                    public void onRightButtonClick(View view) {
+                    }
+                });
+                mMobileFlowDialog.setOnUbtDialogContentClickLinsenter(view -> SharedPreferencesUtils.putBoolean(getActivity(), "mobileFlowTip", view.isSelected()));
+            }
+            Activity activity = getActivity();
+            if (activity != null && !activity.isDestroyed() && !activity.isFinishing() && !mMobileFlowDialog.isShowing()) {
+                mMobileFlowDialog.show();
+                UBTPGApplication.hasShowedMobileFlowTip = true;
+            }
         }
     }
 

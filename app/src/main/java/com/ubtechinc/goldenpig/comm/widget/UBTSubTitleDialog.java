@@ -21,10 +21,12 @@ import com.ubtechinc.goldenpig.base.BaseDialog;
  */
 public class UBTSubTitleDialog extends BaseDialog implements View.OnClickListener {
     private OnUbtDialogClickLinsenter onUbtDialogClickLinsenter;
+    private OnUbtDialogContentClickLinsenter onUbtDialogContentClickLinsenter;
     private Button mLeftBtn, mRightBtn;
     private TextView mTipsTv;  //对话框提示语
     private int mLeftBtnColor = -1, mRightBtnColor = -1;
     private TextView mSubTipsView;
+    private TextView mTvNotip;
     private View ubtBtnDecor;
 
     public UBTSubTitleDialog(@NonNull Context context) {
@@ -52,6 +54,9 @@ public class UBTSubTitleDialog extends BaseDialog implements View.OnClickListene
         this.setContentView(root);
         ubtBtnDecor = findViewById(R.id.ubt_btn_decor);
         mSubTipsView = findViewById(R.id.ubt_tv_dialog_subtips);
+        mTvNotip = findViewById(R.id.ubt_tv_dialog_notip);
+        mTvNotip.setOnClickListener(this);
+
         mLeftBtn = (Button) findViewById(R.id.ubt_dialog_left_btn);
         if (mLeftBtnColor != -1) {
             mLeftBtn.setTextColor(mLeftBtnColor);
@@ -63,6 +68,19 @@ public class UBTSubTitleDialog extends BaseDialog implements View.OnClickListene
             mRightBtn.setTextColor(mRightBtnColor);
         }
         mRightBtn.setOnClickListener(this);
+    }
+
+    public void showNoTip(boolean isShow) {
+        if (mTvNotip != null) {
+            mTvNotip.setVisibility(isShow ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    public void setNoTipText(String value) {
+        if (mTvNotip != null) {
+            mTvNotip.setVisibility(View.VISIBLE);
+            mTvNotip.setText(value);
+        }
     }
 
     public void setTips(String tips) {
@@ -92,6 +110,10 @@ public class UBTSubTitleDialog extends BaseDialog implements View.OnClickListene
         this.onUbtDialogClickLinsenter = onUbtDialogClickLinsenter;
     }
 
+    public void setOnUbtDialogContentClickLinsenter(OnUbtDialogContentClickLinsenter onUbtDialogContentClickLinsenter) {
+        this.onUbtDialogContentClickLinsenter = onUbtDialogContentClickLinsenter;
+    }
+
     public void setSubTips(String subTips) {
         if (mSubTipsView != null) {
             mSubTipsView.setText(subTips);
@@ -106,17 +128,26 @@ public class UBTSubTitleDialog extends BaseDialog implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-        if (onUbtDialogClickLinsenter != null) {
-            switch (v.getId()) {
-                case R.id.ubt_dialog_left_btn:
+        switch (v.getId()) {
+            case R.id.ubt_dialog_left_btn:
+                if (onUbtDialogClickLinsenter != null) {
                     onUbtDialogClickLinsenter.onLeftButtonClick(v);
-                    break;
-                case R.id.ubt_dialog_right_btn:
+                }
+                dismiss();
+                break;
+            case R.id.ubt_dialog_right_btn:
+                if (onUbtDialogClickLinsenter != null) {
                     onUbtDialogClickLinsenter.onRightButtonClick(v);
-                    break;
-            }
+                }
+                dismiss();
+                break;
+            case R.id.ubt_tv_dialog_notip:
+                mTvNotip.setSelected(!mTvNotip.isSelected());
+                if (onUbtDialogContentClickLinsenter != null) {
+                    onUbtDialogContentClickLinsenter.onNotipClick(v);
+                }
+                break;
         }
-        dismiss();
     }
 
     public void setLeftBtnColor(int color) {
@@ -124,6 +155,12 @@ public class UBTSubTitleDialog extends BaseDialog implements View.OnClickListene
             mLeftBtn.setTextColor(color);
         }
         mLeftBtnColor = color;
+    }
+
+    public void setSubTipColor(int color) {
+        if (mSubTipsView != null) {
+            mSubTipsView.setTextColor(color);
+        }
     }
 
     public void setRightBtnColor(int color) {
@@ -137,6 +174,10 @@ public class UBTSubTitleDialog extends BaseDialog implements View.OnClickListene
         void onLeftButtonClick(View view);
 
         void onRightButtonClick(View view);
+    }
+
+    public interface OnUbtDialogContentClickLinsenter {
+        void onNotipClick(View view);
     }
 
     public void setOnlyOneButton() {

@@ -2,6 +2,7 @@ package com.ubtechinc.goldenpig.pigmanager.mypig;
 
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.TextView;
 
@@ -89,6 +90,9 @@ public class PairPigActivity extends BaseToolBarActivity implements View.OnClick
             pairSerialNumber = pairPig.getPairSerialNumber();
             pairUserId = String.valueOf(pairPig.getPairUserId());
             serialNumber = pairPig.getSerialNumber();
+            if (TextUtils.isEmpty(serialNumber)) {
+                serialNumber = AuthLive.getInstance().getCurrentPig().getRobotName();
+            }
             memberNameTv.setText(pairSerialNumber);
         }
     }

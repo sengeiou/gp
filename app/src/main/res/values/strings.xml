@@ -63,7 +63,7 @@
     <string name="ubt_qq_music">QQ音乐</string>
     <string name="ubt_help">帮助与反馈</string>
     <string name="ubt_feedback">意见反馈</string>
-    <string name="ubt_about_pig">关于八戒</string>
+    <string name="ubt_about_pig">关于APP</string>
     <string name="ubt_about">关于</string>
     <string name="ubt_version_format">版本%1$s</string>
     <string name="ubt_account">账号类型</string>
@@ -97,7 +97,7 @@
     <string name="ubt_click_for_net">点击配网</string>
     <string name="ubt_hotspot_name">热点名称</string>
     <string name="ubt_device_version_update">系统升级</string>
-    <string name="ubt_upgrade_now">立即升级</string>
+    <string name="ubt_upgrade_now">点击升级</string>
     <string name="ubt_pig_updateing">收到升级请求，八戒会在连接无线网络的情况下自动下载和安装</string>
     <string name="ubt_pig_update_failure">升级失败，请重试</string>
     <string name="ubt_pig_is_last_version">当前设备已是最新版本</string>
@@ -118,7 +118,7 @@
     <string name="ubt_pair_pig">配对八戒</string>
     <string name="ubt_pair_pig_desc">·请让配对设备的管理员打开八戒APP-我的-设备管理-配对八戒；\n·点击右上角“扫一扫”，扫描上面的二维码，配对八戒；\n·配对成功的八戒可以相互发送语音留言；</string>
     <string name="ubt_san_formember">扫码进入</string>
-    <string name="ubt_drop_up_tips">退出成员组将解绑此设备</string>
+    <string name="ubt_drop_up_tips">您是八戒的管理员，退出群组会解绑八戒，确认要退出群组吗？</string>
     <string name="exit_group">退出群组</string>
     <string name="ubt_unbind_success">退出群组成功</string>
     <string name="ubt_unbind_fialure">退出群组失败</string>
@@ -182,7 +182,7 @@
     <string name="pair_pig_voice">管理已配对的八戒</string>
 
     <string name="unbind_pig_dialog_tip">绑定新八戒前，需解绑现有八戒</string>
-    <string name="unbind_pig_dialog_sub_tip">解绑入口：设备管理-我的八戒</string>
+    <string name="unbind_pig_dialog_sub_tip">解绑入口：我的-八戒详情</string>
     <string name="i_know_text">我知道了</string>
     <string name="close_pig_tip">将手机靠近八戒，可快速绑定</string>
     <string name="ubt_manual_ble_pig">手动连接八戒</string>
@@ -248,5 +248,17 @@
     <string name="switch_wifi_tip2">请谨慎关闭八戒的Wi-Fi，关闭后\n若未连接移动数据，八戒会断开网络无法使用</string>
 
     <string name="connect_wifi">连接Wi-Fi</string>
+    <string name="mobile_flow_title">八戒正在使用移动数据</string>
+    <string name="mobile_flow_tip">无WiFi情况下，八戒将自动切换至SIM卡移动数据网络，可能会产生一定流量及费用，此费用由运营商收取。</string>
+    <string name="no_remind">不再提醒</string>
 
+    <string name="unbind_only_self">仅自己解绑，并转让管理员</string>
+    <string name="unbind_all">全部成员解绑</string>
+    <string name="exit_unbind">退出群组并解绑</string>
+    <string name="unbind_confirm">确定要解绑吗？</string>
+    <string name="unbind_confirm_tip">解绑后：\n1.你将不能通过app使用八戒\n2.八戒里的闹钟、提醒、定制问答和配对八戒等个人数据将会清除</string>
+    <string name="unbind_confirm_tip2">同时清除八戒里保存的通讯录和通话记录等数据</string>
+    <string name="ubt_exit_group_common">退出群组会解绑八戒，确定要退出吗？</string>
+    <string name="ubt_unbind_group_tips">您是八戒的管理员，退出群组会解绑八戒，解绑前请先确认</string>
+    
 </resources>

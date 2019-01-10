@@ -20,6 +20,6 @@
         android:layout_height="@dimen/dp_96"
         android:layout_centerInParent="true"
         android:src="@drawable/pig_load"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
 </RelativeLayout>

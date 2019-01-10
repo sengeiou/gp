@@ -1,60 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@drawable/shape_dialog_bg"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_dialog_bg">
 
     <TextView
         android:id="@+id/ubt_tv_dialog_tips"
-        android:background="@null"
         style="@style/UBTDialogTipsTheme"
         android:layout_marginBottom="@dimen/dp_12"
-        />
+        android:background="@null" />
+
     <com.ubtechinc.goldenpig.comm.widget.PerfectTextView
         android:id="@+id/ubt_tv_dialog_subtips"
-        android:layout_below="@+id/ubt_tv_dialog_tips"
         android:layout_width="wrap_content"
-        android:textSize="@dimen/sp_14"
-        android:textColor="@color/ubt_version_color"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ubt_tv_dialog_tips"
+        android:layout_centerHorizontal="true"
         android:layout_marginStart="@dimen/dp_16"
         android:layout_marginEnd="@dimen/dp_16"
         android:layout_marginBottom="@dimen/dp_18"
-        android:layout_centerHorizontal="true"
         android:gravity="center"
-        android:layout_height="wrap_content" />
+        android:textColor="@color/ubt_version_color"
+        android:textSize="@dimen/sp_14" />
+
+    <TextView
+        android:id="@+id/ubt_tv_dialog_notip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dp_18"
+        android:layout_below="@id/ubt_tv_dialog_subtips"
+        android:layout_alignLeft="@id/ubt_tv_dialog_tips"
+        android:drawableStart="@drawable/selector_xuanze_radio"
+        android:drawablePadding="@dimen/dp_8"
+        android:text="@string/no_remind"
+        android:visibility="gone"
+        android:textColor="#FF454B59"
+        android:textSize="14sp" />
+
     <View
         android:id="@+id/ubt_dialog_decor"
         android:layout_width="match_parent"
         android:layout_height="@dimen/ubt_1px"
+        android:layout_below="@+id/ubt_tv_dialog_notip"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/ubt_tv_dialog_subtips"
         android:background="@color/ubt_dilog_decore_color" />
+
     <View
         android:id="@+id/ubt_btn_decor"
-        android:layout_weight="0.1"
+        android:layout_width="@dimen/ubt_1px"
+        android:layout_height="@dimen/ubt_dialog_margintop"
         android:layout_below="@+id/ubt_dialog_decor"
         android:layout_centerHorizontal="true"
-        android:background="@color/ubt_dilog_decore_color"
-        android:layout_width="@dimen/ubt_1px"
-        android:layout_height="@dimen/ubt_dialog_margintop"/>
+        android:layout_weight="0.1"
+        android:background="@color/ubt_dilog_decore_color" />
+
     <LinearLayout
-        android:layout_below="@+id/ubt_dialog_decor"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ubt_dialog_decor"
+        android:orientation="horizontal">
+
         <Button
             android:id="@+id/ubt_dialog_left_btn"
             style="@style/UBTDialogBottonTheme"
             android:layout_width="match_parent"
-            android:layout_weight="0.5"
             android:layout_height="wrap_content"
+            android:layout_weight="0.5"
 
             android:text="@string/ubt_cancel" />
+
         <Button
             android:id="@+id/ubt_dialog_right_btn"
-            android:layout_weight="0.5"
-            android:textColor="@color/ubt_dialog_btn_txt_color"
             style="@style/UBTDialogBottonTheme"
-             android:text="@string/ubt_allowed"
+            android:layout_weight="0.5"
+            android:text="@string/ubt_allowed"
+            android:textColor="@color/ubt_dialog_btn_txt_color"
 
             />
     </LinearLayout>
