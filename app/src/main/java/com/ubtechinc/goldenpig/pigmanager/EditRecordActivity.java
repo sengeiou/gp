@@ -363,11 +363,12 @@ public class EditRecordActivity extends BaseNewActivity implements Observer {
     public void showDeleteDialog() {
         if (picDialog == null) {
             picView = LayoutInflater.from(this).inflate(
-                    R.layout.dialog_view_bottom2, null);
+                    R.layout.dialog_view_eab_bottom2, null);
             picDialog = DialogUtil.getMenuDialog(this, picView);
         }
         picDialog.show();
         final TextView tv_delete = (TextView) picView.findViewById(R.id.tv_delete);
+        tv_delete.setText("删除所选最近通话");
         tv_delete.setOnClickListener(new View.OnClickListener() {
 
             @Override
