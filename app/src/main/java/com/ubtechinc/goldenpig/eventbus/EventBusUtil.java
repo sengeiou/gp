@@ -59,6 +59,7 @@ public class EventBusUtil {
     public static final int RECEIVE_PIG_WIFI_CONNECT = 20012;
     public static final int RECEIVE_CLEAR_PIG_INFO = 20013;
     public static final int RECEIVE_ROBOT_ONLINE_STATE = 20014;
+    public static final int RECEIVE_ROBOT_VERSION_STATE = 20015;
 
     public static final int SERVER_RESPONSE_UNAUTHORIZED = 401;
 

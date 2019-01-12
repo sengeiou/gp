@@ -21,14 +21,17 @@ import com.ubtechinc.commlib.utils.ContextUtils;
 import com.ubtechinc.commlib.view.UbtSubTxtButton;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.about.UbtAboutActivtiy;
+import com.ubtechinc.goldenpig.app.ActivityManager;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseActivity;
 import com.ubtechinc.goldenpig.base.BaseFragment;
+import com.ubtechinc.goldenpig.comm.entity.UserInfo;
 import com.ubtechinc.goldenpig.comm.img.GlideCircleTransform;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.feedback.FeedBackActivity;
+import com.ubtechinc.goldenpig.login.LoginActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.MainActivity;
 import com.ubtechinc.goldenpig.main.QQMusicWebActivity;
@@ -46,6 +49,8 @@ import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.hotspot.SetHotSpotActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.utils.UbtToastUtils;
+import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -193,14 +198,6 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) rl_pig_state.getLayoutParams();
         params.height = height;
         rl_pig_state.setLayoutParams(params);
-        Glide.with(getActivity())
-                .load(AuthLive.getInstance().getCurrentUser().getUserImage())
-                .asBitmap()
-                .centerCrop()
-                .transform(new GlideCircleTransform(getActivity()))
-                .placeholder(R.drawable.ic_sign_in)
-                .into(mPohtoImg);
-        mNikenameTv.setText(StringUtils.utf8ToString(AuthLive.getInstance().getCurrentUser().getNickName()));
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         updateOnLineStateUI();
         if (pigInfo != null) {
@@ -235,13 +232,35 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
         } catch (RuntimeException e) {
             e.printStackTrace();
         }
-//        getActivity().findViewById(R.id.ubt_btn_device_manager).setOnClickListener(new View
-//                .OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                ActivityRoute.toAnotherActivity(getActivity(), DeviceManageActivity.class, false);
-//            }
-//        });
+
+        fillAccountView();
+    }
+
+    private void fillAccountView() {
+        UserInfo currentUser = AuthLive.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String nickName = SharedPreferencesUtils.getString(getActivity(), "tvs_nickName", "");
+            String headImgUrl = SharedPreferencesUtils.getString(getActivity(), "tvs_headImgUrl", "");
+            if (TextUtils.isEmpty(nickName)) {
+                nickName = currentUser.getNickName();
+            }
+            if (TextUtils.isEmpty(headImgUrl)) {
+                headImgUrl = currentUser.getUserImage();
+            }
+
+            Glide.with(getActivity())
+                    .load(headImgUrl)
+                    .asBitmap()
+                    .centerCrop()
+                    .transform(new GlideCircleTransform(getActivity()))
+                    .placeholder(R.drawable.ic_sign_in)
+                    .into(mPohtoImg);
+
+            mNikenameTv.setText(StringUtils.utf8ToString(nickName));
+        } else {
+            ActivityManager.getInstance().popAllActivityExcept(LoginActivity.class.getName());
+            ActivityRoute.toAnotherActivity(getActivity(), LoginActivity.class, true);
+        }
     }
 
     private void updateOnLineStateUI() {
@@ -262,6 +281,9 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
     @OnClick({R.id.rl_login_info, R.id.ubt_btn_person_qq, R.id.rl_pig_state, R.id.ll_bind, R.id.ll_wifi, R.id.ll_4g,
             R.id.ll_hot_pwd, R.id.ll_duihua})
     public void onClick(View v) {
+        if (!checkPhoneNetState()) {
+            return;
+        }
         boolean isNoSim = ((MainActivity)getActivity()).isNoSim;
         switch (v.getId()) {
             case R.id.rl_login_info:
@@ -307,7 +329,7 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
                 break;
             case R.id.ll_wifi:
                 PigInfo myPig = AuthLive.getInstance().getCurrentPig();
-                if (myPig.isAdmin) {
+                if (myPig.isAdmin && UBTPGApplication.isRobotOnline) {
                     ActivityRoute.toAnotherActivity(getActivity(), SwitchWifiActivity.class, false);
                 } else {
                     ActivityRoute.toAnotherActivity(getActivity(), BleConfigReadyActivity.class, false);
@@ -334,6 +356,15 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
+    private boolean checkPhoneNetState() {
+        if (UBTPGApplication.isNetAvailable) {
+            return true;
+        } else {
+            UbtToastUtils.showCustomToast(getActivity(), getString(R.string.network_error_toast));
+            return false;
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Event event) {
         if (event == null) return;
@@ -353,9 +384,20 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
         if (myPig == null) {
             showBindTipDialog();
         } else if (myPig.isAdmin) {
-            ActivityRoute.toAnotherActivity(getActivity(), clazz, hashMap, false);
+            if (checkOnlineState()) {
+                ActivityRoute.toAnotherActivity(getActivity(), clazz, hashMap, false);
+            }
         } else {
             ToastUtils.showShortToast(R.string.only_admin_operate);
+        }
+    }
+
+    private boolean checkOnlineState() {
+        if (UBTPGApplication.isRobotOnline) {
+            return true;
+        } else {
+            UbtToastUtils.showCustomToast(getActivity(), getString(R.string.ubt_robot_offline));
+            return false;
         }
     }
 

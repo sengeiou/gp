@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -93,12 +92,18 @@ public abstract class BaseToolBarActivity extends BaseActivity {
         return R.layout.activity_base_toolbar;
     }
 
+    protected void hideNotify() {
+        if (rlTopTip != null) {
+            rlTopTip.setVisibility(View.GONE);
+        }
+    }
+
     protected void showNotify(String notifyTips) {
         rlTopTip.setVisibility(View.VISIBLE);
         dtvTopTip.setText(notifyTips);
-        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-        int width = displayMetrics.widthPixels;
-        dtvTopTip.setMaxWidth((int) (width * 0.8));
+//        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+//        int width = displayMetrics.widthPixels;
+//        dtvTopTip.setMaxWidth((int) (width * 0.8));
 
 //        if (mNotifyTv == null) {
 //            mNotifyTv = new DrawableTextView(this);
@@ -145,12 +150,12 @@ public abstract class BaseToolBarActivity extends BaseActivity {
         }
     }
 
-    protected void hideNotify() {
-        if (mNotifyTv != null && viewContent != null) {
-            mNotifyTv.setVisibility(View.GONE);
-
-        }
-    }
+//    protected void hideNotify() {
+//        if (mNotifyTv != null && viewContent != null) {
+//            mNotifyTv.setVisibility(View.GONE);
+//
+//        }
+//    }
 
     /**
      * 设置布局资源

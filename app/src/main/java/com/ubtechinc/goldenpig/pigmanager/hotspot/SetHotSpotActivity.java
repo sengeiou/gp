@@ -17,10 +17,12 @@ import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubt.improtolib.GPResponse;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.ubtrobot.gold.UserContacts;
 
@@ -151,7 +153,15 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer,
             public void onSuccess() {
             }
         });
-        UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getHotSpot()));
+        if (UBTPGApplication.isNetAvailable) {
+            if (UBTPGApplication.isRobotOnline) {
+                UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getHotSpot()));
+            } else {
+                UbtToastUtils.showCustomToast(this, "八戒处于离线状态\n获取热点信息失败");
+            }
+        } else {
+            UbtToastUtils.showCustomToast(this, getString(R.string.network_error_toast));
+        }
     }
 
     @Override
@@ -180,8 +190,16 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer,
             ToastUtils.showShortToast("热点密码长度至少需输入8个字符");
             return;
         }
-        TIMMessage message = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.updateHotSpot(hotSpotName, hotSpotPwd));
-        UbtTIMManager.getInstance().sendTIM(message);
+        if (UBTPGApplication.isNetAvailable) {
+            if (UBTPGApplication.isRobotOnline) {
+                TIMMessage message = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.updateHotSpot(hotSpotName, hotSpotPwd));
+                UbtTIMManager.getInstance().sendTIM(message);
+            } else {
+                UbtToastUtils.showCustomToast(this, getString(R.string.ubt_robot_offline));
+            }
+        } else {
+            UbtToastUtils.showCustomToast(this, getString(R.string.network_error_toast));
+        }
     }
 
     @Override

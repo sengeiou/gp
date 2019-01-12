@@ -35,7 +35,7 @@ public class SwitchWifiActivity extends BaseToolBarActivity implements View.OnCl
 
     private ImageView ivWifiIcon;
 
-    private View tvConnWifi;
+    private TextView tvConnWifi;
 
     @Override
     protected int getConentView() {
@@ -81,9 +81,11 @@ public class SwitchWifiActivity extends BaseToolBarActivity implements View.OnCl
             if (networkStatus.getWifiState()) {
                 ivWifiIcon.setImageResource(R.drawable.ic_wifi);
                 tvWifiValue.setText(networkStatus.getSsid());
+                tvConnWifi.setText(R.string.switch_wifi);
             } else {
                 ivWifiIcon.setImageResource(R.drawable.ic_no_wifi);
-                tvWifiValue.setText("未连接");
+                tvWifiValue.setText("未开启");
+                tvConnWifi.setText(R.string.connect_wifi);
             }
         } catch (Exception e) {
             e.printStackTrace();

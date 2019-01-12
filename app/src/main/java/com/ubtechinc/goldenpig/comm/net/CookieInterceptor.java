@@ -75,9 +75,13 @@ public class CookieInterceptor implements Interceptor {
 
     public void setLoginInfo(LoginInfo info) {
         this.info = info;
+        SPUtils.get().saveObject("loginInfo", info);
     }
 
     public LoginInfo getThridLogin() {
+        if (info == null) {
+            info = (LoginInfo) SPUtils.get().readObject("loginInfo");
+        }
         return info;
     }
 }

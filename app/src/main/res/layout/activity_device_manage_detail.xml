@@ -8,12 +8,6 @@
     android:orientation="vertical"
     tools:context=".personal.DeviceManageActivity">
 
-    <com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewTv
-        android:id="@+id/rl_titlebar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_50"
-        android:background="@color/ubt_white" />
-
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/ubt_1px"
@@ -207,7 +201,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/dp_15"
                         android:text="蜂窝移动网络"
-                        android:textColor="@color/ubt_tips_txt_color"
+                        android:textColor="@drawable/selector_ubt_click_tx_bg"
                         android:textSize="@dimen/dp_15" />
 
                     <ImageView
@@ -254,7 +248,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/dp_15"
                         android:text="八戒热点"
-                        android:textColor="@color/ubt_tips_txt_color"
+                        android:textColor="@drawable/selector_ubt_click_tx_bg"
                         android:textSize="@dimen/dp_15" />
 
                     <ImageView
@@ -301,7 +295,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/dp_15"
                         android:text="连续对话模式"
-                        android:textColor="@color/ubt_tips_txt_color"
+                        android:textColor="@drawable/selector_ubt_click_tx_bg"
                         android:textSize="@dimen/dp_15" />
 
                     <ImageView
@@ -370,7 +364,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/dp_15"
                         android:text="关于八戒机器人"
-                        android:textColor="@color/ubt_tips_txt_color"
+                        android:textColor="@drawable/selector_ubt_click_tx_bg"
                         android:textSize="@dimen/dp_15" />
 
                     <ImageView
@@ -405,7 +399,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/dp_15"
                         android:text="系统升级"
-                        android:textColor="@color/ubt_tips_txt_color"
+                        android:textColor="@drawable/selector_ubt_click_tx_bg"
                         android:textSize="@dimen/dp_15" />
 
                     <ImageView

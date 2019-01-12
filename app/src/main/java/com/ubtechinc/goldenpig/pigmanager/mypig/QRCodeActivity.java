@@ -17,7 +17,6 @@ import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
-import com.ubtechinc.goldenpig.personal.MemberQRScannerActivity;
 import com.ubtechinc.goldenpig.pigmanager.register.GetAddMemberQRHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.yanzhenjie.permission.AndPermission;
@@ -208,7 +207,7 @@ public class QRCodeActivity extends BaseToolBarActivity implements View.OnClickL
 
         } else {
             if (cameraIsCanUse()) {
-                ActivityRoute.toAnotherActivity(QRCodeActivity.this, MemberQRScannerActivity.class, Constants.QR_PAIR_PIG_REQUEST, false);
+                ActivityRoute.toAnotherActivity(QRCodeActivity.this, PairQRScannerActivity.class, Constants.QR_PAIR_PIG_REQUEST, false);
             } else {
                 showPermissionDialog(Permission.CAMERA);
             }

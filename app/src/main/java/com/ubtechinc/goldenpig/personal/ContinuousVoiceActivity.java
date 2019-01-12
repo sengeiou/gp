@@ -8,11 +8,11 @@ import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
-import com.ubtechinc.goldenpig.login.observable.AuthLive;
-import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -48,9 +48,14 @@ public class ContinuousVoiceActivity extends BaseToolBarActivity implements Swit
         switchVoice = findViewById(R.id.switch_voice);
         switchVoice.setOnCheckedChangeListener(this);
 
-        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
-        if (pigInfo != null && pigInfo.isAdmin) {
-            getContinuousVoiceState();
+        if (UBTPGApplication.isNetAvailable) {
+            if (UBTPGApplication.isRobotOnline) {
+                getContinuousVoiceState();
+            } else {
+                UbtToastUtils.showCustomToast(this, "八戒处于离线状态\n获取连续对话模式开关失败");
+            }
+        } else {
+            UbtToastUtils.showCustomToast(this, getString(R.string.network_error_toast));
         }
     }
 
@@ -109,6 +114,14 @@ public class ContinuousVoiceActivity extends BaseToolBarActivity implements Swit
 
     private void doSwitchContinuousVoice(boolean isChecked) {
         Log.d("ContinuousVoice", "set isChecked:" + isChecked);
-        UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.requestContinuousVoiceSwitch(isChecked)));
+        if (UBTPGApplication.isNetAvailable) {
+            if (UBTPGApplication.isRobotOnline) {
+                UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.requestContinuousVoiceSwitch(isChecked)));
+            } else {
+                UbtToastUtils.showCustomToast(this, getString(R.string.ubt_robot_offline));
+            }
+        } else {
+            UbtToastUtils.showCustomToast(this, getString(R.string.network_error_toast));
+        }
     }
 }

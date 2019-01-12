@@ -37,7 +37,9 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.FunctionModel;
 import com.ubtechinc.goldenpig.main.HomeDataHttpProxy;
 import com.ubtechinc.goldenpig.main.MainActivity;
+import com.ubtechinc.goldenpig.pigmanager.BleConfigReadyActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
 import com.ubtrobot.info.NativeInfoContainer;
 
@@ -60,6 +62,7 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NETWORK_STATE_CHANGE
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NEW_CALL_RECORD;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NEW_MESSAGE_NOTIFICATION;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_NATIVE_INFO;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_ONLINE_STATE;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.UPDATE_HOME_FUNCTION_CARD;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
 
@@ -84,7 +87,7 @@ public class PigNewFragment extends BaseFragment {
     Button btnBinding;
 
     @BindView(R.id.tv_net_tip)
-    View tvNetTip;
+    TextView tvNetTip;
 
     @BindView(R.id.recycler_skill)
     RecyclerView recyclerView;
@@ -96,6 +99,8 @@ public class PigNewFragment extends BaseFragment {
     ImageView ivBle;
     @BindView(R.id.iv_signal)
     ImageView ivSignal;
+    @BindView(R.id.iv_battery)
+    ImageView ivBattery;
     @BindView(R.id.tv_battery)
     TextView tvBattery;
     @BindView(R.id.tv_wifi_name)
@@ -119,6 +124,9 @@ public class PigNewFragment extends BaseFragment {
     @BindView(R.id.tv_pig_tip)
     TextView tvPigTip;
 
+    @BindView(R.id.btn_config_wifi)
+    View btnConfigWifi;
+
     PigFragmentAdapter catetoryAdapter;
 
     MainFunctionAdapter mainFunctionAdapter;
@@ -141,11 +149,6 @@ public class PigNewFragment extends BaseFragment {
                     Log.d(TAG, "queryNativeInfo pigInfo = " + pigInfo);
                     if (pigInfo != null && pigInfo.isAdmin) {
                         UbtTIMManager.getInstance().queryNativeInfo();
-                        if (rlNativeInfo != null && rlNativeInfo.getVisibility() == View.VISIBLE) {
-                            tvPigTip.setVisibility(View.GONE);
-                        } else {
-                            tvPigTip.setVisibility(View.VISIBLE);
-                        }
                         if (mHandler.hasMessages(GET_NATIVE_INFO)) {
                             mHandler.removeMessages(GET_NATIVE_INFO);
                         }
@@ -267,14 +270,22 @@ public class PigNewFragment extends BaseFragment {
         }
     }
 
+    /**
+     * 处理 tvNetTip（手机网络/机器人离线）；btnConfigWifi（重新配网）；btnBinding（开始绑定与配网）；tvPigTip（你的智能语音小伙伴）；
+     * rlNativeInfo（机器人信息）
+     */
     private void updateUserPig() {
         if (!UBTPGApplication.isNetAvailable) {
+            tvNetTip.setText("手机无网络连接");
             tvNetTip.setVisibility(View.VISIBLE);
+
+            btnConfigWifi.setVisibility(View.GONE);
             btnBinding.setVisibility(View.GONE);
             tvPigTip.setVisibility(View.GONE);
             hideNativeInfo();
         } else {
             tvNetTip.setVisibility(View.GONE);
+            btnConfigWifi.setVisibility(View.GONE);
             PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
             if (pigInfo != null) {
                 btnBinding.setVisibility(View.GONE);
@@ -284,11 +295,45 @@ public class PigNewFragment extends BaseFragment {
                 }
                 tvPigSn.setText(getString(R.string.ubt_bajie, name));
                 tvPigSn.setVisibility(View.VISIBLE);
-                tvPigTip.setVisibility(View.VISIBLE);
+                if (pigInfo.isAdmin) {
+                    //TODO 管理员
+                    if (UBTPGApplication.isRobotOnline) {
+                        //TODO 在线
+                        rlNativeInfo.setVisibility(View.VISIBLE);
+                    } else {
+                        //TODO 离线
+                        hideNativeInfo();
+                        tvNetTip.setText("机器人离线");
+                        tvNetTip.setVisibility(View.VISIBLE);
+                        btnConfigWifi.setVisibility(View.VISIBLE);
+                        btnConfigWifi.setOnClickListener(v -> ActivityRoute.toAnotherActivity(getActivity(), BleConfigReadyActivity.class, false));
+                    }
+                } else {
+                    //TODO 普通成员
+                    tvPigTip.setText("你的智能语音小伙伴");
+                    tvPigTip.setVisibility(View.VISIBLE);
+                }
+
+//                if (pigInfo.isAdmin) {
+//                    if (UBTPGApplication.isRobotOnline) {
+//                        //TODO 在线
+//                        tvPigTip.setVisibility(View.GONE);
+//                    } else {
+//                        //TODO 离线
+//                        tvPigTip.setVisibility(View.GONE);
+//                        tvNetTip.setVisibility(View.VISIBLE);
+//                        tvNetTip.setText("机器人离线");
+//                        btnConfigWifi.setVisibility(View.VISIBLE);
+//                        btnConfigWifi.setOnClickListener(v -> ActivityRoute.toAnotherActivity(getActivity(), BleConfigReadyActivity.class, false));
+//                    }
+//                } else {
+//                    tvPigTip.setText("你的智能语音小伙伴");
+//                    tvPigTip.setVisibility(View.VISIBLE);
+//                }
             } else {
                 btnBinding.setVisibility(View.VISIBLE);
-                tvPigTip.setVisibility(View.GONE);
                 tvPigSn.setVisibility(View.GONE);
+                tvPigTip.setVisibility(View.GONE);
                 hideNativeInfo();
             }
         }
@@ -384,12 +429,16 @@ public class PigNewFragment extends BaseFragment {
                 break;
             case RECEIVE_NATIVE_INFO:
                 UpdateNativeInfo((NativeInfoContainer.NativeInfo) event.getData());
+                updateUserPig();
                 break;
             case DO_GET_NATIVE_INFO:
                 mHandler.sendEmptyMessage(GET_NATIVE_INFO);
                 break;
             case UPDATE_HOME_FUNCTION_CARD:
                 updateFunctionCard((FunctionModel) event.getData());
+                break;
+            case RECEIVE_ROBOT_ONLINE_STATE:
+                updateUserPig();
                 break;
         }
     }
@@ -407,7 +456,6 @@ public class PigNewFragment extends BaseFragment {
             NativeInfoContainer.BatteryStatus batteryStatus = nativeInfo.getBatteryStatus().unpack(NativeInfoContainer.BatteryStatus.class);
             NativeInfoContainer.NetworkStatus networkStatus = nativeInfo.getNetworkStatus().unpack(NativeInfoContainer.NetworkStatus.class);
 
-            tvPigTip.setVisibility(View.GONE);
             if (rlNativeInfo.getVisibility() != View.VISIBLE) {
                 rlNativeInfo.setVisibility(View.VISIBLE);
             }
@@ -421,8 +469,8 @@ public class PigNewFragment extends BaseFragment {
 
             //更新sim卡信号
             if (simStatus.getInserted()) {
-                ((MainActivity)getActivity()).isNoSim = false;
-                ((MainActivity)getActivity()).pigPhoneNumber = simStatus.getPhoneNumber();
+                ((MainActivity) getActivity()).isNoSim = false;
+                ((MainActivity) getActivity()).pigPhoneNumber = simStatus.getPhoneNumber();
                 int level = simStatus.getLevel();
                 if (level > 4) {
                     level = 4;
@@ -435,13 +483,15 @@ public class PigNewFragment extends BaseFragment {
                     showMobileFlowDialog();
                 }
             } else {
-                ((MainActivity)getActivity()).isNoSim = true;
-                ((MainActivity)getActivity()).pigPhoneNumber = "";
+                ((MainActivity) getActivity()).isNoSim = true;
+                ((MainActivity) getActivity()).pigPhoneNumber = "";
                 ivSignal.setImageLevel(0);
             }
 
             //更新电量
             tvBattery.setText(batteryStatus.getElectricity() + "%");
+
+            ivBattery.setImageLevel(batteryStatus.getElectricity() / 10);
 
             //更新网络连接信息
             if (networkStatus.getWifiState()) {

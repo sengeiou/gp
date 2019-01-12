@@ -1,5 +1,6 @@
 package com.ubtechinc.tvlloginlib.entity;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,7 +8,7 @@ import java.util.Map;
  * Created by ubt on 2017/8/25.
  */
 
-public class LoginInfo {
+public class LoginInfo implements Serializable {
 
     public static final Map<Integer, String> LoginType = new HashMap();
 

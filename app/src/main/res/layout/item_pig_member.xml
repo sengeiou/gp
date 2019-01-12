@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dp_12"
         android:maxLines="1"
-        android:maxEms="7"
+        android:maxEms="6"
         android:text="偷穿鞋的猫"
         android:textColor="#FF454B59"
         android:textSize="15sp"

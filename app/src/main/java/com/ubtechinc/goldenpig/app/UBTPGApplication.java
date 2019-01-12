@@ -614,6 +614,11 @@ public class UBTPGApplication extends LoginApplication implements Observer {
         } else if (action.equals(ContactsProtoBuilder.UPATE_VERSION_ACTION)) {
             final int result = msg.getPayload().unpack(VersionInformation.UpgradeInfo.class).getStatus();
             handleOTADialog(result);
+        } else if (action.equals(ContactsProtoBuilder.GET_VERSION_STATE_ACTION)) {
+            VersionInformation.UpgradeInfo info = msg.getPayload().unpack(VersionInformation.UpgradeInfo.class);
+            Event<VersionInformation.UpgradeInfo> event = new Event<>(EventBusUtil.RECEIVE_ROBOT_VERSION_STATE);
+            event.setData(info);
+            EventBusUtil.sendEvent(event);
         }
     }
 
@@ -639,6 +644,9 @@ public class UBTPGApplication extends LoginApplication implements Observer {
             case 8:
                 tip = "服务异常，无法升级\n" +
                         "请稍后重试";
+                break;
+            default:
+                tip = "OTA升级完成";
                 break;
         }
         showIKnowDialog(tip);
