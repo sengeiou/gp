@@ -489,9 +489,11 @@ public class PigNewFragment extends BaseFragment {
             }
 
             //更新电量
-            tvBattery.setText(batteryStatus.getElectricity() + "%");
+            int electricity = batteryStatus.getElectricity();
+            tvBattery.setText(electricity + "%");
 
-            ivBattery.setImageLevel(batteryStatus.getElectricity() / 10);
+            ivBattery.setImageLevel((int) Math.ceil(electricity / 10f));
+
 
             //更新网络连接信息
             if (networkStatus.getWifiState()) {
