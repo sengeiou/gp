@@ -74,6 +74,8 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
 
     private View rl_4g, rl_hotpoint, rl_continuity_voice, rl_about, rl_update;
 
+    private View ivRedPoint;
+
     private TextView tv_4g, tv_hot_point, tv_continuity_voice, tv_about, tv_update;
 
     private TextView tv_manager;
@@ -131,6 +133,7 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
         rl_update.setOnClickListener(this);
 
 
+        ivRedPoint = findViewById(R.id.iv_red_point);
         tv_4g = findViewById(R.id.tv_4g);
         tv_hot_point = findViewById(R.id.tv_hot_point);
         tv_continuity_voice = findViewById(R.id.tv_continuity_voice);
@@ -204,6 +207,16 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
         if (pigInfo != null) {
             UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
         }
+
+        Intent intent = getIntent();
+        if (intent != null) {
+            boolean hasNewVersion = intent.getBooleanExtra("robotNewVersion", false);
+            if (hasNewVersion) {
+                ivRedPoint.setVisibility(View.VISIBLE);
+            } else {
+                ivRedPoint.setVisibility(View.GONE);
+            }
+        }
     }
 
     @Override
@@ -260,8 +273,12 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
         switch (v.getId()) {
             case R.id.rl_wifi:
                 PigInfo myPig = AuthLive.getInstance().getCurrentPig();
-                if (myPig.isAdmin && UBTPGApplication.isRobotOnline) {
-                    ActivityRoute.toAnotherActivity(this, SwitchWifiActivity.class, false);
+                if (myPig.isAdmin) {
+                    if (UBTPGApplication.isRobotOnline) {
+                        ActivityRoute.toAnotherActivity(this, SwitchWifiActivity.class, false);
+                    } else {
+                        ActivityRoute.toAnotherActivity(this, RobotOfflineActivity.class, false);
+                    }
                 } else {
                     ActivityRoute.toAnotherActivity(this, BleConfigReadyActivity.class, false);
                 }
@@ -414,7 +431,8 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
             unBindConfirmDialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
             unBindConfirmDialog.setSubTipColor(ContextCompat.getColor(this, R.color.ubt_tips_txt_color));
             unBindConfirmDialog.setTips(getString(R.string.unbind_confirm));
-            unBindConfirmDialog.setNoTipText(getString(R.string.unbind_confirm_tip2));
+            unBindConfirmDialog.setRadioText(getString(R.string.unbind_confirm_tip2));
+            unBindConfirmDialog.setRadioSelected(true);
             unBindConfirmDialog.setRightButtonTxt(getString(R.string.ubt_enter));
             unBindConfirmDialog.setSubTips(getString(R.string.unbind_confirm_tip));
             unBindConfirmDialog.setOnUbtDialogClickLinsenter(new UBTSubTitleDialog.OnUbtDialogClickLinsenter() {

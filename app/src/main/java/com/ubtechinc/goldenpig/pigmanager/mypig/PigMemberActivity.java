@@ -730,7 +730,8 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
         unBindConfirmDialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
         unBindConfirmDialog.setSubTipColor(ContextCompat.getColor(this, R.color.ubt_tips_txt_color));
         unBindConfirmDialog.setTips(getString(R.string.unbind_confirm));
-        unBindConfirmDialog.setNoTipText(getString(R.string.unbind_confirm_tip2));
+        unBindConfirmDialog.setRadioText(getString(R.string.unbind_confirm_tip2));
+        unBindConfirmDialog.setRadioSelected(true);
         unBindConfirmDialog.setRightButtonTxt(getString(R.string.ubt_enter));
         unBindConfirmDialog.setSubTips(getString(R.string.unbind_confirm_tip));
         unBindConfirmDialog.setOnUbtDialogClickLinsenter(new UBTSubTitleDialog.OnUbtDialogClickLinsenter() {

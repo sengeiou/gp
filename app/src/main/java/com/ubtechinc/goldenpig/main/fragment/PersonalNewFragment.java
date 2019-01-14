@@ -14,6 +14,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.ubt.imlibv2.bean.ContactsProtoBuilder;
+import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtech.utilcode.utils.ScreenUtils;
 import com.ubtech.utilcode.utils.StringUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
@@ -40,6 +42,7 @@ import com.ubtechinc.goldenpig.personal.BeeHiveMobileActivity;
 import com.ubtechinc.goldenpig.personal.ContinuousVoiceActivity;
 import com.ubtechinc.goldenpig.personal.NoSimActivity;
 import com.ubtechinc.goldenpig.personal.PigManageDetailActivity;
+import com.ubtechinc.goldenpig.personal.RobotOfflineActivity;
 import com.ubtechinc.goldenpig.personal.SwitchWifiActivity;
 import com.ubtechinc.goldenpig.personal.alarm.AlarmListActivity;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionActivity;
@@ -51,6 +54,7 @@ import com.ubtechinc.goldenpig.pigmanager.hotspot.SetHotSpotActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
+import com.ubtrobot.upgrade.VersionInformation;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -60,7 +64,9 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NETWORK_STATE_CHANGED;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_ONLINE_STATE;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_VERSION_STATE;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
 
 /**
@@ -161,6 +167,16 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
 //        if (mTitle != null) {
 //            mTitle.setTextColor(ResourcesCompat.getColor(getResources(), R.color.ubt_white, null));
 //        }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser) {
+            if (UBTPGApplication.isNetAvailable && UBTPGApplication.isRobotOnline) {
+                UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getPigVersionState()));
+            }
+        }
     }
 
     @Override
@@ -284,7 +300,7 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
         if (!checkPhoneNetState()) {
             return;
         }
-        boolean isNoSim = ((MainActivity)getActivity()).isNoSim;
+        boolean isNoSim = ((MainActivity) getActivity()).isNoSim;
         switch (v.getId()) {
             case R.id.rl_login_info:
                 ActivityRoute.toAnotherActivity(getActivity(), UserInfoActivity.class, false);
@@ -322,15 +338,21 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
                 ActivityRoute.toAnotherActivity(getActivity(), QQMusicWebActivity.class, false);
                 break;
             case R.id.rl_pig_state:
-                ActivityRoute.toAnotherActivity(getActivity(), PigManageDetailActivity.class, false);
+                HashMap<String, Boolean> hashMap = new HashMap<>();
+                hashMap.put("robotNewVersion", ll_version.getVisibility() == View.VISIBLE);
+                ActivityRoute.toAnotherActivity(getActivity(), PigManageDetailActivity.class, hashMap, false);
                 break;
             case R.id.ll_bind:
                 ActivityRoute.toAnotherActivity(getActivity(), BleConfigReadyActivity.class, false);
                 break;
             case R.id.ll_wifi:
                 PigInfo myPig = AuthLive.getInstance().getCurrentPig();
-                if (myPig.isAdmin && UBTPGApplication.isRobotOnline) {
-                    ActivityRoute.toAnotherActivity(getActivity(), SwitchWifiActivity.class, false);
+                if (myPig.isAdmin) {
+                    if (UBTPGApplication.isRobotOnline) {
+                        ActivityRoute.toAnotherActivity(getActivity(), SwitchWifiActivity.class, false);
+                    } else {
+                        ActivityRoute.toAnotherActivity(getActivity(), RobotOfflineActivity.class, false);
+                    }
                 } else {
                     ActivityRoute.toAnotherActivity(getActivity(), BleConfigReadyActivity.class, false);
                 }
@@ -373,9 +395,26 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
             case USER_PIG_UPDATE:
                 inits();
                 break;
+            case NETWORK_STATE_CHANGED:
+                updateRobotVersionUI(null);
+                break;
             case RECEIVE_ROBOT_ONLINE_STATE:
                 updateOnLineStateUI();
                 break;
+            case RECEIVE_ROBOT_VERSION_STATE:
+                updateRobotVersionUI((VersionInformation.UpgradeInfo) event.getData());
+                break;
+        }
+    }
+
+    private void updateRobotVersionUI(VersionInformation.UpgradeInfo info) {
+        if (!UBTPGApplication.isNetAvailable) {
+            tv_pig_state.setVisibility(View.GONE);
+            ll_version.setVisibility(View.GONE);
+        } else if (info != null) {
+            tv_pig_state.setVisibility(View.VISIBLE);
+            int status = info.getStatus();
+            ll_version.setVisibility(status == 1 ? View.VISIBLE : View.GONE);
         }
     }
 
