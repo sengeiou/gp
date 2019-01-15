@@ -56,4 +56,6 @@
     <color name="no_network_text">#FF3B30</color>
     <color name="empty_color">#9DA7AD</color>
     <color name="gold_red_color">#FF3A30</color>
+
+    <color name="cardview_line">#3ff2f2f2</color>
 </resources>

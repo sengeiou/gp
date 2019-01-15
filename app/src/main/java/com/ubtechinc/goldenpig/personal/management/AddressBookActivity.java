@@ -172,6 +172,8 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
 //        Divider divider = new Divider(new ColorDrawable(getResources().getColor(R.color
 //                .ubt_wifi_list_divider)),
 //                OrientationHelper.VERTICAL);
+//        divider.setMargin((int) getResources().getDimension(R.dimen.dp_15), 0, (int) getResources().getDimension(R
+//                .dimen.dp_15), 0);
 //        divider.setHeight((int) getResources().getDimension(R.dimen.ubt_1px));
 //        recycler.addItemDecoration(divider);
         recycler.setSwipeMenuCreator(swipeMenuCreator);

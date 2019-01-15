@@ -312,14 +312,13 @@
     <Button
         android:id="@+id/ubt_btn_person_qq"
         style="@style/UBTMeBtnTheme"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="@dimen/dp_20"
         android:drawableStart="@drawable/ic_member"
         android:text="@string/ubt_qq_music" />
 
     <Button
         android:id="@+id/ubt_btn_person_feedback"
         style="@style/UBTMeBtnTheme"
-        android:layout_marginTop="5dp"
         android:drawableStart="@drawable/ic_help"
         android:text="@string/ubt_help" />
 

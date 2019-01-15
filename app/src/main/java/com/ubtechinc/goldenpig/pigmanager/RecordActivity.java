@@ -109,6 +109,7 @@ public class RecordActivity extends BaseNewActivity implements Observer {
         super.onCreate(savedInstanceState);
         mHandler = new MyHandler(this);
         initStateView(true);
+        mStateView.setEmptyResource(R.layout.adapter_record_empty);
         mStateView.setOnRetryClickListener(new StateView.OnRetryClickListener() {
             @Override
             public void onRetryClick() {
@@ -412,11 +413,12 @@ public class RecordActivity extends BaseNewActivity implements Observer {
         mList.addAll(list);
         if (mList.size() == 0) {
             mStateView.showEmpty();
-            mStateView.setEmptyViewMSG("无最近通话");
+            rl_titlebar.getTvRight().setVisibility(View.GONE);
             rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
             rl_titlebar.getTvRight().setEnabled(false);
         } else {
             mStateView.showContent();
+            rl_titlebar.getTvRight().setVisibility(View.VISIBLE);
             rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_checked_color));
             rl_titlebar.getTvRight().setEnabled(true);
         }

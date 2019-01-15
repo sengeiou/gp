@@ -108,8 +108,14 @@ public class EditAddressBookAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             if (mList.get(position).noCard) {
                 aHolder.tv_has_card.setText("未插入SIM卡");
             } else {
-                aHolder.tv_has_card.setText(TextUtils.isEmpty(mList.get(position).phone) ? "" : "八戒号码:"+mList.get(position)
+                aHolder.tv_has_card.setText(TextUtils.isEmpty(mList.get(position).phone) ? "" : "八戒号码:" + mList.get
+                        (position)
                         .phone);
+            }
+            if (mList.size() < 2) {
+                aHolder.ll_select_all.setVisibility(View.GONE);
+            } else {
+                aHolder.ll_select_all.setVisibility(View.VISIBLE);
             }
             if (mList.get(position).selectAll) {
                 aHolder.iv_select.setImageResource(R.drawable.ic_choose2);
@@ -121,6 +127,9 @@ public class EditAddressBookAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             aHolder.ll_select_all.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (mList.size() < 2) {
+                        return;
+                    }
                     if (mList.get(position).selectAll) {
                         mList.get(position).selectAll = false;
                         mEditABListener.nothing();

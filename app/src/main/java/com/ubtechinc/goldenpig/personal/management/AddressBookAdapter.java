@@ -70,10 +70,10 @@ public class AddressBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             });
             if (mList.size() - 1 == position) {
                 aHolder.view_curline.setVisibility(View.GONE);
-                aHolder.view_curline_bottom.setVisibility(View.VISIBLE);
+                //aHolder.view_curline_bottom.setVisibility(View.VISIBLE);
             } else {
                 aHolder.view_curline.setVisibility(View.VISIBLE);
-                aHolder.view_curline_bottom.setVisibility(View.GONE);
+                //aHolder.view_curline_bottom.setVisibility(View.GONE);
             }
 //            aHolder.tv_set.setOnClickListener(new View.OnClickListener() {
 //                @Override
@@ -119,7 +119,8 @@ public class AddressBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             if (mList.get(position).noCard) {
                 aHolder.tv_has_card.setText("未插入SIM卡");
             } else {
-                aHolder.tv_has_card.setText(TextUtils.isEmpty(mList.get(position).phone) ? "" : "八戒号码:"+mList.get(position)
+                aHolder.tv_has_card.setText(TextUtils.isEmpty(mList.get(position).phone) ? "" : "八戒号码:" + mList.get
+                        (position)
                         .phone);
             }
             aHolder.iv_add.setOnClickListener(new View.OnClickListener() {
@@ -151,13 +152,13 @@ public class AddressBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     public class AddressBookHolder extends RecyclerView.ViewHolder {
         private TextView tv_content, tv_number;//, tv_set, tv_delete;
         private ImageView iv_edit;
-        private View view_curline, view_curline_bottom;
+        private View view_curline;
 
         public AddressBookHolder(View itemView) {
             super(itemView);
 //            swipe_menu = (SwipeMenuLayout) itemView.findViewById(R.id.swipe_menu);
             iv_edit = itemView.findViewById(R.id.iv_edit);
-            view_curline_bottom = itemView.findViewById(R.id.view_curline_bottom);
+//            view_curline_bottom = itemView.findViewById(R.id.view_curline_bottom);
             view_curline = itemView.findViewById(R.id.view_curline);
             iv_edit = itemView.findViewById(R.id.iv_edit);
             tv_number = (TextView) itemView.findViewById(R.id.tv_number);

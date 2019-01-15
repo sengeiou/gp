@@ -8,7 +8,16 @@
     android:orientation="vertical"
     tools:context=".personal.DeviceManageActivity">
 
-    <include layout="@layout/view_item_second_titlebar_tv" />
+    <com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewTv
+        android:id="@+id/rl_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:background="@color/ubt_white" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ubt_1px"
+        android:background="@color/ubt_wifi_list_divider" />
 
     <View
         android:layout_width="match_parent"
@@ -17,6 +26,6 @@
     <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
-        android:overScrollMode="never"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:overScrollMode="never" />
 </LinearLayout>

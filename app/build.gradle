@@ -212,4 +212,5 @@ dependencies {
     implementation 'com.vise.xiaoyaoyou:viseutils:1.1.0'
 
     implementation 'com.github.zcweng:switch-button:0.0.3@aar'
+    implementation project(path: ':scardview')
 }
