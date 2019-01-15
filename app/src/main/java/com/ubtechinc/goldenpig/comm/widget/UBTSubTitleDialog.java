@@ -26,7 +26,7 @@ public class UBTSubTitleDialog extends BaseDialog implements View.OnClickListene
     private TextView mTipsTv;  //对话框提示语
     private int mLeftBtnColor = -1, mRightBtnColor = -1;
     private TextView mSubTipsView;
-    private TextView mTvNotip;
+    private TextView mRadioTip;
     private View ubtBtnDecor;
 
     public UBTSubTitleDialog(@NonNull Context context) {
@@ -54,8 +54,8 @@ public class UBTSubTitleDialog extends BaseDialog implements View.OnClickListene
         this.setContentView(root);
         ubtBtnDecor = findViewById(R.id.ubt_btn_decor);
         mSubTipsView = findViewById(R.id.ubt_tv_dialog_subtips);
-        mTvNotip = findViewById(R.id.ubt_tv_dialog_notip);
-        mTvNotip.setOnClickListener(this);
+        mRadioTip = findViewById(R.id.ubt_tv_dialog_notip);
+        mRadioTip.setOnClickListener(this);
 
         mLeftBtn = (Button) findViewById(R.id.ubt_dialog_left_btn);
         if (mLeftBtnColor != -1) {
@@ -71,15 +71,21 @@ public class UBTSubTitleDialog extends BaseDialog implements View.OnClickListene
     }
 
     public void showNoTip(boolean isShow) {
-        if (mTvNotip != null) {
-            mTvNotip.setVisibility(isShow ? View.VISIBLE : View.GONE);
+        if (mRadioTip != null) {
+            mRadioTip.setVisibility(isShow ? View.VISIBLE : View.GONE);
         }
     }
 
-    public void setNoTipText(String value) {
-        if (mTvNotip != null) {
-            mTvNotip.setVisibility(View.VISIBLE);
-            mTvNotip.setText(value);
+    public void setRadioText(String value) {
+        if (mRadioTip != null) {
+            mRadioTip.setVisibility(View.VISIBLE);
+            mRadioTip.setText(value);
+        }
+    }
+
+    public void setRadioSelected(boolean isSelect) {
+        if (mRadioTip != null) {
+            mRadioTip.setSelected(true);
         }
     }
 
@@ -142,7 +148,7 @@ public class UBTSubTitleDialog extends BaseDialog implements View.OnClickListene
                 dismiss();
                 break;
             case R.id.ubt_tv_dialog_notip:
-                mTvNotip.setSelected(!mTvNotip.isSelected());
+                mRadioTip.setSelected(!mRadioTip.isSelected());
                 if (onUbtDialogContentClickLinsenter != null) {
                     onUbtDialogContentClickLinsenter.onNotipClick(v);
                 }

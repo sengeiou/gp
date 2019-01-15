@@ -152,8 +152,8 @@
 
                         <ImageView
                             android:id="@+id/iv_ble"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/dp_22"
+                            android:layout_height="@dimen/dp_22"
                             android:layout_marginLeft="@dimen/dp_5"
                             android:layout_toRightOf="@id/tv_battery"
                             android:src="@drawable/ic_bt_connected"
@@ -168,6 +168,17 @@
                             android:layout_marginLeft="@dimen/dp_5"
                             android:layout_centerVertical="true"
                             android:src="@drawable/ic_signal"
+                            />
+
+                        <ImageView
+                            android:id="@+id/iv_sim_net"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/iv_signal"
+                            android:layout_marginLeft="@dimen/dp_5"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_sim_net"
+                            android:visibility="gone"
                             />
 
                         <RelativeLayout
@@ -219,17 +230,6 @@
                                 />
 
                         </RelativeLayout>
-
-                        <ImageView
-                            android:id="@+id/iv_sim_net"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_toRightOf="@+id/tv_battery"
-                            android:layout_marginLeft="@dimen/dp_5"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_sim_net"
-                            android:visibility="gone"
-                            />
 
                     </RelativeLayout>
                 </RelativeLayout>

@@ -50,6 +50,7 @@ import com.ubtechinc.goldenpig.net.ResponseInterceptor;
 import com.ubtechinc.goldenpig.pigmanager.SetPigNetWorkActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.mypig.CheckRobotOnlineStateProxy;
+import com.ubtechinc.goldenpig.pigmanager.mypig.DeviceUpdateActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.PairPigActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.QRCodeActivity;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPairPigQRHttpProxy;
@@ -427,6 +428,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
 
             @Override
             public void onRightButtonClick(View view) {
+
             }
 
         });
@@ -634,16 +636,28 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                 break;
             case 5:
                 tip = "系统升级失败";
+                if (mTopActivity instanceof DeviceUpdateActivity) {
+                    mTopActivity.finish();
+                }
                 break;
             case 6:
                 tip = "系统升级成功";
+                if (mTopActivity instanceof DeviceUpdateActivity) {
+                    mTopActivity.finish();
+                }
                 break;
             case 7:
                 tip = "升级包异常，系统升级失败";
+                if (mTopActivity instanceof DeviceUpdateActivity) {
+                    mTopActivity.finish();
+                }
                 break;
             case 8:
                 tip = "服务异常，无法升级\n" +
                         "请稍后重试";
+                if (mTopActivity instanceof DeviceUpdateActivity) {
+                    mTopActivity.finish();
+                }
                 break;
             default:
                 tip = "OTA升级完成";

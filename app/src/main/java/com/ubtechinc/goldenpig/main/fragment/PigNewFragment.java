@@ -299,7 +299,7 @@ public class PigNewFragment extends BaseFragment {
                     //TODO 管理员
                     if (UBTPGApplication.isRobotOnline) {
                         //TODO 在线
-                        rlNativeInfo.setVisibility(View.VISIBLE);
+//                        rlNativeInfo.setVisibility(View.VISIBLE);
                     } else {
                         //TODO 离线
                         hideNativeInfo();
@@ -462,7 +462,11 @@ public class PigNewFragment extends BaseFragment {
 
             //更新蓝牙
             if (bleStatus.getOpen()) {
-                ivBle.setImageResource(R.drawable.ic_bt_connected);
+                if (bleStatus.getConnected()) {
+                    ivBle.setImageResource(R.drawable.ic_bt_connected_connect);
+                } else {
+                    ivBle.setImageResource(R.drawable.ic_bt_connected);
+                }
             } else {
                 ivBle.setImageResource(R.drawable.ic_bt_disconnected);
             }
@@ -489,9 +493,11 @@ public class PigNewFragment extends BaseFragment {
             }
 
             //更新电量
-            tvBattery.setText(batteryStatus.getElectricity() + "%");
+            int electricity = batteryStatus.getElectricity();
+            tvBattery.setText(electricity + "%");
 
-            ivBattery.setImageLevel(batteryStatus.getElectricity() / 10);
+            ivBattery.setImageLevel((int) Math.ceil(electricity / 10f));
+
 
             //更新网络连接信息
             if (networkStatus.getWifiState()) {

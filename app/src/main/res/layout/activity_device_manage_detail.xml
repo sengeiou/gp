@@ -417,10 +417,9 @@
                         android:layout_width="@dimen/dp_9"
                         android:layout_height="@dimen/dp_9"
                         android:layout_centerVertical="true"
-                        android:layout_marginRight="@dimen/dp_10"
                         android:layout_toLeftOf="@+id/iv_update_go"
                         android:src="@drawable/red_circle"
-                        android:visibility="gone" />
+                        android:visibility="visible" />
 
                     <View
                         android:layout_width="match_parent"
