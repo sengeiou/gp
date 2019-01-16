@@ -55,7 +55,7 @@ public class ContinuousVoiceActivity extends BaseToolBarActivity implements Swit
                 UbtToastUtils.showCustomToast(this, "八戒处于离线状态\n获取连续对话模式开关失败");
             }
         } else {
-            UbtToastUtils.showCustomToast(this, getString(R.string.network_error_toast));
+            UbtToastUtils.showCustomToast(this, getString(R.string.network_error));
         }
     }
 
@@ -121,7 +121,7 @@ public class ContinuousVoiceActivity extends BaseToolBarActivity implements Swit
                 UbtToastUtils.showCustomToast(this, getString(R.string.ubt_robot_offline));
             }
         } else {
-            UbtToastUtils.showCustomToast(this, getString(R.string.network_error_toast));
+            UbtToastUtils.showCustomToast(this, getString(R.string.network_error));
         }
     }
 }

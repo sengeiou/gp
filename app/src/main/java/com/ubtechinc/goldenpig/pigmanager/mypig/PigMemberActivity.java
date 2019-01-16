@@ -22,6 +22,7 @@ import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.entity.PairPig;
 import com.ubtechinc.goldenpig.comm.entity.UserInfo;
@@ -43,6 +44,7 @@ import com.ubtechinc.goldenpig.pigmanager.register.TransferAdminHttpProxy;
 import com.ubtechinc.goldenpig.push.PushHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PigUtils;
+import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.ubtechinc.nets.http.ThrowableWrapper;
 import com.ubtrobot.clear.ClearContainer;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
@@ -723,8 +725,6 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
         });
     }
 
-    private boolean mClearPigFlag = false;
-
     private void showUnBindConfirmDialog(final String userId) {
         UBTSubTitleDialog unBindConfirmDialog = new UBTSubTitleDialog(this);
         unBindConfirmDialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
@@ -742,15 +742,12 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
 
             @Override
             public void onRightButtonClick(View view) {
-                if (mClearPigFlag) {
+                if (unBindConfirmDialog.isRadioSelected()) {
                     doClearInfoByIM();
                 } else {
                     doUnbind();
                 }
             }
-        });
-        unBindConfirmDialog.setOnUbtDialogContentClickLinsenter(view -> {
-            mClearPigFlag = view.isSelected();
         });
         unBindConfirmDialog.show();
     }
@@ -764,6 +761,10 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
     }
 
     private void doClearInfoByIM() {
+        if (!UBTPGApplication.isRobotOnline) {
+            UbtToastUtils.showCustomToast(this, getString(R.string.ubt_robot_offline_clear_tip));
+            return;
+        }
         List<ClearContainer.Categories.Builder> categorys = new ArrayList<>();
         ClearContainer.Categories.Builder categoryBuilder1 = ClearContainer.Categories.newBuilder();
         categoryBuilder1.setName("Contact.deleteContact");

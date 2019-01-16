@@ -36,10 +36,11 @@
             android:layout_marginStart="@dimen/dp_15"
             android:layout_toLeftOf="@+id/tv_manager"
             android:layout_toRightOf="@+id/ubt_img_me_photo"
+            android:textStyle="bold"
             android:singleLine="true"
             android:text="@string/ubt_visitor_login"
             android:textColor="@color/ubt_tips_txt_color"
-            android:textSize="@dimen/dp_18" />
+            android:textSize="@dimen/sp_18" />
 
         <TextView
             android:id="@+id/tv_manager"
@@ -309,14 +310,14 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <Button
+    <com.ubtechinc.commlib.view.UbtSubTxtButton
         android:id="@+id/ubt_btn_person_qq"
         style="@style/UBTMeBtnTheme"
         android:layout_marginTop="@dimen/dp_20"
         android:drawableStart="@drawable/ic_member"
         android:text="@string/ubt_qq_music" />
 
-    <Button
+    <com.ubtechinc.commlib.view.UbtSubTxtButton
         android:id="@+id/ubt_btn_person_feedback"
         style="@style/UBTMeBtnTheme"
         android:drawableStart="@drawable/ic_help"
@@ -331,7 +332,7 @@
         app:rightText="@string/ubt_version_format"
         app:rightTextColor="@color/ubt_version_color"
         app:rightTextPadding="52dp"
-        app:rightTextSize="14sp" />
+        app:rightTextSize="15sp" />
 
     <View
         android:layout_width="match_parent"

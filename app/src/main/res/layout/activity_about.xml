@@ -39,32 +39,32 @@
             android:textSize="@dimen/sp_14"
             />
 
-        <Button
+        <com.ubtechinc.commlib.view.UbtSubTxtButton
             android:id="@+id/ubt_btn_service_policy"
             style="@style/UBTMeBtnTheme"
+            android:padding="@dimen/dp_15"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_44"
-            android:background="@drawable/selector_ubt_me_item_bg"
             android:drawableRight="@drawable/ic_goto_gray"
             android:gravity="center_vertical|left"
-            android:paddingEnd="@dimen/dp_16"
-            android:paddingStart="@dimen/dp_16"
+            android:paddingStart="@dimen/dp_15"
+            android:paddingEnd="@dimen/dp_15"
             android:text="@string/ubt_service_policy"
             android:textColor="@color/ubt_tips_txt_color"
             android:textSize="@dimen/sp_15"/>
 
-        <Button
+        <com.ubtechinc.commlib.view.UbtSubTxtButton
             android:id="@+id/ubt_btn_privacy_policy"
             style="@style/UBTMeBtnTheme"
+            android:padding="@dimen/dp_15"
+            android:paddingStart="@dimen/dp_15"
+            android:paddingEnd="@dimen/dp_15"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/dp_10"
-            android:background="@drawable/selector_ubt_me_item_bg"
             android:drawableRight="@drawable/ic_goto_gray"
             android:gravity="center_vertical|left"
-            android:paddingEnd="@dimen/dp_16"
-            android:paddingStart="@dimen/dp_16"
             android:text="@string/ubt_privacy_policy"
             android:textColor="@color/ubt_tips_txt_color"
             android:textSize="@dimen/sp_15"/>

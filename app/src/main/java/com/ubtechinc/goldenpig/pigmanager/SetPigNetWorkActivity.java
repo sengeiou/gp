@@ -10,7 +10,7 @@ import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ubt.imlibv2.bean.ContactsProtoBuilder;
@@ -57,7 +57,7 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_PIG_WIFI_LIS
  * @changetime :2018/8/27 14:32
  */
 public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.OnClickListener {
-    private Button mSendWifiInfoBtn;
+    private TextView mSendWifiInfoBtn;
     private UbtWifiListEditText mWifiNamEdt;
     private WifiListEditText mWetWifiName;
     private UbtPasswordEditText mWifiPwdEdt;

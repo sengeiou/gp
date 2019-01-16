@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 
 public class StatusBarUtil {
@@ -69,5 +70,32 @@ public class StatusBarUtil {
                     isFull ? View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
                             : View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
+
+        if (Build.MANUFACTURER.equalsIgnoreCase("OPPO")) {
+            //OPPO
+            setOPPOStatusTextColor(true, activity);
+        }
+
+    }
+
+    private static final int SYSTEM_UI_FLAG_OP_STATUS_BAR_TINT = 0x00000010;
+    private static void setOPPOStatusTextColor(boolean lightStatusBar, Activity activity) {
+        Window window = activity.getWindow();
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        int vis = window.getDecorView().getSystemUiVisibility();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (lightStatusBar) {
+                vis |= View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            } else {
+                vis &= ~View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
+            }
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (lightStatusBar) {
+                vis |= SYSTEM_UI_FLAG_OP_STATUS_BAR_TINT;
+            } else {
+                vis &= ~SYSTEM_UI_FLAG_OP_STATUS_BAR_TINT;
+            }
+        }
+        window.getDecorView().setSystemUiVisibility(vis);
     }
 }

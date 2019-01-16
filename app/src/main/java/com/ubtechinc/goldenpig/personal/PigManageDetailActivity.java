@@ -45,6 +45,7 @@ import com.ubtechinc.goldenpig.pigmanager.mypig.UnbindPigProxy;
 import com.ubtechinc.goldenpig.pigmanager.register.CheckUserRepository;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.utils.CheckUtil;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.ubtechinc.nets.http.ThrowableWrapper;
@@ -101,6 +102,8 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
     private boolean isNoSim;
 
     private boolean isBeeHiveOpen;
+
+    private boolean needHandleUpdate;
 
     @Override
     protected int getConentView() {
@@ -237,6 +240,7 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
             } else {
                 tv_manager_state.setText("普通成员：");
                 refreshUI(false);
+                ivRedPoint.setVisibility(View.GONE);
             }
         } else {
             finish();
@@ -257,17 +261,8 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
         tv_update.setEnabled(isAdmin);
     }
 
-    private boolean checkPhoneNetState() {
-        if (UBTPGApplication.isNetAvailable) {
-            return true;
-        } else {
-            UbtToastUtils.showCustomToast(this, getString(R.string.network_error_toast));
-            return false;
-        }
-    }
-
     public void onClick(View v) {
-        if (!checkPhoneNetState()) {
+        if (!CheckUtil.checkPhoneNetState(this)) {
             return;
         }
         switch (v.getId()) {
@@ -354,6 +349,7 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
 
     private void getPigVersionState() {
         showLoadingDialog();
+        needHandleUpdate = true;
         UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getPigVersionState()));
     }
 
@@ -423,8 +419,6 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
                 });
     }
 
-    private boolean mClearPigFlag = false;
-
     private void showUnBindConfirmDialog(boolean onlySelf) {
         if (onlySelf) {
             UBTSubTitleDialog unBindConfirmDialog = new UBTSubTitleDialog(this);
@@ -443,15 +437,12 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
 
                 @Override
                 public void onRightButtonClick(View view) {
-                    if (mClearPigFlag) {
+                    if (unBindConfirmDialog.isRadioSelected()) {
                         doClearInfoByIM();
                     } else {
                         doUnbind();
                     }
                 }
-            });
-            unBindConfirmDialog.setOnUbtDialogContentClickLinsenter(view -> {
-                mClearPigFlag = view.isSelected();
             });
             unBindConfirmDialog.show();
         } else {
@@ -529,6 +520,10 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
     }
 
     private void doClearInfoByIM() {
+        if (!UBTPGApplication.isRobotOnline) {
+            UbtToastUtils.showCustomToast(this, getString(R.string.ubt_robot_offline_clear_tip));
+            return;
+        }
         List<ClearContainer.Categories.Builder> categorys = new ArrayList<>();
         ClearContainer.Categories.Builder categoryBuilder1 = ClearContainer.Categories.newBuilder();
         categoryBuilder1.setName("Contact.deleteContact");
@@ -601,35 +596,6 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
         EventBusUtil.unregister(this);
     }
 
-    private UBTBaseDialog mIKnowDialog;
-
-    private void showIKnowDialog(String content) {
-        if (mIKnowDialog == null) {
-            mIKnowDialog = new UBTBaseDialog(this);
-            mIKnowDialog.setCancelable(false);
-            mIKnowDialog.setCanceledOnTouchOutside(false);
-            mIKnowDialog.setLeftBtnShow(false);
-            mIKnowDialog.setRightButtonTxt("我知道了");
-            mIKnowDialog.setRightBtnColor(ContextCompat.getColor(this, R.color.ubt_tab_btn_txt_checked_color));
-            mIKnowDialog.setOnUbtDialogClickLinsenter(new UBTBaseDialog.OnUbtDialogClickLinsenter() {
-
-                @Override
-                public void onLeftButtonClick(View view) {
-
-                }
-
-                @Override
-                public void onRightButtonClick(View view) {
-                }
-
-            });
-        }
-        mIKnowDialog.setTips(content);
-        if (!isDestroyed() && !isFinishing() && !mIKnowDialog.isShowing()) {
-            mIKnowDialog.show();
-        }
-    }
-
     private void updateNativeInfo(NativeInfoContainer.NativeInfo data) {
         NativeInfoContainer.NativeInfo nativeInfo = data;
         try {
@@ -696,11 +662,13 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
         int code = event.getCode();
         switch (code) {
             case USER_PIG_UPDATE:
+                updateRobotView();
                 break;
             case RECEIVE_NATIVE_INFO:
                 updateNativeInfo((NativeInfoContainer.NativeInfo) event.getData());
                 break;
             case RECEIVE_ROBOT_VERSION_STATE:
+                if (!needHandleUpdate) return;
                 VersionInformation.UpgradeInfo info = (VersionInformation.UpgradeInfo) event.getData();
                 if (info != null) {
                     dismissLoadDialog();
@@ -733,10 +701,10 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
                 break;
             case RECEIVE_CLEAR_PIG_INFO:
                 if ((boolean) event.getData()) {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("八戒数据清除成功");
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("机器人数据清除成功");
                     doUnbind();
                 } else {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("八戒数据清除失败");
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("机器人数据清除失败，请重试");
                 }
                 break;
             case RECEIVE_ROBOT_ONLINE_STATE:

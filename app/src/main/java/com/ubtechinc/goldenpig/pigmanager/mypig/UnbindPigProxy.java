@@ -47,7 +47,7 @@ public class UnbindPigProxy extends BaseHttpProxy {
                         String result = response.body().source().readUtf8();
                         if (response.isSuccessful()) {
                             callback.onSuccess();
-                        } else {
+                        } else if (response.code() != 401){
                             JSONObject jsonObject = new JSONObject(result);
                             String message = jsonObject.optString("message");
                             callback.onError(message);

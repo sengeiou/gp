@@ -74,7 +74,9 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
 
     private BungdingManager mBangdingManager;
 
-    private Disposable disposable;
+    private Disposable scanDisposable;
+
+    private Disposable connDisposable;
 
     private UBTBaseDialog mGpsTipDialog;
 
@@ -183,11 +185,11 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
             if (!EventBus.getDefault().isRegistered(this)) {
                 EventBus.getDefault().register(this);
             }
-            if (disposable != null) {
-                disposable.dispose();
+            if (scanDisposable != null) {
+                scanDisposable.dispose();
             }
             mUbtBluetoothManager.startScanBluetooth();
-            disposable = Observable.timer(15, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread())
+            scanDisposable = Observable.timer(15, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread())
                     .subscribe(aLong -> {
                         //TODO 获取不到蓝牙设备后响应
                         LocationManager locManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -215,8 +217,8 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
             isAutoScan = false;
             isManualScan = false;
             mUbtBluetoothManager.stopScanBluetooth();
-            if (disposable != null) {
-                disposable.dispose();
+            if (scanDisposable != null) {
+                scanDisposable.dispose();
             }
         }
     }
@@ -226,9 +228,13 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
         super.onDestroy();
         LoadingDialog.getInstance(BleClosePigActivity.this).dismiss();
         startScanBle(false);
-        if (disposable != null) {
-            disposable.dispose();
-            disposable = null;
+        if (scanDisposable != null) {
+            scanDisposable.dispose();
+            scanDisposable = null;
+        }
+        if (connDisposable != null) {
+            connDisposable.dispose();
+            connDisposable = null;
         }
     }
 
@@ -539,7 +545,16 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
         if (device != null) {
             mBluetoothDevice = device;
             mBangdingManager.setBangdingListener(mBandingListenerAbster);
-            new Thread(() -> mHandler.sendEmptyMessage(MSG_WATH_DISCONNECT_SUCCESS)).start();
+            new Thread(() -> {
+                mHandler.sendEmptyMessage(MSG_WATH_DISCONNECT_SUCCESS);
+                connDisposable = Observable.timer(15, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(aLong -> {
+                            //TODO 手动连接15秒超时处理
+                            if (isManualScan) {
+
+                            }
+                        });
+            }).start();
         }
     }
 

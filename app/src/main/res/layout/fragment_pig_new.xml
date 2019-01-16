@@ -13,6 +13,7 @@
         android:paddingBottom="13dp"
         android:paddingTop="13dp"
         android:text="@string/ubt_pig"
+        android:visibility="invisible"
         android:textColor="@color/ubt_tips_txt_color" />
 
 
@@ -172,8 +173,8 @@
 
                         <ImageView
                             android:id="@+id/iv_sim_net"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="@dimen/dp_22"
+                            android:layout_height="@dimen/dp_22"
                             android:layout_toRightOf="@+id/iv_signal"
                             android:layout_marginLeft="@dimen/dp_5"
                             android:layout_centerVertical="true"

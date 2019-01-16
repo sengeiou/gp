@@ -1,10 +1,12 @@
 package com.ubtechinc.goldenpig.personal;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
+import com.ubtech.utilcode.utils.SPUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
@@ -38,7 +40,6 @@ public class AboutBleBJActivity extends BaseToolBarActivity {
 
     private TextView tvVersionValue;
 
-
     @Override
     protected int getConentView() {
         return R.layout.activity_ble_pig_info;
@@ -64,9 +65,24 @@ public class AboutBleBJActivity extends BaseToolBarActivity {
         if (pigInfo != null) {
             String name = pigInfo.getRobotName();
             tvDsnValue.setText(name);
+            getPigInfo(name);
         }
-        getPigVersion();
         getPigDeviceInfo();
+    }
+
+    private void getPigInfo(String pigDsn) {
+        DeviceInfoContainer.DeviceInfo deviceInfo = (DeviceInfoContainer.DeviceInfo) SPUtils.get().readObject("piginfo_basic" + pigDsn);
+        if (deviceInfo != null) {
+            updateUI(deviceInfo);
+        } else {
+            getPigDeviceInfo();
+        }
+        String pigVersion = SPUtils.get().getString("piginfo_version" + pigDsn);
+        if (!TextUtils.isEmpty(pigVersion)) {
+            tvVersionValue.setText(pigVersion);
+        } else {
+            getPigVersion();
+        }
     }
 
     @Override
@@ -87,14 +103,19 @@ public class AboutBleBJActivity extends BaseToolBarActivity {
     public void onReceiveEvent(Event event) {
         if (event == null) return;
         int code = event.getCode();
+        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+        String pigDsn = pigInfo != null ? pigInfo.getRobotName() : "";
         switch (code) {
             case RECEIVE_PIG_VERSION:
+                String currentVersion = (String) event.getData();
+                SPUtils.get().put("piginfo_version" + pigDsn, currentVersion);
                 if (tvVersionValue != null) {
-                    tvVersionValue.setText((String) event.getData());
+                    tvVersionValue.setText(currentVersion);
                 }
                 break;
             case RECEIVE_PIG_DEVICE_INFO:
                 DeviceInfoContainer.DeviceInfo deviceInfo = (DeviceInfoContainer.DeviceInfo) event.getData();
+                SPUtils.get().saveObject("piginfo_basic" + pigDsn, deviceInfo);
                 updateUI(deviceInfo);
                 break;
         }

@@ -659,6 +659,18 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                     mTopActivity.finish();
                 }
                 break;
+            case 9:
+                tip = "八戒系统空间不足，无法升级";
+                if (mTopActivity instanceof DeviceUpdateActivity) {
+                    mTopActivity.finish();
+                }
+                break;
+            case 10:
+                tip = "八戒文件系统异常，无法升级";
+                if (mTopActivity instanceof DeviceUpdateActivity) {
+                    mTopActivity.finish();
+                }
+                break;
             default:
                 tip = "OTA升级完成";
                 break;

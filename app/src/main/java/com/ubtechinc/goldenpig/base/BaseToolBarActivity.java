@@ -1,6 +1,7 @@
 package com.ubtechinc.goldenpig.base;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.comm.widget.DrawableTextView;
+import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
 
 /**
  * @author : HQT
@@ -37,6 +39,8 @@ public abstract class BaseToolBarActivity extends BaseActivity {
     private DrawableTextView mNotifyTv; ///动态提示
     protected TextView mTvSkip;              //跳过按钮
     protected ImageButton mToolbarRightBtn;
+
+    private UBTBaseDialog mIKnowDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -328,5 +332,32 @@ public abstract class BaseToolBarActivity extends BaseActivity {
 
     public interface OnClickRightListener {
         void onClick();
+    }
+
+    protected void showIKnowDialog(String content) {
+        if (mIKnowDialog == null) {
+            mIKnowDialog = new UBTBaseDialog(this);
+            mIKnowDialog.setCancelable(false);
+            mIKnowDialog.setCanceledOnTouchOutside(false);
+            mIKnowDialog.setLeftBtnShow(false);
+            mIKnowDialog.setRightButtonTxt("我知道了");
+            mIKnowDialog.setRightBtnColor(ContextCompat.getColor(this, R.color.ubt_tab_btn_txt_checked_color));
+            mIKnowDialog.setOnUbtDialogClickLinsenter(new UBTBaseDialog.OnUbtDialogClickLinsenter() {
+
+                @Override
+                public void onLeftButtonClick(View view) {
+
+                }
+
+                @Override
+                public void onRightButtonClick(View view) {
+                }
+
+            });
+        }
+        mIKnowDialog.setTips(content);
+        if (!isDestroyed() && !isFinishing() && !mIKnowDialog.isShowing()) {
+            mIKnowDialog.show();
+        }
     }
 }

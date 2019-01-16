@@ -61,7 +61,7 @@
             android:layout_marginStart="@dimen/ubt_edt_marginstart"
             android:background="@color/ubt_dilog_decore_color" />
 
-        <Button
+        <TextView
             android:id="@+id/ubt_btn_connect_wifi"
             style="@style/UBTButtonTheme.Cyan"
             android:layout_marginTop="@dimen/ubt_btn_start_margin_top"
@@ -69,23 +69,24 @@
 
     </LinearLayout>
 
-    <ImageView
-        android:visibility="gone"
-        android:id="@+id/ubt_img_success"
-        android:layout_width="146dp"
-        android:layout_height="146dp"
-        android:layout_centerInParent="true"
-        app:srcCompat="@drawable/ic_success" />
-
     <TextView
         android:visibility="gone"
         android:id="@+id/ubt_tv_set_net_success"
          android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/ubt_img_success"
-        android:layout_centerHorizontal="true"
-        android:textSize="15sp"
-        android:textColor="@color/ubt_tips_txt_color"
+        android:layout_centerInParent="true"
+        android:textColor="#FFB4C0C7"
+        android:textSize="14sp"
         android:text="@string/ubt_set_net_success" />
+
+    <ImageView
+        android:visibility="gone"
+        android:id="@+id/ubt_img_success"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/ubt_tv_set_net_success"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/dp_32"
+        app:srcCompat="@drawable/img_success" />
 
 </RelativeLayout>

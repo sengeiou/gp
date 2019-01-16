@@ -78,7 +78,7 @@
     <string name="ubt_unbing_tips">解绑后，将不能通过app使用此八戒</string>
     <string name="ubt_pig_serialno">八戒序列号：%1$s</string>
     <string name="ubt_pig_version_format">八戒当前版本：%1$s</string>
-    <string name="ubt_ubbind_success">成功解除绑定</string>
+    <string name="ubt_ubbind_success">解绑成功</string>
     <string name="ubt_transfer_admin_tips">你是管理员，解绑前请先转让管理员权限</string>
     <string name="ubt_exit_group_tips">你是管理员，退出成员组请先转让管理员权限</string>
     <string name="ubt_pig_unset_net">八戒未配网，</string>
@@ -202,7 +202,7 @@
 
     <string name="reload_error">加载失败</string>
     <string name="reload">重新加载</string>
-    <string name="network_error_toast">当前网络异常，请检查手机网络</string>
+    <string name="network_error">当前网络异常，请检查手机网络</string>
     <string name="msg_error_toast">当前数据异常，请稍后重试</string>
     <string name="timeout_error_toast">请求超时，请重试</string>
 
@@ -243,11 +243,11 @@
     <string name="continuous_voice_tip2">对话期间：\n如果想让八戒停止说话，短按电源键即可：\n如果八戒在10秒内没有听到声音，则需重新唤醒。</string>
     <string name="continuous_voice_tip3">关闭开关时，每次对话都需要唤醒。</string>
 
-    <string name="beehive_mobile_tip1">开启蜂窝移动数据后，八戒可通过移动网络访问互联网若八戒同时连接了Wi-Fi,则默认使用Wi-Fi网络</string>
-    <string name="beehive_mobile_tip2">如想打开或关闭蜂窝移动数据\n请对八戒说\n“八戒八戒，打开蜂窝移动数据”\n“八戒八戒，关闭蜂窝移动数据”</string>
+    <string name="beehive_mobile_tip1">开启蜂窝移动数据后，八戒可通过移动网络访问互联网\n若八戒同时连接了Wi-Fi,则默认使用Wi-Fi网络</string>
+    <string name="beehive_mobile_tip2">如想打开或关闭蜂窝移动数据\n请对八戒说\n“八戒八戒，打开数据”\n“八戒八戒，关闭数据”</string>
 
-    <string name="switch_wifi_tip1">如想打开或关闭Wi-Fi\n请对八戒说\n“八戒八戒，打开Wi-Fi”\n“八戒八戒，关闭Wi-Fi”</string>
-    <string name="switch_wifi_tip2">请谨慎关闭八戒的Wi-Fi，关闭后\n若未连接移动数据，八戒会断开网络无法使用</string>
+    <string name="switch_wifi_tip1">如想打开或关闭Wi-Fi\n请对八戒说：\n“八戒八戒，打开Wi-Fi”\n“八戒八戒，关闭Wi-Fi”</string>
+    <string name="switch_wifi_tip2">请谨慎关闭八戒的Wi-Fi，关闭后，若未连接移动数据，八戒会断开网络无法使用</string>
 
     <string name="connect_wifi">连接Wi-Fi</string>
     <string name="switch_wifi">切换Wi-Fi</string>
@@ -265,5 +265,6 @@
     <string name="ubt_unbind_group_tips">您是八戒的管理员，退出群组会解绑八戒，解绑前请先确认</string>
 
     <string name="ubt_robot_offline">八戒处于离线状态\n操作失败</string>
+    <string name="ubt_robot_offline_clear_tip">机器人不在线，无法清除数据，请重试</string>
 
 </resources>

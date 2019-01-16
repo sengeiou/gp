@@ -168,11 +168,11 @@ public class RecordActivity extends BaseNewActivity implements Observer {
                 Log.e("setOnUbtTIMConver", s);
                 LoadingDialog.getInstance(RecordActivity.this).dismiss();
                 if (NetworkHelper.sharedHelper() == null) {
-                    ToastUtils.showShortToast(getString(R.string.network_error_toast));
+                    ToastUtils.showShortToast(getString(R.string.network_error));
                 } else if (NetworkHelper.sharedHelper().isNetworkAvailable()) {
                     ToastUtils.showShortToast(getString(R.string.msg_error_toast));
                 } else {
-                    ToastUtils.showShortToast(getString(R.string.network_error_toast));
+                    ToastUtils.showShortToast(getString(R.string.network_error));
                 }
                 if (mHandler.hasMessages(1)) {
                     mHandler.removeMessages(1);

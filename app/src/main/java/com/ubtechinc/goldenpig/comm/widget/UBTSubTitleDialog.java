@@ -89,6 +89,13 @@ public class UBTSubTitleDialog extends BaseDialog implements View.OnClickListene
         }
     }
 
+    public boolean isRadioSelected() {
+        if (mRadioTip != null) {
+            return mRadioTip.isSelected();
+        }
+        return false;
+    }
+
     public void setTips(String tips) {
         if (null == mTipsTv) {
             mTipsTv = (TextView) findViewById(R.id.ubt_tv_dialog_tips);

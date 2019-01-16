@@ -79,7 +79,7 @@ public class SwitchWifiActivity extends BaseToolBarActivity implements View.OnCl
             NativeInfoContainer.NetworkStatus networkStatus = nativeInfo.getNetworkStatus().unpack(NativeInfoContainer.NetworkStatus.class);
 
             if (networkStatus.getWifiState()) {
-                ivWifiIcon.setImageResource(R.drawable.ic_wifi);
+                ivWifiIcon.setImageResource(R.drawable.ic_wifi_connect);
                 tvWifiValue.setText(networkStatus.getSsid());
                 tvConnWifi.setText(R.string.switch_wifi);
             } else {

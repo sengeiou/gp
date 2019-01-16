@@ -299,6 +299,7 @@ public class PigNewFragment extends BaseFragment {
                     //TODO 管理员
                     if (UBTPGApplication.isRobotOnline) {
                         //TODO 在线
+                        tvPigTip.setVisibility(View.GONE);
 //                        rlNativeInfo.setVisibility(View.VISIBLE);
                     } else {
                         //TODO 离线
@@ -458,6 +459,7 @@ public class PigNewFragment extends BaseFragment {
 
             if (rlNativeInfo.getVisibility() != View.VISIBLE) {
                 rlNativeInfo.setVisibility(View.VISIBLE);
+                tvPigTip.setVisibility(View.GONE);
             }
 
             //更新蓝牙

@@ -160,7 +160,7 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer,
                 UbtToastUtils.showCustomToast(this, "八戒处于离线状态\n获取热点信息失败");
             }
         } else {
-            UbtToastUtils.showCustomToast(this, getString(R.string.network_error_toast));
+            UbtToastUtils.showCustomToast(this, getString(R.string.network_error));
         }
     }
 
@@ -198,7 +198,7 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer,
                 UbtToastUtils.showCustomToast(this, getString(R.string.ubt_robot_offline));
             }
         } else {
-            UbtToastUtils.showCustomToast(this, getString(R.string.network_error_toast));
+            UbtToastUtils.showCustomToast(this, getString(R.string.network_error));
         }
     }
 
