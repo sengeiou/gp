@@ -11,18 +11,18 @@
         android:layout_marginBottom="@dimen/dp_15"
         android:background="@color/ubt_wifi_list_divider" />
 
-    <View
-        android:id="@+id/top_curline2"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/ubt_1px"
-        android:layout_below="@+id/top_curline"
-        android:background="@color/ubt_wifi_list_divider" />
+    <!--<View-->
+        <!--android:id="@+id/top_curline2"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/ubt_1px"-->
+        <!--android:layout_below="@+id/top_curline"-->
+        <!--android:background="@color/ubt_wifi_list_divider" />-->
 
     <RelativeLayout
         android:id="@+id/ubt_layout_userinfo"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_64"
-        android:layout_below="@+id/top_curline2"
+        android:layout_below="@+id/top_curline"
         android:background="@color/ubt_white">
 
         <TextView
@@ -116,11 +116,11 @@
             android:textColor="@color/ubt_version_color"
             android:textSize="@dimen/dp_13" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/ubt_1px"
-            android:layout_alignParentBottom="true"
-            android:background="@color/ubt_wifi_list_divider" />
+        <!--<View-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/ubt_1px"-->
+            <!--android:layout_alignParentBottom="true"-->
+            <!--android:background="@color/ubt_wifi_list_divider" />-->
     </RelativeLayout>
 
     <TextView

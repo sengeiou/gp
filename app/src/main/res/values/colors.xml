@@ -57,5 +57,5 @@
     <color name="empty_color">#9DA7AD</color>
     <color name="gold_red_color">#FF3A30</color>
 
-    <color name="cardview_line">#3ff2f2f2</color>
+    <color name="cardview_line">#1ff2f2f2</color>
 </resources>
