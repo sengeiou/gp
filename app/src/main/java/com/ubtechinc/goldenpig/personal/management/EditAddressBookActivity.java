@@ -61,6 +61,7 @@ import butterknife.BindView;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CONTACT_CHECK_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_DELETE_CONTACTS;
+import static com.ubtechinc.goldenpig.personal.management.AddressBookActivity.MAXADD;
 import static com.ubtechinc.goldenpig.utils.CommendUtil.TIMEOUT;
 
 public class EditAddressBookActivity extends BaseNewActivity implements Observer {
@@ -82,6 +83,7 @@ public class EditAddressBookActivity extends BaseNewActivity implements Observer
     public Boolean noCard = false;
     public Boolean hasSelect = false;
     public String pigPhoneNumber = "";
+
     private class MyHandler extends Handler {
         WeakReference<Activity> mWeakReference;
 
@@ -206,7 +208,7 @@ public class EditAddressBookActivity extends BaseNewActivity implements Observer
         if (list.size() == 0) {
             mStateView.showEmpty();
             tv_right.setVisibility(View.GONE);
-        } else if (mList.size() >= 10) {
+        } else if (mList.size() >= MAXADD) {
             AddressBookmodel ab2 = new AddressBookmodel();
             ab2.type = 2;
             mList.add(ab2);
@@ -382,6 +384,9 @@ public class EditAddressBookActivity extends BaseNewActivity implements Observer
                     Event<List<AddressBookmodel>> event = new Event<>(RECEIVE_DELETE_CONTACTS);
                     event.setData(list1);
                     EventBusUtil.sendEvent(event);
+                    if (mList.size() <= 1) {
+                        finish();
+                    }
                 } else {
                     ToastUtils.showShortToast("删除失败，请重试");
                 }

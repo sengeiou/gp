@@ -70,6 +70,7 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
     public int deletePosition = -1;
     public Boolean noCard = false;
     public String pigPhoneNumber = "";
+    public static final int MAXADD = 30;
     /**
      * 先拉取到数据，添加联系人时要在app端作对比后再提交给八戒
      */
@@ -129,7 +130,7 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
 //                    ToastUtils.showShortToast("请先加载联系人成功后再添加");
 //                    return;
 //                }
-                if (mList.size() < 10) {
+                if (mList.size() < MAXADD) {
                     Intent it = new Intent(AddressBookActivity.this, AddAndSetContactActivity
                             .class);
                     it.putParcelableArrayListExtra("list", mList);
@@ -228,7 +229,7 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
         if (list.size() == 0) {
             mStateView.showEmpty();
             tv_right.setVisibility(View.GONE);
-        } else if (mList.size() >= 10) {
+        } else if (mList.size() >= MAXADD) {
             AddressBookmodel ab2 = new AddressBookmodel();
             ab2.noCard = noCard;
             ab2.phone = pigPhoneNumber;
@@ -447,6 +448,16 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
                     }
                 }
                 adapter.notifyDataSetChanged();
+            }
+            for (int i = 0; i < mList.size(); i++) {
+                if (mList.get(i).type == 0) {
+                    break;
+                }
+                if (i == mList.size() - 1) {
+                    mList.clear();
+                    adapter.notifyDataSetChanged();
+                    mStateView.showEmpty();
+                }
             }
         }
     }

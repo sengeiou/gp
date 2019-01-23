@@ -82,7 +82,7 @@
     <string name="add_contact">添加联系人</string>
     <string name="set_contact">编辑联系人</string>
     <string name="complete">完成</string>
-    <string name="contact_limit">通讯录已满10人,如需新增请先删除联系人</string>
+    <string name="contact_limit">通讯录已满30人,如需新增请先删除联系人</string>
     <string name="ubt_off_line">离线</string>
     <string name="ubt_unbind">解除绑定</string>
     <string name="ubt_device_update">设备升级</string>
