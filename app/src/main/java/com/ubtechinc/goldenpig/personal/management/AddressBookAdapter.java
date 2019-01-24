@@ -118,10 +118,15 @@ public class AddressBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             AddressBookHolder3 aHolder = (AddressBookHolder3) holder;
             if (mList.get(position).noCard) {
                 aHolder.tv_has_card.setText("未插入SIM卡");
+                aHolder.tv_has_card.setTextColor(mContext.getResources().getColor(R.color
+                        .ubt_tab_btn_txt_checked_color));
+            } else if (TextUtils.isEmpty(mList.get(position).phone)) {
+                aHolder.tv_has_card.setText("无法获取号码");
+                aHolder.tv_has_card.setTextColor(mContext.getResources().getColor(R.color.empty_color));
             } else {
-                aHolder.tv_has_card.setText(TextUtils.isEmpty(mList.get(position).phone) ? "" : "八戒号码:" + mList.get
-                        (position)
-                        .phone);
+                aHolder.tv_has_card.setText("八戒号码:" + mList.get(position).phone);
+                aHolder.tv_has_card.setTextColor(mContext.getResources().getColor(R.color
+                        .ubt_tab_btn_txt_checked_color));
             }
             aHolder.iv_add.setOnClickListener(new View.OnClickListener() {
                 @Override
