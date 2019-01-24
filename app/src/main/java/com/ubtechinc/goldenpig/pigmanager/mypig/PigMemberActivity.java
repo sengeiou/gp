@@ -43,6 +43,7 @@ import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.pigmanager.register.TransferAdminHttpProxy;
 import com.ubtechinc.goldenpig.push.PushHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.utils.FastClickUtils;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.ubtechinc.nets.http.ThrowableWrapper;
@@ -616,10 +617,10 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
                 break;
             case RECEIVE_CLEAR_PIG_INFO:
                 if ((boolean) event.getData()) {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("八戒数据清除成功");
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("机器人数据清除成功");
                     doUnbind();
                 } else {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("八戒数据清除失败");
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("机器人数据清除失败，请重试");
                 }
                 break;
         }
@@ -742,6 +743,7 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
 
             @Override
             public void onRightButtonClick(View view) {
+                if (FastClickUtils.isFastClick()) return;
                 if (unBindConfirmDialog.isRadioSelected()) {
                     doClearInfoByIM();
                 } else {
@@ -752,7 +754,7 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
         unBindConfirmDialog.show();
     }
 
-    private void doUnbind() {
+    private synchronized void doUnbind() {
         UnbindPigProxy pigProxy = new UnbindPigProxy();
         String userId = AuthLive.getInstance().getUserId();
         final String serialNo = AuthLive.getInstance().getCurrentPig().getRobotName();

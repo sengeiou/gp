@@ -220,7 +220,10 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
         rl_pig_state.setLayoutParams(params);
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         updateOnLineStateUI();
+
         if (pigInfo != null) {
+            mQQMusicBtn.setAlpha(1.0f);
+            mQQMusicBtn.setEnabled(true);
             tv_manager.setVisibility(View.VISIBLE);
             if (pigInfo.isAdmin) {
                 tv_manager.setText("管理员");
@@ -239,6 +242,8 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
 
             ll_function.setVisibility(View.VISIBLE);
         } else {
+            mQQMusicBtn.setAlpha(0.5f);
+            mQQMusicBtn.setEnabled(false);
             ubt_tv_pig_name.setVisibility(View.GONE);
             ll_bind.setVisibility(View.VISIBLE);
             ll_function.setVisibility(View.GONE);

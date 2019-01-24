@@ -245,6 +245,7 @@
 
     <string name="beehive_mobile_tip1">开启蜂窝移动数据后，八戒可通过移动网络访问互联网\n若八戒同时连接了Wi-Fi,则默认使用Wi-Fi网络</string>
     <string name="beehive_mobile_tip2">如想打开或关闭蜂窝移动数据\n请对八戒说\n“八戒八戒，打开数据”\n“八戒八戒，关闭数据”</string>
+    <string name="open_beehive_mobile">请先打开蜂窝移动数据</string>
 
     <string name="switch_wifi_tip1">如想打开或关闭Wi-Fi\n请对八戒说：\n“八戒八戒，打开Wi-Fi”\n“八戒八戒，关闭Wi-Fi”</string>
     <string name="switch_wifi_tip2">请谨慎关闭八戒的Wi-Fi，关闭后，若未连接移动数据，八戒会断开网络无法使用</string>

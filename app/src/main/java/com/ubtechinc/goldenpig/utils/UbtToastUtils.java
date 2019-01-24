@@ -11,16 +11,24 @@ import com.ubtechinc.goldenpig.R;
 
 public class UbtToastUtils {
 
-    public static void showCustomToast(Context context, String tips) {
-        Toast customToast = new Toast(context.getApplicationContext());
-        View customView = LayoutInflater.from(context).inflate(R.layout.toast_customer,null);
+    private static Toast mToast;
 
+    public static void showCustomToast(Context context, String tips) {
+        View customView;
+        if (mToast == null) {
+            mToast = new Toast(context.getApplicationContext());
+            customView = LayoutInflater.from(context).inflate(R.layout.toast_customer, null);
+        } else {
+            customView = mToast.getView();
+            mToast.cancel();
+            mToast = new Toast(context.getApplicationContext());
+        }
         TextView tv = customView.findViewById(R.id.ubt_tv_toast_tips);
         tv.setText(tips);
-        customToast.setView(customView);
-        customToast.setDuration(Toast.LENGTH_SHORT);
-        customToast.setGravity(Gravity.CENTER,0,0);
-        customToast.show();
+        mToast.setView(customView);
+        mToast.setDuration(Toast.LENGTH_SHORT);
+        mToast.setGravity(Gravity.CENTER, 0, 0);
+        mToast.show();
     }
 
 }

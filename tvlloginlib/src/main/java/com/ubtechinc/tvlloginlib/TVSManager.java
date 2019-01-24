@@ -52,6 +52,10 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
         return instance;
     }
 
+    public LoginProxy getProxy() {
+        return proxy;
+    }
+
     private TVSManager(Context context, String wxId, String qqOpenId) {
         this.context = context;
         proxy = LoginProxy.getInstance(wxId, qqOpenId, context);

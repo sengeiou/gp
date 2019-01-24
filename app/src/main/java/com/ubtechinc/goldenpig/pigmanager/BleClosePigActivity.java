@@ -551,7 +551,10 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
                         .subscribe(aLong -> {
                             //TODO 手动连接15秒超时处理
                             if (isManualScan) {
-
+                                if (pigListDialog != null) {
+                                    pigListDialog.dismiss();
+                                    showErrorDialog("连接失败");
+                                }
                             }
                         });
             }).start();

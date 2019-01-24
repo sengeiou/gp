@@ -14,7 +14,11 @@ import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.push.PushAppInfo;
+import com.ubtechinc.goldenpig.push.PushHttpProxy;
 import com.ubtechinc.nets.utils.DeviceUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class EggShellActivtiy extends BaseToolBarActivity {
 
@@ -50,6 +54,18 @@ public class EggShellActivtiy extends BaseToolBarActivity {
         TextView tvPushStatus = findViewById(R.id.tv_push_status);
         PushAppInfo pushAppInfo = AuthLive.getInstance().getPushAppInfo();
         tvPushStatus.setText(getResources().getString(R.string.ubt_push_channel, pushAppInfo.isBindStatus() ? "正常" : "异常"));
+
+        findViewById(R.id.bt_test_push).setOnClickListener(v -> {
+            try {
+                PushHttpProxy pushHttpProxy = new PushHttpProxy();
+                Map map = new HashMap();
+                map.put("app_category", 1);
+                String userId = AuthLive.getInstance().getUserId();
+                pushHttpProxy.pushToken("Gold Pig", "Test push by myself", userId, map, 1);
+            } catch (Exception e) {
+                //TODO
+            }
+        });
 
     }
 

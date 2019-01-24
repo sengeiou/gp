@@ -206,15 +206,10 @@ public abstract class BaseToolBarActivity extends BaseActivity {
      * 设置显示返回按钮
      */
     protected void setTitleBack(boolean visible) {
-        if (visible) {
-//            toolbar.setNavigationIcon(R.drawable.ic_back);//设置返回按钮
-            ActionBar actionBar = getSupportActionBar();
-            if (actionBar != null) {
-//                Drawable drawable = ContextCompat.getDrawable(this, R.drawable.ic_back);
-//                drawable.setBounds(0, 0, 40, 40);
-                actionBar.setHomeAsUpIndicator(R.drawable.ic_return);
-                actionBar.setDisplayHomeAsUpEnabled(true);
-            }
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_return);
+            actionBar.setDisplayHomeAsUpEnabled(visible);
         }
     }
 

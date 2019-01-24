@@ -1,6 +1,7 @@
 package com.ubtechinc.goldenpig.net;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.ubtech.utilcode.utils.Utils;
 import com.ubtechinc.goldenpig.BuildConfig;
@@ -29,6 +30,7 @@ public class RequestInterceptor implements Interceptor {
                 .header("authorization", TextUtils.isEmpty(token) ? "" : token)
                 .header("product", BuildConfig.product)
                 .build();
+        Log.d(TAG, "url      =  : " + request.url());
         return chain.proceed(request);
     }
 }

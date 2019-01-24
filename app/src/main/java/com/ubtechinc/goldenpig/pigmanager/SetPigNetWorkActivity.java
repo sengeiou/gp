@@ -143,6 +143,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
                 if (connect) {
                     mSendWifiInfoBtn.setText(R.string.ubt_connect);
                     mSendWifiInfoBtn.setAlpha(1.0f);
+                    setTitleBack(false);
                     findViewById(R.id.ubt_layout_setnet).setVisibility(View.GONE);
                     findViewById(R.id.ubt_img_success).setVisibility(View.VISIBLE);
                     findViewById(R.id.ubt_tv_set_net_success).setVisibility(View.VISIBLE);
@@ -203,6 +204,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
         doSendSkipComm();
         if (isPigConnectNet) {
             hideNotify();
+            setTitleBack(false);
             findViewById(R.id.ubt_layout_setnet).setVisibility(View.GONE);
             findViewById(R.id.ubt_img_success).setVisibility(View.VISIBLE);
             findViewById(R.id.ubt_tv_set_net_success).setVisibility(View.VISIBLE);
@@ -401,6 +403,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
             mSendWifiInfoBtn.setAlpha(1.0f);
             dismissLoadDialog();
             hideNotify();
+            setTitleBack(false);
             findViewById(R.id.ubt_layout_setnet).setVisibility(View.GONE);
             findViewById(R.id.ubt_img_success).setVisibility(View.VISIBLE);
             findViewById(R.id.ubt_tv_set_net_success).setVisibility(View.VISIBLE);

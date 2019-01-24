@@ -9,6 +9,7 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -167,6 +168,12 @@ public abstract class QRScannerActivity extends AppCompatActivity implements Sur
     protected void onDestroy() {
         inactivityTimer.shutdown();
         super.onDestroy();
+    }
+
+    public void restartScan() {
+        if (handler != null) {
+            Message.obtain(handler, R.id.restart_preview).sendToTarget();
+        }
     }
 
     /**

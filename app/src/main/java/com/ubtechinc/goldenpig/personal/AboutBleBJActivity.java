@@ -22,7 +22,7 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_PIG_DEVICE_I
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_PIG_VERSION;
 
 /**
- * @Description: 关于八戒机器人
+ * @Description: 关于机器人
  * @Author: zhijunzhou
  * @CreateDate: 2018/12/28 15:52
  */
@@ -48,7 +48,7 @@ public class AboutBleBJActivity extends BaseToolBarActivity {
     @Override
     protected void init(Bundle savedInstanceState) {
         EventBusUtil.register(this);
-        setToolBarTitle("关于八戒机器人");
+        setToolBarTitle("关于机器人");
         setTitleBack(true);
         initViews();
     }

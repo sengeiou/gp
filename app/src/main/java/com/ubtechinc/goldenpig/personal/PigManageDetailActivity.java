@@ -105,6 +105,8 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
 
     private boolean needHandleUpdate;
 
+    private boolean needUnBindByClear;
+
     @Override
     protected int getConentView() {
         return R.layout.activity_device_manage_detail;
@@ -288,8 +290,10 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
             case R.id.rl_hotpoint:
                 if (isNoSim) {
                     enterFunction(NoSimActivity.class, null);
-                } else {
+                } else if (isBeeHiveOpen) {
                     enterFunction(SetHotSpotActivity.class, null);
+                } else {
+                    UbtToastUtils.showCustomToast(this, getString(R.string.open_beehive_mobile));
                 }
                 break;
             case R.id.rl_continuity_voice:
@@ -524,6 +528,7 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
             UbtToastUtils.showCustomToast(this, getString(R.string.ubt_robot_offline_clear_tip));
             return;
         }
+        needUnBindByClear = true;
         List<ClearContainer.Categories.Builder> categorys = new ArrayList<>();
         ClearContainer.Categories.Builder categoryBuilder1 = ClearContainer.Categories.newBuilder();
         categoryBuilder1.setName("Contact.deleteContact");
@@ -601,10 +606,10 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
         try {
             NativeInfoContainer.SimStatus simStatus = nativeInfo.getSimStatus().unpack(NativeInfoContainer.SimStatus.class);
             NativeInfoContainer.NetworkStatus networkStatus = nativeInfo.getNetworkStatus().unpack(NativeInfoContainer.NetworkStatus.class);
-            if (networkStatus.getMobileState() == 0) {
-                isBeeHiveOpen = false;
-            } else {
+            if (simStatus.getOpen()) {
                 isBeeHiveOpen = true;
+            } else {
+                isBeeHiveOpen = false;
             }
             if (simStatus.getInserted()) {
                 isNoSim = false;
@@ -700,6 +705,7 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
                 }
                 break;
             case RECEIVE_CLEAR_PIG_INFO:
+                if (!needUnBindByClear) return;
                 if ((boolean) event.getData()) {
                     com.ubtech.utilcode.utils.ToastUtils.showShortToast("机器人数据清除成功");
                     doUnbind();

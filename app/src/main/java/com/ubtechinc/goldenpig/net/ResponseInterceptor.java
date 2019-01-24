@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
+import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
@@ -18,13 +19,15 @@ public class ResponseInterceptor implements Interceptor {
 
     @Override
     public Response intercept(Chain chain) throws IOException {
-        Response response = chain.proceed(chain.request());
+        Request request = chain.request();
+        Response response = chain.proceed(request);
 
         if (response.code() == 401) {
             Event<Integer> event = new Event<>(EventBusUtil.SERVER_RESPONSE_UNAUTHORIZED);
             EventBusUtil.sendEvent(event);
         }
 
+        Log.d(TAG, "url      =  : " + request.url());
         Log.d(TAG, "code     =  : " + response.code());
         Log.d(TAG, "message  =  : " + response.message());
         Log.d(TAG, "protocol =  : " + response.protocol());

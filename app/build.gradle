@@ -35,8 +35,8 @@ android {
         applicationId "com.ubtechinc.goldenpig"
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
-        versionCode 35
-        versionName "1.0.10"
+        versionCode 36
+        versionName "1.0.11"
         multiDexEnabled true
 
         manifestPlaceholders = [
@@ -79,7 +79,7 @@ android {
             //H5 URL域名
 //            buildConfigField "String", "H5_URL","\"http://10.10.32.22:8080\""
 //            buildConfigField "String", "H5_URL","\"http://10.10.1.14:8090/cloud-ppi/help\""
-            buildConfigField "String", "H5_URL","\"https://apis.ubtrobot.com/v1/cloud-ppi/help\""
+            buildConfigField "String", "H5_URL","\"https://internal.ubtrobot.com/v1/cloud-ppi/help\""
 
             minifyEnabled false
             shrinkResources false

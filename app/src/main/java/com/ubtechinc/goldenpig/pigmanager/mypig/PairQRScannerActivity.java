@@ -60,6 +60,7 @@ public class PairQRScannerActivity extends QRScannerActivity {
                             } else {
                                 setErrorTips(getString(R.string.ubt_pair_pig_fialure));
                             }
+                            restartScan();
                         });
                     }
 

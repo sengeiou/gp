@@ -22,7 +22,7 @@ public class XGMessageRecevicer extends XGPushBaseReceiver {
 
     @Override
     public void onRegisterResult(Context context, int i, XGPushRegisterResult xgPushRegisterResult) {
-        Log.d("TPush", "onRegisterResult:");
+        Log.d("TPush", "onRegisterResult:" + xgPushRegisterResult.toString());
         if (UbtPushManager.getInstance().getListener() != null) {
             UbtPushManager.getInstance().getListener().onRegisterResult(context, i, new UbtPushModel(xgPushRegisterResult,
                     null, null, null));

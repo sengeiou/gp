@@ -82,11 +82,28 @@ public class SwitchWifiActivity extends BaseToolBarActivity implements View.OnCl
                 ivWifiIcon.setImageResource(R.drawable.ic_wifi_connect);
                 tvWifiValue.setText(networkStatus.getSsid());
                 tvConnWifi.setText(R.string.switch_wifi);
+            } else if (networkStatus.getOpen()) {
+                ivWifiIcon.setImageResource(R.drawable.ic_wifi);
+                tvWifiValue.setText("未连接");
+                tvConnWifi.setText(R.string.connect_wifi);
             } else {
                 ivWifiIcon.setImageResource(R.drawable.ic_no_wifi);
                 tvWifiValue.setText("未开启");
                 tvConnWifi.setText(R.string.connect_wifi);
             }
+//            if (!networkStatus.getOpen()) {
+//                ivWifiIcon.setImageResource(R.drawable.ic_no_wifi);
+//                tvWifiValue.setText("未开启");
+//                tvConnWifi.setText(R.string.connect_wifi);
+//            } else if (networkStatus.getWifiState()) {
+//                ivWifiIcon.setImageResource(R.drawable.ic_wifi_connect);
+//                tvWifiValue.setText(networkStatus.getSsid());
+//                tvConnWifi.setText(R.string.switch_wifi);
+//            } else {
+//                ivWifiIcon.setImageResource(R.drawable.ic_wifi);
+//                tvWifiValue.setText("未连接");
+//                tvConnWifi.setText(R.string.connect_wifi);
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
