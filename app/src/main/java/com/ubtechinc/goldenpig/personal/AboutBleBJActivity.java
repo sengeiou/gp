@@ -71,7 +71,7 @@ public class AboutBleBJActivity extends BaseToolBarActivity {
     }
 
     private void getPigInfo(String pigDsn) {
-        DeviceInfoContainer.DeviceInfo deviceInfo = (DeviceInfoContainer.DeviceInfo) SPUtils.get().readObject("piginfo_basic" + pigDsn);
+        DeviceInfoContainer.GPDeviceInfo deviceInfo = (DeviceInfoContainer.GPDeviceInfo) SPUtils.get().readObject("piginfo_basic" + pigDsn);
         if (deviceInfo != null) {
             updateUI(deviceInfo);
         } else {
@@ -114,14 +114,14 @@ public class AboutBleBJActivity extends BaseToolBarActivity {
                 }
                 break;
             case RECEIVE_PIG_DEVICE_INFO:
-                DeviceInfoContainer.DeviceInfo deviceInfo = (DeviceInfoContainer.DeviceInfo) event.getData();
+                DeviceInfoContainer.GPDeviceInfo deviceInfo = (DeviceInfoContainer.GPDeviceInfo) event.getData();
                 SPUtils.get().saveObject("piginfo_basic" + pigDsn, deviceInfo);
                 updateUI(deviceInfo);
                 break;
         }
     }
 
-    private void updateUI(DeviceInfoContainer.DeviceInfo deviceInfo) {
+    private void updateUI(DeviceInfoContainer.GPDeviceInfo deviceInfo) {
         String serialNumber = deviceInfo.getSerialNumber();
         updateTvValue(tvDsnValue, serialNumber);
 

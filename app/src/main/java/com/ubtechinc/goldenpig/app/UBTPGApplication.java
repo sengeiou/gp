@@ -590,8 +590,8 @@ public class UBTPGApplication extends LoginApplication implements Observer {
             event.setData(result);
             EventBusUtil.sendEvent(event);
         } else if (action.equals(ContactsProtoBuilder.IM_DEVICE_INFO)) {
-            DeviceInfoContainer.DeviceInfo deviceInfo = msg.getPayload().unpack(DeviceInfoContainer.DeviceInfo.class);
-            Event<DeviceInfoContainer.DeviceInfo> event = new Event<>(EventBusUtil.RECEIVE_PIG_DEVICE_INFO);
+            DeviceInfoContainer.GPDeviceInfo deviceInfo = msg.getPayload().unpack(DeviceInfoContainer.GPDeviceInfo.class);
+            Event<DeviceInfoContainer.GPDeviceInfo> event = new Event<>(EventBusUtil.RECEIVE_PIG_DEVICE_INFO);
             event.setData(deviceInfo);
             EventBusUtil.sendEvent(event);
         } else if (action.equals(ContactsProtoBuilder.IM_REQUEST_WIFI_LIST)) {
