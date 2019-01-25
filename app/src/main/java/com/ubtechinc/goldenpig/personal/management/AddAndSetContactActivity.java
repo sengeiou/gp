@@ -130,9 +130,10 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
         oldList = getIntent().getParcelableArrayListExtra("list");
         if (oldList == null) {
             oldList = new ArrayList<>();
-        } else if (oldList.size() == 11) {
-            oldList.remove(oldList.size() - 1);
         }
+//        else if (oldList.size() == 11) {
+//            oldList.remove(oldList.size() - 1);
+//        }
         switch (type) {
             case 0:
                 rl_titlebar.setTitleText(getString(R.string.add_contact));
@@ -492,21 +493,27 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
     }
 
     private boolean checkOldList() {
-        for (int i = 0; i < oldList.size(); i++) {
-            if (TextUtils.isEmpty(oldList.get(i).phone)) {
-                continue;
+        try {
+            for (int i = 0; i < oldList.size(); i++) {
+                if (TextUtils.isEmpty(oldList.get(i).phone) || TextUtils.isEmpty(oldList.get(i).name)) {
+                    continue;
+                }
+                if (oldList.get(i).type != 0) {
+                    continue;
+                }
+                if (type == 1 && i == updatePosition) {
+                    continue;
+                }
+                if (oldList.get(i).phone.equals(strPhone)) {
+                    ToastUtils.showShortToast("存在重复号码");
+                    return false;
+                }
+                if (oldList.get(i).name.equals(strName)) {
+                    ToastUtils.showShortToast("存在重复昵称");
+                    return false;
+                }
             }
-            if (type == 1 && i == updatePosition) {
-                continue;
-            }
-            if (oldList.get(i).phone.equals(strPhone)) {
-                ToastUtils.showShortToast("存在重复号码");
-                return false;
-            }
-            if (oldList.get(i).name.equals(strName)) {
-                ToastUtils.showShortToast("存在重复昵称");
-                return false;
-            }
+        } catch (Exception e) {
         }
         return true;
     }
