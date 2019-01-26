@@ -19,6 +19,8 @@ import com.ubtechinc.goldenpig.view.swipe_menu.SwipeMenuLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.ubtechinc.goldenpig.personal.management.AddressBookActivity.MAXADD;
+
 /**
  * Created by MQ on 2017/6/9.
  */
@@ -131,7 +133,7 @@ public class AddressBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             aHolder.iv_add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mList.size() < 11) {
+                    if (mList.size() < MAXADD) {
                         Intent it = new Intent(mContext, AddAndSetContactActivity
                                 .class);
                         it.putParcelableArrayListExtra("list", mList);
