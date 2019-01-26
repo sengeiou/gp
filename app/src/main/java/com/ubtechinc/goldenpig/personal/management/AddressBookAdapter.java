@@ -133,7 +133,7 @@ public class AddressBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             aHolder.iv_add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mList.size() < MAXADD) {
+                    if (mList.size() <= MAXADD) {
                         Intent it = new Intent(mContext, AddAndSetContactActivity
                                 .class);
                         it.putParcelableArrayListExtra("list", mList);
