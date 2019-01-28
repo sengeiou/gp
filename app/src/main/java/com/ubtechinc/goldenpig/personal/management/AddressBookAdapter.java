@@ -126,7 +126,7 @@ public class AddressBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 aHolder.tv_has_card.setText("无法获取号码");
                 aHolder.tv_has_card.setTextColor(mContext.getResources().getColor(R.color.empty_color));
             } else {
-                aHolder.tv_has_card.setText("八戒号码:" + mList.get(position).phone);
+                aHolder.tv_has_card.setText(mList.get(position).phone);
                 aHolder.tv_has_card.setTextColor(mContext.getResources().getColor(R.color
                         .ubt_tab_btn_txt_checked_color));
             }
