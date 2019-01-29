@@ -303,6 +303,7 @@ public class PigNewFragment extends BaseFragment {
 //                        rlNativeInfo.setVisibility(View.VISIBLE);
                     } else {
                         //TODO 离线
+                        tvPigTip.setVisibility(View.GONE);
                         hideNativeInfo();
                         tvNetTip.setText("机器人离线");
                         tvNetTip.setVisibility(View.VISIBLE);
@@ -314,23 +315,6 @@ public class PigNewFragment extends BaseFragment {
                     tvPigTip.setText("你的智能语音小伙伴");
                     tvPigTip.setVisibility(View.VISIBLE);
                 }
-
-//                if (pigInfo.isAdmin) {
-//                    if (UBTPGApplication.isRobotOnline) {
-//                        //TODO 在线
-//                        tvPigTip.setVisibility(View.GONE);
-//                    } else {
-//                        //TODO 离线
-//                        tvPigTip.setVisibility(View.GONE);
-//                        tvNetTip.setVisibility(View.VISIBLE);
-//                        tvNetTip.setText("机器人离线");
-//                        btnConfigWifi.setVisibility(View.VISIBLE);
-//                        btnConfigWifi.setOnClickListener(v -> ActivityRoute.toAnotherActivity(getActivity(), BleConfigReadyActivity.class, false));
-//                    }
-//                } else {
-//                    tvPigTip.setText("你的智能语音小伙伴");
-//                    tvPigTip.setVisibility(View.VISIBLE);
-//                }
             } else {
                 btnBinding.setVisibility(View.VISIBLE);
                 tvPigSn.setVisibility(View.GONE);

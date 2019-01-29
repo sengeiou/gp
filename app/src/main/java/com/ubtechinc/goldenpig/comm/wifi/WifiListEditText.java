@@ -34,6 +34,7 @@ public class WifiListEditText extends RelativeLayout implements View.OnClickList
     private ArrayList<UbtWifiInfo> mWifiList; ///扫描到的wifi信息列表
     private RecyclerView mWifiRyc;   //wifi列表
     private View mWifiLoading;
+    private View mTvWifiRetry;
     private WifiListAdapter mWifiListAdapter;
     private PopupWindow window;
 
@@ -140,8 +141,10 @@ public class WifiListEditText extends RelativeLayout implements View.OnClickList
             mWifiRyc = contentView.findViewById(R.id.ubt_wifi_list_ryc);
             mWifiRyc.setLayoutManager(new WrapContentLinearLayoutManager(getContext()));
             mWifiLoading = contentView.findViewById(R.id.ubt_wifi_loading);
+            mTvWifiRetry = contentView.findViewById(R.id.tv_wifi_retry);
             mWifiLoading.setVisibility(View.VISIBLE);
             mWifiRyc.setVisibility(View.GONE);
+            mTvWifiRetry.setVisibility(View.GONE);
             if (mWifiListAdapter == null) {
                 mWifiListAdapter = new WifiListAdapter(getContext(), mWifiList);
                 mWifiListAdapter.setOnItemListener((view, result) -> {
@@ -183,6 +186,9 @@ public class WifiListEditText extends RelativeLayout implements View.OnClickList
         if (mWifiLoading != null) {
             mWifiLoading.setVisibility(View.GONE);
         }
+        if (mTvWifiRetry != null) {
+            mTvWifiRetry.setVisibility(View.GONE);
+        }
         if (mWifiRyc != null) {
             mWifiRyc.setVisibility(View.VISIBLE);
         }
@@ -199,6 +205,25 @@ public class WifiListEditText extends RelativeLayout implements View.OnClickList
                 mWifiListAdapter.updateList(mWifiList);
                 mWifiListAdapter.notifyItemInserted(mWifiList.size());
             }
+        }
+    }
+
+    public void fetchWifiFailured(IRetryCallback callback) {
+        if (mWifiList == null || mWifiList.isEmpty()) {
+            //TODO 超时重试
+            mTvWifiRetry.setVisibility(View.VISIBLE);
+            mWifiLoading.setVisibility(View.GONE);
+            mTvWifiRetry.setOnClickListener(v -> {
+                if (callback != null) {
+                    if (mWifiLoading != null) {
+                        mWifiLoading.setVisibility(View.VISIBLE);
+                    }
+                    if (mTvWifiRetry != null) {
+                        mTvWifiRetry.setVisibility(View.GONE);
+                    }
+                    callback.doRetry();
+                }
+            });
         }
     }
 
@@ -224,5 +249,9 @@ public class WifiListEditText extends RelativeLayout implements View.OnClickList
         void onChange(String ssid);
 
         void onShow(boolean isShow);
+    }
+
+    public interface IRetryCallback {
+        void doRetry();
     }
 }

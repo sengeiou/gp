@@ -115,6 +115,7 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
                 imSyncRelationShip();
                 runOnUiThread(() -> {
                     isDownloadedUserList = false;
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast(R.string.ubt_ubbind_success);
                     updatePigList();
                     getMember("1");
                 });
