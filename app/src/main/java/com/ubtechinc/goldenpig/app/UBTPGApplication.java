@@ -635,7 +635,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                         "Wi-Fi且电量充足时自动升级";
                 break;
             case 5:
-                tip = "系统升级失败";
+                tip = "升级包异常，系统升级失败";
                 if (mTopActivity instanceof DeviceUpdateActivity) {
                     mTopActivity.finish();
                 }
@@ -647,13 +647,14 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                 }
                 break;
             case 7:
-                tip = "升级包异常，系统升级失败";
+                tip = "服务器异常，无法升级\n" +
+                        "请稍后重试";
                 if (mTopActivity instanceof DeviceUpdateActivity) {
                     mTopActivity.finish();
                 }
                 break;
             case 8:
-                tip = "服务异常，无法升级\n" +
+                tip = "服务器异常，无法升级\n" +
                         "请稍后重试";
                 if (mTopActivity instanceof DeviceUpdateActivity) {
                     mTopActivity.finish();

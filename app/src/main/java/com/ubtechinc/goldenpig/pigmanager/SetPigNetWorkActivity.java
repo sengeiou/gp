@@ -45,6 +45,12 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_PIG_WIFI_CONNECT;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_PIG_WIFI_LIST;
 
@@ -72,6 +78,8 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
     private boolean isPigConnectNet = false;
 
     private String comingSource;
+
+    private Disposable scanWifiDisposable;
 
     @Override
     protected int getConentView() {
@@ -114,15 +122,30 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
                 //TODO 获取wifi列表
                 mWifiNamEdt.setVisibility(View.GONE);
                 mWetWifiName.setVisibility(View.VISIBLE);
-                UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getWifiList()));
+                doGetWifiByIM();
             }
         }
+    }
+
+    private void doGetWifiByIM() {
+        UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getWifiList()));
+        scanWifiDisposable = Observable.timer(15, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> {
+                    //TODO IM获取wifi列表15秒后超时处理
+                    if (mWetWifiName != null) {
+                        mWetWifiName.fetchWifiFailured(() -> doGetWifiByIM());
+                    }
+                });
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         EventBusUtil.unregister(this);
+        if (scanWifiDisposable != null) {
+            scanWifiDisposable.dispose();
+            scanWifiDisposable = null;
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

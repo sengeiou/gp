@@ -398,7 +398,7 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
     private void showErrorDialog(String message) {
         if (mErrorDialog == null) {
             mErrorDialog = new UBTBaseDialog(this);
-            mErrorDialog.setTips("连接失败");
+            mErrorDialog.setTips(message);
             mErrorDialog.setLeftBtnShow(false);
             mErrorDialog.setRightButtonTxt("我知道了");
             mErrorDialog.setRightBtnColor(ContextCompat.getColor(this, R.color.ubt_tab_btn_txt_checked_color));

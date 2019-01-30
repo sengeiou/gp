@@ -100,7 +100,7 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        ToastUtils.showShortToast(MyPigActivity.this, R.string.ubt_ubbind_success);
+                        ToastUtils.showShortToast(MyPigActivity.this, R.string.ubt_unbind_success);
                         imSyncRelationShip();
                         try {
                             ArrayList<PigInfo> pigInfos = AuthLive.getInstance().getCurrentPigList();
