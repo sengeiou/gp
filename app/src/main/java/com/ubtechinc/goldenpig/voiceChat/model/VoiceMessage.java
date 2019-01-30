@@ -39,6 +39,7 @@ import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -135,6 +136,7 @@ public class VoiceMessage extends Message {
               voicetime = ((TIMSoundElem) message.getElement(0)).getDuration()/1000;
            }
 //           if(5<=voicetime&&voicetime<10){
+
 //               tv.setText("     ");
 //           }else if(10<=voicetime&&voicetime<15){
 //               tv.setText("         ");
@@ -148,6 +150,8 @@ public class VoiceMessage extends Message {
 //               tv.setText("                         ");
 //           }
            //to improve the voice length from product advices
+
+        downloadAudioResources();
        try {
            String mcontent = "";
            if (1 <= voicetime && voicetime <= 9) {
@@ -218,7 +222,8 @@ public class VoiceMessage extends Message {
                        Toast.makeText(UBTPGApplication.getContext(),"click voice xxx ", Toast.LENGTH_SHORT).show();
                    }
                    MediaUtil.getInstance().setIsReadyPlayingIndex(message.getMsgUniqueId());
-                   VoiceMessage.this.playAudio(frameAnimatio);
+                  // VoiceMessage.this.playAudio(frameAnimatio);
+                   VoiceMessage.this.playAudioCache(frameAnimatio);
                }
            });
            showStatus(viewHolder);
@@ -331,7 +336,56 @@ public class VoiceMessage extends Message {
         return String.valueOf(n).length();
     }
 
+    private void downloadAudioResources(){
+        try{
+            FileInputStream fis = new FileInputStream(FileUtil.getCacheFilePath(message.getMsgId()));
+        }catch(FileNotFoundException e){
+            e.printStackTrace();
+            startDownloadAudio();
+        }
+    }
 
+    private void startDownloadAudio(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                TIMSoundElem elem = (TIMSoundElem) message.getElement(0);
+                elem.getSound(new TIMValueCallBack<byte[]>() {
+                    @Override
+                    public void onError(int i, String s) {
+                        LogUtils.d(TAG,"ERROR "+s);
+                    }
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        FileUtil.createFile(bytes,message.getMsgId());
+                    }
+                });
+            }
+        }).start();
+    }
 
+    private  void playAudioCache(final AnimationDrawable frameAnimatio){
+        try{
+            FileInputStream fis = new FileInputStream(FileUtil.getCacheFilePath(message.getMsgId()));
+            ///storage/emulated/0/Android/data/com.ubtechinc.goldenpig/cache/2936344365
+            Log.d(TAG,"file path "+FileUtil.getCacheFilePath(message.getMsgId()));
+            LogUtils.d(TAG,"file path "+FileUtil.getCacheFilePath(message.getMsgId()));
+            if (!MediaUtil.getInstance().playCustomize(fis,message.getMsgUniqueId())){
+                return;
+            }
+            frameAnimatio.start();
+            MediaUtil.getInstance().setEventListener(new MediaUtil.EventListener() {
+                @Override
+                public void onStop() {
+                    frameAnimatio.stop();
+                    frameAnimatio.selectDrawable(0);
+                }
+            });
+        }catch(FileNotFoundException e){
+            e.printStackTrace();
+            Log.d(TAG,"never execute this ");
+            playAudio(frameAnimatio);
+        }
+    }
 
 }
