@@ -195,7 +195,7 @@ dependencies {
 
     implementation project(path: ':recyclerview-swipe')
     implementation project(path: ':loopview')
-    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.+'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.15'
     implementation 'com.umeng.analytics:analytics:latest.integration'
    // implementation 'com.squareup.picasso:picasso:2.71828'
     //implementation 'com.weigan:loopView:0.1.2'

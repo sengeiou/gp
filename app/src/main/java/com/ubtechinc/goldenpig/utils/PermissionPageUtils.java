@@ -148,19 +148,24 @@ public class PermissionPageUtils {
         String rom = getMiuiVersion();
         Log.d(TAG, "goMiaoMiMainager --- rom : " + rom);
         Intent intent = new Intent();
+        boolean hit = false;
         if ("V6".equals(rom) || "V7".equals(rom)) {
             intent.setAction("miui.intent.action.APP_PERM_EDITOR");
             intent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.AppPermissionsEditorActivity");
             intent.putExtra("extra_pkgname", packageName);
+            hit = true;
         } else if ("V8".equals(rom) || "V9".equals(rom)) {
             intent.setAction("miui.intent.action.APP_PERM_EDITOR");
             intent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.PermissionsEditorActivity");
             intent.putExtra("extra_pkgname", packageName);
+            hit = true;
         } else {
             goIntentSetting();
         }
-        intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-        mContext.startActivity(intent);
+        if (hit) {
+            intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
+            mContext.startActivity(intent);
+        }
     }
 
     private void goMeizuMainager() {
