@@ -138,12 +138,19 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
         mStateView.setEmptyResource(R.layout.adapter_mall_list_empty);
         mStateView.setOnEmptyClickListener(new StateView.OnEmptyClickListener() {
             @Override
-            public void onEmptyClick() {
+            public void onEmptyClick(View view) {
                 if (mList.size() < MAXADD) {
-                    Intent it = new Intent(AddressBookActivity.this, AddAndSetContactActivity
-                            .class);
-                    it.putParcelableArrayListExtra("list", mList);
-                    startActivity(it);
+                    switch (view.getId()) {
+                        case R.id.view_empty_click:
+                            Intent it = new Intent(AddressBookActivity.this, AddAndSetContactActivity
+                                    .class);
+                            it.putParcelableArrayListExtra("list", mList);
+                            startActivity(it);
+                            break;
+                        case R.id.view_empty_click2:
+                            importContact();
+                            break;
+                    }
                 } else {
                     UbtToastUtils.showCustomToast(AddressBookActivity.this, getString(R.string.contact_limit));
                 }
@@ -503,7 +510,7 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         //给RecyclerView设置布局管理器
         recycler.setLayoutManager(linearLayoutManager);
-        Divider divider = new Divider(new ColorDrawable(0xffcdd3e2), OrientationHelper.VERTICAL);
+        Divider divider = new Divider(new ColorDrawable(0xff424242), OrientationHelper.VERTICAL);
         //单位:px
 //        divider.setMargin(mContext.getResources().getDimensionPixelSize(R.dimen.dp_15), 0, mContext.getResources()
 //                .getDimensionPixelSize(R.dimen.dp_15), 0);

@@ -236,14 +236,27 @@ public class StateView extends View {
     public View showEmpty() {
         if (mEmptyView == null) {
             mEmptyView = inflate(mEmptyResource);
-            mEmptyView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mEmptyClickListener != null) {
-                        mEmptyClickListener.onEmptyClick();
+            try {
+                View view = mEmptyView.findViewById(R.id.view_empty_click);
+                view.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mEmptyClickListener != null) {
+                            mEmptyClickListener.onEmptyClick(view);
+                        }
                     }
-                }
-            });
+                });
+                View view2 = mEmptyView.findViewById(R.id.view_empty_click2);
+                view2.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mEmptyClickListener != null) {
+                            mEmptyClickListener.onEmptyClick(view2);
+                        }
+                    }
+                });
+            } catch (Exception e) {
+            }
         }
         showView(mEmptyView);
         return mEmptyView;
@@ -470,7 +483,7 @@ public class StateView extends View {
     }
 
     public interface OnEmptyClickListener {
-        void onEmptyClick();
+        void onEmptyClick(View view);
     }
 
     @Override

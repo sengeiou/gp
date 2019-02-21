@@ -228,6 +228,9 @@
         <activity
             android:name=".personal.management.contact.ContactListActivity"
             android:launchMode="singleTop"></activity>
+        <activity
+            android:name=".personal.management.contact.contactlist.ContactList2Activity"
+            android:launchMode="singleTop"></activity>
     </application>
 
 </manifest>

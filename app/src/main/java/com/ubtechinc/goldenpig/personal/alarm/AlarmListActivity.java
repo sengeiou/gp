@@ -112,7 +112,7 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
         });
         mStateView.setOnEmptyClickListener(new StateView.OnEmptyClickListener() {
             @Override
-            public void onEmptyClick() {
+            public void onEmptyClick(View view) {
                 ActivityRoute.toAnotherActivity(AlarmListActivity.this, AddAlarmActivity
                         .class, false);
             }

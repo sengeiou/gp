@@ -232,7 +232,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                 if (curPosition >= 0 && curPosition < mList.size()) {
                     String curText = mList.get(curPosition);
                     if (curText.equals(item)) {
-                        helper.setBackgroundRes(R.id.tv_name, R.drawable.blue_round_frame);
+                        helper.setBackgroundRes(R.id.tv_name, R.drawable.shape_ubt_btn_cyan_gb);
                     } else {
                         helper.setBackgroundRes(R.id.tv_name, R.drawable.gray_round_frame);
                     }
@@ -559,7 +559,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
     protected void onDestroy() {
         super.onDestroy();
         UbtTIMManager.getInstance().deleteMsgObserve(this);
-        if (mHandler != null) {
+        if(mHandler!=null){
             mHandler.removeCallbacksAndMessages(null);
         }
     }

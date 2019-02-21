@@ -114,7 +114,7 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
         mStateView.setEmptyResource(R.layout.adapter_remind_empty);
         mStateView.setOnEmptyClickListener(new StateView.OnEmptyClickListener() {
             @Override
-            public void onEmptyClick() {
+            public void onEmptyClick(View view) {
                 ActivityRoute.toAnotherActivity(RemindActivity.this, AddRemindActivity
                         .class, false);
             }

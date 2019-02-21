@@ -55,7 +55,7 @@ public class SideBar extends View {
         int singleHeight = height / 27;
         Log.d("hdf", "singleHeight:" + singleHeight);
         for (int i = 0; i < letterList.size(); i++) {
-            paint.setColor(Color.parseColor("#606060"));
+            paint.setColor(Color.parseColor("#454B59"));
             paint.setTypeface(Typeface.DEFAULT);
             paint.setAntiAlias(true);
             paint.setTextSize(singleHeight * 2 / 3);
@@ -65,7 +65,7 @@ public class SideBar extends View {
 //                paint.setFakeBoldText(true);
 //            }
             if (letterList.get(i).equals(chooseD)) {
-                paint.setColor(Color.parseColor("#4F41FD"));
+                paint.setColor(Color.parseColor("#29AAFF"));
                 paint.setFakeBoldText(true);
             }
 
