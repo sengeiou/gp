@@ -110,4 +110,5 @@ public class CommendUtil {
     }
 
     public static final int TIMEOUT = 15;
+    public static final int TIMEOUT_MILLI = 15 * 1000;
 }

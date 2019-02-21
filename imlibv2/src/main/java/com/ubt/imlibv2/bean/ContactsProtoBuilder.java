@@ -50,13 +50,19 @@ public class ContactsProtoBuilder {
      */
     public static final String IM_DEVICE_INFO = "/im/device_info";
 
-    /** 机器人配网 */
+    /**
+     * 机器人配网
+     */
     public static final String IM_CONNECT_WIFI = "/connect/wifi";
 
-    /** 机器人wifi列表 */
+    /**
+     * 机器人wifi列表
+     */
     public static final String IM_REQUEST_WIFI_LIST = "/request/wifi/list";
 
-    /** 清除本体信息 */
+    /**
+     * 清除本体信息
+     */
     public static final String IM_CLEAR_REQUEST = "/im/clear/request";
 
     public static byte[] getAddContactsInfo(String name, String number) {
@@ -72,6 +78,27 @@ public class ContactsProtoBuilder {
         UserContacts.User user = builder.build();
         userContactBuilder.addUser(user);
 
+        UserContacts.UserContact contact = userContactBuilder.build();
+        ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer
+                .ChannelMessage.newBuilder()
+                .setHeader(header)
+                .setPayload(Any.pack(contact))
+                .build();
+
+        return channelMessage.toByteArray();
+    }
+
+    public static byte[] getAddContactsInfo(List<MyContact> users) {
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder()
+                .setAction("/im/mail/add").setTime(System.currentTimeMillis()).build();
+        UserContacts.UserContact.Builder userContactBuilder = UserContacts.UserContact.newBuilder();
+        for (int i = 0; i < users.size(); i++) {
+            UserContacts.User.Builder builder = UserContacts.User.newBuilder();
+            builder.setName(users.get(i).lastname);
+            builder.setNumber(users.get(i).mobile);
+            UserContacts.User user = builder.build();
+            userContactBuilder.addUser(user);
+        }
         UserContacts.UserContact contact = userContactBuilder.build();
         ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer
                 .ChannelMessage.newBuilder()
@@ -359,6 +386,7 @@ public class ContactsProtoBuilder {
 
     /**
      * 获取八戒Wifi列表
+     *
      * @return
      */
     public static byte[] getWifiList() {
@@ -367,6 +395,7 @@ public class ContactsProtoBuilder {
 
     /**
      * 给机器人配网
+     *
      * @param wifiName
      * @param wifiPwd
      * @param wifiCtype

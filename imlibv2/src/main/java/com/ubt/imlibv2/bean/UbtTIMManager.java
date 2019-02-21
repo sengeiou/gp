@@ -346,6 +346,13 @@ public class UbtTIMManager {
         sendTIM(msg);
     }
 
+    public void addUser(List<MyContact> list) {
+
+        byte[] data = ContactsProtoBuilder.getAddContactsInfo(list);
+        TIMMessage msg = creatElem(data);
+        sendTIM(msg);
+    }
+
     public void deleteUser(String nikeName, String number, String userId) {
 
         byte[] data = ContactsProtoBuilder.getDeleteContactsInfo(nikeName, number, userId);

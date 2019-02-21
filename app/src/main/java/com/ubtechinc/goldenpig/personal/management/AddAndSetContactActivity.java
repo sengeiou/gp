@@ -1,6 +1,7 @@
 package com.ubtechinc.goldenpig.personal.management;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -8,6 +9,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -20,7 +22,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -34,7 +35,7 @@ import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubt.improtolib.GPResponse;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.ScreenUtils;
-import com.ubtech.utilcode.utils.ToastUtils;
+import com.ubtech.utilcode.utils.network.NetworkHelper;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewTv;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
@@ -44,13 +45,16 @@ import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.model.AddressBookmodel;
+import com.ubtechinc.goldenpig.personal.management.contact.ContactListActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.utils.CommendUtil;
+import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.ubtechinc.goldenpig.view.GridSpacingItemDecoration;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -58,25 +62,26 @@ import java.util.Observable;
 import java.util.Observer;
 
 import butterknife.BindView;
-import butterknife.OnClick;
+import okio.Timeout;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CONTACT_CHECK_SUCCESS;
+import static com.ubtechinc.goldenpig.utils.CommendUtil.TIMEOUT_MILLI;
 
 public class AddAndSetContactActivity extends BaseNewActivity implements Observer {
     @BindView(R.id.rl_titlebar)
     SecondTitleBarViewTv rl_titlebar;
     @BindView(R.id.et_phone)
     EditText etPhone;
-    @BindView(R.id.iv_phone_clear)
-    ImageView ivPhoneClear;
-    @BindView(R.id.view_clear_line)
-    View viewClearLine;
-    @BindView(R.id.iv_add)
-    ImageView ivAdd;
+    //    @BindView(R.id.iv_phone_clear)
+//    ImageView ivPhoneClear;
+//    @BindView(R.id.view_clear_line)
+//    View viewClearLine;
+//    @BindView(R.id.iv_add)
+//    ImageView ivAdd;
     @BindView(R.id.et_name)
     EditText etName;
-    @BindView(R.id.iv_name_clear)
-    ImageView ivNameClear;
+    //    @BindView(R.id.iv_name_clear)
+//    ImageView ivNameClear;
     @BindView(R.id.recycler)
     RecyclerView recycler;
     /**
@@ -93,6 +98,27 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
     private int curPosition = -1;
     private String TAG = AddAndSetContactActivity.class.getSimpleName();
 
+    private MyHandler mHandler;
+
+    private class MyHandler extends Handler {
+        WeakReference<Activity> mWeakReference;
+
+        public MyHandler(Activity activity) {
+            mWeakReference = new WeakReference<Activity>(activity);
+        }
+
+        @Override
+        public void handleMessage(android.os.Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 1) {
+                if (mWeakReference.get() != null) {
+                    UbtToastUtils.showCustomToast(mWeakReference.get(), getString(R.string.ubt_robot_offline));
+                    LoadingDialog.getInstance(mWeakReference.get()).dismiss();
+                }
+            }
+        }
+    }
+
     @Override
     protected int getContentViewId() {
         return R.layout.activity_add_set_contact;
@@ -101,6 +127,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mHandler = new MyHandler(this);
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null) {
             UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
@@ -112,9 +139,9 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
             @Override
             public void onError(int i, String s) {
                 if (AuthLive.getInstance().getCurrentPig() != null) {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("八戒未登录");
+                    UbtToastUtils.showCustomToast(getApplication(), "八戒未登录");
                 } else {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定八戒");
+                    UbtToastUtils.showCustomToast(getApplication(), "未绑定八戒");
                 }
                 LoadingDialog.getInstance(AddAndSetContactActivity.this).dismiss();
             }
@@ -153,12 +180,20 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
             @Override
             public void onClick(View v) {
                 if (TextUtils.isEmpty(strPhone) || TextUtils.isEmpty(strName)) {
-                    ToastUtils.showShortToast("电话或昵称不能为空");
+                    UbtToastUtils.showCustomToast(getApplication(), "电话或昵称不能为空");
                     return;
                 }
                 if (!checkOldList()) {
                     return;
                 }
+                if (!NetworkHelper.sharedHelper().isNetworkAvailable()) {
+                    UbtToastUtils.showCustomToast(AddAndSetContactActivity.this, getString(R.string.network_error));
+                    return;
+                }
+                if (mHandler.hasMessages(1)) {
+                    mHandler.removeMessages(1);
+                }
+                mHandler.sendEmptyMessageDelayed(1, TIMEOUT_MILLI);// 15s 秒后检查加载框是否还在
                 try {
                     if (type == 0) {
                         UbtTIMManager.getInstance().addUser(strName, strPhone);
@@ -166,10 +201,9 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                         UbtTIMManager.getInstance().updateUser(strName, strPhone, oldList.get
                                 (updatePosition).id + "");
                     }
-                    LoadingDialog.getInstance(AddAndSetContactActivity.this).setTimeout(20)
-                            .setShowToast(true).show();
+                    LoadingDialog.getInstance(AddAndSetContactActivity.this).show();
                 } catch (Exception e) {
-                    ToastUtils.showShortToast("请求异常，请重试");
+                    UbtToastUtils.showCustomToast(getApplication(), "请求异常，请重试");
                 }
             }
         });
@@ -182,9 +216,8 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
         GridLayoutManager gm = new GridLayoutManager(this, 5);
         gm.setOrientation(LinearLayoutManager.VERTICAL);
         recycler.setLayoutManager(gm);
-        int itemSpace = (int) ((ScreenUtils.getScreenWidth() - 2 * getResources().getDimension(R
-                .dimen
-                .dp_25) - 5 * getResources().getDimension(R.dimen.dp_55)) / 4);
+        int itemSpace = (int) ((ScreenUtils.getScreenWidth() - 2 * getResources().getDimension(R.dimen.dp_30) - 5 *
+                getResources().getDimension(R.dimen.dp_50)) / 4);
         GridSpacingItemDecoration de = new GridSpacingItemDecoration(5, itemSpace, (int)
                 getResources()
                         .getDimension(R.dimen.dp_17), false);
@@ -234,14 +267,14 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
             public void afterTextChanged(Editable s) {
                 strPhone = etPhone.getText().toString().trim();
                 if (TextUtils.isEmpty(strPhone)) {
-                    ivPhoneClear.setVisibility(View.INVISIBLE);
-                    viewClearLine.setVisibility(View.INVISIBLE);
+//                    ivPhoneClear.setVisibility(View.INVISIBLE);
+//                    viewClearLine.setVisibility(View.INVISIBLE);
                     rl_titlebar.getTvRight().setEnabled(false);
                     rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color
                             .ubt_skip_txt_unenable_color));
                 } else {
-                    ivPhoneClear.setVisibility(View.VISIBLE);
-                    viewClearLine.setVisibility(View.VISIBLE);
+//                    ivPhoneClear.setVisibility(View.VISIBLE);
+//                    viewClearLine.setVisibility(View.VISIBLE);
                     rl_titlebar.getTvRight().setEnabled(true);
                     rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color
                             .ubt_tab_btn_txt_checked_color));
@@ -279,13 +312,11 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                         adapter.notifyDataSetChanged();
                     }
                 }
-
-                if (TextUtils.isEmpty(strName)) {
-                    ivNameClear.setVisibility(View.INVISIBLE);
-
-                } else {
-                    ivNameClear.setVisibility(View.VISIBLE);
-                }
+//                if (TextUtils.isEmpty(strName)) {
+//                    ivNameClear.setVisibility(View.INVISIBLE);
+//                } else {
+//                    ivNameClear.setVisibility(View.VISIBLE);
+//                }
             }
         });
         if (updatePosition >= 0 && updatePosition < oldList.size()) {
@@ -344,7 +375,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
             int destLen = CommendUtil.getMsgLength(dest.toString());
             LogUtils.d("sourceLen:" + sourceLen + ",destLen:" + destLen);
             if (sourceLen + destLen > 6) {
-                ToastUtils.showShortToast("最大长度为6个汉字");
+                UbtToastUtils.showCustomToast(getApplication(), "最大长度为6个汉字");
                 return "";
             }
             return source;
@@ -352,40 +383,40 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
         etName.setFilters(FilterArray);
     }
 
-    @OnClick({R.id.iv_phone_clear, R.id.iv_name_clear, R.id.iv_add})
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.iv_phone_clear:
-                etPhone.setText("");
-                break;
-            case R.id.iv_name_clear:
-                etName.setText("");
-                break;
-            case R.id.iv_add:
-                importContact();
-//                if (TextUtils.isEmpty(strPhone) || TextUtils.isEmpty(strName)) {
-//                    ToastUtils.showShortToast("电话或昵称不能为空");
-//                    break;
-//                }
-//                if (!checkOldList()) {
-//                    break;
-//                }
-//                try {
-//                    if (type == 0) {
-//                        UbtTIMManager.getInstance().addUser(strName, strPhone);
-//                    } else {
-//                        UbtTIMManager.getInstance().updateUser(strName, strPhone, oldList.get
-//                                (updatePosition).id + "");
-//                    }
-//                    LoadingDialog.getInstance(AddAndSetContactActivity.this).setTimeout(20)
-//                            .setShowToast(true).show();
-//                } catch (Exception e) {
-//                    ToastUtils.showShortToast("请求异常，请重试");
-//                }
-                break;
-            default:
-        }
-    }
+//    @OnClick({R.id.iv_phone_clear, R.id.iv_name_clear, R.id.iv_add})
+//    public void onClick(View view) {
+//        switch (view.getId()) {
+//            case R.id.iv_phone_clear:
+//                etPhone.setText("");
+//                break;
+//            case R.id.iv_name_clear:
+//                etName.setText("");
+//                break;
+//            case R.id.iv_add:
+//                importContact();
+////                if (TextUtils.isEmpty(strPhone) || TextUtils.isEmpty(strName)) {
+////                    ToastUtils.showShortToast("电话或昵称不能为空");
+////                    break;
+////                }
+////                if (!checkOldList()) {
+////                    break;
+////                }
+////                try {
+////                    if (type == 0) {
+////                        UbtTIMManager.getInstance().addUser(strName, strPhone);
+////                    } else {
+////                        UbtTIMManager.getInstance().updateUser(strName, strPhone, oldList.get
+////                                (updatePosition).id + "");
+////                    }
+////                    LoadingDialog.getInstance(AddAndSetContactActivity.this).setTimeout(20)
+////                            .setShowToast(true).show();
+////                } catch (Exception e) {
+////                    ToastUtils.showShortToast("请求异常，请重试");
+////                }
+//                break;
+//            default:
+//        }
+//    }
 
     /**
      * 导入联系人
@@ -436,11 +467,13 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
 
     private void intentToContact() {
         // 跳转到联系人界面
-        Intent intent = new Intent();
-        intent.setAction("android.intent.action.PICK");
-        intent.addCategory("android.intent.category.DEFAULT");
-        intent.setType("vnd.android.cursor.dir/phone_v2");
-        startActivityForResult(intent, GlobalVariable.REQUEST_CONTACTS_READ_RESULT);
+//        Intent intent = new Intent();
+//        intent.setAction("android.intent.action.PICK");
+//        intent.addCategory("android.intent.category.DEFAULT");
+//        intent.setType("vnd.android.cursor.dir/phone_v2");
+//        startActivityForResult(intent, GlobalVariable.REQUEST_CONTACTS_READ_RESULT);
+
+        startActivity(new Intent(this, ContactListActivity.class));
     }
 
     @Override
@@ -490,6 +523,10 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
         mList.add("女儿");
         mList.add("弟弟");
         mList.add("哥哥");
+        mList.add("姐姐");
+        mList.add("妹妹");
+        mList.add("老公");
+        mList.add("老婆");
     }
 
     private boolean checkOldList() {
@@ -505,11 +542,11 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                     continue;
                 }
                 if (oldList.get(i).phone.equals(strPhone)) {
-                    ToastUtils.showShortToast("存在重复号码");
+                    UbtToastUtils.showCustomToast(getApplication(), "存在重复号码");
                     return false;
                 }
                 if (oldList.get(i).name.equals(strName)) {
-                    ToastUtils.showShortToast("存在重复昵称");
+                    UbtToastUtils.showCustomToast(getApplication(), "存在重复昵称");
                     return false;
                 }
             }
@@ -522,11 +559,15 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
     protected void onDestroy() {
         super.onDestroy();
         UbtTIMManager.getInstance().deleteMsgObserve(this);
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
     }
 
     @Override
     public void update(Observable o, Object arg) {
         LoadingDialog.getInstance(AddAndSetContactActivity.this).dismiss();
+        mHandler.removeMessages(1);
         try {
             TIMMessage msg = (TIMMessage) arg;
             for (int i = 0; i < msg.getElementCount(); ++i) {
@@ -551,11 +592,11 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
             case "/im/mail/add":
                 Boolean flag = msg.getPayload().unpack(GPResponse.Response.class).getResult();
                 if (flag) {
-                    ToastUtils.showShortToast("添加成功");
+                    UbtToastUtils.showCustomToast(getApplication(), "添加成功");
                     EventBusUtil.sendEvent(new Event<String>(CONTACT_CHECK_SUCCESS));
                     finish();
                 } else {
-                    ToastUtils.showShortToast("请求异常，请重试");
+                    UbtToastUtils.showCustomToast(getApplication(), "请求异常，请重试");
                 }
                 break;
 
@@ -564,11 +605,11 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
             case "/im/mail/update":
                 Boolean flag2 = msg.getPayload().unpack(GPResponse.Response.class).getResult();
                 if (flag2) {
-                    ToastUtils.showShortToast("编辑成功");
+                    UbtToastUtils.showCustomToast(getApplication(), "编辑成功");
                     EventBusUtil.sendEvent(new Event<String>(CONTACT_CHECK_SUCCESS));
                     finish();
                 } else {
-                    ToastUtils.showShortToast("请求异常，请重试");
+                    UbtToastUtils.showCustomToast(getApplication(), "请求异常，请重试");
                 }
                 break;
             default:

@@ -4,6 +4,7 @@ apply plugin: 'com.android.application'
 def releaseTime() {
     return new Date().format("yyMMddHH")
 }
+
 android {
     compileSdkVersion COMPILE_SDK_VERSION
     compileOptions {
@@ -41,8 +42,8 @@ android {
 
         manifestPlaceholders = [
 
-                XG_ACCESS_ID:"注册应用的accessid",
-                XG_ACCESS_KEY : "注册应用的accesskey",
+                XG_ACCESS_ID : "注册应用的accessid",
+                XG_ACCESS_KEY: "注册应用的accesskey",
         ]
     }
     signingConfigs {
@@ -60,26 +61,26 @@ android {
             //QQ APP_ID
             buildConfigField "String", "APP_ID_QQ", "\"1107514711\""
             //金猪productId
-            buildConfigField "String", "PRODUCT_ID" , "\"ffb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589\""
+            buildConfigField "String", "PRODUCT_ID", "\"ffb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589\""
             //金猪APPID
-            buildConfigField "String", "APP_ID","\"100080014\""
+            buildConfigField "String", "APP_ID", "\"100080014\""
             //product   60101 区分产品
             buildConfigField "String", "product", "\"60101\""
             //金猪APPKEY 85650f0ffe314beda3b85a9ab626662d
             buildConfigField "String", "APP_KEY", "\"85650f0ffe314beda3b85a9ab626662d\""
 
             //TVS模式开关
-            buildConfigField "Boolean", "TVS_MODE","false"
+            buildConfigField "Boolean", "TVS_MODE", "false"
 
             //登录Url 域名
-            buildConfigField "String",  "LOGIN_URL","\"https://testjimu.ubtrobot.com:8443\""
+            buildConfigField "String", "LOGIN_URL", "\"https://testjimu.ubtrobot.com:8443\""
             //IM操作URL域名https://10.10.1.43:9080
-            buildConfigField "String", "IM_URL","\"https://210.75.21.106:9080\""
+            buildConfigField "String", "IM_URL", "\"https://210.75.21.106:9080\""
 
             //H5 URL域名
 //            buildConfigField "String", "H5_URL","\"http://10.10.32.22:8080\""
 //            buildConfigField "String", "H5_URL","\"http://10.10.1.14:8090/cloud-ppi/help\""
-            buildConfigField "String", "H5_URL","\"https://internal.ubtrobot.com/v1/cloud-ppi/help\""
+            buildConfigField "String", "H5_URL", "\"https://internal.ubtrobot.com/v1/cloud-ppi/help\""
 
             minifyEnabled false
             shrinkResources false
@@ -97,24 +98,24 @@ android {
             //QQ APP_ID
             buildConfigField "String", "APP_ID_QQ", "\"1107514711\""
             //金猪productId
-            buildConfigField "String", "PRODUCT_ID" , "\"ffb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589\""
+            buildConfigField "String", "PRODUCT_ID", "\"ffb54fb08efe11e8a377658d0db82adb:cdc9a089b0b94747ae60d97f01310589\""
             //金猪APPID
-            buildConfigField "String", "APP_ID","\"100080014\""
+            buildConfigField "String", "APP_ID", "\"100080014\""
             //product   60101 区分产品
             buildConfigField "String", "product", "\"60101\""
             //金猪APPKEY
-            buildConfigField "String", "APP_KEY","\"85650f0ffe314beda3b85a9ab626662d\""
+            buildConfigField "String", "APP_KEY", "\"85650f0ffe314beda3b85a9ab626662d\""
 
             //登录Url 域名
-            buildConfigField "String", "LOGIN_URL","\"https://testjimu.ubtrobot.com:8443\""
+            buildConfigField "String", "LOGIN_URL", "\"https://testjimu.ubtrobot.com:8443\""
             //IM操作URL域名
-            buildConfigField "String", "IM_URL","\"https://210.75.21.106:9080\""
+            buildConfigField "String", "IM_URL", "\"https://210.75.21.106:9080\""
 
             //TVS模式开关
-            buildConfigField "Boolean", "TVS_MODE","true"
+            buildConfigField "Boolean", "TVS_MODE", "true"
 
             //H5 URL域名
-            buildConfigField "String", "H5_URL","\"https://internal.ubtrobot.com/v1/cloud-ppi/help\""
+            buildConfigField "String", "H5_URL", "\"https://internal.ubtrobot.com/v1/cloud-ppi/help\""
 
             //是否优化zip
             zipAlignEnabled false
@@ -152,7 +153,7 @@ android {
 
 repositories {
     flatDir {
-        dirs '../tvlloginlib/libs','libs'
+        dirs '../tvlloginlib/libs', 'libs'
     }
 }
 dependencies {
@@ -165,7 +166,7 @@ dependencies {
     implementation rootProject.ext.deps.tencentOpenSDK
     //testImplementation 'junit:junit:4.12'
     /*androidTestImplementation 'com.android.support.test:runner:1.0.2'
-                            androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'*/
+                                androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'*/
     implementation project(path: ':commlib')
     implementation project(path: ':tvlloginlib')
     implementation project(path: ':xingemodule')
@@ -192,25 +193,22 @@ dependencies {
     implementation project(path: ':improtolib')
     implementation 'com.facebook.stetho:stetho:1.3.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
-
     implementation project(path: ':recyclerview-swipe')
     implementation project(path: ':loopview')
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.15'
     implementation 'com.umeng.analytics:analytics:latest.integration'
-   // implementation 'com.squareup.picasso:picasso:2.71828'
+    // implementation 'com.squareup.picasso:picasso:2.71828'
     //implementation 'com.weigan:loopView:0.1.2'
     //compile 'com.yanzhenjie:recyclerview-swipe:1.1.4'
-
     //add bugly
-    implementation 'com.tencent.bugly:crashreport:latest.release' //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.2.0
-//    implementation 'com.tencent.bugly:nativecrashreport:latest.release' //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
-
+    implementation 'com.tencent.bugly:crashreport:latest.release'
+    //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.2.0
+    //    implementation 'com.tencent.bugly:nativecrashreport:latest.release' //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
     //add SCADA
     implementation 'com.ubtrobot.mobile:analytics:0.7.1-SNAPSHOT'
-
     //add crash widget
     implementation 'com.vise.xiaoyaoyou:viseutils:1.1.0'
-
     implementation 'com.github.zcweng:switch-button:0.0.3@aar'
     implementation project(path: ':scardview')
+    implementation files('libs/pinyin4j-2.5.0.jar')
 }

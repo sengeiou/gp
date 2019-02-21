@@ -7,12 +7,10 @@
 
     <TextView
         android:id="@+id/tv_name"
-        android:layout_width="@dimen/dp_55"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/dp_50"
+        android:layout_height="@dimen/dp_28"
         android:background="@drawable/gray_round_frame"
         android:gravity="center"
-        android:paddingBottom="@dimen/dp_3"
-        android:paddingTop="@dimen/dp_3"
         android:textColor="@color/ubt_white"
         android:textSize="@dimen/sp_12"
         tools:text="爸爸" />

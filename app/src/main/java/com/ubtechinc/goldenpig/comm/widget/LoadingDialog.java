@@ -14,6 +14,8 @@ import android.widget.LinearLayout;
 
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.app.UBTPGApplication;
+import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 
 
 public class LoadingDialog extends Dialog {
@@ -22,6 +24,11 @@ public class LoadingDialog extends Dialog {
     public static final int CHECK_TIME_OUT = 1000;
     private int mTimeout = 20000;
     private static Boolean showToast = false;
+    /**
+     * 0为默认
+     * 1为八戒
+     */
+    private static int toastType = 0;
 
     public LoadingDialog setShowToast(Boolean showToast) {
         this.showToast = showToast;
@@ -32,6 +39,12 @@ public class LoadingDialog extends Dialog {
         this.mTimeout = timeout * 1000;
         return mDia;
     }
+
+    public LoadingDialog setToastTye(int toastType) {
+        this.toastType = toastType;
+        return mDia;
+    }
+
 
     public void setCancelable(boolean cancelable) {
         super.setCancelable(cancelable);
@@ -109,6 +122,7 @@ public class LoadingDialog extends Dialog {
         getWindow().setBackgroundDrawableResource(R.color.ubt_transparent);
         setTranslucentStatus(false);
         this.setCancelable(false);
+        toastType = 0;
     }
 
     private static Handler mHandler = new Handler() {
@@ -121,7 +135,19 @@ public class LoadingDialog extends Dialog {
                         try {
                             mDia.cancel();
                             if (showToast) {
-                                ToastUtils.showShortToast("操作失败，请重试");
+                                switch (toastType) {
+                                    case 0:
+                                        UbtToastUtils.showCustomToast(UBTPGApplication.getContext(), "操作失败，请重试");
+                                        break;
+                                    case 1:
+                                        UbtToastUtils.showCustomToast(UBTPGApplication.getContext(), UBTPGApplication
+                                                .getContext().getString(R.string.ubt_robot_offline));
+                                        break;
+                                    default:
+                                        UbtToastUtils.showCustomToast(UBTPGApplication.getContext(), "操作失败，请重试");
+                                        break;
+                                }
+
                             }
                         } catch (Exception e) {
 

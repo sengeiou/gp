@@ -2,18 +2,27 @@ package com.ubtechinc.goldenpig.personal.management;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Parcelable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.model.AddressBookmodel;
+import com.ubtechinc.goldenpig.view.Divider;
+import com.ubtechinc.goldenpig.view.RecyclerItemClickListener;
+import com.ubtechinc.goldenpig.view.RecyclerOnItemLongListener;
 import com.ubtechinc.goldenpig.view.swipe_menu.SwipeMenuLayout;
 
 import java.util.ArrayList;
@@ -29,11 +38,15 @@ public class AddressBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private Context mContext;
     private ArrayList<AddressBookmodel> mList;
     private int hasCard = 0;
+    private RecyclerOnItemLongListener recyclerOnItemLongListener;
 
-    public AddressBookAdapter(Context mContext, ArrayList<AddressBookmodel> mList) {
+    public AddressBookAdapter(Context mContext, ArrayList<AddressBookmodel> mList, RecyclerOnItemLongListener
+            recyclerOnItemLongListener) {
         this.mContext = mContext;
         this.mList = mList;
+        this.recyclerOnItemLongListener = recyclerOnItemLongListener;
     }
+
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -133,13 +146,8 @@ public class AddressBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             aHolder.iv_add.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mList.size() <= MAXADD) {
-                        Intent it = new Intent(mContext, AddAndSetContactActivity
-                                .class);
-                        it.putParcelableArrayListExtra("list", mList);
-                        mContext.startActivity(it);
-                    } else {
-                        ToastUtils.showShortToast(mContext.getString(R.string.contact_limit));
+                    if(recyclerOnItemLongListener!=null){
+                        recyclerOnItemLongListener.onItemClick(v,position);
                     }
                 }
             });
@@ -192,4 +200,5 @@ public class AddressBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             iv_add = itemView.findViewById(R.id.iv_add);
         }
     }
+
 }

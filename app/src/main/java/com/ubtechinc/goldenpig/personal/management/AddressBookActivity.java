@@ -1,17 +1,26 @@
 package com.ubtechinc.goldenpig.personal.management;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -22,22 +31,24 @@ import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubt.improtolib.GPResponse;
 import com.ubt.improtolib.UserContacts;
-import com.ubtech.utilcode.utils.ToastUtils;
+import com.ubtech.utilcode.utils.network.NetworkHelper;
 import com.ubtechinc.goldenpig.R;
-import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewImg;
-import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewTv;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
+import com.ubtechinc.goldenpig.comm.GlobalVariable;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.model.AddressBookmodel;
-import com.ubtechinc.goldenpig.mvp.MVPBaseActivity;
-import com.ubtechinc.goldenpig.pigmanager.EditRecordActivity;
-import com.ubtechinc.goldenpig.pigmanager.RecordActivity;
+import com.ubtechinc.goldenpig.personal.management.contact.ContactListActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.ubtechinc.goldenpig.view.Divider;
+import com.ubtechinc.goldenpig.view.RecyclerItemClickListener;
+import com.ubtechinc.goldenpig.view.RecyclerOnItemLongListener;
 import com.ubtechinc.goldenpig.view.StateView;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Permission;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
@@ -47,6 +58,7 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -55,6 +67,8 @@ import butterknife.BindView;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CONTACT_CHECK_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_DELETE_CONTACTS;
+import static com.ubtechinc.goldenpig.utils.CommendUtil.TIMEOUT;
+import static com.ubtechinc.goldenpig.utils.CommendUtil.TIMEOUT_MILLI;
 
 public class AddressBookActivity extends BaseNewActivity implements Observer {
     @BindView(R.id.iv_left)
@@ -90,8 +104,7 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
             super.handleMessage(msg);
             if (msg.what == 1) {
                 if (mWeakReference.get() != null) {
-                    //((AddressBookActivity) mWeakReference.get()).refreshLayout.finishRefresh(true);
-                    ToastUtils.showShortToast(mWeakReference.get().getString(R.string.timeout_error_toast));
+                    UbtToastUtils.showCustomToast(mWeakReference.get(), getString(R.string.ubt_robot_offline));
                     ((AddressBookActivity) mWeakReference.get()).mStateView.showRetry();
                 }
             }
@@ -126,17 +139,13 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
         mStateView.setOnEmptyClickListener(new StateView.OnEmptyClickListener() {
             @Override
             public void onEmptyClick() {
-                //                if (!hasLoadMsg) {
-//                    ToastUtils.showShortToast("请先加载联系人成功后再添加");
-//                    return;
-//                }
                 if (mList.size() < MAXADD) {
                     Intent it = new Intent(AddressBookActivity.this, AddAndSetContactActivity
                             .class);
                     it.putParcelableArrayListExtra("list", mList);
                     startActivity(it);
                 } else {
-                    ToastUtils.showShortToast(getString(R.string.contact_limit));
+                    UbtToastUtils.showCustomToast(AddressBookActivity.this, getString(R.string.contact_limit));
                 }
             }
         });
@@ -179,7 +188,21 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
 //        recycler.addItemDecoration(divider);
         recycler.setSwipeMenuCreator(swipeMenuCreator);
         recycler.setSwipeMenuItemClickListener(mMenuItemClickListener);
-        adapter = new AddressBookAdapter(this, mList);
+        adapter = new AddressBookAdapter(this, mList, new RecyclerOnItemLongListener() {
+            @Override
+            public void onItemLongClick(View v, int position) {
+
+            }
+
+            @Override
+            public void onItemClick(View v, int position) {
+                if (mList.size() <= MAXADD) {
+                    showPopupWindow(v, mList);
+                } else {
+                    UbtToastUtils.showCustomToast(AddressBookActivity.this, getString(R.string.contact_limit));
+                }
+            }
+        });
         recycler.setAdapter(adapter);
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null) {
@@ -192,9 +215,9 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
                 Log.e("setOnUbtTIMConver", s);
                 LoadingDialog.getInstance(AddressBookActivity.this).dismiss();
                 if (AuthLive.getInstance().getCurrentPig() != null) {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("八戒未登录");
+                    UbtToastUtils.showCustomToast(AddressBookActivity.this, "八戒未登录");
                 } else {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定八戒");
+                    UbtToastUtils.showCustomToast(AddressBookActivity.this, "未绑定八戒");
                 }
             }
 
@@ -206,17 +229,6 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
         //refreshLayout.autoRefresh();
         refresh();
     }
-
-//    @Override
-//    public void onRefresh(RefreshLayout refreshLayout) {
-//        mStateView.showLoading();
-//        if (mHandler.hasMessages(1)) {
-//            mHandler.removeMessages(1);
-//        }
-//        mHandler.sendEmptyMessageDelayed(1, 20 * 1000);// 20s 秒后检查加载框是否还在
-//        UbtTIMManager.getInstance().queryUser();
-//    }
-
 
     public void onRefreshSuccess(List<AddressBookmodel> list) {
         if (mHandler.hasMessages(1)) {
@@ -260,7 +272,7 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
 
     public void onError(String str) {
         hasLoadMsg = false;
-        ToastUtils.showShortToast(str);
+        UbtToastUtils.showCustomToast(AddressBookActivity.this, str);
         if (mList.size() == 0) {
             mStateView.showRetry();
         } else {
@@ -325,11 +337,15 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
             int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
             if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
                 if (menuPosition == 0) {
+                    if (!NetworkHelper.sharedHelper().isNetworkAvailable()) {
+                        UbtToastUtils.showCustomToast(getApplication(), getString(R.string.network_error));
+                        return;
+                    }
                     UbtTIMManager.getInstance().deleteUser(mList.get(adapterPosition).name, mList
                             .get(adapterPosition).phone, mList.get(adapterPosition).id + "");
                     deletePosition = adapterPosition;
-                    LoadingDialog.getInstance(AddressBookActivity.this).setTimeout(20)
-                            .setShowToast(true).show();
+                    LoadingDialog.getInstance(AddressBookActivity.this).setTimeout(TIMEOUT)
+                            .setShowToast(true).setToastTye(1).show();
                 }
 //                if (menuPosition == 0) {
 //                    Intent it = new Intent(AddressBookActivity.this, AddAndSetContactActivity
@@ -369,7 +385,7 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
                 }
             }
         } catch (Exception e) {
-            ToastUtils.showShortToast(getString(R.string.msg_error_toast));
+            UbtToastUtils.showCustomToast(AddressBookActivity.this, getString(R.string.msg_error_toast));
             mStateView.showRetry();
         }
 
@@ -420,7 +436,7 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
                     updateTitlebarRightIcon(true);
                     adapter.notifyDataSetChanged();
                 } else {
-                    ToastUtils.showShortToast("删除失败，请重试");
+                    UbtToastUtils.showCustomToast(AddressBookActivity.this, "删除失败，请重试");
                 }
                 break;
             case "/im/mail/update":
@@ -463,11 +479,130 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
     }
 
     public void refresh() {
+        if (!NetworkHelper.sharedHelper().isNetworkAvailable()) {
+            UbtToastUtils.showCustomToast(AddressBookActivity.this, getString(R.string.network_error));
+            return;
+        }
         mStateView.showLoading();
         if (mHandler.hasMessages(1)) {
             mHandler.removeMessages(1);
         }
-        mHandler.sendEmptyMessageDelayed(1, 20 * 1000);// 20s 秒后检查加载框是否还在
+        mHandler.sendEmptyMessageDelayed(1, TIMEOUT_MILLI);// 15s 秒后检查加载框是否还在
         UbtTIMManager.getInstance().queryUser();
+    }
+
+    public void showPopupWindow(View parent, ArrayList<AddressBookmodel> mList) {
+        View view = LayoutInflater.from(this).inflate(R.layout
+                .view_addb_layout, null);
+        RecyclerView recycler = view.findViewById(R.id.recycler);
+        List<String> list = new ArrayList<>();
+        list.add("添加联系人");
+        list.add("导入手机通讯录");
+        AddbAdapter adapter = new AddbAdapter(this, list);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        //给RecyclerView设置布局管理器
+        recycler.setLayoutManager(linearLayoutManager);
+        Divider divider = new Divider(new ColorDrawable(0xffcdd3e2), OrientationHelper.VERTICAL);
+        //单位:px
+//        divider.setMargin(mContext.getResources().getDimensionPixelSize(R.dimen.dp_15), 0, mContext.getResources()
+//                .getDimensionPixelSize(R.dimen.dp_15), 0);
+        divider.setHeight(1);
+        recycler.addItemDecoration(divider);
+        recycler.setAdapter(adapter);
+
+        final PopupWindow popupWindow = new PopupWindow(view, ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        //backgroundAlpha(0.5f);//设置屏幕透明度
+        // 使其聚集
+        popupWindow.setFocusable(true);
+        // 设置允许在外点击消失
+        popupWindow.setOutsideTouchable(true);
+        // 这个是为了点击“返回Back”也能使其消失，并且并不会影响你的背景
+        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                // popupWindow隐藏时恢复屏幕正常透明度
+            }
+        });
+        recycler.addOnItemTouchListener(new RecyclerItemClickListener(this) {
+            @Override
+            protected void onItemClick(View view, int position) {
+                popupWindow.dismiss();
+                switch (position) {
+                    case 0:
+                        Intent it = new Intent(AddressBookActivity.this, AddAndSetContactActivity
+                                .class);
+                        it.putParcelableArrayListExtra("list", mList);
+                        startActivity(it);
+                        break;
+                    case 1:
+                        importContact();
+                        break;
+                }
+            }
+        });
+        popupWindow.showAsDropDown(parent, -getResources().getDimensionPixelSize(R.dimen.dp_95), -10);
+    }
+
+    /**
+     * 导入联系人
+     */
+    private void importContact() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (AndPermission.hasPermission(this, Manifest.permission.READ_CONTACTS)) {
+                intentToContact();
+            } else if (AndPermission.hasAlwaysDeniedPermission(this, Arrays.asList(Manifest.permission.READ_CONTACTS)
+            )) {
+                showPermissionDialog(Permission.CONTACTS);
+            } else {
+                ActivityCompat.requestPermissions(AddressBookActivity.this,
+                        new String[]{android.Manifest.permission.READ_CONTACTS},
+                        GlobalVariable.REQUEST_CONTACTS_READ_PERMISSON);
+            }
+//            if (ContextCompat.checkSelfPermission(AddAndSetContactActivity.this, android.Manifest.permission
+// .READ_CONTACTS)
+//                    != PackageManager.PERMISSION_GRANTED) {
+//                // 若不为GRANTED(即为DENIED)则要申请权限了
+//                // 申请权限 第一个为context 第二个可以指定多个请求的权限 第三个参数为请求码
+//                ActivityCompat.requestPermissions(AddAndSetContactActivity.this,
+//                        new String[]{android.Manifest.permission.READ_CONTACTS},
+//                        GlobalVariable.REQUEST_CONTACTS_READ_PERMISSON);
+//            } else {
+//                //权限已经被授予，在这里直接写要执行的相应方法即可
+//                intentToContact();
+//            }
+        } else {
+            // 低于6.0的手机直接访问
+            intentToContact();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[]
+            grantResults) {
+        if (requestCode == GlobalVariable.REQUEST_CONTACTS_READ_PERMISSON) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                intentToContact();
+            } else {
+                UbtToastUtils.showCustomToast(AddressBookActivity.this, "授权被禁止");
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions,
+                grantResults);
+    }
+
+    private void intentToContact() {
+        // 跳转到联系人界面
+//        Intent intent = new Intent();
+//        intent.setAction("android.intent.action.PICK");
+//        intent.addCategory("android.intent.category.DEFAULT");
+//        intent.setType("vnd.android.cursor.dir/phone_v2");
+//        startActivityForResult(intent, GlobalVariable.REQUEST_CONTACTS_READ_RESULT);
+        Intent it = new Intent(this, ContactListActivity.class);
+        it.putParcelableArrayListExtra("list", mList);
+        startActivity(it);
     }
 }

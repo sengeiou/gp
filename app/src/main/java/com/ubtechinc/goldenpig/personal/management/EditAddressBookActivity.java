@@ -2,20 +2,16 @@ package com.ubtechinc.goldenpig.personal.management;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -27,9 +23,7 @@ import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubt.improtolib.GPResponse;
 import com.ubt.improtolib.UserContacts;
-import com.ubt.improtolib.UserRecords;
-import com.ubtech.utilcode.utils.ToastUtils;
-import com.ubtechinc.commlib.log.UbtLogger;
+import com.ubtech.utilcode.utils.network.NetworkHelper;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
@@ -37,12 +31,9 @@ import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.model.AddressBookmodel;
-import com.ubtechinc.goldenpig.pigmanager.EditRecordActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
-import com.ubtechinc.goldenpig.utils.CommendUtil;
 import com.ubtechinc.goldenpig.utils.DialogUtil;
-import com.ubtechinc.goldenpig.view.Divider;
-import com.ubtechinc.goldenpig.view.StateView;
+import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
@@ -63,6 +54,7 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CONTACT_CHECK_SUCCES
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_DELETE_CONTACTS;
 import static com.ubtechinc.goldenpig.personal.management.AddressBookActivity.MAXADD;
 import static com.ubtechinc.goldenpig.utils.CommendUtil.TIMEOUT;
+import static com.ubtechinc.goldenpig.utils.CommendUtil.TIMEOUT_MILLI;
 
 public class EditAddressBookActivity extends BaseNewActivity implements Observer {
     @BindView(R.id.tv_left)
@@ -79,30 +71,9 @@ public class EditAddressBookActivity extends BaseNewActivity implements Observer
      */
     private Boolean hasLoadMsg = false;
 
-    private MyHandler mHandler;
     public Boolean noCard = false;
     public Boolean hasSelect = false;
     public String pigPhoneNumber = "";
-
-    private class MyHandler extends Handler {
-        WeakReference<Activity> mWeakReference;
-
-        public MyHandler(Activity activity) {
-            mWeakReference = new WeakReference<Activity>(activity);
-        }
-
-        @Override
-        public void handleMessage(android.os.Message msg) {
-            super.handleMessage(msg);
-            if (msg.what == 1) {
-                if (mWeakReference.get() != null) {
-                    //((AddressBookActivity) mWeakReference.get()).refreshLayout.finishRefresh(true);
-                    ToastUtils.showShortToast(mWeakReference.get().getString(R.string.timeout_error_toast));
-                    ((EditAddressBookActivity) mWeakReference.get()).mStateView.showRetry();
-                }
-            }
-        }
-    }
 
     @Override
     protected int getContentViewId() {
@@ -117,7 +88,6 @@ public class EditAddressBookActivity extends BaseNewActivity implements Observer
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mHandler = new MyHandler(this);
         ArrayList list = getIntent().getParcelableArrayListExtra("list");
         noCard = getIntent().getBooleanExtra("noCard", false);
         pigPhoneNumber = getIntent().getStringExtra("pigPhoneNumber");
@@ -184,9 +154,9 @@ public class EditAddressBookActivity extends BaseNewActivity implements Observer
                 Log.e("setOnUbtTIMConver", s);
                 LoadingDialog.getInstance(EditAddressBookActivity.this).dismiss();
                 if (AuthLive.getInstance().getCurrentPig() != null) {
-                    ToastUtils.showShortToast("八戒未登录");
+                    UbtToastUtils.showCustomToast(getApplication(), "八戒未登录");
                 } else {
-                    ToastUtils.showShortToast("未绑定八戒");
+                    UbtToastUtils.showCustomToast(getApplication(), "未绑定八戒");
                 }
             }
 
@@ -198,9 +168,6 @@ public class EditAddressBookActivity extends BaseNewActivity implements Observer
     }
 
     public void onRefreshSuccess(List<AddressBookmodel> list) {
-        if (mHandler.hasMessages(1)) {
-            mHandler.removeMessages(1);
-        }
         hasLoadMsg = true;
         //refreshLayout.finishRefresh(true);
         mList.clear();
@@ -235,7 +202,7 @@ public class EditAddressBookActivity extends BaseNewActivity implements Observer
 
     public void onError(String str) {
         hasLoadMsg = false;
-        ToastUtils.showShortToast(str);
+        UbtToastUtils.showCustomToast(getApplication(), str);
         if (mList.size() == 0) {
             mStateView.showRetry();
         } else {
@@ -243,78 +210,9 @@ public class EditAddressBookActivity extends BaseNewActivity implements Observer
         }
     }
 
-
-    public Handler getHandler() {
-        return mHandler;
-    }
-
-    /**
-     * 菜单创建器，在Item要创建菜单的时候调用。
-     */
-    private SwipeMenuCreator swipeMenuCreator = new SwipeMenuCreator() {
-        @Override
-        public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
-            if (viewType == 1) {
-                return;
-            }
-            int width = getResources().getDimensionPixelSize(R.dimen.dp_65);
-
-            // 1. MATCH_PARENT 自适应高度，保持和Item一样高;
-            // 2. 指定具体的高，比如80;
-            // 3. WRAP_CONTENT，自身高度，不推荐;
-            int height = ViewGroup.LayoutParams.MATCH_PARENT;
-            // 添加右侧的，如果不添加，则右侧不会出现菜单。
-            {
-//                SwipeMenuItem addItem = new SwipeMenuItem(AddressBookActivity.this)
-//                        .setBackgroundColor(getResources().getColor(R.color
-//                                .ubt_tab_btn_txt_checked_color))
-//                        .setText("编辑")
-//                        .setTextColor(Color.WHITE)
-//                        .setTextSize(16)
-//                        .setWidth(width)
-//                        .setHeight(height);
-//                swipeRightMenu.addMenuItem(addItem); // 添加菜单到右侧。
-                SwipeMenuItem deleteItem = new SwipeMenuItem(EditAddressBookActivity.this)
-                        .setBackgroundColor(getResources().getColor(R.color
-                                .ubt_dialog_btn_txt_color))
-                        .setText("删除")
-                        .setTextColor(Color.WHITE)
-                        .setTextSize(16)
-                        .setWidth(width)
-                        .setHeight(height);
-                swipeRightMenu.addMenuItem(deleteItem);// 添加菜单到右侧。
-
-            }
-        }
-    };
-
-    /**
-     * RecyclerView的Item的Menu点击监听。
-     */
-    private SwipeMenuItemClickListener mMenuItemClickListener = new SwipeMenuItemClickListener() {
-        @Override
-        public void onItemClick(SwipeMenuBridge menuBridge) {
-            menuBridge.closeMenu();
-            int direction = menuBridge.getDirection(); // 左侧还是右侧菜单。
-            int adapterPosition = menuBridge.getAdapterPosition(); // RecyclerView的Item的position。
-            int menuPosition = menuBridge.getPosition(); // 菜单在RecyclerView的Item中的Position。
-            if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
-                if (menuPosition == 0) {
-                    UbtTIMManager.getInstance().deleteUser(mList.get(adapterPosition).name, mList
-                            .get(adapterPosition).phone, mList.get(adapterPosition).id + "");
-                    deletePosition = adapterPosition;
-                    LoadingDialog.getInstance(EditAddressBookActivity.this).setTimeout(20)
-                            .setShowToast(true).show();
-                }
-            }
-        }
-    };
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mHandler.removeCallbacksAndMessages(null);
-        mHandler = null;
         UbtTIMManager.getInstance().deleteMsgObserve(this);
     }
 
@@ -330,7 +228,7 @@ public class EditAddressBookActivity extends BaseNewActivity implements Observer
                 }
             }
         } catch (Exception e) {
-            ToastUtils.showShortToast(getString(R.string.msg_error_toast));
+            UbtToastUtils.showCustomToast(getApplication(), getString(R.string.msg_error_toast));
             mStateView.showRetry();
         }
 
@@ -388,7 +286,7 @@ public class EditAddressBookActivity extends BaseNewActivity implements Observer
                         finish();
                     }
                 } else {
-                    ToastUtils.showShortToast("删除失败，请重试");
+                    UbtToastUtils.showCustomToast(getApplication(), "删除失败，请重试");
                 }
                 break;
             case "/im/mail/update":
@@ -396,24 +294,6 @@ public class EditAddressBookActivity extends BaseNewActivity implements Observer
                 break;
             default:
         }
-    }
-
-    @Override
-    protected void onReceiveStickyEvent(Event event) {
-        super.onReceiveStickyEvent(event);
-        if (event.getCode() == CONTACT_CHECK_SUCCESS) {
-            //refreshLayout.autoRefresh();
-            refresh();
-        }
-    }
-
-    public void refresh() {
-        mStateView.showLoading();
-        if (mHandler.hasMessages(1)) {
-            mHandler.removeMessages(1);
-        }
-        mHandler.sendEmptyMessageDelayed(1, 20 * 1000);// 20s 秒后检查加载框是否还在
-        UbtTIMManager.getInstance().queryUser();
     }
 
     private Dialog picDialog;
@@ -446,9 +326,13 @@ public class EditAddressBookActivity extends BaseNewActivity implements Observer
                         list.add(book);
                     }
                 }
+                if (!NetworkHelper.sharedHelper().isNetworkAvailable()) {
+                    UbtToastUtils.showCustomToast(getApplication(), getString(R.string.network_error));
+                    return;
+                }
                 UbtTIMManager.getInstance().deleteUser(list);
-                LoadingDialog.getInstance(EditAddressBookActivity.this).setTimeout(20)
-                        .setShowToast(true).show();
+                LoadingDialog.getInstance(EditAddressBookActivity.this).setTimeout(TIMEOUT)
+                        .setShowToast(true).setToastTye(1).show();
             }
         });
         TextView tv_cancel = (TextView) picView.findViewById(R.id.tv_cancel);
