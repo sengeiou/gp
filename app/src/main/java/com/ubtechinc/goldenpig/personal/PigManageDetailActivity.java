@@ -357,6 +357,10 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
         UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getPigVersionState()));
     }
 
+    private void getRobotOTAResult() {
+        UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getRobotUpdateResult()));
+    }
+
     private void unBindCheck() {
         mPig = AuthLive.getInstance().getCurrentPig();
         if (mPig != null && mPig.isAdmin) {
@@ -674,6 +678,7 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
                 break;
             case RECEIVE_ROBOT_VERSION_STATE:
                 if (!needHandleUpdate) return;
+                needHandleUpdate = false;
                 VersionInformation.UpgradeInfo info = (VersionInformation.UpgradeInfo) event.getData();
                 if (info != null) {
                     dismissLoadDialog();

@@ -76,7 +76,7 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
 
     private Disposable scanDisposable;
 
-    private Disposable connDisposable;
+//    private Disposable connDisposable;
 
     private UBTBaseDialog mGpsTipDialog;
 
@@ -232,10 +232,10 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
             scanDisposable.dispose();
             scanDisposable = null;
         }
-        if (connDisposable != null) {
-            connDisposable.dispose();
-            connDisposable = null;
-        }
+//        if (connDisposable != null) {
+//            connDisposable.dispose();
+//            connDisposable = null;
+//        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -545,19 +545,17 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
         if (device != null) {
             mBluetoothDevice = device;
             mBangdingManager.setBangdingListener(mBandingListenerAbster);
-            new Thread(() -> {
-                mHandler.sendEmptyMessage(MSG_WATH_DISCONNECT_SUCCESS);
-                connDisposable = Observable.timer(15, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(aLong -> {
-                            //TODO 手动连接15秒超时处理
-                            if (isManualScan) {
-                                if (pigListDialog != null) {
-                                    pigListDialog.dismiss();
-                                    showErrorDialog("连接失败");
-                                }
-                            }
-                        });
-            }).start();
+            new Thread(() -> mHandler.sendEmptyMessage(MSG_WATH_DISCONNECT_SUCCESS)).start();
+//            connDisposable = Observable.timer(15, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe(aLong -> {
+//                        //TODO 手动连接15秒超时处理
+//                        if (isManualScan) {
+//                            if (pigListDialog != null) {
+//                                pigListDialog.dismiss();
+//                                showErrorDialog("连接失败");
+//                            }
+//                        }
+//                    });
         }
     }
 

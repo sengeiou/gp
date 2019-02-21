@@ -16,7 +16,6 @@ import com.tencent.ai.tvs.info.DeviceManager;
 import com.tencent.ai.tvs.info.UserInfoManager;
 import com.ubtech.utilcode.utils.network.NetworkHelper;
 import com.ubtechinc.tvlloginlib.entity.LoginInfo;
-import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +58,7 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
     private TVSManager(Context context, String wxId, String qqOpenId) {
         this.context = context;
         proxy = LoginProxy.getInstance(wxId, qqOpenId, context);
-        proxy.setLoginEnv(ELoginEnv.FORMAL);
+        proxy.setLoginEnv(ELoginEnv.TEST);
         wxClient = new WXClient(proxy, this);
         qqClient = new QQClient(proxy, this);
         /**这步监听主要是作tvs相关的结果回调主要方法onSuccess和onError*/
@@ -172,8 +171,8 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
             case USERINFORECV_TYPE:
                 String nickName = UserInfoManager.getInstance().nickName;
                 String headImgUrl = UserInfoManager.getInstance().headImgUrl;
-                SharedPreferencesUtils.putString(context, "tvs_nickName", nickName);
-                SharedPreferencesUtils.putString(context, "tvs_headImgUrl", headImgUrl);
+//                SharedPreferencesUtils.putString(context, "tvs_nickName", nickName);
+//                SharedPreferencesUtils.putString(context, "tvs_headImgUrl", headImgUrl);
                 break;
             case UNIACCESS_TYPE:
                 if (mTVSAlarmListener != null) {

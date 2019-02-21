@@ -27,7 +27,7 @@
         android:layout_marginLeft="@dimen/dp_15"
         android:layout_marginTop="@dimen/dp_10"
         android:layout_marginRight="@dimen/dp_15"
-        android:text="给八戒插入SIM卡，就可以打电话，使用移动数据，分享热点了"
+        android:text="给八戒插入SIM卡，就可以打电话，使用移动数据，分享热点了。"
         android:textColor="#FFB4C0C7"
         android:textSize="14sp" />
 

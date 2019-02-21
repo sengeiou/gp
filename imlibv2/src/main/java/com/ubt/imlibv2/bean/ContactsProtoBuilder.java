@@ -25,6 +25,7 @@ public class ContactsProtoBuilder {
     public static final String GET_VERSION_ACTION = "/upgrade_skill/get/current_version";
     public static final String GET_VERSION_STATE_ACTION = "/upgrade_skill/detect";
     public static final String UPATE_VERSION_ACTION = "/upgrade_skill/upgrade";
+    public static final String UPATE_VERSION_RESULT_ACTION = "/upgrade_skill/get/upgradeResult";
 
     public static final String UPAT_HOTSPOT = "/im/HotSpot/receiver"; /// 修改热点
     public static final String GET_HOTSPOT = "/im/HotSpot/Account"; ///查询热点
@@ -236,13 +237,20 @@ public class ContactsProtoBuilder {
 
     /*获取八戒升级状态命令*/
     public static byte[] getPigVersionState() {
-
         return createBaseData(GET_VERSION_STATE_ACTION);
     }
 
     /*八戒升级命令*/
     public static byte[] updatePigVersion() {
         return createBaseData(UPATE_VERSION_ACTION);
+    }
+
+    /**
+     * 获取八戒OTA升级结果
+     * @return
+     */
+    public static byte[] getRobotUpdateResult() {
+        return createBaseData(UPATE_VERSION_RESULT_ACTION);
     }
 
     private static byte[] createBaseData(String action) {

@@ -50,7 +50,6 @@ import com.ubtechinc.goldenpig.net.ResponseInterceptor;
 import com.ubtechinc.goldenpig.pigmanager.SetPigNetWorkActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.mypig.CheckRobotOnlineStateProxy;
-import com.ubtechinc.goldenpig.pigmanager.mypig.DeviceUpdateActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.PairPigActivity;
 import com.ubtechinc.goldenpig.pigmanager.mypig.QRCodeActivity;
 import com.ubtechinc.goldenpig.pigmanager.register.GetPairPigQRHttpProxy;
@@ -67,6 +66,7 @@ import com.ubtechinc.nets.utils.DeviceUtils;
 import com.ubtechinc.protocollibrary.communit.ProtoBufferDisposer;
 import com.ubtechinc.push.UbtPushModel;
 import com.ubtechinc.tvlloginlib.TVSManager;
+import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
 import com.ubtrobot.analytics.mobile.AnalyticsKit;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.ubtrobot.channelservice.proto.GPRelationshipContainer;
@@ -111,7 +111,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
 
     public static Activity mTopActivity;
 
-    public static final String TAG = "goldpig";
+    public static final String TAG = "goldenPig";
 
     private boolean isShowForceOfflineDialog;
 
@@ -411,7 +411,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
 
 
     private void showIKnowDialog(String content) {
-        if (mTopActivity == null) return;
+        if (mTopActivity == null || TextUtils.isEmpty(content)) return;
         UBTBaseDialog iknowDialog = new UBTBaseDialog(mTopActivity);
         iknowDialog.setCancelable(false);
         iknowDialog.setCanceledOnTouchOutside(false);
@@ -613,9 +613,9 @@ public class UBTPGApplication extends LoginApplication implements Observer {
             Event<Boolean> event = new Event<>(EventBusUtil.RECEIVE_CLEAR_PIG_INFO);
             event.setData(result);
             EventBusUtil.sendEvent(event);
-        } else if (action.equals(ContactsProtoBuilder.UPATE_VERSION_ACTION)) {
+        } else if (action.equals(ContactsProtoBuilder.UPATE_VERSION_ACTION) || action.equals(ContactsProtoBuilder.UPATE_VERSION_RESULT_ACTION)) {
             final int result = msg.getPayload().unpack(VersionInformation.UpgradeInfo.class).getStatus();
-            handleOTADialog(result);
+            handleOTADialog(result, action);
         } else if (action.equals(ContactsProtoBuilder.GET_VERSION_STATE_ACTION)) {
             VersionInformation.UpgradeInfo info = msg.getPayload().unpack(VersionInformation.UpgradeInfo.class);
             Event<VersionInformation.UpgradeInfo> event = new Event<>(EventBusUtil.RECEIVE_ROBOT_VERSION_STATE);
@@ -624,7 +624,8 @@ public class UBTPGApplication extends LoginApplication implements Observer {
         }
     }
 
-    private void handleOTADialog(int result) {
+    private void handleOTADialog(int result, String action) {
+        Log.d(TAG, "OTA|action=" + action + " result=" + result);
         String tip = "";
         switch (result) {
             case 3:
@@ -636,45 +637,59 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                 break;
             case 5:
                 tip = "升级包异常，系统升级失败";
-                if (mTopActivity instanceof DeviceUpdateActivity) {
-                    mTopActivity.finish();
+                if (action.equals(ContactsProtoBuilder.UPATE_VERSION_RESULT_ACTION)) {
+                    if (SharedPreferencesUtils.getBoolean(this, "hasTipOTAResult", false)) {
+                        tip = "";
+                    } else {
+                        SharedPreferencesUtils.putBoolean(this, "hasTipOTAResult", true);
+                    }
                 }
+//                if (mTopActivity instanceof DeviceUpdateActivity) {
+//                    mTopActivity.finish();
+//                }
                 break;
             case 6:
                 tip = "系统升级成功";
-                if (mTopActivity instanceof DeviceUpdateActivity) {
-                    mTopActivity.finish();
+                if (action.equals(ContactsProtoBuilder.UPATE_VERSION_RESULT_ACTION)) {
+                    if (SharedPreferencesUtils.getBoolean(this, "hasTipOTAResult", false)) {
+                        tip = "";
+                    } else {
+                        SharedPreferencesUtils.putBoolean(this, "hasTipOTAResult", true);
+                    }
                 }
+//                if (mTopActivity instanceof DeviceUpdateActivity) {
+//                    mTopActivity.finish();
+//                }
                 break;
             case 7:
                 tip = "服务器异常，无法升级\n" +
                         "请稍后重试";
-                if (mTopActivity instanceof DeviceUpdateActivity) {
-                    mTopActivity.finish();
-                }
+//                if (mTopActivity instanceof DeviceUpdateActivity) {
+//                    mTopActivity.finish();
+//                }
                 break;
             case 8:
                 tip = "服务器异常，无法升级\n" +
                         "请稍后重试";
-                if (mTopActivity instanceof DeviceUpdateActivity) {
-                    mTopActivity.finish();
-                }
+//                if (mTopActivity instanceof DeviceUpdateActivity) {
+//                    mTopActivity.finish();
+//                }
                 break;
             case 9:
                 tip = "八戒系统空间不足，无法升级";
-                if (mTopActivity instanceof DeviceUpdateActivity) {
-                    mTopActivity.finish();
-                }
+//                if (mTopActivity instanceof DeviceUpdateActivity) {
+//                    mTopActivity.finish();
+//                }
                 break;
             case 10:
                 tip = "八戒文件系统异常，无法升级";
-                if (mTopActivity instanceof DeviceUpdateActivity) {
-                    mTopActivity.finish();
-                }
+//                if (mTopActivity instanceof DeviceUpdateActivity) {
+//                    mTopActivity.finish();
+//                }
                 break;
-            default:
-                tip = "OTA升级完成";
-                break;
+//            default:
+//                tip = "OTA升级完成";
+//                break;
         }
         showIKnowDialog(tip);
     }

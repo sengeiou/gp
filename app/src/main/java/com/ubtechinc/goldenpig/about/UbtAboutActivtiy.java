@@ -85,6 +85,7 @@ public class UbtAboutActivtiy extends BaseToolBarActivity {
             @Override
             public void onClick(View v) {
                 long time = SystemClock.elapsedRealtime();
+                updateVersion();
                 if (lastClickTime == 0) {
                     lastClickTime = time;
                 }
@@ -112,6 +113,18 @@ public class UbtAboutActivtiy extends BaseToolBarActivity {
                 }
             }
         });
+    }
+
+    private void updateVersion() {
+        String version = mVersionTv.getText().toString();
+        if (!TextUtils.isEmpty(version)) {
+            String verCode = "." + ContextUtils.getVerCode(this);
+            if (version.endsWith(verCode)) {
+                mVersionTv.setText(String.format(getString(R.string.ubt_version_format), ContextUtils.getVerName(this)));
+            } else {
+                mVersionTv.setText(String.format(getString(R.string.ubt_version_format), ContextUtils.getVerName(this) + verCode));
+            }
+        }
     }
 
 }

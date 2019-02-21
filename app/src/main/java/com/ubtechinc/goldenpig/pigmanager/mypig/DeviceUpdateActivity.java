@@ -3,7 +3,7 @@ package com.ubtechinc.goldenpig.pigmanager.mypig;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,6 +14,7 @@ import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.utils.CheckUtil;
+import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
 
 import butterknife.ButterKnife;
 
@@ -49,7 +50,7 @@ public class DeviceUpdateActivity extends BaseToolBarActivity implements View.On
         mCurrVersionTv = findViewById(R.id.tv_current_version);
         mVersionTv = findViewById(R.id.tv_new_version);
         mMsgTv = findViewById(R.id.ubt_tv_version_msg);
-        mMsgTv.setMovementMethod(ScrollingMovementMethod.getInstance());
+//        mMsgTv.setMovementMethod(ScrollingMovementMethod.getInstance());
         mTvUpdate = findViewById(R.id.tv_ota_update);
         mTvUpdate.setOnClickListener(this);
 
@@ -66,6 +67,7 @@ public class DeviceUpdateActivity extends BaseToolBarActivity implements View.On
                 mVersionTv.setText(getString(R.string.ubt_latest_version_format, latestVersion));
             }
             if (!TextUtils.isEmpty(updateMessage)) {
+                Log.d("updateMessage", updateMessage);
                 mMsgTv.setText(updateMessage);
             }
             if ("3".equals(status)) {
@@ -74,6 +76,7 @@ public class DeviceUpdateActivity extends BaseToolBarActivity implements View.On
             }
         }
         initIM();
+        getRobotOTAResult();
     }
 
     private void initIM() {
@@ -84,7 +87,14 @@ public class DeviceUpdateActivity extends BaseToolBarActivity implements View.On
     }
 
     private void sendUpdate() {
+        SharedPreferencesUtils.putBoolean(this, "hasTipOTAResult", false);
         UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.updatePigVersion()));
+    }
+
+    private void getRobotOTAResult() {
+        if (!SharedPreferencesUtils.getBoolean(this, "hasTipOTAResult", false)) {
+            UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getRobotUpdateResult()));
+        }
     }
 
     @Override
@@ -93,7 +103,6 @@ public class DeviceUpdateActivity extends BaseToolBarActivity implements View.On
             case R.id.tv_ota_update:
                 if (!CheckUtil.checkPhoneNetState(this, false)) {
                     showIKnowDialog(getResources().getString(R.string.network_error));
-
                     return;
                 }
                 if (!CheckUtil.checkRobotOnlineState(this)) {

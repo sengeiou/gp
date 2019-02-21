@@ -179,6 +179,7 @@ class UbtBluetoothConnector {
                             synchronized (mSyncLock) {
                                 if (mIsShutdown) closeGatt(gatt);
                             }
+                            mMainHandler.sendEmptyMessage(MSG_CONNECT_FAILED);
                         }
                     } else {//本次操作失败,考虑是否重新触发操作
                         if (newState == BluetoothGatt.STATE_CONNECTED

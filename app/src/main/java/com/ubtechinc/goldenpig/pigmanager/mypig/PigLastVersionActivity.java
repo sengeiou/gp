@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.TextView;
 
+import com.ubt.imlibv2.bean.ContactsProtoBuilder;
+import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
+import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
 
 public class PigLastVersionActivity extends BaseToolBarActivity {
     @Override
@@ -27,5 +30,15 @@ public class PigLastVersionActivity extends BaseToolBarActivity {
                 tvVersionValue.setText(latestVersion);
             }
         }
+
+        getRobotOTAResult();
     }
+
+    private void getRobotOTAResult() {
+        if (!SharedPreferencesUtils.getBoolean(this, "hasTipOTAResult", false)) {
+            UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getRobotUpdateResult()));
+        }
+    }
+
+
 }

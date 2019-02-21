@@ -83,4 +83,15 @@ public class ContextUtils {
         }
         return verName;
     }
+
+    public static int getVerCode(Context context) {
+        int verCode = -1;
+        try {
+            verCode = context.getPackageManager().
+                    getPackageInfo(context.getPackageName(), 0).versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        return verCode;
+    }
 }

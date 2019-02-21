@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,6 +66,7 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.ubtechinc.goldenpig.app.UBTPGApplication.TAG;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NETWORK_STATE_CHANGED;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_ONLINE_STATE;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_VERSION_STATE;
@@ -269,6 +271,7 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
         if (currentUser != null) {
             String nickName = SharedPreferencesUtils.getString(getActivity(), "tvs_nickName", "");
             String headImgUrl = SharedPreferencesUtils.getString(getActivity(), "tvs_headImgUrl", "");
+            Log.d(TAG, "PersonalFrag|fillAccountView|tvs_nickName=" + nickName + " ubt_nickName=" + currentUser.getNickName());
             if (TextUtils.isEmpty(nickName)) {
                 nickName = currentUser.getNickName();
             }

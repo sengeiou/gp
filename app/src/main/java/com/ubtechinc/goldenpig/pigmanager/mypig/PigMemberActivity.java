@@ -614,7 +614,7 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
         switch (code) {
             case USER_PIG_UPDATE:
                 isDownloadedUserList = false;
-                getMember("1");
+                updateData();
                 break;
             case RECEIVE_CLEAR_PIG_INFO:
                 if ((boolean) event.getData()) {
@@ -625,6 +625,17 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
                 }
                 break;
         }
+    }
+
+    private void updateData() {
+        mPig = AuthLive.getInstance().getCurrentPig();
+        tvMemberTip = findViewById(R.id.tv_member_tip);
+        if (mPig != null && mPig.isAdmin) {
+            tvMemberTip.setText("HI，你是八戒机器人的管理员，可管理成员组");
+        } else {
+            tvMemberTip.setText("HI，欢迎加入八戒的成员组，你可以给八戒配置网络");
+        }
+        getMember("1");
     }
 
     @Override
