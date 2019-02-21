@@ -1,9 +1,7 @@
 package com.ubtechinc.goldenpig.personal.management;
 
-import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -11,7 +9,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -34,7 +31,6 @@ import com.ubt.improtolib.UserContacts;
 import com.ubtech.utilcode.utils.network.NetworkHelper;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
-import com.ubtechinc.goldenpig.comm.GlobalVariable;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
@@ -49,6 +45,7 @@ import com.ubtechinc.goldenpig.view.StateView;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
+import com.yanzhenjie.permission.PermissionListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
@@ -58,7 +55,6 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -558,48 +554,69 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
      * 导入联系人
      */
     private void importContact() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (AndPermission.hasPermission(this, Manifest.permission.READ_CONTACTS)) {
-                intentToContact();
-            } else if (AndPermission.hasAlwaysDeniedPermission(this, Arrays.asList(Manifest.permission.READ_CONTACTS)
-            )) {
-                showPermissionDialog(Permission.CONTACTS);
-            } else {
-                ActivityCompat.requestPermissions(AddressBookActivity.this,
-                        new String[]{android.Manifest.permission.READ_CONTACTS},
-                        GlobalVariable.REQUEST_CONTACTS_READ_PERMISSON);
-            }
-//            if (ContextCompat.checkSelfPermission(AddAndSetContactActivity.this, android.Manifest.permission
-// .READ_CONTACTS)
-//                    != PackageManager.PERMISSION_GRANTED) {
-//                // 若不为GRANTED(即为DENIED)则要申请权限了
-//                // 申请权限 第一个为context 第二个可以指定多个请求的权限 第三个参数为请求码
-//                ActivityCompat.requestPermissions(AddAndSetContactActivity.this,
-//                        new String[]{android.Manifest.permission.READ_CONTACTS},
-//                        GlobalVariable.REQUEST_CONTACTS_READ_PERMISSON);
-//            } else {
-//                //权限已经被授予，在这里直接写要执行的相应方法即可
-//                intentToContact();
-//            }
+        if (Build.VERSION_CODES.M <= Build.VERSION.SDK_INT) {
+            AndPermission.with(this)
+                    .requestCode(0x1101)
+                    .permission(Permission.CONTACTS)
+                    .callback(new PermissionListener() {
+                        @Override
+                        public void onSucceed(int requestCode, @NonNull List<String> grantPermissions) {
+                            intentToContact();
+                        }
+
+                        @Override
+                        public void onFailed(int requestCode, @NonNull List<String> deniedPermissions) {
+                            showPermissionDialog(Permission.CONTACTS);
+                        }
+                    })
+                    .rationale((requestCode, rationale) -> rationale.resume())
+                    .start();
         } else {
-            // 低于6.0的手机直接访问
             intentToContact();
         }
+
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            if (AndPermission.hasPermission(this, Manifest.permission.READ_CONTACTS)) {
+//                intentToContact();
+//            } else if (AndPermission.hasAlwaysDeniedPermission(this, Arrays.asList(Manifest.permission.READ_CONTACTS)
+//            )) {
+//                showPermissionDialog(Permission.CONTACTS);
+//            } else {
+//                ActivityCompat.requestPermissions(AddressBookActivity.this,
+//                        new String[]{android.Manifest.permission.READ_CONTACTS},
+//                        GlobalVariable.REQUEST_CONTACTS_READ_PERMISSON);
+//            }
+////            if (ContextCompat.checkSelfPermission(AddAndSetContactActivity.this, android.Manifest.permission
+//// .READ_CONTACTS)
+////                    != PackageManager.PERMISSION_GRANTED) {
+////                // 若不为GRANTED(即为DENIED)则要申请权限了
+////                // 申请权限 第一个为context 第二个可以指定多个请求的权限 第三个参数为请求码
+////                ActivityCompat.requestPermissions(AddAndSetContactActivity.this,
+////                        new String[]{android.Manifest.permission.READ_CONTACTS},
+////                        GlobalVariable.REQUEST_CONTACTS_READ_PERMISSON);
+////            } else {
+////                //权限已经被授予，在这里直接写要执行的相应方法即可
+////                intentToContact();
+////            }
+//        } else {
+//            // 低于6.0的手机直接访问
+//            intentToContact();
+//        }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[]
-            grantResults) {
-        if (requestCode == GlobalVariable.REQUEST_CONTACTS_READ_PERMISSON) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                intentToContact();
-            } else {
-                UbtToastUtils.showCustomToast(AddressBookActivity.this, "授权被禁止");
-            }
-        }
-        super.onRequestPermissionsResult(requestCode, permissions,
-                grantResults);
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[]
+//            grantResults) {
+//        if (requestCode == GlobalVariable.REQUEST_CONTACTS_READ_PERMISSON) {
+//            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                intentToContact();
+//            } else {
+//                UbtToastUtils.showCustomToast(AddressBookActivity.this, "授权被禁止");
+//            }
+//        }
+//        super.onRequestPermissionsResult(requestCode, permissions,
+//                grantResults);
+//    }
 
     private void intentToContact() {
         // 跳转到联系人界面
