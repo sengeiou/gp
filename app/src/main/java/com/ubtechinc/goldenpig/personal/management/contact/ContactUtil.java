@@ -479,6 +479,9 @@ public class ContactUtil {
                                 .getColumnIndex(Phone.NUMBER));
                         list.get(list.size() - 1).mobile = jobNum;
                     }
+                    if (!TextUtils.isEmpty(list.get(list.size() - 1).mobile)) {
+                        list.get(list.size() - 1).mobile = list.get(list.size() - 1).mobile.trim();
+                    }
                 }
             } catch (Exception e) {
             }

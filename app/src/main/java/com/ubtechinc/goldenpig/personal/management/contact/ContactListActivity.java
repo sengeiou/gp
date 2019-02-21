@@ -113,6 +113,12 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
                         flag = false;
                         break;
                     }
+                    if (!isGB2312(list.get(i).lastname)) {
+                        UbtToastUtils.showCustomToast(getApplication(), "昵称格式错误，请选择其他联系人");
+                        flag = false;
+                        break;
+                    }
+
                     for (int j = i + 1; j < list.size(); j++) {
                         if (list.get(i).lastname.equals(list.get(j).lastname)) {
                             UbtToastUtils.showCustomToast(getApplication(), "昵称重复，请先取消重复号码再选择");
@@ -144,7 +150,7 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
 
         sideBar.setTextView(dialog);
         checkContact();
-        sideBar.setIndexText(ContactUtil.getInstance(this).getIndexString());
+        sideBar.setIndexText(indexString);//ContactUtil.getInstance(this).getIndexString()
         adapter = new SortAdapter(this, SourceDateList);
         sortListView.setAdapter(adapter);
         sortListView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -278,6 +284,9 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
     }
 
     public static Boolean isGB2312(String str) {
+        if (TextUtils.isEmpty(str)) {
+            return false;
+        }
         for (int i = 0; i < str.length(); i++) {
             String bb = str.substring(i, i + 1);
             // 生成一个Pattern,同时编译一个正则表达式,其中的u4E00("一"的unicode编码)-\u9FA5("龥"的unicode编码)
@@ -289,7 +298,10 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
         return true;
     }
 
+    ArrayList<String> indexString;
+
     public void checkContact() {
+        indexString = new ArrayList<>();
         List<MyContact> cache = ContactUtil.getInstance(this).getContactList();
         SourceDateList = new ArrayList<>();
         if (cache == null || cache.size() == 0) {
@@ -297,6 +309,9 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
             for (int i = 0; i < cache.size(); i++) {
                 if (!TextUtils.isEmpty(cache.get(i).lastname) && !TextUtils.isEmpty(cache.get(i).mobile)) {
                     SourceDateList.add(cache.get(i));
+                    if (!indexString.contains(cache.get(i).sortLetter)) {
+                        indexString.add(cache.get(i).sortLetter);
+                    }
                 }
             }
         }
