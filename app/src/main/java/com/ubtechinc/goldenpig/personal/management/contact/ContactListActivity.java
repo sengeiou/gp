@@ -75,9 +75,9 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
             @Override
             public void onError(int i, String s) {
                 if (AuthLive.getInstance().getCurrentPig() != null) {
-                    UbtToastUtils.showCustomToast(getApplication(),"八戒未登录");
+                    UbtToastUtils.showCustomToast(getApplication(), "八戒未登录");
                 } else {
-                    UbtToastUtils.showCustomToast(getApplication(),"未绑定八戒");
+                    UbtToastUtils.showCustomToast(getApplication(), "未绑定八戒");
                 }
                 LoadingDialog.getInstance(ContactListActivity.this).dismiss();
             }
@@ -115,19 +115,19 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
                     }
                     for (int j = i + 1; j < list.size(); j++) {
                         if (list.get(i).lastname.equals(list.get(j).lastname)) {
-                            UbtToastUtils.showCustomToast(getApplication(),"昵称重复，请先取消重复号码再选择");
+                            UbtToastUtils.showCustomToast(getApplication(), "昵称重复，请先取消重复号码再选择");
                             flag = false;
                             break;
                         }
                         if (list.get(i).mobile.equals(list.get(j).mobile)) {
-                            UbtToastUtils.showCustomToast(getApplication(),"号码重复，请先取消重复号码再选择");
+                            UbtToastUtils.showCustomToast(getApplication(), "号码重复，请先取消重复号码再选择");
                             flag = false;
                             break;
                         }
                     }
                 }
                 if (MAXADD < list.size() + oldList.size()) {
-                    UbtToastUtils.showCustomToast(getApplication(),"八戒机器人最多能储存30人，请重新选择");
+                    UbtToastUtils.showCustomToast(getApplication(), "八戒机器人最多能储存30人，请重新选择");
                 } else if (flag) {
                     if (!NetworkHelper.sharedHelper().isNetworkAvailable()) {
                         UbtToastUtils.showCustomToast(getApplication(), getString(R.string.network_error));
@@ -143,8 +143,7 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
                 .empty_color));
 
         sideBar.setTextView(dialog);
-        SourceDateList = ContactUtil.getInstance(this).getContactList();
-        Collections.sort(SourceDateList, new PinyinComparator());
+        checkContact();
         sideBar.setIndexText(ContactUtil.getInstance(this).getIndexString());
         adapter = new SortAdapter(this, SourceDateList);
         sortListView.setAdapter(adapter);
@@ -208,11 +207,11 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
                     continue;
                 }
                 if (oldList.get(i).phone.equals(strPhone)) {
-                    UbtToastUtils.showCustomToast(getApplication(),"该号码已存在，请选择其他号码");
+                    UbtToastUtils.showCustomToast(getApplication(), "该号码已存在，请选择其他号码");
                     return false;
                 }
                 if (oldList.get(i).name.equals(strName)) {
-                    UbtToastUtils.showCustomToast(getApplication(),"昵称重复，导入请前往八戒通讯录修改昵称");
+                    UbtToastUtils.showCustomToast(getApplication(), "昵称重复，导入请前往八戒通讯录修改昵称");
                     return false;
                 }
             }
@@ -254,11 +253,11 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
             case "/im/mail/add":
                 Boolean flag = msg.getPayload().unpack(GPResponse.Response.class).getResult();
                 if (flag) {
-                    UbtToastUtils.showCustomToast(getApplication(),"导入成功");
+                    UbtToastUtils.showCustomToast(getApplication(), "导入成功");
                     EventBusUtil.sendEvent(new Event<String>(CONTACT_CHECK_SUCCESS));
                     finish();
                 } else {
-                    UbtToastUtils.showCustomToast(getApplication(),"请求异常，请重试");
+                    UbtToastUtils.showCustomToast(getApplication(), "请求异常，请重试");
                 }
                 break;
 
@@ -267,11 +266,11 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
             case "/im/mail/update":
                 Boolean flag2 = msg.getPayload().unpack(GPResponse.Response.class).getResult();
                 if (flag2) {
-                    UbtToastUtils.showCustomToast(getApplication(),"编辑成功");
+                    UbtToastUtils.showCustomToast(getApplication(), "编辑成功");
                     EventBusUtil.sendEvent(new Event<String>(CONTACT_CHECK_SUCCESS));
                     finish();
                 } else {
-                    UbtToastUtils.showCustomToast(getApplication(),"导入失败，请重试");
+                    UbtToastUtils.showCustomToast(getApplication(), "导入失败，请重试");
                 }
                 break;
             default:
@@ -288,5 +287,19 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
             }
         }
         return true;
+    }
+
+    public void checkContact() {
+        List<MyContact> cache = ContactUtil.getInstance(this).getContactList();
+        SourceDateList = new ArrayList<>();
+        if (cache == null || cache.size() == 0) {
+        } else {
+            for (int i = 0; i < cache.size(); i++) {
+                if (!TextUtils.isEmpty(cache.get(i).lastname) && !TextUtils.isEmpty(cache.get(i).mobile)) {
+                    SourceDateList.add(cache.get(i));
+                }
+            }
+        }
+        Collections.sort(SourceDateList, new PinyinComparator());
     }
 }
