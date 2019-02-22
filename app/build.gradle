@@ -36,7 +36,7 @@ android {
         applicationId "com.ubtechinc.goldenpig"
         minSdkVersion MIN_SDK_VERSION
         targetSdkVersion TARGET_SDK_VERSION
-        versionCode 39
+        versionCode 40
         versionName "1.1.2"
         multiDexEnabled true
 
