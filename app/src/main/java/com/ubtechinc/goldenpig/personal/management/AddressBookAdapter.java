@@ -90,42 +90,6 @@ public class AddressBookAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 aHolder.view_curline.setVisibility(View.VISIBLE);
                 //aHolder.view_curline_bottom.setVisibility(View.GONE);
             }
-//            aHolder.tv_set.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (aHolder.swipe_menu.isMenuOpen()) {
-//                        aHolder.swipe_menu.smoothToCloseMenu();
-//                    }
-//                    Toast.makeText(mContext, "编辑", Toast.LENGTH_SHORT).show();
-//                }
-//            });
-//            aHolder.tv_delete.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (aHolder.swipe_menu.isMenuOpen()) {
-//                        aHolder.swipe_menu.smoothToCloseMenu();
-//                    }
-//                    mList.remove(position);
-//                    try {
-//                        if (mList.get(mList.size() - 1).type == 1) {
-//                            mList.remove(mList.size() - 1);
-//                        }
-//                    } catch (Exception e) {
-//                    }
-//                    notifyDataSetChanged();
-//                }
-//            });
-//            aHolder.itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (aHolder.swipe_menu.isMenuOpen()) {
-//                        aHolder.swipe_menu.smoothToCloseMenu();
-//                    } else {
-//                        Toast.makeText(mContext, "这是第" + (position + 1) + "条数据", Toast.LENGTH_SHORT)
-//                                .show();
-//                    }
-//                }
-//            });
         } else if (mList.get(position).type == 1) {
             AddressBookHolder2 aHolder = (AddressBookHolder2) holder;
             aHolder.tv_content.setText(mContext.getString(R.string.contact_limit));

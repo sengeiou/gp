@@ -24,6 +24,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.tencent.TIMCustomElem;
 import com.tencent.TIMElem;
 import com.tencent.TIMMessage;
+import com.ubt.imlibv2.bean.MyContact;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubt.improtolib.GPResponse;
@@ -36,6 +37,7 @@ import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.model.AddressBookmodel;
 import com.ubtechinc.goldenpig.personal.management.contact.ContactListActivity;
+import com.ubtechinc.goldenpig.personal.management.contact.ContactUtil;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.ubtechinc.goldenpig.view.Divider;
@@ -294,7 +296,7 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
     private SwipeMenuCreator swipeMenuCreator = new SwipeMenuCreator() {
         @Override
         public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
-            if (viewType == 1) {
+            if (viewType != 0) {
                 return;
             }
             int width = getResources().getDimensionPixelSize(R.dimen.dp_65);
@@ -625,8 +627,11 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
 //        intent.addCategory("android.intent.category.DEFAULT");
 //        intent.setType("vnd.android.cursor.dir/phone_v2");
 //        startActivityForResult(intent, GlobalVariable.REQUEST_CONTACTS_READ_RESULT);
+        ArrayList<MyContact> cache = new ArrayList<>();
+        cache.addAll(ContactUtil.getInstance(this).getContactList());
         Intent it = new Intent(this, ContactListActivity.class);
         it.putParcelableArrayListExtra("list", mList);
+        it.putParcelableArrayListExtra("cache", cache);
         startActivity(it);
     }
 }

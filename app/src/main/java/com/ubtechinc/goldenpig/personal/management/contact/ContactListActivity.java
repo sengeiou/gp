@@ -64,6 +64,9 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         oldList = getIntent().getParcelableArrayListExtra("list");
+        ArrayList<MyContact> cache = new ArrayList<>();
+        cache.addAll(getIntent().getParcelableArrayListExtra("cache"));
+        checkContact(cache);
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null) {
             UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
@@ -149,7 +152,6 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
                 .empty_color));
 
         sideBar.setTextView(dialog);
-        checkContact();
         sideBar.setIndexText(indexString);//ContactUtil.getInstance(this).getIndexString()
         adapter = new SortAdapter(this, SourceDateList);
         sortListView.setAdapter(adapter);
@@ -300,9 +302,8 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
 
     ArrayList<String> indexString;
 
-    public void checkContact() {
+    public void checkContact(ArrayList<MyContact> cache) {
         indexString = new ArrayList<>();
-        List<MyContact> cache = ContactUtil.getInstance(this).getContactList();
         SourceDateList = new ArrayList<>();
         if (cache == null || cache.size() == 0) {
         } else {
@@ -316,5 +317,6 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
             }
         }
         Collections.sort(SourceDateList, new PinyinComparator());
+        Collections.sort(indexString, new StringComparator());
     }
 }

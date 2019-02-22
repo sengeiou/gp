@@ -266,19 +266,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
             @Override
             public void afterTextChanged(Editable s) {
                 strPhone = etPhone.getText().toString().trim();
-                if (TextUtils.isEmpty(strPhone)) {
-//                    ivPhoneClear.setVisibility(View.INVISIBLE);
-//                    viewClearLine.setVisibility(View.INVISIBLE);
-                    rl_titlebar.getTvRight().setEnabled(false);
-                    rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color
-                            .ubt_skip_txt_unenable_color));
-                } else {
-//                    ivPhoneClear.setVisibility(View.VISIBLE);
-//                    viewClearLine.setVisibility(View.VISIBLE);
-                    rl_titlebar.getTvRight().setEnabled(true);
-                    rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color
-                            .ubt_tab_btn_txt_checked_color));
-                }
+                checkMSG();
             }
         });
         etName.addTextChangedListener(new TextWatcher() {
@@ -295,7 +283,6 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
             @Override
             public void afterTextChanged(Editable s) {
                 strName = etName.getText().toString().trim();
-
                 if (mList != null && !mList.isEmpty()) {
                     int newPos = curPosition;
                     for (int i = 0; i < mList.size(); i++) {
@@ -312,11 +299,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                         adapter.notifyDataSetChanged();
                     }
                 }
-//                if (TextUtils.isEmpty(strName)) {
-//                    ivNameClear.setVisibility(View.INVISIBLE);
-//                } else {
-//                    ivNameClear.setVisibility(View.VISIBLE);
-//                }
+                checkMSG();
             }
         });
         if (updatePosition >= 0 && updatePosition < oldList.size()) {
@@ -375,7 +358,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
             int destLen = CommendUtil.getMsgLength(dest.toString());
             LogUtils.d("sourceLen:" + sourceLen + ",destLen:" + destLen);
             if (sourceLen + destLen > 6) {
-                UbtToastUtils.showCustomToast(getApplication(), "最大长度为6个汉字");
+                UbtToastUtils.showCustomToast(getApplication(), "请输入6个字以内昵称");
                 return "";
             }
             return source;
@@ -542,11 +525,11 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                     continue;
                 }
                 if (oldList.get(i).phone.equals(strPhone)) {
-                    UbtToastUtils.showCustomToast(getApplication(), "存在重复号码");
+                    UbtToastUtils.showCustomToast(getApplication(), "手机号重复，请重新输入");
                     return false;
                 }
                 if (oldList.get(i).name.equals(strName)) {
-                    UbtToastUtils.showCustomToast(getApplication(), "存在重复昵称");
+                    UbtToastUtils.showCustomToast(getApplication(), "昵称重复，请重新输入");
                     return false;
                 }
             }
@@ -559,7 +542,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
     protected void onDestroy() {
         super.onDestroy();
         UbtTIMManager.getInstance().deleteMsgObserve(this);
-        if(mHandler!=null){
+        if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
         }
     }
@@ -613,6 +596,18 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
                 }
                 break;
             default:
+        }
+    }
+
+    private void checkMSG() {
+        if (TextUtils.isEmpty(strPhone) || TextUtils.isEmpty(strName)) {
+            rl_titlebar.getTvRight().setEnabled(false);
+            rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color
+                    .ubt_skip_txt_unenable_color));
+        } else {
+            rl_titlebar.getTvRight().setEnabled(true);
+            rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color
+                    .ubt_tab_btn_txt_checked_color));
         }
     }
 }
