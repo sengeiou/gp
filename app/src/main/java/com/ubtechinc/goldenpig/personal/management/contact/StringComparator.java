@@ -1,8 +1,6 @@
 package com.ubtechinc.goldenpig.personal.management.contact;
 
 
-import com.ubt.imlibv2.bean.MyContact;
-
 import java.util.Comparator;
 
 /**
