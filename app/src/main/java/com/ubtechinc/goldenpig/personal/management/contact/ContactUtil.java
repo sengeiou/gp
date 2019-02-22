@@ -435,7 +435,7 @@ public class ContactUtil {
                 mimetype = cursor.getString(cursor.getColumnIndex(Data.MIMETYPE)); // 取得mimetype类型,扩展的数据都在这个类型里面
                 // 1.1,拿到联系人的各种名字
                 if (StructuredName.CONTENT_ITEM_TYPE.equals(mimetype)) {
-                    cursor.getString(cursor
+                    String display = cursor.getString(cursor
                             .getColumnIndex(StructuredName.DISPLAY_NAME));
                     String lastname = cursor.getString(cursor
                             .getColumnIndex(StructuredName.GIVEN_NAME));
@@ -443,11 +443,22 @@ public class ContactUtil {
                             .getColumnIndex(StructuredName.FAMILY_NAME));
                     String middleName = cursor.getString(cursor
                             .getColumnIndex(StructuredName.MIDDLE_NAME));
-                    if (!TextUtils.isEmpty(lastname)) {
-                        list.get(list.size() - 1).lastname = lastname;
-                    } else if (TextUtils.isEmpty(firstName + middleName)) {
-                        list.get(list.size() - 1).lastname = firstName + middleName;
+                    if (!TextUtils.isEmpty(display)) {
+                        list.get(list.size() - 1).lastname = display;
+                    } else {
+                        try {
+                            String name = (TextUtils.isEmpty(firstName) ? "" : firstName) +
+                                    (TextUtils.isEmpty(middleName) ? "" : middleName) +
+                                    (TextUtils.isEmpty(lastname) ? "" : lastname);
+                            list.get(list.size() - 1).lastname = name;
+                        } catch (Exception e) {
+                        }
                     }
+//                    else if (!TextUtils.isEmpty(lastname)) {
+//                        list.get(list.size() - 1).lastname = lastname;
+//                    } else if (TextUtils.isEmpty(firstName + middleName)) {
+//                        list.get(list.size() - 1).lastname = firstName + middleName;
+//                    }
                     String pinyin = PinyinUtils.getPingYin(list.get(list.size() - 1).lastname);
                     String sortString = pinyin.substring(0, 1).toUpperCase();
                     if (sortString.matches("[A-Z]")) {
