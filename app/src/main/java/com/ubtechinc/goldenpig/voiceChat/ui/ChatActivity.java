@@ -369,10 +369,73 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
      */
     @Override
     public void sendText() {
+           boolean isValidCharacter= isLetterDigitOrChinese(input.getText().toString());
+           if(!isValidCharacter){
+               Toast.makeText(UBTPGApplication.getContext(), "包含特殊字符"+input.getText().toString(), Toast.LENGTH_LONG).show();
+                return ;
+           }
            Message message = new TextMessage(input.getText());
            presenter.sendMessage(message.getMessage(), ChatPresenter.MESSAGE_TEXT);
            input.setText("");
     }
+
+    public static boolean isLetterDigitOrChinese(String str) {
+        for(int i=0;i<str.length();i++) {
+            if(isChinese(str.charAt(i))||isNumber(str.charAt(i))||isAlphabetic(str.charAt(i))){
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    public static boolean isChinese(char c) {
+        Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
+        if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
+                || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
+                || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A
+                || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_B
+                || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
+                || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS
+                || ub == Character.UnicodeBlock.GENERAL_PUNCTUATION) {
+            if(isChinesePunctuation(c)){
+                return false;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isChinesePunctuation(char c) {
+        Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
+        if (ub == Character.UnicodeBlock.GENERAL_PUNCTUATION
+                || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
+                || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS
+                || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_FORMS
+                || ub == Character.UnicodeBlock.VERTICAL_FORMS) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+     public static boolean isNumber(char n){
+            if(Character.isDigit(n)){
+                return true;
+            }else {
+                return false;
+            }
+        }
+
+     public static boolean isAlphabetic(char m) {
+            if(Character.isAlphabetic(m)){
+                return true;
+            }else {
+                return false;
+            }
+
+     }
+
 
     /**
      * 发送文件
