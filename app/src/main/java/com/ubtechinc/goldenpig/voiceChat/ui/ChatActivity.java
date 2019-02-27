@@ -371,7 +371,7 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
     public void sendText() {
            boolean isValidCharacter= isLetterDigitOrChinese(input.getText().toString());
            if(!isValidCharacter){
-               Toast.makeText(UBTPGApplication.getContext(), "包含特殊字符"+input.getText().toString(), Toast.LENGTH_LONG).show();
+               Toast.makeText(UBTPGApplication.getContext(), "留言内容未包含有效字符", Toast.LENGTH_LONG).show();
                 return ;
            }
            Message message = new TextMessage(input.getText());
