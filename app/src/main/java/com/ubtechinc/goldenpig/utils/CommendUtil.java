@@ -11,8 +11,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.regex.Pattern;
 
 public class CommendUtil {
+
+    public static boolean verifyPhone(String phone) {
+        if (TextUtils.isEmpty(phone))
+            return false;
+        return Pattern.matches("^1[\\d]{10}", phone);
+    }
+
+    public static String showPhone(String phone) {
+        if (TextUtils.isEmpty(phone))
+            return "";
+        StringBuilder sb = new StringBuilder();
+        if (phone.length() > 7) {
+            sb.append(phone.substring(0, 3));
+            sb.append(" ");
+            sb.append(phone.substring(3, 7));
+            sb.append(" ");
+            sb.append(phone.substring(7, phone.length()));
+        } else if (phone.length() > 3) {
+            sb.append(phone.substring(0, 3));
+            sb.append(" ");
+            sb.append(phone.substring(3, phone.length()));
+        } else {
+            sb.append(phone);
+        }
+        return sb.toString();
+    }
 
     public static int getMsgLength(String str) {
         if (TextUtils.isEmpty(str)) {

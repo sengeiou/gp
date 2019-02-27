@@ -320,7 +320,7 @@ public class EditAddressBookActivity extends BaseNewActivity implements Observer
                 picDialog.dismiss();
                 List<AddressBook> list = new ArrayList<>();
                 for (int i = 0; i < mList.size(); i++) {
-                    if (TextUtils.isEmpty(mList.get(i).phone)) {
+                    if (TextUtils.isEmpty(mList.get(i).phone) || TextUtils.isEmpty(mList.get(i).name)) {
                         continue;
                     }
                     if (mList.get(i).select) {

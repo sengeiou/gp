@@ -434,7 +434,8 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
                         deletePosition = -1;
                     } catch (Exception e) {
                     }
-                    if (mList.size() == 0) {
+                    if (mList.size() == 1 && mList.get(0).type != 0) {
+                        mList.clear();
                         mStateView.showEmpty();
                         tv_right.setVisibility(View.GONE);
                     }
@@ -628,9 +629,19 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
 //        intent.setType("vnd.android.cursor.dir/phone_v2");
 //        startActivityForResult(intent, GlobalVariable.REQUEST_CONTACTS_READ_RESULT);
         ArrayList<MyContact> cache = new ArrayList<>();
+        ArrayList<AddressBookmodel> cachelist = new ArrayList<>();
+        cachelist.addAll(mList);
+        if (cachelist != null && cachelist.size() > 0) {
+            if (cachelist.get(0).type != 0) {
+                cachelist.remove(0);
+            }
+            if (cachelist.get(cachelist.size() - 1).type != 0) {
+                cachelist.remove(cachelist.size() - 1);
+            }
+        }
         cache.addAll(ContactUtil.getInstance(this).getContactList());
         Intent it = new Intent(this, ContactListActivity.class);
-        it.putParcelableArrayListExtra("list", mList);
+        it.putParcelableArrayListExtra("list", cachelist);
         it.putParcelableArrayListExtra("cache", cache);
         startActivity(it);
     }

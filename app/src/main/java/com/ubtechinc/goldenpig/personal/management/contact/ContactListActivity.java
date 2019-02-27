@@ -26,6 +26,7 @@ import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.model.AddressBookmodel;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.utils.CommendUtil;
 import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 
@@ -186,6 +187,9 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
+                if (!SourceDateList.get(position).select && !canselect(SourceDateList.get(position))) {
+                    return;
+                }
                 SourceDateList.get(position).select = !SourceDateList.get(position).select;
                 adapter.notifyDataSetChanged();
                 for (int i = 0; i < SourceDateList.size(); i++) {
@@ -318,5 +322,43 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
         }
         Collections.sort(SourceDateList, new PinyinComparator());
         Collections.sort(indexString, new StringComparator());
+    }
+
+    public Boolean canselect(MyContact data) {
+        List<MyContact> list = new ArrayList<>();
+        if(!CommendUtil.verifyPhone(data.mobile)){
+            UbtToastUtils.showCustomToast(getApplication(), "号码格式错误，请选择其他联系人");
+            return false;
+        }
+        /**名字是否合规*/
+        if (!isGB2312(data.lastname)) {
+            UbtToastUtils.showCustomToast(getApplication(), "昵称格式错误，请选择其他联系人");
+            return false;
+        }
+
+        if (!checkOldList(data.lastname, data.mobile)) {
+            return false;
+        }
+        /**获取已选中的联系人*/
+        for (int i = 0; i < SourceDateList.size(); i++) {
+            if (SourceDateList.get(i).select) {
+                list.add(SourceDateList.get(i));
+            }
+        }
+        for (int i = 0; i < list.size(); i++) {
+            if (data.mobile.equals(list.get(i).mobile)) {
+                UbtToastUtils.showCustomToast(getApplication(), "号码重复，请先取消重复号码再选择");
+                return false;
+            }
+            if (data.lastname.equals(list.get(i).lastname)) {
+                UbtToastUtils.showCustomToast(getApplication(), "昵称重复，请先取消重复号码再选择");
+                return false;
+            }
+        }
+        if (MAXADD <= list.size() + oldList.size()) {
+            UbtToastUtils.showCustomToast(getApplication(), "八戒机器人最多能储存30人，请重新选择");
+            return false;
+        }
+        return true;
     }
 }
