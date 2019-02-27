@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.ubt.imlibv2.bean.MyContact;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.utils.CommendUtil;
 
 import java.util.List;
 
@@ -77,7 +78,7 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer {
         } catch (Exception e) {
             viewHolder.cur_line.setVisibility(View.GONE);
         }
-        viewHolder.tv_phone.setText(mContent.mobile);
+        viewHolder.tv_phone.setText(CommendUtil.showPhone(mContent.mobile));
         viewHolder.tv_name.setText(this.list.get(position).lastname);
         return view;
 

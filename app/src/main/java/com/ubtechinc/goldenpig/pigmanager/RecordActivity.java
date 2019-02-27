@@ -24,6 +24,7 @@ import com.ubtech.utilcode.utils.network.NetworkHelper;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewTv;
+import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
@@ -32,6 +33,7 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.bean.RecordModel;
 import com.ubtechinc.goldenpig.utils.CommendUtil;
+import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.StateView;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
@@ -50,6 +52,9 @@ import java.util.Observer;
 
 import butterknife.BindView;
 
+import static com.ubtech.utilcode.utils.TimeUtils.ONE_DAY;
+import static com.ubtech.utilcode.utils.TimeUtils.ONE_HOUR;
+import static com.ubtech.utilcode.utils.TimeUtils.ONE_MINUTE;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DELETE_RECORD_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.EDIT_RECORD_CALLBACK;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.INVISE_RECORD_POINT;
@@ -83,7 +88,8 @@ public class RecordActivity extends BaseNewActivity implements Observer {
         public void handleMessage(android.os.Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
-                ToastUtils.showShortToast(mWeakReference.get().getString(R.string.timeout_error_toast));
+                UbtToastUtils.showCustomToast(UBTPGApplication.getContext(), mWeakReference.get().getString(R.string
+                        .timeout_error_toast));
                 if (mWeakReference.get() != null) {
                     LoadingDialog.getInstance(mWeakReference.get()).dismiss();
                     if (mList.size() == 0) {
@@ -193,7 +199,8 @@ public class RecordActivity extends BaseNewActivity implements Observer {
     }
 
     public void onRefresh() {
-        LoadingDialog.getInstance(this).setTimeout(TIMEOUT).setShowToast(true).show();
+        mStateView.showLoading();
+        //LoadingDialog.getInstance(this).setTimeout(TIMEOUT).setShowToast(true).show();
         if (mHandler.hasMessages(1)) {
             mHandler.removeMessages(1);
         }
@@ -425,4 +432,41 @@ public class RecordActivity extends BaseNewActivity implements Observer {
         adapter.notifyDataSetChanged();
     }
 
+    public void aa() {
+        List<RecordModel> ss = new ArrayList<>();
+        List<Long> s = new ArrayList<>();
+        long t = System.currentTimeMillis();
+        s.add(t - ONE_MINUTE * 12);
+        s.add(t - ONE_HOUR * 2);
+        s.add(t - ONE_DAY * 12);
+        s.add(t - ONE_DAY * 1 - ONE_HOUR * 12);
+        s.add(t - ONE_DAY * 1 - ONE_HOUR * 2);
+
+        s.add(t - ONE_DAY * 2);
+        s.add(t - ONE_DAY * 3);
+        s.add(t - ONE_DAY * 4);
+        s.add(t - ONE_DAY * 5);
+        s.add(t - ONE_DAY * 6);
+
+        s.add(t - ONE_DAY * 7);
+        s.add(t - ONE_DAY * 8);
+        s.add(t - ONE_HOUR * 12);
+        s.add(t - ONE_MINUTE * 12);
+        s.add(t - ONE_HOUR * 2);
+
+        s.add(t - ONE_DAY * 12);
+        for (int j = 0; j < 16; j++) {
+            RecordModel mo = new RecordModel();
+            mo.name = "油瓶" + j;
+            mo.number = "1598765432" + j;
+            mo.id = 23;
+            mo.type = 2;
+            mo.dateLong = s.get(j);
+            mo.duration = 2000;
+            ss.add(mo);
+        }
+        allList.clear();
+        allList.addAll(ss);
+        onRefreshSuccess(CommendUtil.checkRecord(ss));
+    }
 }

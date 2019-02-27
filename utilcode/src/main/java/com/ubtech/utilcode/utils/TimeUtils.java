@@ -187,6 +187,7 @@ public class TimeUtils {
     public static final String DEFAULT_PATTERN2 = "yyyy-MM-dd HH-mm-ss";
     public static final String DEFAULT_PATTERN3 = "yyyyMMddHHmmss";
     public static final String DEFAULT_PATTERN12 = "yyyy-MM-dd HH:mm:ss aa";
+
     /**
      * 将时间戳转为时间字符串
      * <p>格式为yyyy-MM-dd HH:mm:ss</p>
@@ -1185,7 +1186,7 @@ public class TimeUtils {
     public static final SimpleDateFormat DATE_FORMAT_MONTH = new SimpleDateFormat(
             "yyyy-MM");
     public static final SimpleDateFormat DATE_FORMAT_ONLY_TIME = new SimpleDateFormat(
-            "H:mm");
+            "HH:mm");
     public static final SimpleDateFormat DATE_FORMAT_MON_TIME = new SimpleDateFormat(
             "MM-dd-HH-mm");
     public static final SimpleDateFormat DATE_FORMAT_ONLY_TIME_12 = new SimpleDateFormat(
@@ -1696,77 +1697,55 @@ public class TimeUtils {
     }
 
 
-    private static final long ONE_MINUTE = 60000L;
-    private static final long ONE_HOUR = 3600000L;
-    private static final long ONE_DAY = 86400000L;
-    private static final long ONE_WEEK = 604800000L;
+    public static final long ONE_MINUTE = 60000L;
+    public static final long ONE_HOUR = 3600000L;
+    public static final long ONE_DAY = 86400000L;
+    public static final long ONE_WEEK = 604800000L;
 
-    private static final String ONE_SECOND_AGO = "秒前";
-    private static final String ONE_MINUTE_AGO = "分钟前";
-    private static final String ONE_HOUR_AGO = "小时前";
-    private static final String ONE_DAY_AGO = "天前";
-    private static final String ONE_MONTH_AGO = "月前";
-    private static final String ONE_YEAR_AGO = "年前";
+    public static final String ONE_SECOND_AGO = "秒前";
+    public static final String ONE_MINUTE_AGO = "分钟前";
+    public static final String ONE_HOUR_AGO = "小时前";
+    public static final String ONE_DAY_AGO = "天前";
+    public static final String ONE_MONTH_AGO = "月前";
+    public static final String ONE_YEAR_AGO = "年前";
 
     public static String format(Date date) {
         long timenow = new Date().getTime();
-        long delta = timenow - date.getTime();
-        String strTime = TimeUtils.getTime(timenow, TimeUtils
-                .DATE_FORMAT_DATE);
-        String strDelta = TimeUtils.getTime(date.getTime(), TimeUtils
-                .DATE_FORMAT_DATE);
-        if (strTime.equals(strDelta)) {//同一天
-            String str;
-            String timeDate = TimeUtils.getTime(date.getTime(), TimeUtils
-                    .DATE_FORMAT_ONLY_TIME);
-            String[] times = timeDate.split(":");
-            int hour = Integer.parseInt(times[0]);
-            if (hour >= 13) {
-                str = "下午" + (hour - 12) + ":" + times[1];
-            } else {
-                str = "上午" + hour + ":" + times[1];
-            }
-            return str;
-        }
-//        if (delta < 1L * ONE_MINUTE) {
-//            long seconds = toSeconds(delta);
-//            return (seconds <= 0 ? 1 : seconds) + ONE_SECOND_AGO;
+//        long delta = timenow - date.getTime();
+//        //当前时间到天
+//        String strTime = TimeUtils.getTime(timenow, TimeUtils
+//                .DATE_FORMAT_DATE);
+//        //目标时间
+//        String strTarget = TimeUtils.getTime(date.getTime(), TimeUtils
+//                .DATE_FORMAT_DATE);
+//        if (strTime.equals(strTarget)) {//同一天
+//            String timeDate = TimeUtils.getTime(date.getTime(), TimeUtils
+//                    .DATE_FORMAT_ONLY_TIME);
+//            return timeDate;
 //        }
-//        if (delta < 45L * ONE_MINUTE) {
-//            long minutes = toMinutes(delta);
-//            return (minutes <= 0 ? 1 : minutes) + ONE_MINUTE_AGO;
-//        }
-//        if (isSameDayOfMillis(timenow, date.getTime())) {
-//            long hours = toHours(delta);
-//            return (hours <= 0 ? 1 : hours) + ONE_HOUR_AGO;
-//        }
-        if (delta < 24L * ONE_HOUR) {
-            return "昨天";
-        }
-//        if (delta < 24L * ONE_HOUR) {
-//            long hours = toHours(delta);
-//            return (hours <= 0 ? 1 : hours) + ONE_HOUR_AGO;
-//        }
-//        if (delta < 48L * ONE_HOUR) {
+//        //昨天
+//        long timeYesterday = timenow - ONE_DAY;
+//        String strYesterday = TimeUtils.getTime(timeYesterday, TimeUtils
+//                .DATE_FORMAT_DATE);
+//        if (strYesterday.equals(strTarget)) {
 //            return "昨天";
 //        }
-        if (delta < 30L * ONE_DAY) {
-            long days = toDay(timenow) - toDay(date.getTime());
-            if (days <= 1) {
-                return "昨天";
-            }
-            //return days + ONE_DAY_AGO;
+        long days = toDay(timenow) - toDay(date.getTime());
+        if (days == 0) {
+            String timeDate = TimeUtils.getTime(date.getTime(), TimeUtils
+                    .DATE_FORMAT_ONLY_TIME);
+            return timeDate;
         }
+        if (days == 1) {
+            return "昨天";
+        }
+        if (days < 7) {
+            return getWeekFromIn2(getWeekIndex(date));
+        }
+        int year = TimeUtils.getYearFromDate(date);
         int month = TimeUtils.getMonthFromDate(date);
         int day = TimeUtils.getDayFromDate(date);
-        return month + "月" + day + "日";
-//        if (delta < 12L * 4L * ONE_WEEK) {
-//            long months = toMonths(delta);
-//            return (months <= 0 ? 1 : months) + ONE_MONTH_AGO;
-//        } else {
-//            long years = toYears(delta);
-//            return (years <= 0 ? 1 : years) + ONE_YEAR_AGO;
-//        }
+        return year + "年" + month + "月" + day + "日";
     }
 
     private static long toSeconds(long date) {
@@ -1823,6 +1802,26 @@ public class TimeUtils {
                 return "周六";
         }
         return "周日";
+    }
+
+    public static String getWeekFromIn2(int index) {
+        switch (index) {
+            case 1:
+                return "星期日";
+            case 2:
+                return "星期一";
+            case 3:
+                return "星期二";
+            case 4:
+                return "星期三";
+            case 5:
+                return "星期四";
+            case 6:
+                return "星期五";
+            case 7:
+                return "星期六";
+        }
+        return "星期日";
     }
 
 

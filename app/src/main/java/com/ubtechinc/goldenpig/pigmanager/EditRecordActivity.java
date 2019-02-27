@@ -159,7 +159,7 @@ public class EditRecordActivity extends BaseNewActivity implements Observer {
                 adapter.notifyDataSetChanged();
                 for (int i = 0; i < mList.size(); i++) {
                     if (mList.get(i).select) {
-                        tvDelete.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_checked_color));
+                        tvDelete.setTextColor(getResources().getColor(R.color.gold_red_color));
                         tvDelete.setEnabled(true);
                         break;
                     }
@@ -172,11 +172,13 @@ public class EditRecordActivity extends BaseNewActivity implements Observer {
                 for (int i = 0; i < mList.size(); i++) {
                     if (!mList.get(i).select) {
                         isSelectAll = false;
+                        tvDelete.setText("删除");
                         iv_select_all.setImageResource(R.drawable.ic_noselect);
                         break;
                     }
                     if (i == mList.size() - 1) {
                         isSelectAll = true;
+                        tvDelete.setText("清空");
                         iv_select_all.setImageResource(R.drawable.ic_select);
                     }
                 }
@@ -238,12 +240,17 @@ public class EditRecordActivity extends BaseNewActivity implements Observer {
                 adapter.notifyDataSetChanged();
                 if (isSelectAll) {
                     iv_select_all.setImageResource(R.drawable.ic_select);
-                    tvDelete.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_checked_color));
+                    tvDelete.setTextColor(getResources().getColor(R.color.gold_red_color));
                     tvDelete.setEnabled(true);
                 } else {
                     iv_select_all.setImageResource(R.drawable.ic_noselect);
                     tvDelete.setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
                     tvDelete.setEnabled(false);
+                }
+                if (isSelectAll) {
+                    tvDelete.setText("清空");
+                } else {
+                    tvDelete.setText("删除");
                 }
                 break;
         }
@@ -368,7 +375,11 @@ public class EditRecordActivity extends BaseNewActivity implements Observer {
         }
         picDialog.show();
         final TextView tv_delete = (TextView) picView.findViewById(R.id.tv_delete);
-        tv_delete.setText("删除所选最近通话");
+        if (isSelectAll) {
+            tv_delete.setText("清空所选最近通话");
+        } else {
+            tv_delete.setText("删除所选最近通话");
+        }
         tv_delete.setOnClickListener(new View.OnClickListener() {
 
             @Override

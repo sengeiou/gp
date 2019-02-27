@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class ContactUtil {
     private static Context context;
-    public List<Contacts> list;
+    public List<Contacts> mList;
     private JSONObject contactData;
     private JSONObject jsonObject;
 
@@ -67,7 +67,7 @@ public class ContactUtil {
      * @throws JSONException
      */
     public String getContactInfo() throws JSONException {
-        list = new ArrayList<Contacts>();
+        mList = new ArrayList<Contacts>();
         contactData = new JSONObject();
         String mimetype = "";
         int oldrid = -1;
@@ -414,7 +414,7 @@ public class ContactUtil {
 
     public List<MyContact> getContactList() {
         indexString = new ArrayList<String>();
-        List<MyContact> list = new ArrayList<MyContact>();
+        List<MyContact> cache = new ArrayList<MyContact>();
         String mimetype = "";
         int oldrid = -1;
         int contactId = -1;
@@ -429,7 +429,7 @@ public class ContactUtil {
                         .getColumnIndex(Data.RAW_CONTACT_ID));
                 if (oldrid != contactId) {
                     MyContact contact = new MyContact();
-                    list.add(contact);
+                    cache.add(contact);
                     oldrid = contactId;
                 }
                 mimetype = cursor.getString(cursor.getColumnIndex(Data.MIMETYPE)); // 取得mimetype类型,扩展的数据都在这个类型里面
@@ -444,34 +444,37 @@ public class ContactUtil {
                     String middleName = cursor.getString(cursor
                             .getColumnIndex(StructuredName.MIDDLE_NAME));
                     if (!TextUtils.isEmpty(display)) {
-                        list.get(list.size() - 1).lastname = display;
+                        cache.get(cache.size() - 1).lastname = display;
                     } else {
                         try {
                             String name = (TextUtils.isEmpty(firstName) ? "" : firstName) +
                                     (TextUtils.isEmpty(middleName) ? "" : middleName) +
                                     (TextUtils.isEmpty(lastname) ? "" : lastname);
-                            list.get(list.size() - 1).lastname = name;
+                            cache.get(cache.size() - 1).lastname = name;
                         } catch (Exception e) {
                         }
+                    }
+                    if (!TextUtils.isEmpty(cache.get(cache.size() - 1).lastname)) {
+                        cache.get(cache.size() - 1).lastname = cache.get(cache.size() - 1).lastname.replace(" ", "");
                     }
 //                    else if (!TextUtils.isEmpty(lastname)) {
 //                        list.get(list.size() - 1).lastname = lastname;
 //                    } else if (TextUtils.isEmpty(firstName + middleName)) {
 //                        list.get(list.size() - 1).lastname = firstName + middleName;
 //                    }
-                    String pinyin = PinyinUtils.getPingYin(list.get(list.size() - 1).lastname);
-                    String sortString = pinyin.substring(0, 1).toUpperCase();
-                    if (sortString.matches("[A-Z]")) {
-                        list.get(list.size() - 1).sortLetter = sortString.toUpperCase();
-                        if (!indexString.contains(sortString)) {
-                            indexString.add(sortString);
-                        }
-                    } else {
-                        list.get(list.size() - 1).sortLetter = "#";
-                        if (!indexString.contains("#")) {
-                            indexString.add("#");
-                        }
-                    }
+//                    String pinyin = PinyinUtils.getPingYin(list.get(list.size() - 1).lastname);
+//                    String sortString = pinyin.substring(0, 1).toUpperCase();
+//                    if (sortString.matches("[A-Z]")) {
+//                        list.get(list.size() - 1).sortLetter = sortString.toUpperCase();
+//                        if (!indexString.contains(sortString)) {
+//                            indexString.add(sortString);
+//                        }
+//                    } else {
+//                        list.get(list.size() - 1).sortLetter = "#";
+//                        if (!indexString.contains("#")) {
+//                            indexString.add("#");
+//                        }
+//                    }
                 }
                 // 1.2 获取各种电话信息
                 if (Phone.CONTENT_ITEM_TYPE.equals(mimetype)) {
@@ -480,24 +483,45 @@ public class ContactUtil {
                     if (phoneType == Phone.TYPE_MOBILE) {
                         String mobile = cursor.getString(cursor
                                 .getColumnIndex(Phone.NUMBER));
-                        list.get(list.size() - 1).mobile = mobile;
+                        cache.get(cache.size() - 1).mobile = mobile;
                     } else if (phoneType == Phone.TYPE_HOME) {
                         String homeNum = cursor.getString(cursor
                                 .getColumnIndex(Phone.NUMBER));
-                        list.get(list.size() - 1).mobile = homeNum;
+                        cache.get(cache.size() - 1).mobile = homeNum;
                     } else if (phoneType == Phone.TYPE_WORK) {
                         String jobNum = cursor.getString(cursor
                                 .getColumnIndex(Phone.NUMBER));
-                        list.get(list.size() - 1).mobile = jobNum;
+                        cache.get(cache.size() - 1).mobile = jobNum;
                     }
-                    if (!TextUtils.isEmpty(list.get(list.size() - 1).mobile)) {
-                        list.get(list.size() - 1).mobile = list.get(list.size() - 1).mobile.trim();
+                    if (!TextUtils.isEmpty(cache.get(cache.size() - 1).mobile)) {
+                        cache.get(cache.size() - 1).mobile = cache.get(cache.size() - 1).mobile.replace(" ", "");
                     }
                 }
             } catch (Exception e) {
             }
         }
         cursor.close();
+        List<MyContact> list = new ArrayList<MyContact>();
+        for (int i = 0; i < cache.size(); i++) {
+            if (!TextUtils.isEmpty(cache.get(i).lastname) && !TextUtils.isEmpty(cache.get(i).mobile)) {
+                list.add(cache.get(i));
+            }
+        }
+        for (int i = 0; i < list.size(); i++) {
+            String pinyin = PinyinUtils.getPingYin(list.get(i).lastname);
+            String sortString = pinyin.substring(0, 1).toUpperCase();
+            if (sortString.matches("[A-Z]")) {
+                list.get(i).sortLetter = sortString.toUpperCase();
+                if (!indexString.contains(sortString)) {
+                    indexString.add(sortString);
+                }
+            } else {
+                list.get(i).sortLetter = "#";
+                if (!indexString.contains("#")) {
+                    indexString.add("#");
+                }
+            }
+        }
         Collections.sort(indexString);
         return list;
     }

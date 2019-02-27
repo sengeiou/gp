@@ -159,13 +159,17 @@ public class ContactsProtoBuilder {
                 .setAction("/im/mail/delete").setTime(System.currentTimeMillis()).build();
         UserContacts.UserContact.Builder userContactBuilder = UserContacts.UserContact.newBuilder();
         for (int i = 0; i < list.size(); i++) {
-            AddressBook book = list.get(i);
-            UserContacts.User.Builder builder = UserContacts.User.newBuilder();
-            builder.setName(book.nikeName);
-            builder.setNumber(book.number);
-            builder.setId(Integer.valueOf(book.userId));
-            UserContacts.User user = builder.build();
-            userContactBuilder.addUser(user);
+            try{
+                AddressBook book = list.get(i);
+                UserContacts.User.Builder builder = UserContacts.User.newBuilder();
+                builder.setName(book.nikeName);
+                builder.setNumber(book.number);
+                builder.setId(Integer.valueOf(book.userId));
+                UserContacts.User user = builder.build();
+                userContactBuilder.addUser(user);
+            }catch (Exception e){
+            }
+
         }
         UserContacts.UserContact contact = userContactBuilder.build();
         ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer
