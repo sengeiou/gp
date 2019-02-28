@@ -1,6 +1,8 @@
 package com.ubtechinc.goldenpig.personal;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
@@ -15,6 +17,8 @@ import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
  */
 public class NoSimActivity extends BaseToolBarActivity {
 
+    public static final String KEY_TOOL_BAR_TITLE = "actionbarTitle";
+
     @Override
     protected int getConentView() {
         return R.layout.activity_no_sim;
@@ -22,7 +26,15 @@ public class NoSimActivity extends BaseToolBarActivity {
 
     @Override
     protected void init(Bundle savedInstanceState) {
-        setToolBarTitle("蜂窝移动网络");
+        String title = "蜂窝移动网络";
+        Intent intent = getIntent();
+        if (intent != null) {
+            String sourceTitle = intent.getStringExtra(KEY_TOOL_BAR_TITLE);
+            if (!TextUtils.isEmpty(sourceTitle)) {
+                title = sourceTitle;
+            }
+        }
+        setToolBarTitle(title);
         setTitleBack(true);
     }
 

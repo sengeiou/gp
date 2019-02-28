@@ -63,6 +63,8 @@
         android:layout_width="@dimen/ubt_0dp"
         android:layout_height="120dp"
         android:focusableInTouchMode="true"
+        android:paddingTop="@dimen/dp_10"
+        android:fillViewport="true"
         android:scrollbars="vertical"
         android:overScrollMode="never"
         app:layout_constraintTop_toBottomOf="@id/tv_new_version"
@@ -72,11 +74,9 @@
         <com.ubtechinc.goldenpig.comm.widget.PerfectTextView
             android:id="@+id/ubt_tv_version_msg"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_15"
             android:layout_marginRight="@dimen/dp_15"
-            android:layout_marginTop="@dimen/dp_8"
-            android:layout_marginBottom="@dimen/dp_8"
             android:lineSpacingExtra="5dp"
             android:textColor="#FF454B59"
             android:textSize="@dimen/sp_15" />

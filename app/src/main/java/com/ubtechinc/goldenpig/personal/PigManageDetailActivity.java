@@ -68,6 +68,8 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_NATIVE_INFO;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_ONLINE_STATE;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_VERSION_STATE;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
+import static com.ubtechinc.goldenpig.personal.BeeHiveMobileActivity.KEY_BEE_HIVE_OPEN;
+import static com.ubtechinc.goldenpig.personal.NoSimActivity.KEY_TOOL_BAR_TITLE;
 
 public class PigManageDetailActivity extends BaseToolBarActivity implements View.OnClickListener {
 
@@ -282,14 +284,20 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
                 break;
             case R.id.rl_4g:
                 if (isNoSim) {
-                    enterFunction(NoSimActivity.class, null);
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put(KEY_TOOL_BAR_TITLE, getResources().getString(R.string.ubt_mobile_bee_hive));
+                    enterFunction(NoSimActivity.class, map);
                 } else {
-                    enterFunction(BeeHiveMobileActivity.class, null);
+                    HashMap<String, Boolean> map = new HashMap<>();
+                    map.put(KEY_BEE_HIVE_OPEN, isBeeHiveOpen);
+                    enterFunction(BeeHiveMobileActivity.class, map);
                 }
                 break;
             case R.id.rl_hotpoint:
                 if (isNoSim) {
-                    enterFunction(NoSimActivity.class, null);
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put(KEY_TOOL_BAR_TITLE, getResources().getString(R.string.ubt_person_hotspot));
+                    enterFunction(NoSimActivity.class, map);
                 } else if (isBeeHiveOpen) {
                     enterFunction(SetHotSpotActivity.class, null);
                 } else {
@@ -610,20 +618,23 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
         try {
             NativeInfoContainer.SimStatus simStatus = nativeInfo.getSimStatus().unpack(NativeInfoContainer.SimStatus.class);
             NativeInfoContainer.NetworkStatus networkStatus = nativeInfo.getNetworkStatus().unpack(NativeInfoContainer.NetworkStatus.class);
-            if (simStatus.getOpen()) {
-                isBeeHiveOpen = true;
-            } else {
-                isBeeHiveOpen = false;
-            }
+
             if (simStatus.getInserted()) {
                 isNoSim = false;
             } else {
                 isNoSim = true;
             }
 
+            if (!isNoSim && simStatus.getOpen()) {
+                isBeeHiveOpen = true;
+            } else {
+                isBeeHiveOpen = false;
+            }
+
             tvWifiName.setText(networkStatus.getSsid());
 
             if (isNoSim) {
+                tvBeehiveClose.setText(R.string.ubt_no_sim);
                 tvBeehiveClose.setVisibility(View.VISIBLE);
                 tvNoSim.setVisibility(View.VISIBLE);
             } else {
@@ -631,7 +642,7 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
                 if (isBeeHiveOpen) {
                     tvBeehiveClose.setVisibility(View.GONE);
                 } else {
-                    tvBeehiveClose.setText("已关闭");
+                    tvBeehiveClose.setText(R.string.ubt_is_close);
                     tvBeehiveClose.setVisibility(View.VISIBLE);
                 }
             }

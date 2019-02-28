@@ -19,17 +19,29 @@
             android:src="@drawable/ic_mobile_data" />
 
         <TextView
+            android:id="@+id/tv_mobile_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/dp_20"
-            android:text="蜂窝移动数据"
+            android:layout_marginTop="@dimen/dp_10"
+            android:text="@string/ubt_mobile_bee_hive"
             android:textColor="#FF454B59"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toRightOf="@id/iv_mobile_icon"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@id/iv_mobile_icon" />
+
+        <TextView
+            android:id="@+id/tv_mobile_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/dp_3"
+            android:textColor="#FFB4C0C7"
+            android:textSize="14sp"
+            android:text="@string/ubt_is_open"
+            app:layout_constraintLeft_toLeftOf="@id/tv_mobile_label"
+            app:layout_constraintTop_toBottomOf="@id/tv_mobile_label" />
 
     </android.support.constraint.ConstraintLayout>
 

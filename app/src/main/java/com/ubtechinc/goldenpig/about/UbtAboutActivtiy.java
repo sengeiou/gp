@@ -8,12 +8,18 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.tencent.ai.tvs.comm.CommOpInfo;
+import com.tencent.ai.tvs.env.ELoginPlatform;
+import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtechinc.commlib.utils.ContextUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.utils.PigUtils;
+import com.ubtechinc.goldenpig.utils.TvsUtil;
 import com.ubtechinc.nets.BuildConfig;
+import com.ubtechinc.tvlloginlib.TVSManager;
 
 public class UbtAboutActivtiy extends BaseToolBarActivity {
 
@@ -84,6 +90,13 @@ public class UbtAboutActivtiy extends BaseToolBarActivity {
         findViewById(R.id.iv_ubt_logo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //TODO Test smarthome
+//                LoginProxy proxy = TVSManager.getInstance(UbtAboutActivtiy.this,
+//                        com.ubtechinc.goldenpig.BuildConfig.APP_ID_WX, com.ubtechinc.goldenpig.BuildConfig.APP_ID_QQ).getProxy();
+//                String url = "https://ddsdk.html5.qq.com/smartHome";
+//                proxy.tvsRequestUrl(url, null, null, null);
+
                 long time = SystemClock.elapsedRealtime();
                 updateVersion();
                 if (lastClickTime == 0) {
@@ -127,5 +140,28 @@ public class UbtAboutActivtiy extends BaseToolBarActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+//        fetchSmarthome();
+    }
+
+    private void fetchSmarthome() {
+        ELoginPlatform platform = TvsUtil.currentPlatform();
+        TVSManager.getInstance(this, com.ubtechinc.goldenpig.BuildConfig.APP_ID_WX, com.ubtechinc.goldenpig.BuildConfig.APP_ID_QQ)
+                .requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils
+                        .getSmartHomeUniAccessinfo(0, 1, 0, 0), new TVSManager
+                        .TVSAlarmListener() {
+                    @Override
+                    public void onSuccess(CommOpInfo msg) {
+                        LogUtils.d("smartzjCommOpInfo:" + msg);
+                    }
+
+                    @Override
+                    public void onError(String code) {
+                        LogUtils.d("smartzjcode:" + code);
+                    }
+                });
+    }
 }
 

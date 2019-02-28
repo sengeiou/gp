@@ -194,7 +194,11 @@ public class QRCodeActivity extends BaseToolBarActivity implements View.OnClickL
                     .callback(new PermissionListener() {
                         @Override
                         public void onSucceed(int requestCode, @NonNull List<String> grantPermissions) {
-                            ActivityRoute.toAnotherActivity(QRCodeActivity.this, PairQRScannerActivity.class, Constants.QR_PAIR_PIG_REQUEST, false);
+                            if (cameraIsCanUse()) {
+                                ActivityRoute.toAnotherActivity(QRCodeActivity.this, PairQRScannerActivity.class, Constants.QR_PAIR_PIG_REQUEST, false);
+                            } else {
+                                showPermissionDialog(Permission.CAMERA);
+                            }
                         }
 
                         @Override

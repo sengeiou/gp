@@ -103,6 +103,23 @@ public class PigUtils {
         return info;
     }
 
+    public static UniAccessInfo getSmartHomeUniAccessinfo(int eCloud_type, int eRepeatType, long
+            lAlarmId, long lStartTimeStamp) {
+        String skillId = "8c62fb66-d05f-11e8-8130-68cc6ea8c1f8";
+        UniAccessInfo info = new UniAccessInfo();
+        info.domain = "smarthome";
+        info.intent = "query_skills";
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("operType", "query_skills");
+//            obj.put("skill_id", skillId);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        info.jsonBlobInfo = obj.toString();
+        return info;
+    }
+
     public static UniAccessInfo getRemindUniAccessinfo(String sNote, int eCloud_type, int eRepeatType, long
             lReminderId, long lStartTimeStamp) {
         UniAccessInfo info = new UniAccessInfo();

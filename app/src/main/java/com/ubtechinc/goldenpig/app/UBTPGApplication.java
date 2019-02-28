@@ -153,7 +153,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
         initSCADA();
 
         //bugly
-        CrashReport.initCrashReport(getApplicationContext(), "85c6f36db6", BuildConfig.DEBUG);
+        CrashReport.initCrashReport(getApplicationContext(), "a6f55be79e", BuildConfig.DEBUG);
 
         MultiDex.install(this);
         com.ubtech.utilcode.utils.Utils.init(this);

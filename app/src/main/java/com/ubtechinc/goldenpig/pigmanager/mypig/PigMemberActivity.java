@@ -629,13 +629,17 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
 
     private void updateData() {
         mPig = AuthLive.getInstance().getCurrentPig();
-        tvMemberTip = findViewById(R.id.tv_member_tip);
-        if (mPig != null && mPig.isAdmin) {
-            tvMemberTip.setText("HI，你是八戒机器人的管理员，可管理成员组");
+        if (mPig != null) {
+            tvMemberTip = findViewById(R.id.tv_member_tip);
+            if (mPig.isAdmin) {
+                tvMemberTip.setText("HI，你是八戒机器人的管理员，可管理成员组");
+            } else {
+                tvMemberTip.setText("HI，欢迎加入八戒的成员组，你可以给八戒配置网络");
+            }
+            getMember("1");
         } else {
-            tvMemberTip.setText("HI，欢迎加入八戒的成员组，你可以给八戒配置网络");
+            finish();
         }
-        getMember("1");
     }
 
     @Override
@@ -733,9 +737,28 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
             @Override
             public void onSuccess() {
                 imSyncRelationShip();
+                doPushUnbindMsg();
                 runOnUiThread(() -> updatePigList());
             }
         });
+    }
+
+    /**
+     * 群推解绑消息
+     */
+    private void doPushUnbindMsg() {
+        UserInfo currentUser = AuthLive.getInstance().getCurrentUser();
+        if (mUsertList != null && currentUser != null) {
+            for (CheckBindRobotModule.User user : mUsertList) {
+                String userId = String.valueOf(user.getUserId());
+                if (!currentUser.getUserId().equals(userId)) {
+                    PushHttpProxy pushHttpProxy = new PushHttpProxy();
+                    Map map = new HashMap();
+                    map.put("app_category", 1);
+                    pushHttpProxy.pushToken("", "你已被管理员移除成员组", userId, map, 1);
+                }
+            }
+        }
     }
 
     private void showUnBindConfirmDialog(final String userId) {

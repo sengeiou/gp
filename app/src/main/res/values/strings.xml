@@ -54,6 +54,11 @@
     <string name="ubt_visitor_login">游客登录</string>
     <string name="ubt_bunding_set_net">绑定与配网</string>
     <string name="ubt_person_hotspot">八戒热点</string>
+    <string name="ubt_mobile_bee_hive">蜂窝移动网络</string>
+    <string name="ubt_no_sim">未插SIM卡</string>
+    <string name="ubt_is_close">已关闭</string>
+    <string name="ubt_is_open">已开启</string>
+    <string name="ubt_not_open">未开启</string>
     <string name="ubt_device_manger">设备管理</string>
     <string name="ubt_custom_answer">定制问答</string>
     <string name="ubt_custom_answer_sub">定制你的专属个性问答</string>

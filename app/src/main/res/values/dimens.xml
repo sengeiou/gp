@@ -8,7 +8,7 @@
     <dimen name="ubt_logo_margintop">112dp</dimen>
     <dimen name="ubt_btn_blank_height">15dp</dimen>
     <dimen name="ubt_btn_txt_size">15sp</dimen>
-    <dimen name="ubt_btn_width">240dp</dimen>
+    <dimen name="ubt_btn_width">250dp</dimen>
     <dimen name="ubt_btn_icon_margin_start">20dp</dimen>
     <dimen name="ubt_btn_icon_szie">22dp</dimen>
     <dimen name="ubt_tab_btn_txt_size">10sp</dimen>

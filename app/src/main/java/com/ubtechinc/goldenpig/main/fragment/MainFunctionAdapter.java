@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.scwang.smartrefresh.layout.util.DensityUtil;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
@@ -86,8 +87,8 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
                         @Override
                         public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
                             BitmapDrawable drawable = new BitmapDrawable(context.getResources(), resource);
-                            drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-                            holder.tvItem.setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null);
+                            drawable.setBounds(0, 0, DensityUtil.dp2px(55), DensityUtil.dp2px(55));
+                            holder.tvItem.setCompoundDrawables(null, drawable, null, null);
                         }
                     });
         } else {

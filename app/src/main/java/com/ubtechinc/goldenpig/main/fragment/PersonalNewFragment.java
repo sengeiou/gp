@@ -71,6 +71,7 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NETWORK_STATE_CHANGE
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_ONLINE_STATE;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_VERSION_STATE;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
+import static com.ubtechinc.goldenpig.personal.NoSimActivity.KEY_TOOL_BAR_TITLE;
 
 /**
  * @author : HQT
@@ -375,14 +376,18 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
                 break;
             case R.id.ll_4g:
                 if (isNoSim) {
-                    enterFunction(NoSimActivity.class, null);
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put(KEY_TOOL_BAR_TITLE, getResources().getString(R.string.ubt_mobile_bee_hive));
+                    enterFunction(NoSimActivity.class, map);
                 } else {
                     enterFunction(BeeHiveMobileActivity.class, null);
                 }
                 break;
             case R.id.ll_hot_pwd:
                 if (isNoSim) {
-                    enterFunction(NoSimActivity.class, null);
+                    HashMap<String, String> map = new HashMap<>();
+                    map.put(KEY_TOOL_BAR_TITLE, getResources().getString(R.string.ubt_person_hotspot));
+                    enterFunction(NoSimActivity.class, map);
                 } else {
                     enterFunction(SetHotSpotActivity.class, null);
                 }
@@ -405,7 +410,8 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Event event) {
-        if (event == null) return;
+        Log.e("Personal", "isd:" + isDetached());
+        if (event == null || isDetached() || isRemoving() || !isAdded()) return;
         int code = event.getCode();
         switch (code) {
             case USER_PIG_UPDATE:

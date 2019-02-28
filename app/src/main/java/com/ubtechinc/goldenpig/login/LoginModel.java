@@ -54,13 +54,13 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
 
     @Override
     public void onSuccess(UserInfo userInfo) {
-        authLive.logined(userInfo);
+//        authLive.logined(userInfo);
         Log.d(TAG, "onSuccess  " + userInfo.getUserId() + userInfo.getUserImage());
-        getPigList();
+        getPigList(userInfo);
     }
 
     ///  获取用户绑定的八戒
-    private void getPigList() {
+    private void getPigList(final UserInfo userInfo) {
         if (AuthLive.getInstance().getCurrentPigList() != null) {
             AuthLive.getInstance().getCurrentPigList().clear();
         }
@@ -69,16 +69,19 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
                     @Override
                     public void onError(ThrowableWrapper e) {
                         Log.e("getPigList", e.getMessage());
+                        authLive.error();
                     }
 
                     @Override
                     public void onException(Exception e) {
                         Log.e("getPigList", e.getMessage());
+                        authLive.error();
                     }
 
                     @Override
                     public void onSuccess(String response) {
                         Log.e("getPigList", response);
+                        authLive.logined(userInfo);
                         PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance()
                                 .getCurrentPigList());
                         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
