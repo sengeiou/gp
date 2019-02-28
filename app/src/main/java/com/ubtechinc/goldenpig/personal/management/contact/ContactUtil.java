@@ -1,8 +1,10 @@
 package com.ubtechinc.goldenpig.personal.management.contact;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.provider.ContactsContract.CommonDataKinds.Email;
 import android.provider.ContactsContract.CommonDataKinds.Event;
 import android.provider.ContactsContract.CommonDataKinds.Im;
@@ -31,6 +33,7 @@ import java.util.List;
  * @author larson
  */
 public class ContactUtil {
+    private static String TAG = "ContactUtil";
     private static Context context;
     public List<Contacts> mList;
     private JSONObject contactData;
@@ -444,71 +447,79 @@ public class ContactUtil {
                     String middleName = cursor.getString(cursor
                             .getColumnIndex(StructuredName.MIDDLE_NAME));
                     if (!TextUtils.isEmpty(display)) {
-                        cache.get(cache.size() - 1).lastname = display;
+                        cache.get(cache.size() - 1).name = display;
                     } else {
                         try {
                             String name = (TextUtils.isEmpty(firstName) ? "" : firstName) +
                                     (TextUtils.isEmpty(middleName) ? "" : middleName) +
                                     (TextUtils.isEmpty(lastname) ? "" : lastname);
-                            cache.get(cache.size() - 1).lastname = name;
+                            cache.get(cache.size() - 1).name = name;
                         } catch (Exception e) {
                         }
                     }
-                    if (!TextUtils.isEmpty(cache.get(cache.size() - 1).lastname)) {
-                        cache.get(cache.size() - 1).lastname = cache.get(cache.size() - 1).lastname.replace(" ", "");
+                    if (!TextUtils.isEmpty(cache.get(cache.size() - 1).name)) {
+                        cache.get(cache.size() - 1).name = cache.get(cache.size() - 1).name.replace(" ", "");
                     }
-//                    else if (!TextUtils.isEmpty(lastname)) {
-//                        list.get(list.size() - 1).lastname = lastname;
-//                    } else if (TextUtils.isEmpty(firstName + middleName)) {
-//                        list.get(list.size() - 1).lastname = firstName + middleName;
-//                    }
-//                    String pinyin = PinyinUtils.getPingYin(list.get(list.size() - 1).lastname);
-//                    String sortString = pinyin.substring(0, 1).toUpperCase();
-//                    if (sortString.matches("[A-Z]")) {
-//                        list.get(list.size() - 1).sortLetter = sortString.toUpperCase();
-//                        if (!indexString.contains(sortString)) {
-//                            indexString.add(sortString);
-//                        }
-//                    } else {
-//                        list.get(list.size() - 1).sortLetter = "#";
-//                        if (!indexString.contains("#")) {
-//                            indexString.add("#");
-//                        }
-//                    }
                 }
                 // 1.2 获取各种电话信息
                 if (Phone.CONTENT_ITEM_TYPE.equals(mimetype)) {
-                    int phoneType = cursor
-                            .getInt(cursor.getColumnIndex(Phone.TYPE)); // 手机
-                    if (phoneType == Phone.TYPE_MOBILE) {
-                        String mobile = cursor.getString(cursor
-                                .getColumnIndex(Phone.NUMBER));
-                        cache.get(cache.size() - 1).mobile = mobile;
-                    } else if (phoneType == Phone.TYPE_HOME) {
-                        String homeNum = cursor.getString(cursor
-                                .getColumnIndex(Phone.NUMBER));
-                        cache.get(cache.size() - 1).mobile = homeNum;
-                    } else if (phoneType == Phone.TYPE_WORK) {
-                        String jobNum = cursor.getString(cursor
-                                .getColumnIndex(Phone.NUMBER));
-                        cache.get(cache.size() - 1).mobile = jobNum;
+                    String mobile = cursor.getString(cursor
+                            .getColumnIndex(Phone.NUMBER));
+                    if (!TextUtils.isEmpty(mobile)) {
+                        mobile = mobile.replace(" ", "");
                     }
-                    if (!TextUtils.isEmpty(cache.get(cache.size() - 1).mobile)) {
-                        cache.get(cache.size() - 1).mobile = cache.get(cache.size() - 1).mobile.replace(" ", "");
+                    if (!TextUtils.isEmpty(mobile)) {
+                        if (cache.get(cache.size() - 1).numberList == null) {
+                            List<String> numberList = new ArrayList<>();
+                            cache.get(cache.size() - 1).numberList = numberList;
+                        }
+                        cache.get(cache.size() - 1).numberList.add(mobile);
                     }
+//                    int phoneType = cursor
+//                            .getInt(cursor.getColumnIndex(Phone.TYPE)); // 手机
+//                    if (phoneType == Phone.TYPE_MOBILE) {
+//                        String mobile = cursor.getString(cursor
+//                                .getColumnIndex(Phone.NUMBER));
+//                        cache.get(cache.size() - 1).mobile = mobile;
+//                    } else if (phoneType == Phone.TYPE_HOME) {
+//                        String homeNum = cursor.getString(cursor
+//                                .getColumnIndex(Phone.NUMBER));
+//                        cache.get(cache.size() - 1).mobile = homeNum;
+//                    } else if (phoneType == Phone.TYPE_WORK) {
+//                        String jobNum = cursor.getString(cursor
+//                                .getColumnIndex(Phone.NUMBER));
+//                        cache.get(cache.size() - 1).mobile = jobNum;
+//                    }
+//                    if (!TextUtils.isEmpty(cache.get(cache.size() - 1).mobile)) {
+//                        cache.get(cache.size() - 1).mobile = cache.get(cache.size() - 1).mobile.replace(" ", "");
+//                    }
                 }
             } catch (Exception e) {
             }
         }
         cursor.close();
+
         List<MyContact> list = new ArrayList<MyContact>();
         for (int i = 0; i < cache.size(); i++) {
-            if (!TextUtils.isEmpty(cache.get(i).lastname) && !TextUtils.isEmpty(cache.get(i).mobile)) {
-                list.add(cache.get(i));
+            if (TextUtils.isEmpty(cache.get(i).name) || cache.get(i).numberList == null || cache.get(i).numberList
+                    .size() == 0) {
+                continue;
+            }
+            for (int j = 0; j < cache.get(i).numberList.size(); j++) {
+                MyContact myContact = new MyContact();
+                myContact.id = cache.get(i).id;
+                myContact.name = cache.get(i).name;
+                myContact.mobile = cache.get(i).numberList.get(j);
+                list.add(myContact);
             }
         }
+//        for (int i = 0; i < cache.size(); i++) {
+//            if (!TextUtils.isEmpty(cache.get(i).name) && !TextUtils.isEmpty(cache.get(i).mobile)) {
+//                list.add(cache.get(i));
+//            }
+//        }
         for (int i = 0; i < list.size(); i++) {
-            String pinyin = PinyinUtils.getPingYin(list.get(i).lastname);
+            String pinyin = PinyinUtils.getPingYin(list.get(i).name);
             String sortString = pinyin.substring(0, 1).toUpperCase();
             if (sortString.matches("[A-Z]")) {
                 list.get(i).sortLetter = sortString.toUpperCase();
@@ -530,5 +541,176 @@ public class ContactUtil {
 //        ArrayList<String> al = new ArrayList<String>();
 //        al.addAll(indexString.subList(3,8));
         return indexString;
+    }
+
+    public List<MyContact> fetchContact() {
+        List<MyContact> cache = new ArrayList<>();
+        ContentResolver cr = context.getContentResolver();
+        Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+        if (cur.getCount() > 0) {
+            while (cur.moveToNext()) {
+                String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+                String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+
+                if (cur.getInt(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
+                    Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                            new String[]{id}, null);
+                    while (pCur.moveToNext()) {
+                        String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone
+                                .NUMBER));
+                        if (!TextUtils.isEmpty(phoneNo)) {
+                            phoneNo = phoneNo.replace(" ", "");
+                        }
+                        int type = pCur.getInt(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
+                        switch (type) {
+                            case ContactsContract.CommonDataKinds.Phone.TYPE_HOME:
+                                try {
+                                    if (!TextUtils.isEmpty(phoneNo)) {
+                                        MyContact contactClass = new MyContact();
+                                        contactClass.id = id;
+                                        contactClass.name = name;
+                                        contactClass.mobile = phoneNo;
+                                        cache.add(contactClass);
+                                    }
+                                } catch (Exception e) {
+                                    Log.d(TAG, e.toString());
+                                }
+                                break;
+                            case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
+                                try {
+                                    if (!TextUtils.isEmpty(phoneNo)) {
+                                        MyContact contactClass = new MyContact();
+                                        contactClass.id = id;
+                                        contactClass.name = name;
+                                        contactClass.mobile = phoneNo;
+                                        cache.add(contactClass);
+                                    }
+                                } catch (Exception e) {
+                                    Log.d(TAG, e.toString());
+                                }
+                                break;
+                            case ContactsContract.CommonDataKinds.Phone.TYPE_WORK:
+                                try {
+                                    if (!TextUtils.isEmpty(phoneNo)) {
+                                        MyContact contactClass = new MyContact();
+                                        contactClass.id = id;
+                                        contactClass.name = name;
+                                        contactClass.mobile = phoneNo;
+                                        cache.add(contactClass);
+                                    }
+                                } catch (Exception e) {
+                                    Log.d(TAG, e.toString());
+                                }
+                                break;
+                            case ContactsContract.CommonDataKinds.Phone.TYPE_FAX_HOME:
+                                try {
+                                    if (!TextUtils.isEmpty(phoneNo)) {
+                                        MyContact contactClass = new MyContact();
+                                        contactClass.id = id;
+                                        contactClass.name = name;
+                                        contactClass.mobile = phoneNo;
+                                        cache.add(contactClass);
+                                    }
+                                } catch (Exception e) {
+                                    Log.d(TAG, e.toString());
+                                }
+                                break;
+                            case ContactsContract.CommonDataKinds.Phone.TYPE_FAX_WORK:
+                                try {
+                                    if (!TextUtils.isEmpty(phoneNo)) {
+                                        MyContact contactClass = new MyContact();
+                                        contactClass.id = id;
+                                        contactClass.name = name;
+                                        contactClass.mobile = phoneNo;
+                                        cache.add(contactClass);
+                                    }
+                                } catch (Exception e) {
+                                    Log.d(TAG, e.toString());
+                                }
+                                break;
+                            case ContactsContract.CommonDataKinds.Phone.TYPE_MAIN:
+                                try {
+                                    if (!TextUtils.isEmpty(phoneNo)) {
+                                        MyContact contactClass = new MyContact();
+                                        contactClass.id = id;
+                                        contactClass.name = name;
+                                        contactClass.mobile = phoneNo;
+                                        cache.add(contactClass);
+                                    }
+                                } catch (Exception e) {
+                                    Log.d(TAG, e.toString());
+                                }
+                                break;
+                            case ContactsContract.CommonDataKinds.Phone.TYPE_OTHER:
+                                try {
+                                    if (!TextUtils.isEmpty(phoneNo)) {
+                                        MyContact contactClass = new MyContact();
+                                        contactClass.id = id;
+                                        contactClass.name = name;
+                                        contactClass.mobile = phoneNo;
+                                        cache.add(contactClass);
+                                    }
+                                } catch (Exception e) {
+                                    Log.d(TAG, e.toString());
+                                }
+                                break;
+                            case ContactsContract.CommonDataKinds.Phone.TYPE_CUSTOM:
+                                try {
+                                    if (!TextUtils.isEmpty(phoneNo)) {
+                                        MyContact contactClass = new MyContact();
+                                        contactClass.id = id;
+                                        contactClass.name = name;
+                                        contactClass.mobile = phoneNo;
+                                        cache.add(contactClass);
+                                    }
+                                } catch (Exception e) {
+                                    Log.d(TAG, e.toString());
+                                }
+                                break;
+                            case ContactsContract.CommonDataKinds.Phone.TYPE_PAGER:
+                                try {
+                                    if (!TextUtils.isEmpty(phoneNo)) {
+                                        MyContact contactClass = new MyContact();
+                                        contactClass.id = id;
+                                        contactClass.name = name;
+                                        contactClass.mobile = phoneNo;
+                                        cache.add(contactClass);
+                                    }
+                                } catch (Exception e) {
+                                    Log.d(TAG, e.toString());
+                                }
+                                break;
+                        }
+                    }
+                    pCur.close();
+                }
+            }
+        }
+        List<MyContact> list = new ArrayList<MyContact>();
+        for (int i = 0; i < cache.size(); i++) {
+            if (!TextUtils.isEmpty(cache.get(i).name) && !TextUtils.isEmpty(cache.get(i).mobile)) {
+                list.add(cache.get(i));
+            }
+        }
+
+        indexString = new ArrayList<String>();
+        for (int i = 0; i < list.size(); i++) {
+            String pinyin = PinyinUtils.getPingYin(list.get(i).name);
+            String sortString = pinyin.substring(0, 1).toUpperCase();
+            if (sortString.matches("[A-Z]")) {
+                list.get(i).sortLetter = sortString.toUpperCase();
+                if (!indexString.contains(sortString)) {
+                    indexString.add(sortString);
+                }
+            } else {
+                list.get(i).sortLetter = "#";
+                if (!indexString.contains("#")) {
+                    indexString.add("#");
+                }
+            }
+        }
+        Collections.sort(indexString);
+        return list;
     }
 }

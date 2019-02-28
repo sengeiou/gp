@@ -151,7 +151,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
 
             }
         });
-        initLengthLimit();
+        //initLengthLimit();
         type = getIntent().getIntExtra("type", 0);
         updatePosition = getIntent().getIntExtra("position", -1);
         oldList = getIntent().getParcelableArrayListExtra("list");
@@ -181,6 +181,10 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
             public void onClick(View v) {
                 if (TextUtils.isEmpty(strPhone) || TextUtils.isEmpty(strName)) {
                     UbtToastUtils.showCustomToast(getApplication(), "电话或昵称不能为空");
+                    return;
+                }
+                if (!isGB2312(strName)) {
+                    UbtToastUtils.showCustomToast(AddAndSetContactActivity.this, "请输入6个字以内中文昵称");
                     return;
                 }
                 if (!checkOldList()) {
@@ -265,7 +269,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
 
             @Override
             public void afterTextChanged(Editable s) {
-                strPhone = etPhone.getText().toString().trim();
+                strPhone = etPhone.getText().toString();
                 checkMSG();
             }
         });
@@ -282,7 +286,7 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
 
             @Override
             public void afterTextChanged(Editable s) {
-                strName = etName.getText().toString().trim();
+                strName = etName.getText().toString();
                 if (mList != null && !mList.isEmpty()) {
                     int newPos = curPosition;
                     for (int i = 0; i < mList.size(); i++) {
@@ -341,29 +345,29 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
     }
 
     public void initLengthLimit() {
-        InputFilter[] FilterArray = new InputFilter[1];
-        FilterArray[0] = (source, start, end, dest, dstart, dend) -> {
-            for (int i = start; i < end; i++) {
-                if (!isChinese(source.charAt(i))) {
-                    return "";
-                } else {
-                    if ((source.charAt(i) >= 0x4e00) && (source.charAt(i) <= 0x9fbb)) {
-
-                    } else {
-                        return "";
-                    }
-                }
-            }
-            int sourceLen = CommendUtil.getMsgLength(source.toString());
-            int destLen = CommendUtil.getMsgLength(dest.toString());
-            LogUtils.d("sourceLen:" + sourceLen + ",destLen:" + destLen);
-            if (sourceLen + destLen > 6) {
-                UbtToastUtils.showCustomToast(getApplication(), "请输入6个字以内昵称");
-                return "";
-            }
-            return source;
-        };
-        etName.setFilters(FilterArray);
+//        InputFilter[] FilterArray = new InputFilter[1];
+//        FilterArray[0] = (source, start, end, dest, dstart, dend) -> {
+//            for (int i = start; i < end; i++) {
+//                if (!isChinese(source.charAt(i))) {
+//                    return "";
+//                } else {
+//                    if ((source.charAt(i) >= 0x4e00) && (source.charAt(i) <= 0x9fbb)) {
+//
+//                    } else {
+//                        return "";
+//                    }
+//                }
+//            }
+//            int sourceLen = CommendUtil.getMsgLength(source.toString());
+//            int destLen = CommendUtil.getMsgLength(dest.toString());
+//            LogUtils.d("sourceLen:" + sourceLen + ",destLen:" + destLen);
+//            if (sourceLen + destLen > 6) {
+//                UbtToastUtils.showCustomToast(getApplication(), "请输入6个字以内昵称");
+//                return "";
+//            }
+//            return source;
+//        };
+//        etName.setFilters(FilterArray);
     }
 
 //    @OnClick({R.id.iv_phone_clear, R.id.iv_name_clear, R.id.iv_add})
@@ -609,5 +613,20 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
             rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color
                     .ubt_tab_btn_txt_checked_color));
         }
+    }
+
+    public static Boolean isGB2312(String str) {
+        if (TextUtils.isEmpty(str)) {
+            return false;
+        }
+        for (int i = 0; i < str.length(); i++) {
+            String bb = str.substring(i, i + 1);
+            // 生成一个Pattern,同时编译一个正则表达式,其中的u4E00("一"的unicode编码)-\u9FA5("龥"的unicode编码)
+            boolean cc = java.util.regex.Pattern.matches("[\u4E00-\u9FA5]", bb);
+            if (cc == false) {
+                return cc;
+            }
+        }
+        return true;
     }
 }

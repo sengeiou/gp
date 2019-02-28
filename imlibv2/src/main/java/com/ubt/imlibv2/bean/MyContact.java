@@ -3,19 +3,26 @@ package com.ubt.imlibv2.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MyContact implements Parcelable {
+    public String id;
     public String mobile;
-    public String lastname;
+    public String name;
     public String sortLetter;
     public Boolean select = false;
+    public List<String> numberList = new ArrayList<>();
 
     public MyContact() {
     }
 
     protected MyContact(Parcel in) {
+        id = in.readString();
         mobile = in.readString();
-        lastname = in.readString();
+        name = in.readString();
         sortLetter = in.readString();
+        numberList = in.readArrayList(String.class.getClassLoader());
     }
 
     public static final Creator<MyContact> CREATOR = new Creator<MyContact>() {
@@ -37,8 +44,10 @@ public class MyContact implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
         parcel.writeString(mobile);
-        parcel.writeString(lastname);
+        parcel.writeString(name);
         parcel.writeString(sortLetter);
+        parcel.writeList(numberList);
     }
 }

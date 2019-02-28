@@ -639,7 +639,8 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
                 cachelist.remove(cachelist.size() - 1);
             }
         }
-        cache.addAll(ContactUtil.getInstance(this).getContactList());
+        cache.addAll(ContactUtil.getInstance(getApplication()).getContactList());
+        //cache.addAll(ContactUtil.getInstance(getApplication()).fetchContact());
         Intent it = new Intent(this, ContactListActivity.class);
         it.putParcelableArrayListExtra("list", cachelist);
         it.putParcelableArrayListExtra("cache", cache);

@@ -95,7 +95,7 @@ public class ContactsProtoBuilder {
         UserContacts.UserContact.Builder userContactBuilder = UserContacts.UserContact.newBuilder();
         for (int i = 0; i < users.size(); i++) {
             UserContacts.User.Builder builder = UserContacts.User.newBuilder();
-            builder.setName(users.get(i).lastname);
+            builder.setName(users.get(i).name);
             builder.setNumber(users.get(i).mobile);
             UserContacts.User user = builder.build();
             userContactBuilder.addUser(user);

@@ -79,7 +79,7 @@ public class SortAdapter extends BaseAdapter implements SectionIndexer {
             viewHolder.cur_line.setVisibility(View.GONE);
         }
         viewHolder.tv_phone.setText(CommendUtil.showPhone(mContent.mobile));
-        viewHolder.tv_name.setText(this.list.get(position).lastname);
+        viewHolder.tv_name.setText(this.list.get(position).name);
         return view;
 
     }

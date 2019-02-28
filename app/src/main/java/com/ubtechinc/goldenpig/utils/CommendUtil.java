@@ -18,7 +18,8 @@ public class CommendUtil {
     public static boolean verifyPhone(String phone) {
         if (TextUtils.isEmpty(phone))
             return false;
-        return Pattern.matches("^1[\\d]{10}", phone);
+        Pattern pattern = Pattern.compile("[0-9]*");
+        return pattern.matcher(phone).matches();
     }
 
     public static String showPhone(String phone) {

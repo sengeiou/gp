@@ -113,18 +113,18 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
                     if (!flag) {
                         break;
                     }
-                    if (!checkOldList(list.get(i).lastname, list.get(i).mobile)) {
+                    if (!checkOldList(list.get(i).name, list.get(i).mobile)) {
                         flag = false;
                         break;
                     }
-                    if (!isGB2312(list.get(i).lastname)) {
+                    if (!isGB2312(list.get(i).name)) {
                         UbtToastUtils.showCustomToast(getApplication(), "昵称格式错误，请选择其他联系人");
                         flag = false;
                         break;
                     }
 
                     for (int j = i + 1; j < list.size(); j++) {
-                        if (list.get(i).lastname.equals(list.get(j).lastname)) {
+                        if (list.get(i).name.equals(list.get(j).name)) {
                             UbtToastUtils.showCustomToast(getApplication(), "昵称重复，请先取消重复号码再选择");
                             flag = false;
                             break;
@@ -312,7 +312,7 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
         if (cache == null || cache.size() == 0) {
         } else {
             for (int i = 0; i < cache.size(); i++) {
-                if (!TextUtils.isEmpty(cache.get(i).lastname) && !TextUtils.isEmpty(cache.get(i).mobile)) {
+                if (!TextUtils.isEmpty(cache.get(i).name) && !TextUtils.isEmpty(cache.get(i).mobile)) {
                     SourceDateList.add(cache.get(i));
                     if (!indexString.contains(cache.get(i).sortLetter)) {
                         indexString.add(cache.get(i).sortLetter);
@@ -326,17 +326,16 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
 
     public Boolean canselect(MyContact data) {
         List<MyContact> list = new ArrayList<>();
-        if(!CommendUtil.verifyPhone(data.mobile)){
+        /**名字是否合规*/
+        if (!isGB2312(data.name) || data.name.length() > 6) {
+            UbtToastUtils.showCustomToast(getApplication(), "仅支持6个字内的中文昵称，请选择其他联系人");
+            return false;
+        }
+        if (!CommendUtil.verifyPhone(data.mobile)) {
             UbtToastUtils.showCustomToast(getApplication(), "号码格式错误，请选择其他联系人");
             return false;
         }
-        /**名字是否合规*/
-        if (!isGB2312(data.lastname)) {
-            UbtToastUtils.showCustomToast(getApplication(), "昵称格式错误，请选择其他联系人");
-            return false;
-        }
-
-        if (!checkOldList(data.lastname, data.mobile)) {
+        if (!checkOldList(data.name, data.mobile)) {
             return false;
         }
         /**获取已选中的联系人*/
@@ -350,7 +349,7 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
                 UbtToastUtils.showCustomToast(getApplication(), "号码重复，请先取消重复号码再选择");
                 return false;
             }
-            if (data.lastname.equals(list.get(i).lastname)) {
+            if (data.name.equals(list.get(i).name)) {
                 UbtToastUtils.showCustomToast(getApplication(), "昵称重复，请先取消重复号码再选择");
                 return false;
             }
