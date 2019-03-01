@@ -26,7 +26,7 @@ public class AddressBookmodel implements Parcelable, MultiItemEntity {
     protected AddressBookmodel(Parcel in) {
         pinyin = in.readString();
         name = in.readString();
-        sortLetter = in.readString();
+        //sortLetter = in.readString();
         phone = in.readString();
         id = in.readLong();
         type = in.readInt();
@@ -35,7 +35,7 @@ public class AddressBookmodel implements Parcelable, MultiItemEntity {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(pinyin);
-        dest.writeString(sortLetter);
+        //dest.writeString(sortLetter);
         dest.writeString(name);
         dest.writeString(phone);
         dest.writeLong(id);
