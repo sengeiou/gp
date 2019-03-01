@@ -66,7 +66,8 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
         super.onCreate(savedInstanceState);
         oldList = getIntent().getParcelableArrayListExtra("list");
         ArrayList<MyContact> cache = new ArrayList<>();
-        cache.addAll(getIntent().getParcelableArrayListExtra("cache"));
+        //cache.addAll(getIntent().getParcelableArrayListExtra("cache"));
+        cache.addAll(ContactUtil.getInstance(getApplication()).getContactList());
         checkContact(cache);
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null) {

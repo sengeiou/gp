@@ -1,6 +1,7 @@
 package com.ubtechinc.goldenpig.base;
 
 
+import android.Manifest;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -61,6 +62,7 @@ public abstract class BaseNewActivity extends AppCompatActivity {
         super.onResume();
         MobclickAgent.onResume(this);
     }
+
     @Override
     protected void onPause() {
         super.onPause();
@@ -166,10 +168,13 @@ public abstract class BaseNewActivity extends AppCompatActivity {
             subTip = "使用该功能需要拍照权限，请前往系统设置开启权限";
         } else if (permission == Permission.CONTACTS) {
             subTip = "使用该功能需要读取联系人权限，请前往系统设置开启权限";
+        } else if (permission.length == 1 && permission[0] == Manifest.permission.READ_CONTACTS) {
+            subTip = "使用该功能需要读取联系人权限，请前往系统设置开启权限";
         }
         if (dialog == null) {
             dialog = new UBTSubTitleDialog(this);
-            dialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
+            dialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color,
+                    null));
             dialog.setTips("权限申请");
             dialog.setLeftButtonTxt(getString(R.string.ubt_cancel));
             dialog.setRightButtonTxt(getString(R.string.go_setting));
