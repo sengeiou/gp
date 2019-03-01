@@ -11,6 +11,7 @@ public class MyContact implements Parcelable {
     public String mobile;
     public String name;
     public String sortLetter;
+    public String pinyin;
     public Boolean select = false;
     public List<String> numberList = new ArrayList<>();
 
@@ -18,6 +19,7 @@ public class MyContact implements Parcelable {
     }
 
     protected MyContact(Parcel in) {
+        pinyin = in.readString();
         id = in.readString();
         mobile = in.readString();
         name = in.readString();
@@ -44,6 +46,7 @@ public class MyContact implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(pinyin);
         parcel.writeString(id);
         parcel.writeString(mobile);
         parcel.writeString(name);

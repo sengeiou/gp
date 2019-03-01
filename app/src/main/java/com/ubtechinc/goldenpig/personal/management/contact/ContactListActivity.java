@@ -332,7 +332,7 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
             UbtToastUtils.showCustomToast(getApplication(), "仅支持6个字内的中文昵称，请选择其他联系人");
             return false;
         }
-        if (!CommendUtil.verifyPhone(data.mobile)) {
+        if (!CommendUtil.verifyPhone(data.mobile) || data.mobile.length() > 20) {
             UbtToastUtils.showCustomToast(getApplication(), "号码格式错误，请选择其他联系人");
             return false;
         }

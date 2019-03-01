@@ -523,11 +523,13 @@ public class ContactUtil {
             String sortString = pinyin.substring(0, 1).toUpperCase();
             if (sortString.matches("[A-Z]")) {
                 list.get(i).sortLetter = sortString.toUpperCase();
+                list.get(i).pinyin = pinyin;
                 if (!indexString.contains(sortString)) {
                     indexString.add(sortString);
                 }
             } else {
                 list.get(i).sortLetter = "#";
+                list.get(i).pinyin = "#";
                 if (!indexString.contains("#")) {
                     indexString.add("#");
                 }

@@ -16,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,8 +42,11 @@ import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.model.AddressBookmodel;
+import com.ubtechinc.goldenpig.personal.management.contact.AddressBookComparator;
 import com.ubtechinc.goldenpig.personal.management.contact.ContactListActivity;
 import com.ubtechinc.goldenpig.personal.management.contact.ContactUtil;
+import com.ubtechinc.goldenpig.personal.management.contact.PinyinComparator;
+import com.ubtechinc.goldenpig.personal.management.contact.PinyinUtils;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.ubtechinc.goldenpig.view.Divider;
@@ -62,6 +66,7 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -247,7 +252,18 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
         hasLoadMsg = true;
         //refreshLayout.finishRefresh(true);
         mList.clear();
-        //mList.addAll(list);
+        for (int i = 0; i < list.size(); i++) {
+            String pinyin = PinyinUtils.getPingYin(list.get(i).name);
+            String sortString = pinyin.substring(0, 1).toUpperCase();
+            if (sortString.matches("[A-Z]")) {
+                list.get(i).sortLetter = sortString.toUpperCase();
+                list.get(i).pinyin = pinyin;
+            } else {
+                list.get(i).sortLetter = "#";
+                list.get(i).pinyin = "#";
+            }
+        }
+        Collections.sort(list, new AddressBookComparator());
         if (list.size() == 0) {
             mStateView.showEmpty();
             tv_right.setVisibility(View.GONE);
@@ -415,6 +431,9 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
                         .class).getUserList();
                 List<AddressBookmodel> ss = new ArrayList<>();
                 for (int j = 0; j < list.size(); j++) {
+                    if (TextUtils.isEmpty(list.get(j).getName()) || TextUtils.isEmpty(list.get(j).getNumber())) {
+                        continue;
+                    }
                     AddressBookmodel mo = new AddressBookmodel();
                     mo.name = list.get(j).getName();
                     mo.phone = list.get(j).getNumber();
