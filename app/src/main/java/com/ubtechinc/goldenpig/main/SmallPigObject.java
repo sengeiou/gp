@@ -41,5 +41,10 @@ public class SmallPigObject {
         String script = "javascript:sendSign(\"" + sign + "\")";
         mWebView.post(() -> mWebView.evaluateJavascript(script, value -> LogUtils.d("goldPig", "SmallPigObject|onReceiveValue:" + value)));
     }
+    @JavascriptInterface
+    public void loadTencentSmartHomePages(){
+        
+    }
+
 
 }

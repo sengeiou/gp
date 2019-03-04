@@ -10,10 +10,12 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.bottomnavigation.BottomNavigationBar;
 import com.bottomnavigation.BottomNavigationItem;
+import com.tencent.ai.tvs.LoginProxy;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtech.utilcode.utils.SPUtils;
 import com.ubtechinc.bluetooth.UbtBluetoothManager;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.about.UbtAboutActivtiy;
 import com.ubtechinc.goldenpig.app.Constant;
 import com.ubtechinc.goldenpig.base.BaseActivity;
 import com.ubtechinc.goldenpig.base.BaseFragment;
@@ -24,6 +26,7 @@ import com.ubtechinc.goldenpig.main.fragment.SkillFragment;
 import com.ubtechinc.goldenpig.model.JsonCallback;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionModel;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.tvlloginlib.TVSManager;
 
 /**
  * @author : HQT
@@ -76,6 +79,7 @@ public class MainActivity extends BaseActivity {
         mBottomNavigationBar.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC);
         mBottomNavigationBar
                 .addItem(new BottomNavigationItem(R.drawable.ic_home_selected, R.string.ubt_tab_little_pig).setInactiveIconResource(R.drawable.ic_home_normal))
+                .addItem(new BottomNavigationItem(R.drawable.ic_home_selected, R.string.ubt_tab_smarthome).setInactiveIconResource(R.drawable.ic_home_normal))
                 .addItem(new BottomNavigationItem(R.drawable.ic_skil_selected, R.string.ubt_tab_skill).setInactiveIconResource(R.drawable.ic_skil_normal))
                 .addItem(new BottomNavigationItem(R.drawable.ic_me_selected, R.string.ubt_tab_person).setInactiveIconResource(R.drawable.ic_me_normal))
                 .setFirstSelectedPosition(0)
@@ -145,6 +149,11 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
             case 1:
+                LoginProxy proxy = TVSManager.getInstance(this, com.ubtechinc.goldenpig.BuildConfig.APP_ID_WX, com.ubtechinc.goldenpig.BuildConfig.APP_ID_QQ).getProxy();
+                String url = "https://ddsdk.html5.qq.com/smartHome";
+              proxy.tvsRequestUrl(url, null, null, null);
+                break;
+            case 2:
                 if (mSkillFragment == null) {
                     mSkillFragment = BaseFragment.newInstance(SkillFragment.class);
                     fragmentTransaction.add(R.id.main_content, mSkillFragment, SKILL_TAG);
@@ -152,7 +161,7 @@ public class MainActivity extends BaseActivity {
                     showOrHideFragment(fragmentTransaction, mSkillFragment, true);
                 }
                 break;
-            case 2:
+            case 3:
                 if (mMineFragment == null) {
                     mMineFragment = BaseFragment.newInstance(PersonalNewFragment.class);
                     fragmentTransaction.add(R.id.main_content, mMineFragment, MINE_TAG);

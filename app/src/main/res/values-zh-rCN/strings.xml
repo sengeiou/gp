@@ -4,6 +4,7 @@
     <string name="ubt_qq_login">QQ登录</string>
     <string name="ubt_wechat_login">微信登录</string>
     <string name="ubt_tab_little_pig">八戒</string>
+    <string name="ubt_tab_smarthome">智能家居</string>
     <string name="ubt_tab_skill">技能</string>
     <string name="ubt_tab_person">我的</string>
     <string name="ubt_wx_uninstalled">微信未安装</string>
