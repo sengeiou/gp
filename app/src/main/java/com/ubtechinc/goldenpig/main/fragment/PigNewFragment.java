@@ -392,7 +392,7 @@ public class PigNewFragment extends BaseFragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Event event) {
-        if (event == null || isDetached()) return;
+        if (event == null || isDetached() || isRemoving() || !isAdded()) return;
         int code = event.getCode();
         switch (code) {
             case INVISE_RECORD_POINT:
