@@ -4,6 +4,7 @@ package com.ubtechinc.goldenpig.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
@@ -117,19 +118,30 @@ public class MainActivity extends BaseActivity {
         fragmentTransaction.commit();
     }
 
+    private void showOrHideFragment(FragmentTransaction fragmentTransaction, Fragment fragment, boolean isVisibleToUser) {
+        if (fragmentTransaction != null && fragment != null) {
+            if (isVisibleToUser) {
+                fragmentTransaction.show(fragment);
+            } else {
+                fragmentTransaction.hide(fragment);
+            }
+            fragment.setUserVisibleHint(isVisibleToUser);
+        }
+    }
+
     private void initFragment(int i) {
         if (mFragmentManager == null) {
             mFragmentManager = getSupportFragmentManager();
         }
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-        hideFragment(fragmentTransaction);
+        hideAllFragment(fragmentTransaction);
         switch (i) {
             case 0:
                 if (mHomeFragment == null) {
                     mHomeFragment = BaseFragment.newInstance(PigNewFragment.class);
                     fragmentTransaction.add(R.id.main_content, mHomeFragment, HOME_TAG);
                 } else {
-                    fragmentTransaction.show(mHomeFragment);
+                    showOrHideFragment(fragmentTransaction, mHomeFragment, true);
                 }
                 break;
             case 1:
@@ -137,7 +149,7 @@ public class MainActivity extends BaseActivity {
                     mSkillFragment = BaseFragment.newInstance(SkillFragment.class);
                     fragmentTransaction.add(R.id.main_content, mSkillFragment, SKILL_TAG);
                 } else {
-                    fragmentTransaction.show(mSkillFragment);
+                    showOrHideFragment(fragmentTransaction, mSkillFragment, true);
                 }
                 break;
             case 2:
@@ -145,7 +157,7 @@ public class MainActivity extends BaseActivity {
                     mMineFragment = BaseFragment.newInstance(PersonalNewFragment.class);
                     fragmentTransaction.add(R.id.main_content, mMineFragment, MINE_TAG);
                 } else {
-                    fragmentTransaction.show(mMineFragment);
+                    showOrHideFragment(fragmentTransaction, mMineFragment, true);
                 }
                 break;
             default:
@@ -154,16 +166,10 @@ public class MainActivity extends BaseActivity {
         fragmentTransaction.commit();
     }
 
-    private void hideFragment(FragmentTransaction fragmentTransaction) {
-        if (mHomeFragment != null) {
-            fragmentTransaction.hide(mHomeFragment);
-        }
-        if (mSkillFragment != null) {
-            fragmentTransaction.hide(mSkillFragment);
-        }
-        if (mMineFragment != null) {
-            fragmentTransaction.hide(mMineFragment);
-        }
+    private void hideAllFragment(FragmentTransaction fragmentTransaction) {
+        showOrHideFragment(fragmentTransaction, mHomeFragment, false);
+        showOrHideFragment(fragmentTransaction, mSkillFragment, false);
+        showOrHideFragment(fragmentTransaction, mMineFragment, false);
     }
 
     @Override

@@ -223,7 +223,6 @@ public class PigNewFragment extends BaseFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Log.d(TAG, "onActivityCreated");
-        mHandler.sendEmptyMessage(GET_NATIVE_INFO);
         updateUserPig();
         initFunctionCard();
         initRecycleList();
