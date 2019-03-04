@@ -26,6 +26,7 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.MainActivity;
 import com.ubtechinc.goldenpig.pigmanager.BleConfigReadyActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.utils.CheckUtil;
 import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
 
@@ -69,6 +70,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
+        if (!CheckUtil.checkPhoneNetState(this)) {
+            return;
+        }
         switch (v.getId()) {
             case R.id.ubt_btn_qq_login:
                 qqLogin();
