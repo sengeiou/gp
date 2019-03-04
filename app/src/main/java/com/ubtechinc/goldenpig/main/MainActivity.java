@@ -1,6 +1,7 @@
 package com.ubtechinc.goldenpig.main;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,6 +27,7 @@ import com.ubtechinc.goldenpig.main.fragment.SkillFragment;
 import com.ubtechinc.goldenpig.model.JsonCallback;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionModel;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.tvlloginlib.TVSManager;
 
 /**
@@ -149,9 +151,10 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
             case 1:
-                LoginProxy proxy = TVSManager.getInstance(this, com.ubtechinc.goldenpig.BuildConfig.APP_ID_WX, com.ubtechinc.goldenpig.BuildConfig.APP_ID_QQ).getProxy();
-                String url = "https://ddsdk.html5.qq.com/smartHome";
-              proxy.tvsRequestUrl(url, null, null, null);
+//                LoginProxy proxy = TVSManager.getInstance(this, com.ubtechinc.goldenpig.BuildConfig.APP_ID_WX, com.ubtechinc.goldenpig.BuildConfig.APP_ID_QQ).getProxy();
+//                String url = "https://ddsdk.html5.qq.com/smartHome";
+//              proxy.tvsRequestUrl(url, null, null, null);
+                ActivityRoute.toAnotherActivity((Activity) this, SmartHomeWebActivity.class, false);
                 break;
             case 2:
                 if (mSkillFragment == null) {
