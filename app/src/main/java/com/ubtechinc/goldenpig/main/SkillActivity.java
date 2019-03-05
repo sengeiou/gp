@@ -1,5 +1,7 @@
 package com.ubtechinc.goldenpig.main;
 
+import android.os.Bundle;
+
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseWebActivity;
@@ -15,6 +17,12 @@ import com.ubtechinc.nets.utils.DeviceUtils;
  */
 
 public class SkillActivity extends BaseWebActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+//        StatusBarWrapUtil.translucentStatusBar(this, true);
+    }
 
     @Override
     protected String getURL() {
