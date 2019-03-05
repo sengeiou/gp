@@ -85,7 +85,7 @@ public class MainActivity extends BaseActivity {
         mBottomNavigationBar.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC);
         mBottomNavigationBar
                 .addItem(new BottomNavigationItem(R.drawable.ic_home_selected, R.string.ubt_tab_little_pig).setInactiveIconResource(R.drawable.ic_home_normal))
-                .addItem(new BottomNavigationItem(R.drawable.ic_home_selected, R.string.ubt_tab_smarthome).setInactiveIconResource(R.drawable.ic_home_normal))
+                .addItem(new BottomNavigationItem(R.drawable.ic_smart_home, R.string.ubt_tab_smarthome).setInactiveIconResource(R.drawable.ic_smart_home_gray))
                 .addItem(new BottomNavigationItem(R.drawable.ic_skil_selected, R.string.ubt_tab_skill).setInactiveIconResource(R.drawable.ic_skil_normal))
                 .addItem(new BottomNavigationItem(R.drawable.ic_me_selected, R.string.ubt_tab_person).setInactiveIconResource(R.drawable.ic_me_normal))
                 .setFirstSelectedPosition(0)
