@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.tencent.ai.tvs.LoginProxy;
 import com.ubtech.utilcode.utils.LogUtils;
+import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseActivity;
@@ -43,7 +44,7 @@ public class SmallPigObject {
     public void openNewPage(String param) {
         HashMap<String, String> map = new HashMap<>();
         map.put("url", param);
-        ActivityRoute.toAnotherActivity((Activity) mContext, SkillDetailActivity.class, map, false);
+       ActivityRoute.toAnotherActivity((Activity) mContext, SkillDetailActivity.class, map, false);
     }
 
     @JavascriptInterface
@@ -63,8 +64,7 @@ public class SmallPigObject {
                 String url = "https://ddsdk.html5.qq.com/smartHome";
                 proxy.tvsRequestUrl(url, null, null, null);
             } else {
-              //  Toast.makeText(UBTPGApplication.getContext(), "仅管理员可操作", Toast.LENGTH_SHORT).show();
-                showBindTipDialog();
+                ToastUtils.showShortToast(R.string.only_admin_operate);
             }
         } else {
             //TODO 弹框去绑猪
