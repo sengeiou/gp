@@ -63,7 +63,8 @@ public class SmallPigObject {
                 String url = "https://ddsdk.html5.qq.com/smartHome";
                 proxy.tvsRequestUrl(url, null, null, null);
             } else {
-                Toast.makeText(UBTPGApplication.getContext(), "仅管理员可操作", Toast.LENGTH_SHORT).show();
+              //  Toast.makeText(UBTPGApplication.getContext(), "仅管理员可操作", Toast.LENGTH_SHORT).show();
+                showBindTipDialog();
             }
         } else {
             //TODO 弹框去绑猪

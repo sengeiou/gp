@@ -6,6 +6,7 @@ import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseWebActivity;
 import com.ubtechinc.goldenpig.net.URestSigner;
+import com.ubtechinc.goldenpig.utils.StatusBarWrapUtil;
 import com.ubtechinc.nets.utils.DeviceUtils;
 
 /**
@@ -21,7 +22,7 @@ public class SkillActivity extends BaseWebActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        StatusBarWrapUtil.translucentStatusBar(this, true);
+       // StatusBarWrapUtil.translucentStatusBar(this, true);
     }
 
     @Override
