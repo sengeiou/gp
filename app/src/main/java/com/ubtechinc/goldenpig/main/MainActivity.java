@@ -1,6 +1,7 @@
 package com.ubtechinc.goldenpig.main;
 
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,10 +11,12 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.bottomnavigation.BottomNavigationBar;
 import com.bottomnavigation.BottomNavigationItem;
+import com.tencent.ai.tvs.LoginProxy;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtech.utilcode.utils.SPUtils;
 import com.ubtechinc.bluetooth.UbtBluetoothManager;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.about.UbtAboutActivtiy;
 import com.ubtechinc.goldenpig.app.Constant;
 import com.ubtechinc.goldenpig.base.BaseActivity;
 import com.ubtechinc.goldenpig.base.BaseFragment;
@@ -21,9 +24,12 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.fragment.PersonalNewFragment;
 import com.ubtechinc.goldenpig.main.fragment.PigNewFragment;
 import com.ubtechinc.goldenpig.main.fragment.SkillFragment;
+import com.ubtechinc.goldenpig.main.fragment.SmartHomeFragment;
 import com.ubtechinc.goldenpig.model.JsonCallback;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionModel;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.tvlloginlib.TVSManager;
 
 /**
  * @author : HQT
@@ -44,11 +50,14 @@ public class MainActivity extends BaseActivity {
 
     private SkillFragment mSkillFragment;
 
+    private SmartHomeFragment mSmartHomeFragment;
+
     private PersonalNewFragment mMineFragment;
 
     private FragmentManager mFragmentManager;
 
     public static final String HOME_TAG = "home";
+    public static final String SMARTHOOME_TAG="smarthome";
     public static final String SKILL_TAG = "skill";
     public static final String MINE_TAG = "mine";
 
@@ -76,6 +85,7 @@ public class MainActivity extends BaseActivity {
         mBottomNavigationBar.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC);
         mBottomNavigationBar
                 .addItem(new BottomNavigationItem(R.drawable.ic_home_selected, R.string.ubt_tab_little_pig).setInactiveIconResource(R.drawable.ic_home_normal))
+                .addItem(new BottomNavigationItem(R.drawable.ic_smart_home, R.string.ubt_tab_smarthome).setInactiveIconResource(R.drawable.ic_smart_home_gray))
                 .addItem(new BottomNavigationItem(R.drawable.ic_skil_selected, R.string.ubt_tab_skill).setInactiveIconResource(R.drawable.ic_skil_normal))
                 .addItem(new BottomNavigationItem(R.drawable.ic_me_selected, R.string.ubt_tab_person).setInactiveIconResource(R.drawable.ic_me_normal))
                 .setFirstSelectedPosition(0)
@@ -115,6 +125,10 @@ public class MainActivity extends BaseActivity {
             mMineFragment = BaseFragment.newInstance(PersonalNewFragment.class);
             fragmentTransaction.add(R.id.main_content, mMineFragment, MINE_TAG);
         }
+        if(mSmartHomeFragment==null){
+            mSmartHomeFragment= BaseFragment.newInstance(SmartHomeFragment.class);
+            fragmentTransaction.add(R.id.main_content, mSmartHomeFragment, SMARTHOOME_TAG);
+        }
         fragmentTransaction.commit();
     }
 
@@ -145,6 +159,18 @@ public class MainActivity extends BaseActivity {
                 }
                 break;
             case 1:
+//                LoginProxy proxy = TVSManager.getInstance(this, com.ubtechinc.goldenpig.BuildConfig.APP_ID_WX, com.ubtechinc.goldenpig.BuildConfig.APP_ID_QQ).getProxy();
+//                String url = "https://ddsdk.html5.qq.com/smartHome";
+//              proxy.tvsRequestUrl(url, null, null, null);
+                //ActivityRoute.toAnotherActivity((Activity) this, SmartHomeWebActivity.class, false);
+                if (mSmartHomeFragment == null) {
+                    mSmartHomeFragment = BaseFragment.newInstance(SmartHomeFragment.class);
+                    fragmentTransaction.add(R.id.main_content, mSmartHomeFragment, SMARTHOOME_TAG);
+                } else {
+                    showOrHideFragment(fragmentTransaction, mSmartHomeFragment, true);
+                }
+                break;
+            case 2:
                 if (mSkillFragment == null) {
                     mSkillFragment = BaseFragment.newInstance(SkillFragment.class);
                     fragmentTransaction.add(R.id.main_content, mSkillFragment, SKILL_TAG);
@@ -152,7 +178,7 @@ public class MainActivity extends BaseActivity {
                     showOrHideFragment(fragmentTransaction, mSkillFragment, true);
                 }
                 break;
-            case 2:
+            case 3:
                 if (mMineFragment == null) {
                     mMineFragment = BaseFragment.newInstance(PersonalNewFragment.class);
                     fragmentTransaction.add(R.id.main_content, mMineFragment, MINE_TAG);
@@ -170,6 +196,7 @@ public class MainActivity extends BaseActivity {
         showOrHideFragment(fragmentTransaction, mHomeFragment, false);
         showOrHideFragment(fragmentTransaction, mSkillFragment, false);
         showOrHideFragment(fragmentTransaction, mMineFragment, false);
+        showOrHideFragment(fragmentTransaction,mSmartHomeFragment,false);
     }
 
     @Override

@@ -3,6 +3,7 @@
     <string name="ubt_qq_login">QQ登录</string>
     <string name="ubt_wechat_login">微信登录</string>
     <string name="ubt_tab_little_pig">八戒</string>
+    <string name="ubt_tab_smarthome">智能家居</string>
     <string name="ubt_tab_skill">技能</string>
     <string name="ubt_tab_person">我的</string>
     <string name="ubt_wx_uninstalled">微信未安装</string>
@@ -225,7 +226,7 @@
     <string name="main_answer">定制问答</string>
     <string name="main_call_record">最近通话</string>
     <string name="main_bt_speaker">蓝牙音箱</string>
-
+    <string name="main_smarthome">智能家居</string>
     <string name="ubt_bajie">BaJie_%1$s</string>
     <string name="ubt_devid">设备ID：%1$s</string>
     <string name="ubt_im_status">IM状态：%1$s</string>

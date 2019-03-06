@@ -183,7 +183,6 @@ public abstract class BaseToolBarActivity extends BaseActivity {
     protected void setToolBarTitle(String title) {
         if (!TextUtils.isEmpty(title)) {
             tvTitle = (TextView) findViewById(R.id.ubt_tv_toolbar_title);
-
             tvTitle.setText(title);
         }
     }
