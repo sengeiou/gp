@@ -32,6 +32,8 @@ public class SkillDetailActivity extends BaseWebActivity {
         Log.d("SkillDetailActivity",url);
         if (url.contains(SMARTHOME_URL)) {
             Log.d("SkillDetailActivity",url);
+            //hiddleTitle();
+            //hideActionBar();
             return R.string.ubt_tab_smarthome;
         } else if (url.contains(SKILL_URL)) {
             Log.d("SkillDetailActivity",url);
