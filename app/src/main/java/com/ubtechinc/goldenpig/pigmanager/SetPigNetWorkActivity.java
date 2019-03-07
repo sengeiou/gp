@@ -422,7 +422,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
 //            wifiName = mWifiNamEdt.getText();
 //            wifiCtype = mWifiNamEdt.getcType();
             wifiName = mWetWifiName.getSsid();
-            wifiCtype = mWetWifiName.getCtype();
+            wifiCtype = mWetWifiName.getWifiCtype(wifiName);
             UbtLogger.d(TAG, "switchwifi else:" + wifiCtype);
         }
         if (TextUtils.isEmpty(wifiCtype)) {
