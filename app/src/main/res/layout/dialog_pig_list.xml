@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/dp_9"
         android:gravity="center"
+        android:textColor="@drawable/selector_ubt_bind_tx_bg"
         android:text="关闭"
-        android:textColor="#FF29AAFF"
         android:textSize="17sp"/>
 </LinearLayout>

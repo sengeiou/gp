@@ -1,7 +1,6 @@
 package com.ubtechinc.goldenpig.main;
 
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,12 +10,10 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.bottomnavigation.BottomNavigationBar;
 import com.bottomnavigation.BottomNavigationItem;
-import com.tencent.ai.tvs.LoginProxy;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtech.utilcode.utils.SPUtils;
 import com.ubtechinc.bluetooth.UbtBluetoothManager;
 import com.ubtechinc.goldenpig.R;
-import com.ubtechinc.goldenpig.about.UbtAboutActivtiy;
 import com.ubtechinc.goldenpig.app.Constant;
 import com.ubtechinc.goldenpig.base.BaseActivity;
 import com.ubtechinc.goldenpig.base.BaseFragment;
@@ -28,8 +25,6 @@ import com.ubtechinc.goldenpig.main.fragment.SmartHomeFragment;
 import com.ubtechinc.goldenpig.model.JsonCallback;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionModel;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
-import com.ubtechinc.goldenpig.route.ActivityRoute;
-import com.ubtechinc.tvlloginlib.TVSManager;
 
 /**
  * @author : HQT
@@ -42,7 +37,9 @@ import com.ubtechinc.tvlloginlib.TVSManager;
 public class MainActivity extends BaseActivity {
     Handler mHander = new Handler();
 
-    public boolean isNoSim;
+    public static boolean isNoSim;
+
+    public static boolean isBeeHiveOpen;
 
     public String pigPhoneNumber;
 

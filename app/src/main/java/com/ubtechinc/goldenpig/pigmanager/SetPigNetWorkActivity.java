@@ -26,7 +26,6 @@ import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.ActivityManager;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.view.UbtPasswordEditText;
-import com.ubtechinc.goldenpig.comm.view.UbtWifiListEditText;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
 import com.ubtechinc.goldenpig.comm.wifi.UbtWifiInfo;
@@ -77,7 +76,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
     private ICommandProduce commandProduce;
     private BungdingManager bungdingManager;
 
-    private static final int TIME_OUT = 30;
+    private static final int TIME_OUT = 35;
 
     private boolean isPigConnectNet = false;
 
@@ -156,8 +155,6 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
                     }
                 });
     }
-
-
 
     private void doGetWifiByBle(){
         UbtLogger.d(TAG, "doGetWifiByBle");
@@ -570,4 +567,5 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
             //TODO 获取网络异常
         }
     }
+
 }

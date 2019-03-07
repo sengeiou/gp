@@ -83,4 +83,5 @@ public class UbtPasswordEditText extends RelativeLayout implements View.OnClickL
             isVisualPsd = !isVisualPsd;
         }
     }
+
 }

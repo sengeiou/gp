@@ -24,6 +24,8 @@ public class PigListAdapter extends RecyclerView.Adapter<PigListAdapter.PigHolde
     private ArrayList<UbtBluetoothDevice> mLeList;
     private OnPigListItemClickListener mItemClickListener;
     private int clickedPos = -1;
+    private View mPigClose;
+
 
     public PigListAdapter(ArrayList<UbtBluetoothDevice> leList) {
         this.mLeList = leList;
@@ -34,7 +36,6 @@ public class PigListAdapter extends RecyclerView.Adapter<PigListAdapter.PigHolde
     public PigHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LinearLayout.inflate(parent.getContext(), R.layout.item_pig_list, null);
         return new PigHolder(view);
-
     }
 
     @Override
@@ -56,6 +57,9 @@ public class PigListAdapter extends RecyclerView.Adapter<PigListAdapter.PigHolde
             }
 
             holder.pigNameTv.setOnClickListener(v -> {
+                if (mPigClose != null) {
+                    mPigClose.setEnabled(false);
+                }
                 if (mItemClickListener != null) {
                     clickedPos = position;
                     mItemClickListener.onClick(position, device);
@@ -89,6 +93,10 @@ public class PigListAdapter extends RecyclerView.Adapter<PigListAdapter.PigHolde
 
     public OnPigListItemClickListener getItemClickListener() {
         return mItemClickListener;
+    }
+
+    public void setCloseView(View pigClose) {
+        this.mPigClose = pigClose;
     }
 
     protected static class PigHolder extends RecyclerView.ViewHolder {

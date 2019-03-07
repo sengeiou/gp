@@ -12,6 +12,7 @@
         android:layout_toStartOf="@+id/ubt_btn_drop_wifilist"
         android:drawablePadding="2dp"
         android:gravity="center_vertical"
+        android:inputType="textNoSuggestions"
         android:background="@null"
         android:layout_alignTop="@+id/ubt_btn_drop_wifilist"
         android:layout_alignBottom="@+id/ubt_btn_drop_wifilist"

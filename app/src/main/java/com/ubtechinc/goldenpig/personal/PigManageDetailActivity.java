@@ -32,6 +32,7 @@ import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
+import com.ubtechinc.goldenpig.main.MainActivity;
 import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.BleConfigReadyActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
@@ -621,14 +622,18 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
 
             if (simStatus.getInserted()) {
                 isNoSim = false;
+                MainActivity.isNoSim = false;
             } else {
                 isNoSim = true;
+                MainActivity.isNoSim = true;
             }
 
             if (!isNoSim && simStatus.getOpen()) {
                 isBeeHiveOpen = true;
+                MainActivity.isBeeHiveOpen = true;
             } else {
                 isBeeHiveOpen = false;
+                MainActivity.isBeeHiveOpen = false;
             }
 
             tvWifiName.setText(networkStatus.getSsid());

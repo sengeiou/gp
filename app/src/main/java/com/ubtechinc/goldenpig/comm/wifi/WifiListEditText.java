@@ -16,7 +16,6 @@ import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.commlib.view.UbtClearableEditText;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.comm.view.WrapContentLinearLayoutManager;
-import com.ubtechinc.nets.utils.WifiControl;
 
 import java.util.ArrayList;
 
@@ -64,12 +63,12 @@ public class WifiListEditText extends RelativeLayout implements View.OnClickList
         LayoutInflater.from(context).inflate(R.layout.layout_ubt_wifi_list_edittext, this, true);
 
         mWifiNameEdt = findViewById(R.id.ubt_clearedt_wifi_name);
-        mWifiNameEdt.setFocusable(true);
-        mWifiNameEdt.setFocusableInTouchMode(true);
-        mWifiNameEdt.requestFocus();
+        mWifiNameEdt.setFocusable(false);
+        mWifiNameEdt.setFocusableInTouchMode(false);
+//        mWifiNameEdt.requestFocus();
 
-        mClearLine = findViewById(R.id.view_clear_line);
-        mWifiNameEdt.setClearLine(mClearLine);
+//        mClearLine = findViewById(R.id.view_clear_line);
+//        mWifiNameEdt.setClearLine(mClearLine);
 
         mDropBtn = findViewById(R.id.ubt_btn_drop_wifilist);
         mDropBtn.setOnClickListener(this);
@@ -208,6 +207,8 @@ public class WifiListEditText extends RelativeLayout implements View.OnClickList
                         mWifiNameEdt.setText(mCurrSsid);
                     }
                 }
+            } else if (mCurrSsid.equals(wifiInfo.getSsid())) {
+                mCurrCtype = wifiInfo.getEncryptionKey();
             }
             mWifiList.add(wifiInfo);
             if (mWifiListAdapter != null) {
@@ -220,6 +221,9 @@ public class WifiListEditText extends RelativeLayout implements View.OnClickList
     public void fetchWifiFailured(IRetryCallback callback) {
         if (mWifiList == null || mWifiList.isEmpty()) {
             //TODO 超时重试
+            if (mTvWifiRetry == null || mWifiLoading == null) {
+                return;
+            }
             mTvWifiRetry.setVisibility(View.VISIBLE);
             mWifiLoading.setVisibility(View.GONE);
             mTvWifiRetry.setOnClickListener(v -> {

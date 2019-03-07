@@ -459,7 +459,12 @@ public class PigNewFragment extends BaseFragment {
 
             //更新sim卡信号
             if (simStatus.getInserted()) {
-                ((MainActivity) getActivity()).isNoSim = false;
+                MainActivity.isNoSim = false;
+                if (simStatus.getOpen()) {
+                    MainActivity.isBeeHiveOpen = true;
+                } else {
+                    MainActivity.isBeeHiveOpen = false;
+                }
                 ((MainActivity) getActivity()).pigPhoneNumber = simStatus.getPhoneNumber();
                 int level = simStatus.getLevel();
                 if (level > 4) {
@@ -473,7 +478,7 @@ public class PigNewFragment extends BaseFragment {
                     showMobileFlowDialog();
                 }
             } else {
-                ((MainActivity) getActivity()).isNoSim = true;
+                MainActivity.isNoSim = true;
                 ((MainActivity) getActivity()).pigPhoneNumber = "";
                 ivSignal.setImageLevel(0);
             }

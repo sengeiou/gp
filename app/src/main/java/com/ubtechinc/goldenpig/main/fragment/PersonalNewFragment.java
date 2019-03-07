@@ -71,6 +71,7 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NETWORK_STATE_CHANGE
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_ONLINE_STATE;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_VERSION_STATE;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
+import static com.ubtechinc.goldenpig.personal.BeeHiveMobileActivity.KEY_BEE_HIVE_OPEN;
 import static com.ubtechinc.goldenpig.personal.NoSimActivity.KEY_TOOL_BAR_TITLE;
 
 /**
@@ -317,7 +318,8 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
         if (!checkPhoneNetState()) {
             return;
         }
-        boolean isNoSim = ((MainActivity) getActivity()).isNoSim;
+        boolean isNoSim = MainActivity.isNoSim;
+        boolean isBeeHiveOpen = MainActivity.isBeeHiveOpen;
         switch (v.getId()) {
             case R.id.rl_login_info:
                 ActivityRoute.toAnotherActivity(getActivity(), UserInfoActivity.class, false);
@@ -380,7 +382,9 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
                     map.put(KEY_TOOL_BAR_TITLE, getResources().getString(R.string.ubt_mobile_bee_hive));
                     enterFunction(NoSimActivity.class, map);
                 } else {
-                    enterFunction(BeeHiveMobileActivity.class, null);
+                    HashMap<String, Boolean> map = new HashMap<>();
+                    map.put(KEY_BEE_HIVE_OPEN, isBeeHiveOpen);
+                    enterFunction(BeeHiveMobileActivity.class, map);
                 }
                 break;
             case R.id.ll_hot_pwd:
@@ -388,8 +392,10 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
                     HashMap<String, String> map = new HashMap<>();
                     map.put(KEY_TOOL_BAR_TITLE, getResources().getString(R.string.ubt_person_hotspot));
                     enterFunction(NoSimActivity.class, map);
-                } else {
+                } else if (isBeeHiveOpen){
                     enterFunction(SetHotSpotActivity.class, null);
+                } else {
+                    UbtToastUtils.showCustomToast(getActivity(), getString(R.string.open_beehive_mobile));
                 }
                 break;
             case R.id.ll_duihua:

@@ -50,6 +50,7 @@ public class PigListDialog extends BaseDialog {
         mPigRycView.addItemDecoration(new DefaultItemDecoration(getContext().getResources().getColor(R.color.ubt_wifi_list_divider)));
         mPigAdapter = new PigListAdapter(mLeList);
         mPigRycView.setAdapter(mPigAdapter);
+        mPigAdapter.setCloseView(mPigClose);
 
         mPigClose.setOnClickListener(v -> cancel());
     }
