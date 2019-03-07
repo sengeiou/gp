@@ -36,6 +36,7 @@ import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.main.MainActivity;
 import com.ubtechinc.goldenpig.net.RegisterRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.bean.BundingListenerAbster;
+import com.ubtechinc.goldenpig.pigmanager.bean.UbtScanResult;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.nets.utils.WifiControl;
 import com.ubtrobot.wifi.WifiMessageContainer;
@@ -45,6 +46,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -63,6 +65,8 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_PIG_WIFI_LIS
  * @changetime :2018/8/27 14:32
  */
 public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.OnClickListener {
+
+    private static final String TAG = SetPigNetWorkActivity.class.getSimpleName();
     private TextView mSendWifiInfoBtn;
     private UbtWifiListEditText mWifiNamEdt;
     private WifiListEditText mWetWifiName;
@@ -93,6 +97,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
 
     @Override
     protected void init(Bundle savedInstanceState) {
+        UbtLogger.d(TAG, "init");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermission();
         }
@@ -114,20 +119,33 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
 //        mTvSkip.setOnClickListener(this);
         bungdingManager = new BungdingManager(this);
         bungdingManager.setBangdingListener(mBandingListenerAbster);
+        bungdingManager.setGetWifiListListener(new BungdingManager.GetWifiListListener() {
+            @Override
+            public void onGetWifiList(List<UbtScanResult> scanResultList) {
+                UbtLogger.d(TAG, "scanResultList:" + scanResultList.get(0).getS());
+                saveWifiInfoForSpinnerByBle(scanResultList);
+            }
+        });
         checkPigWifi();
         Intent intent = getIntent();
         if (intent != null) {
             comingSource = intent.getStringExtra("comingSource");
             if ("switchwifi".equals(comingSource)) {
                 //TODO 获取wifi列表
+                UbtLogger.d(TAG, "get wifi list");
                 mWifiNamEdt.setVisibility(View.GONE);
                 mWetWifiName.setVisibility(View.VISIBLE);
                 doGetWifiByIM();
+            }else{
+                mWifiNamEdt.setVisibility(View.GONE);
+                mWetWifiName.setVisibility(View.VISIBLE);
+                doGetWifiByBle();
             }
         }
     }
 
     private void doGetWifiByIM() {
+        UbtLogger.d(TAG, "doGetWifiByIM");
         UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getWifiList()));
         scanWifiDisposable = Observable.timer(15, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(aLong -> {
@@ -137,6 +155,16 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
                     }
                 });
     }
+
+
+
+    private void doGetWifiByBle(){
+        UbtLogger.d(TAG, "doGetWifiByBle");
+        String message = commandProduce.getWifiList();
+        UbtBluetoothManager.getInstance().sendMessageToBle(message);
+    }
+
+
 
     @Override
     protected void onDestroy() {
@@ -157,7 +185,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
                 WifiMessageContainer.WifiList wifiList = (WifiMessageContainer.WifiList) event.getData();
                 String sWifiJson = wifiList.getWifiList();
                 saveWifiInfoForSpinner(sWifiJson);
-                UbtLogger.i("RECEIVE_PIG_WIFI_LIST", sWifiJson);
+                UbtLogger.i(TAG, sWifiJson);
                 break;
             case RECEIVE_PIG_WIFI_CONNECT:
                 WifiMessageContainer.ConnectStatus connectStatus = (WifiMessageContainer.ConnectStatus) event.getData();
@@ -208,6 +236,35 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
             LogUtils.d("SetPigNetwork", "saveWifiInfoForSpinner:" + e.getMessage());
         }
     }
+
+
+    private void saveWifiInfoForSpinnerByBle(List<UbtScanResult> scanResultList) {
+        UbtLogger.d(TAG, "saveWifiInfoForSpinnerByBle");
+        try {
+            if (scanResultList.size()>0) {
+
+                for (int i = 0; i < scanResultList.size(); i++) {
+
+                    String ssid = scanResultList.get(i).getS();
+                    int rssi = scanResultList.get(i).getL();
+                    String encryptionKey = scanResultList.get(i).getC();
+                    UbtWifiInfo ubtWifiInfo = new UbtWifiInfo();
+                    ubtWifiInfo.setSsid(ssid);
+                    ubtWifiInfo.setRssi(rssi);
+                    ubtWifiInfo.setEncryptionKey(encryptionKey);
+                    if (mWetWifiName != null) {
+                        mWetWifiName.addWifiLsit2List(ubtWifiInfo);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            LogUtils.d("SetPigNetwork", "saveWifiInfoForSpinner:" + e.getMessage());
+        }
+    }
+
+
+
+
 
     @Override
     public void onClick(View v) {
@@ -359,9 +416,13 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
         if ("switchwifi".equals(comingSource)) {
             wifiName = mWetWifiName.getSsid();
             wifiCtype = mWetWifiName.getCtype();
+            UbtLogger.d(TAG, "switchwifi");
         } else {
-            wifiName = mWifiNamEdt.getText();
-            wifiCtype = mWifiNamEdt.getcType();
+//            wifiName = mWifiNamEdt.getText();
+//            wifiCtype = mWifiNamEdt.getcType();
+            wifiName = mWetWifiName.getSsid();
+            wifiCtype = mWetWifiName.getCtype();
+            UbtLogger.d(TAG, "switchwifi else:" + wifiCtype);
         }
         if (TextUtils.isEmpty(wifiCtype)) {
             ToastUtils.showShortToast(this, "正在获取Wi-Fi加密方式，请稍后尝试");
@@ -497,6 +558,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
 
     private void updateDefaultSsid() {
         try {
+
             String defaultSsid = WifiControl.get(SetPigNetWorkActivity.this).getConnectInfo().getSSID();
             if (!TextUtils.isEmpty(defaultSsid) && !defaultSsid.contains("unknown")) {
                 mWifiNamEdt.setText(defaultSsid);

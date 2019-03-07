@@ -16,6 +16,7 @@ import com.ubtechinc.bluetooth.Constants;
 import com.ubtechinc.bluetooth.UbtBluetoothManager;
 import com.ubtechinc.bluetooth.command.ICommandProduce;
 import com.ubtechinc.bluetooth.command.JsonCommandProduce;
+import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.base.BaseActivity;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
@@ -153,10 +154,12 @@ public class BungdingManager {
                     } else if (command == WIFI_LIST_RESLUT_TRANS) {
                         String appListStr = (String) rePlyJson.get(Constants.WIIF_LIST_COMMAND);
                         JSONArray jsonArray = new JSONArray(appListStr);
+//                        UbtLogger.d(TAG, "WIFI_LIST_RESLUT_TRANS:" + jsonArray.length());
                         List<UbtScanResult> scanResultList = null;
                         if (jsonArray.length() != 0) {
                             scanResultList = JsonUtils.stringToObjectList(appListStr, UbtScanResult.class);
                         }
+                        UbtLogger.d(TAG, "WIFI_LIST_RESLUT_TRANS:" + scanResultList.size());
                         if (mGetWifiListListener != null) {
                             mGetWifiListListener.onGetWifiList(scanResultList);
                         }
