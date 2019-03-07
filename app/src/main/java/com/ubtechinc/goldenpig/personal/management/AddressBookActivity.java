@@ -497,12 +497,15 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
             }
             for (int i = 0; i < mList.size(); i++) {
                 if (mList.get(i).type == 0) {
+                    mStateView.showContent();
+                    tv_right.setVisibility(View.VISIBLE);
                     break;
                 }
                 if (i == mList.size() - 1) {
                     mList.clear();
                     adapter.notifyDataSetChanged();
                     mStateView.showEmpty();
+                    tv_right.setVisibility(View.GONE);
                 }
             }
         }

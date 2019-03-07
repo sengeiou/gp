@@ -350,6 +350,7 @@ public class EditRecordActivity extends BaseNewActivity implements Observer {
                     if (mList.size() == 0) {
                         mStateView.showEmpty();
                         mStateView.setEmptyViewMSG("无最近通话");
+                        onBackPressed();
                     } else {
                         mStateView.showContent();
                     }
@@ -386,21 +387,29 @@ public class EditRecordActivity extends BaseNewActivity implements Observer {
             public void onClick(View v) {//
                 picDialog.dismiss();
                 List<UserRecords.Record> list = new ArrayList();
-                for (int i = 0; i < mList.size(); i++) {
-                    for (int j = 0; j < allList.size(); j++) {
-                        if (allList.get(i).number.equals(mList.get(i).number)
-                                && allList.get(i).type == mList.get(i).type
-                                && CommendUtil.isSameDayOfMillis(allList.get(i).dateLong, mList.get(i).dateLong)) {
-                            UserRecords.Record.Builder recordBuild = UserRecords.Record.newBuilder();
-                            recordBuild.setName(allList.get(i).name);
-                            recordBuild.setNumber(allList.get(i).number);
-                            recordBuild.setDateLong(allList.get(i).dateLong);
-                            recordBuild.setDuration(allList.get(i).duration);
-                            recordBuild.setType(allList.get(i).type);
-                            recordBuild.setId(allList.get(i).id);
-                            list.add(recordBuild.build());
+                for (int m = 0; m < mList.size(); m++) {
+                    if (!mList.get(m).select) {
+                        continue;
+                    }
+                    int count = mList.get(m).ids.size();
+                    for (int i = 0; i < count; i++) {
+                        for (int j = 0; j < allList.size(); j++) {
+                            if (mList.get(m).ids.get(i).equals(allList.get(j).id)) {
+                                UserRecords.Record.Builder recordBuild = UserRecords.Record.newBuilder();
+                                recordBuild.setName(allList.get(j).name);
+                                recordBuild.setNumber(allList.get(j).number);
+                                recordBuild.setDateLong(allList.get(j).dateLong);
+                                recordBuild.setDuration(allList.get(j).duration);
+                                recordBuild.setType(allList.get(j).type);
+                                recordBuild.setId(allList.get(j).id);
+                                list.add(recordBuild.build());
+                                break;
+                            }
                         }
                     }
+                }
+                if (list == null || list.size() == 0) {
+                    return;
                 }
                 UbtLogger.d("EditRecordActivity", "delete the list");
                 UbtTIMManager.getInstance().deleteRecord(list);

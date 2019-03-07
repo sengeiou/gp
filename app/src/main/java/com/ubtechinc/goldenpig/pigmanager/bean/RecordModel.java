@@ -3,6 +3,8 @@ package com.ubtechinc.goldenpig.pigmanager.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 public class RecordModel implements Parcelable {
     /**
      * 联系人名
@@ -37,6 +39,7 @@ public class RecordModel implements Parcelable {
 
     public int count = 1;
 
+    public List<Long> ids;
     public RecordModel() {
     }
 
@@ -50,6 +53,7 @@ public class RecordModel implements Parcelable {
         duration = in.readLong();
         byte tmpSelect = in.readByte();
         select = tmpSelect == 0 ? null : tmpSelect == 1;
+        ids = in.readArrayList(Long.class.getClassLoader());
     }
 
     @Override
@@ -62,6 +66,7 @@ public class RecordModel implements Parcelable {
         dest.writeInt(count);
         dest.writeLong(duration);
         dest.writeByte((byte) (select == null ? 0 : select ? 1 : 2));
+        dest.writeList(ids);
     }
 
     @Override

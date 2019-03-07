@@ -67,7 +67,7 @@ public class RecordActivity extends BaseNewActivity implements Observer {
     SwipeMenuRecyclerView recycler;
     RecordAdapter adapter;
     private ArrayList<RecordModel> mList;
-    public int deletePosition = 0;
+    public int deletePosition = -1;
     /**
      *
      */
@@ -136,6 +136,7 @@ public class RecordActivity extends BaseNewActivity implements Observer {
         rl_titlebar.setTvRightName("编辑");
         rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color
                 .ubt_tab_btn_txt_checked_color));
+        rl_titlebar.getTvRight().setVisibility(View.GONE);
         rl_titlebar.setRightOnclickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -208,7 +209,7 @@ public class RecordActivity extends BaseNewActivity implements Observer {
         UbtTIMManager.getInstance().queryRecord();
     }
 
-//    public void onError(String str) {
+    //    public void onError(String str) {
 //        hasLoadMsg = false;
 //        ToastUtils.showShortToast(str);
 //        if (mList.size() == 0) {
@@ -265,19 +266,20 @@ public class RecordActivity extends BaseNewActivity implements Observer {
             if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
                 if (menuPosition == 0) {
                     List<UserRecords.Record> list = new ArrayList();
-                    for (int i = 0; i < allList.size(); i++) {
-                        if (allList.get(i).number.equals(mList.get(adapterPosition).number)
-                                && allList.get(i).type == mList.get(adapterPosition).type
-                                && CommendUtil.isSameDayOfMillis(allList.get(i).dateLong, mList.get(adapterPosition)
-                                .dateLong)) {
-                            UserRecords.Record.Builder recordBuild = UserRecords.Record.newBuilder();
-                            recordBuild.setName(allList.get(i).name);
-                            recordBuild.setNumber(allList.get(i).number);
-                            recordBuild.setDateLong(allList.get(i).dateLong);
-                            recordBuild.setDuration(allList.get(i).duration);
-                            recordBuild.setType(allList.get(i).type);
-                            recordBuild.setId(allList.get(i).id);
-                            list.add(recordBuild.build());
+                    int count = mList.get(adapterPosition).ids.size();
+                    for (int i = 0; i < count; i++) {
+                        for (int j = 0; j < allList.size(); j++) {
+                            if (mList.get(adapterPosition).ids.get(i).equals(allList.get(j).id)) {
+                                UserRecords.Record.Builder recordBuild = UserRecords.Record.newBuilder();
+                                recordBuild.setName(allList.get(j).name);
+                                recordBuild.setNumber(allList.get(j).number);
+                                recordBuild.setDateLong(allList.get(j).dateLong);
+                                recordBuild.setDuration(allList.get(j).duration);
+                                recordBuild.setType(allList.get(j).type);
+                                recordBuild.setId(allList.get(j).id);
+                                list.add(recordBuild.build());
+                                break;
+                            }
                         }
                     }
                     UbtLogger.d("RecordActivity", "delete the list");
@@ -356,23 +358,24 @@ public class RecordActivity extends BaseNewActivity implements Observer {
                 Boolean flag = msg.getPayload().unpack(GPResponse.Response.class).getResult();
                 LoadingDialog.getInstance(RecordActivity.this).dismiss();
                 if (flag) {
-                    mList.remove(deletePosition);
                     try {
-                        if (mList.get(mList.size() - 1).type == 1) {
-                            mList.remove(mList.size() - 1);
-                        }
+                        mList.remove(deletePosition);
+//                        if (mList.get(mList.size() - 1).type == 1) {
+//                            mList.remove(mList.size() - 1);
+//                        }
                     } catch (Exception e) {
                     }
                     if (mList.size() == 0) {
                         mStateView.showEmpty();
-                        mStateView.setEmptyViewMSG("无最近通话");
                         rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
                         rl_titlebar.getTvRight().setEnabled(false);
+                        rl_titlebar.getTvRight().setVisibility(View.GONE);
                     } else {
                         mStateView.showContent();
                         rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color
                                 .ubt_tab_btn_txt_checked_color));
                         rl_titlebar.getTvRight().setEnabled(true);
+                        rl_titlebar.getTvRight().setVisibility(View.VISIBLE);
                     }
                     adapter.notifyDataSetChanged();
                 } else {
@@ -395,14 +398,15 @@ public class RecordActivity extends BaseNewActivity implements Observer {
                 adapter.notifyDataSetChanged();
                 if (mList.size() == 0) {
                     mStateView.showEmpty();
-                    mStateView.setEmptyViewMSG("无最近通话");
                     rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
                     rl_titlebar.getTvRight().setEnabled(false);
+                    rl_titlebar.getTvRight().setVisibility(View.GONE);
                 } else {
                     mStateView.showContent();
                     rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color
                             .ubt_tab_btn_txt_checked_color));
                     rl_titlebar.getTvRight().setEnabled(true);
+                    rl_titlebar.getTvRight().setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -423,11 +427,13 @@ public class RecordActivity extends BaseNewActivity implements Observer {
             rl_titlebar.getTvRight().setVisibility(View.GONE);
             rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_color));
             rl_titlebar.getTvRight().setEnabled(false);
+            rl_titlebar.getTvRight().setVisibility(View.GONE);
         } else {
             mStateView.showContent();
             rl_titlebar.getTvRight().setVisibility(View.VISIBLE);
             rl_titlebar.getTvRight().setTextColor(getResources().getColor(R.color.ubt_tab_btn_txt_checked_color));
             rl_titlebar.getTvRight().setEnabled(true);
+            rl_titlebar.getTvRight().setVisibility(View.VISIBLE);
         }
         adapter.notifyDataSetChanged();
     }

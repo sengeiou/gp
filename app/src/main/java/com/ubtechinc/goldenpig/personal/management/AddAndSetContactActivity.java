@@ -287,6 +287,15 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
             @Override
             public void afterTextChanged(Editable s) {
                 strName = etName.getText().toString();
+                if (!TextUtils.isEmpty(strName) && strName.length() > 6) {
+                    UbtToastUtils.showCustomToast(getApplication(), "请输入6个字以内中文昵称");
+                    try {
+                        etName.setText(strName.substring(0, 6));
+                        etName.setSelection(6);
+                    } catch (Exception e) {
+                    }
+                    return;
+                }
                 if (mList != null && !mList.isEmpty()) {
                     int newPos = curPosition;
                     for (int i = 0; i < mList.size(); i++) {
@@ -345,8 +354,8 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
     }
 
     public void initLengthLimit() {
-//        InputFilter[] FilterArray = new InputFilter[1];
-//        FilterArray[0] = (source, start, end, dest, dstart, dend) -> {
+        InputFilter[] FilterArray = new InputFilter[1];
+        FilterArray[0] = (source, start, end, dest, dstart, dend) -> {
 //            for (int i = start; i < end; i++) {
 //                if (!isChinese(source.charAt(i))) {
 //                    return "";
@@ -358,16 +367,16 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
 //                    }
 //                }
 //            }
-//            int sourceLen = CommendUtil.getMsgLength(source.toString());
-//            int destLen = CommendUtil.getMsgLength(dest.toString());
-//            LogUtils.d("sourceLen:" + sourceLen + ",destLen:" + destLen);
-//            if (sourceLen + destLen > 6) {
-//                UbtToastUtils.showCustomToast(getApplication(), "请输入6个字以内昵称");
-//                return "";
-//            }
-//            return source;
-//        };
-//        etName.setFilters(FilterArray);
+            int sourceLen = CommendUtil.getMsgLength(source.toString());
+            int destLen = CommendUtil.getMsgLength(dest.toString());
+            LogUtils.d("sourceLen:" + sourceLen + ",destLen:" + destLen);
+            if (sourceLen + destLen > 6) {
+                UbtToastUtils.showCustomToast(getApplication(), "请输入6个字以内中文昵称");
+                return "";
+            }
+            return source;
+        };
+        etName.setFilters(FilterArray);
     }
 
 //    @OnClick({R.id.iv_phone_clear, R.id.iv_name_clear, R.id.iv_add})

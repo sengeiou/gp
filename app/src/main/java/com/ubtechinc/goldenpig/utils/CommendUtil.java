@@ -105,6 +105,11 @@ public class CommendUtil {
         if (list.size() == 0) {
             return result;
         }
+        for (int i = 0; i < list.size(); i++) {
+            List<Long> id = new ArrayList<>();
+            id.add(list.get(i).id);
+            list.get(i).ids = id;
+        }
         result.add(list.get(0));
         for (int i = 1; i < list.size(); i++) {
             for (int j = 0; j < result.size(); j++) {
@@ -112,6 +117,7 @@ public class CommendUtil {
                         && result.get(j).type == list.get(i).type
                         && isSameDayOfMillis(result.get(j).dateLong, list.get(i).dateLong)) {
                     result.get(j).count++;
+                    result.get(j).ids.add(list.get(i).id);
                     break;
                 }
                 if (j == result.size() - 1) {

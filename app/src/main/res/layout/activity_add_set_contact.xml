@@ -46,7 +46,6 @@
             android:layout_weight="1"
             android:background="@null"
             android:gravity="center_vertical"
-            android:maxLength="6"
             android:singleLine="true"
             android:hint="请输入6个字内的中文昵称"
             android:textColorHint="@color/empty_color"
