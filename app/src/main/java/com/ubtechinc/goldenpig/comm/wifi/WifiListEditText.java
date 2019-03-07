@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import com.ubtechinc.commlib.view.UbtClearableEditText;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.comm.view.WrapContentLinearLayoutManager;
+import com.ubtechinc.nets.utils.WifiControl;
 
 import java.util.ArrayList;
 
@@ -87,8 +88,12 @@ public class WifiListEditText extends RelativeLayout implements View.OnClickList
         if (mWifiNameEdt != null) {
             if (!TextUtils.isEmpty(wifiSsid)) {
                 mWifiNameEdt.setText(wifiSsid.replace("\"", ""));
+                mCurrSsid = wifiSsid;
+                mCurrCtype = WifiControl.get(getContext()).getCType();
             } else {
                 mWifiNameEdt.setText("");
+                mCurrSsid = null;
+                mCurrCtype = null;
             }
         }
     }
@@ -197,7 +202,9 @@ public class WifiListEditText extends RelativeLayout implements View.OnClickList
                 mCurrSsid = wifiInfo.getSsid();
                 mCurrCtype = wifiInfo.getEncryptionKey();
                 if (mWifiNameEdt != null) {
-                    mWifiNameEdt.setText(mCurrSsid);
+                    if(TextUtils.isEmpty(mWifiNameEdt.getText().toString())){
+                        mWifiNameEdt.setText(mCurrSsid);
+                    }
                 }
             }
             mWifiList.add(wifiInfo);

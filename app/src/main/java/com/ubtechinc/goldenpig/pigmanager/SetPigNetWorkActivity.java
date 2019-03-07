@@ -68,7 +68,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
 
     private static final String TAG = SetPigNetWorkActivity.class.getSimpleName();
     private TextView mSendWifiInfoBtn;
-    private UbtWifiListEditText mWifiNamEdt;
+//    private UbtWifiListEditText mWifiNamEdt;
     private WifiListEditText mWetWifiName;
     private UbtPasswordEditText mWifiPwdEdt;
 
@@ -107,11 +107,12 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
         setTitleBack(true);
         mSendWifiInfoBtn = findViewById(R.id.ubt_btn_connect_wifi);
         mSendWifiInfoBtn.setOnClickListener(this);
-        mWifiNamEdt = findViewById(R.id.ubt_edt_wifi_name);
+//        mWifiNamEdt = findViewById(R.id.ubt_edt_wifi_name);
         mWetWifiName = findViewById(R.id.wet_wifi_name);
         String phoneSsid = WifiControl.get(SetPigNetWorkActivity.this).getSSID();
         if (!TextUtils.isEmpty(phoneSsid)) {
-            mWifiNamEdt.setText(phoneSsid);
+            UbtLogger.d("wifiListEditText", "phoneSsid:" + phoneSsid);
+            mWetWifiName.setWifi(phoneSsid);
         }
         mWifiPwdEdt = findViewById(R.id.ubt_edt_wifi_password);
 //        mTvSkip = findViewById(R.id.ubt_tv_set_net_skip);
@@ -133,11 +134,11 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
             if ("switchwifi".equals(comingSource)) {
                 //TODO 获取wifi列表
                 UbtLogger.d(TAG, "get wifi list");
-                mWifiNamEdt.setVisibility(View.GONE);
+//                mWifiNamEdt.setVisibility(View.GONE);
                 mWetWifiName.setVisibility(View.VISIBLE);
                 doGetWifiByIM();
             }else{
-                mWifiNamEdt.setVisibility(View.GONE);
+//                mWifiNamEdt.setVisibility(View.GONE);
                 mWetWifiName.setVisibility(View.VISIBLE);
                 doGetWifiByBle();
             }
@@ -375,7 +376,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
      * 向本体发送wifi信息
      */
     private void checkWifiInfo() {
-        String wifiName = mWifiNamEdt.getText();
+        String wifiName = mWetWifiName.getSsid();
         if (TextUtils.isEmpty(wifiName)) {
             ToastUtils.showShortToast(this, "请填写WIFI SSID");
             return;
@@ -561,9 +562,9 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
 
             String defaultSsid = WifiControl.get(SetPigNetWorkActivity.this).getConnectInfo().getSSID();
             if (!TextUtils.isEmpty(defaultSsid) && !defaultSsid.contains("unknown")) {
-                mWifiNamEdt.setText(defaultSsid);
+                mWetWifiName.setWifi(defaultSsid);
             } else {
-                mWifiNamEdt.setText("");
+                mWetWifiName.setWifi("");
             }
         } catch (Exception e) {
             //TODO 获取网络异常
