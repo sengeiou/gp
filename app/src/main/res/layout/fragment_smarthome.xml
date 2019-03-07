@@ -12,8 +12,8 @@
         android:layout_height="wrap_content"
         android:paddingBottom="13dp"
         android:paddingTop="13dp"
-        android:text="@string/ubt_tab_skill"
         android:visibility="gone"
+        android:text="@string/ubt_tab_smarthome"
         android:textColor="@color/ubt_tips_txt_color" />
 
     <FrameLayout
