@@ -23,6 +23,7 @@
             style="@style/UBTSetWifiEditTheme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:inputType="textPersonName" />
 
         <com.ubtechinc.goldenpig.comm.wifi.WifiListEditText
@@ -30,7 +31,7 @@
             style="@style/UBTSetWifiEditTheme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:visibility="visible"
             android:inputType="textPersonName" />
 
         <View
