@@ -1,4 +1,5 @@
 include ':app', ':commlib', ':protollib', ':tvlloginlib',':utilcode', ':qrcodelib',
         ':servicemodel',':netutils',':protocollibrary', ':improtolib',
         ':imlibv2',':bluetoothlibrary',':recyclerview-swipe',':loopview',
-        ":xingemodule",':scardview'
+        ":xingemodule",':scardview',':basiccomponent:bottomnavigationbar',
+        ':basiccomponent:commonlib'

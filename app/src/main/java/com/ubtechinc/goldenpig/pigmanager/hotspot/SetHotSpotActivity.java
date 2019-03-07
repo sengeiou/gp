@@ -186,6 +186,10 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer,
             ToastUtils.showShortToast("热点名称或密码不允许为空");
             return;
         }
+        if (hotSpotName.length() > 10) {
+            ToastUtils.showShortToast("热点名称长度不允许超过10个字符");
+            return;
+        }
         if (hotSpotPwd.length() < 8) {
             ToastUtils.showShortToast("热点密码长度至少需输入8个字符");
             return;

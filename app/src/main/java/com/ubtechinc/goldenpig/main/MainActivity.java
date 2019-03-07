@@ -3,42 +3,33 @@ package com.ubtechinc.goldenpig.main;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.RadioButton;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
+import com.bottomnavigation.BottomNavigationBar;
+import com.bottomnavigation.BottomNavigationItem;
+import com.tencent.ai.tvs.LoginProxy;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtech.utilcode.utils.SPUtils;
 import com.ubtechinc.bluetooth.UbtBluetoothManager;
-import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.about.UbtAboutActivtiy;
 import com.ubtechinc.goldenpig.app.Constant;
 import com.ubtechinc.goldenpig.base.BaseActivity;
-import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
-import com.ubtechinc.goldenpig.login.LoginActivity;
+import com.ubtechinc.goldenpig.base.BaseFragment;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
-import com.ubtechinc.goldenpig.main.fragment.MainFragmentAdpater;
 import com.ubtechinc.goldenpig.main.fragment.PersonalNewFragment;
 import com.ubtechinc.goldenpig.main.fragment.PigNewFragment;
 import com.ubtechinc.goldenpig.main.fragment.SkillFragment;
+import com.ubtechinc.goldenpig.main.fragment.SmartHomeFragment;
 import com.ubtechinc.goldenpig.model.JsonCallback;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionModel;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
-import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
-import com.ubtechinc.goldenpig.utils.PigUtils;
-import com.ubtechinc.nets.http.ThrowableWrapper;
-
-import java.util.ArrayList;
+import com.ubtechinc.tvlloginlib.TVSManager;
 
 /**
  * @author : HQT
@@ -48,30 +39,165 @@ import java.util.ArrayList;
  * @change :
  * @changTime :2018/8/17 18:00
  */
-public class MainActivity extends BaseActivity implements View.OnClickListener {
-    ArrayList<Fragment> fragments;
-    private MainFragmentAdpater adapter;
-    private ViewPager fragmentPage;
-    private RadioButton pigRbtn;
-    private RadioButton houseRbtn;
-    private RadioButton personRbtn;
+public class MainActivity extends BaseActivity {
     Handler mHander = new Handler();
 
-    private UbtTIMManager mUbtTIMManager;
-
-    private boolean sendCid = false;
-
     public boolean isNoSim;
+
     public String pigPhoneNumber;
-    public boolean isBeeHiveOpen;
+
+    private PigNewFragment mHomeFragment;
+
+    private SkillFragment mSkillFragment;
+
+    private SmartHomeFragment mSmartHomeFragment;
+
+    private PersonalNewFragment mMineFragment;
+
+    private FragmentManager mFragmentManager;
+
+    public static final String HOME_TAG = "home";
+    public static final String SMARTHOOME_TAG="smarthome";
+    public static final String SKILL_TAG = "skill";
+    public static final String MINE_TAG = "mine";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        inits();
+        initViews();
         checkInitInterlocution();
     }
 
+    @Override
+    protected int getContentViewId() {
+        return R.layout.activity_main;
+    }
+
+    private void initViews() {
+        initNavBar();
+        preInitFragment();
+        initFragment(0);
+    }
+
+    private void initNavBar() {
+        BottomNavigationBar mBottomNavigationBar = findViewById(R.id.bottom_navigation_bar);
+        mBottomNavigationBar.setMode(BottomNavigationBar.MODE_FIXED);
+        mBottomNavigationBar.setBackgroundStyle(BottomNavigationBar.BACKGROUND_STYLE_STATIC);
+        mBottomNavigationBar
+                .addItem(new BottomNavigationItem(R.drawable.ic_home_selected, R.string.ubt_tab_little_pig).setInactiveIconResource(R.drawable.ic_home_normal))
+                .addItem(new BottomNavigationItem(R.drawable.ic_smart_home, R.string.ubt_tab_smarthome).setInactiveIconResource(R.drawable.ic_smart_home_gray))
+                .addItem(new BottomNavigationItem(R.drawable.ic_skil_selected, R.string.ubt_tab_skill).setInactiveIconResource(R.drawable.ic_skil_normal))
+                .addItem(new BottomNavigationItem(R.drawable.ic_me_selected, R.string.ubt_tab_person).setInactiveIconResource(R.drawable.ic_me_normal))
+                .setFirstSelectedPosition(0)
+                .initialise();
+        mBottomNavigationBar.setTabSelectedListener(new BottomNavigationBar.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(int position) {
+                initFragment(position);
+            }
+
+            @Override
+            public void onTabUnselected(int position) {
+
+            }
+
+            @Override
+            public void onTabReselected(int position) {
+
+            }
+        });
+    }
+
+    private void preInitFragment() {
+        if (mFragmentManager == null) {
+            mFragmentManager = getSupportFragmentManager();
+        }
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        if (mHomeFragment == null) {
+            mHomeFragment = BaseFragment.newInstance(PigNewFragment.class);
+            fragmentTransaction.add(R.id.main_content, mHomeFragment, HOME_TAG);
+        }
+        if (mSkillFragment == null) {
+            mSkillFragment = BaseFragment.newInstance(SkillFragment.class);
+            fragmentTransaction.add(R.id.main_content, mSkillFragment, SKILL_TAG);
+        }
+        if (mMineFragment == null) {
+            mMineFragment = BaseFragment.newInstance(PersonalNewFragment.class);
+            fragmentTransaction.add(R.id.main_content, mMineFragment, MINE_TAG);
+        }
+        if(mSmartHomeFragment==null){
+            mSmartHomeFragment= BaseFragment.newInstance(SmartHomeFragment.class);
+            fragmentTransaction.add(R.id.main_content, mSmartHomeFragment, SMARTHOOME_TAG);
+        }
+        fragmentTransaction.commit();
+    }
+
+    private void showOrHideFragment(FragmentTransaction fragmentTransaction, Fragment fragment, boolean isVisibleToUser) {
+        if (fragmentTransaction != null && fragment != null) {
+            if (isVisibleToUser) {
+                fragmentTransaction.show(fragment);
+            } else {
+                fragmentTransaction.hide(fragment);
+            }
+            fragment.setUserVisibleHint(isVisibleToUser);
+        }
+    }
+
+    private void initFragment(int i) {
+        if (mFragmentManager == null) {
+            mFragmentManager = getSupportFragmentManager();
+        }
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        hideAllFragment(fragmentTransaction);
+        switch (i) {
+            case 0:
+                if (mHomeFragment == null) {
+                    mHomeFragment = BaseFragment.newInstance(PigNewFragment.class);
+                    fragmentTransaction.add(R.id.main_content, mHomeFragment, HOME_TAG);
+                } else {
+                    showOrHideFragment(fragmentTransaction, mHomeFragment, true);
+                }
+                break;
+            case 1:
+//                LoginProxy proxy = TVSManager.getInstance(this, com.ubtechinc.goldenpig.BuildConfig.APP_ID_WX, com.ubtechinc.goldenpig.BuildConfig.APP_ID_QQ).getProxy();
+//                String url = "https://ddsdk.html5.qq.com/smartHome";
+//              proxy.tvsRequestUrl(url, null, null, null);
+                //ActivityRoute.toAnotherActivity((Activity) this, SmartHomeWebActivity.class, false);
+                if (mSmartHomeFragment == null) {
+                    mSmartHomeFragment = BaseFragment.newInstance(SmartHomeFragment.class);
+                    fragmentTransaction.add(R.id.main_content, mSmartHomeFragment, SMARTHOOME_TAG);
+                } else {
+                    showOrHideFragment(fragmentTransaction, mSmartHomeFragment, true);
+                }
+                break;
+            case 2:
+                if (mSkillFragment == null) {
+                    mSkillFragment = BaseFragment.newInstance(SkillFragment.class);
+                    fragmentTransaction.add(R.id.main_content, mSkillFragment, SKILL_TAG);
+                } else {
+                    showOrHideFragment(fragmentTransaction, mSkillFragment, true);
+                }
+                break;
+            case 3:
+                if (mMineFragment == null) {
+                    mMineFragment = BaseFragment.newInstance(PersonalNewFragment.class);
+                    fragmentTransaction.add(R.id.main_content, mMineFragment, MINE_TAG);
+                } else {
+                    showOrHideFragment(fragmentTransaction, mMineFragment, true);
+                }
+                break;
+            default:
+                break;
+        }
+        fragmentTransaction.commit();
+    }
+
+    private void hideAllFragment(FragmentTransaction fragmentTransaction) {
+        showOrHideFragment(fragmentTransaction, mHomeFragment, false);
+        showOrHideFragment(fragmentTransaction, mSkillFragment, false);
+        showOrHideFragment(fragmentTransaction, mMineFragment, false);
+        showOrHideFragment(fragmentTransaction,mSmartHomeFragment,false);
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -87,146 +213,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-
-    @Override
-    protected int getContentViewId() {
-        return R.layout.activity_main;
-    }
-
-    private void inits() {
-        if (TextUtils.isEmpty(CookieInterceptor.get().getToken())) {
-            ActivityRoute.toAnotherActivity(MainActivity.this, LoginActivity.class, true);
-            return;
-        }
-        new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new
-                GetPigListHttpProxy.OnGetPigListLitener() {
-                    @Override
-                    public void onError(ThrowableWrapper e) {
-//                        SharedPreferencesUtils.putBoolean(MainActivity.this, "firstEnter", true);
-//                        toBleConfigActivity(false);
-                        Log.e("getPigList", e.getMessage());
-                    }
-
-                    @Override
-                    public void onException(Exception e) {
-//                        SharedPreferencesUtils.putBoolean(MainActivity.this, "firstEnter", true);
-//                        toBleConfigActivity(false);
-                        Log.e("getPigList", e.getMessage());
-                    }
-
-                    @Override
-                    public void onSuccess(String response) {
-                        Log.e("getPigList", response);
-                        PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance()
-                                .getCurrentPigList());
-//                        ArrayList<PigInfo> list = AuthLive.getInstance().getCurrentPigList();
-//                        if (list == null || list.isEmpty()) {
-//                            SharedPreferencesUtils.putBoolean(MainActivity.this, "firstEnter", true);
-//                            toBleConfigActivity(false);
-//                        }
-                    }
-                });
-
-        personRbtn = (RadioButton) findViewById(R.id.ubt_rbt_me);
-        personRbtn.setOnClickListener(this);
-
-        pigRbtn = (RadioButton) findViewById(R.id.ubt_rbt_pig);
-        pigRbtn.setOnClickListener(this);
-
-        houseRbtn = (RadioButton) findViewById(R.id.ubt_rbt_house);
-        houseRbtn.setOnClickListener(this);
-
-        fragmentPage = (ViewPager) findViewById(R.id.ubt_pg_main_pager);
-        fragmentPage.setOffscreenPageLimit(2);
-
-        fragments = new ArrayList<>();
-        fragments.add(new PigNewFragment());
-        fragments.add(new SkillFragment());
-        fragments.add(new PersonalNewFragment());//PersonalFragment
-        adapter = new MainFragmentAdpater(getSupportFragmentManager(), fragments);
-        fragmentPage.setAdapter(adapter);
-        fragmentPage.addOnPageChangeListener(new MainViewPagerChangeListener());
-        fragmentPage.setCurrentItem(0);
-    }
-
-    /**
-     * 通过设置全屏，设置状态栏透明
-     *
-     * @param activity
-     */
-    private void fullScreen(Activity activity) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                //5.x开始需要把颜色设置透明，否则导航栏会呈现系统默认的浅灰色
-                Window window = activity.getWindow();
-                View decorView = window.getDecorView();
-                //两个 flag 要结合使用，表示让应用的主体内容占用系统状态栏的空间
-                int option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-                decorView.setSystemUiVisibility(option);
-                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-                window.setStatusBarColor(Color.TRANSPARENT); //导航栏颜色也可以正常设置 //
-                // window.setNavigationBarColor(Color.TRANSPARENT);
-            } else {
-                Window window = activity.getWindow();
-                WindowManager.LayoutParams attributes = window.getAttributes();
-                int flagTranslucentStatus = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
-                int flagTranslucentNavigation = WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION;
-                attributes.flags |= flagTranslucentStatus; // attributes.flags |= flagTranslucentNavigation;
-                window.setAttributes(attributes);
-            }
-        }
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //UbtBluetoothManager.getInstance().closeConnectBle();
-
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.ubt_rbt_pig:
-                fragmentPage.setCurrentItem(0);
-                break;
-            case R.id.ubt_rbt_house:
-                fragmentPage.setCurrentItem(1);
-                break;
-            case R.id.ubt_rbt_me:
-                fragmentPage.setCurrentItem(2);
-                break;
-            default:
-        }
-    }
-
-    private class MainViewPagerChangeListener implements ViewPager.OnPageChangeListener {
-
-        @Override
-        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-        }
-
-        @Override
-        public void onPageSelected(int position) {
-            switch (position) {
-                case 0:
-                    pigRbtn.setChecked(true);
-                    break;
-                case 1:
-                    houseRbtn.setChecked(true);
-                    break;
-                case 2:
-                    personRbtn.setChecked(true);
-                    break;
-                default:
-            }
-        }
-
-        @Override
-        public void onPageScrollStateChanged(int state) {
-
-        }
     }
 
     public void checkInitInterlocution() {
@@ -254,8 +243,4 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
 }

@@ -51,6 +51,17 @@ public abstract class BaseFragment extends Fragment {
         super();
     }
 
+    public static <T extends BaseFragment> T newInstance(Class instance) {
+        try {
+            return (T) instance.newInstance();
+        } catch (java.lang.InstantiationException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

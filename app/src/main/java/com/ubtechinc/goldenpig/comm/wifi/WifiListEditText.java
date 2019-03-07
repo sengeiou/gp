@@ -12,9 +12,11 @@ import android.widget.ImageButton;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 
+import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.commlib.view.UbtClearableEditText;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.comm.view.WrapContentLinearLayoutManager;
+import com.ubtechinc.nets.utils.WifiControl;
 
 import java.util.ArrayList;
 
@@ -86,9 +88,14 @@ public class WifiListEditText extends RelativeLayout implements View.OnClickList
     public void setWifi(String wifiSsid) {
         if (mWifiNameEdt != null) {
             if (!TextUtils.isEmpty(wifiSsid)) {
-                mWifiNameEdt.setText(wifiSsid.replace("\"", ""));
+                wifiSsid = wifiSsid.replace("\"", "");
+                mWifiNameEdt.setText(wifiSsid);
+                mCurrSsid = wifiSsid;
+//                mCurrCtype = getWifiCtype(wifiSsid);
             } else {
                 mWifiNameEdt.setText("");
+                mCurrSsid = null;
+                mCurrCtype = null;
             }
         }
     }
@@ -197,7 +204,9 @@ public class WifiListEditText extends RelativeLayout implements View.OnClickList
                 mCurrSsid = wifiInfo.getSsid();
                 mCurrCtype = wifiInfo.getEncryptionKey();
                 if (mWifiNameEdt != null) {
-                    mWifiNameEdt.setText(mCurrSsid);
+                    if(TextUtils.isEmpty(mWifiNameEdt.getText().toString())){
+                        mWifiNameEdt.setText(mCurrSsid);
+                    }
                 }
             }
             mWifiList.add(wifiInfo);
@@ -253,5 +262,18 @@ public class WifiListEditText extends RelativeLayout implements View.OnClickList
 
     public interface IRetryCallback {
         void doRetry();
+    }
+
+    public String getWifiCtype(String wifiName){
+        if(mWifiList.size()>0){
+            for(int i = 0; i<mWifiList.size(); i++){
+                if(wifiName.equals(mWifiList.get(i).getSsid())){
+                    UbtLogger.d("getWifiCtype", "getWifiCtype:" +mWifiList.get(i).getEncryptionKey());
+                    return mWifiList.get(i).getEncryptionKey();
+                }
+            }
+        }
+
+        return "WPA2";
     }
 }
