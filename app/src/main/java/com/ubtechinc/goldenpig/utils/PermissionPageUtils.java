@@ -82,7 +82,8 @@ public class PermissionPageUtils {
     private void goLGMainager() {
         try {
             Intent intent = new Intent(packageName);
-            ComponentName comp = new ComponentName("com.android.settings", "com.android.settings.Settings$AccessLockSummaryActivity");
+            ComponentName comp = new ComponentName("com.android.settings", "com.android.settings" +
+                    ".Settings$AccessLockSummaryActivity");
             intent.setComponent(comp);
             intent.addFlags(FLAG_ACTIVITY_NEW_TASK);
             mContext.startActivity(intent);
@@ -111,7 +112,8 @@ public class PermissionPageUtils {
         try {
             Intent intent = new Intent(packageName);
             intent.setFlags(FLAG_ACTIVITY_NEW_TASK);
-            ComponentName comp = new ComponentName("com.huawei.systemmanager", "com.huawei.permissionmanager.ui.MainActivity");
+            ComponentName comp = new ComponentName("com.huawei.systemmanager", "com.huawei.permissionmanager.ui" +
+                    ".MainActivity");
             intent.setComponent(comp);
             mContext.startActivity(intent);
         } catch (Exception e) {
@@ -151,7 +153,8 @@ public class PermissionPageUtils {
         boolean hit = false;
         if ("V6".equals(rom) || "V7".equals(rom)) {
             intent.setAction("miui.intent.action.APP_PERM_EDITOR");
-            intent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions.AppPermissionsEditorActivity");
+            intent.setClassName("com.miui.securitycenter", "com.miui.permcenter.permissions" +
+                    ".AppPermissionsEditorActivity");
             intent.putExtra("extra_pkgname", packageName);
             hit = true;
         } else if ("V8".equals(rom) || "V9".equals(rom)) {
@@ -248,6 +251,7 @@ public class PermissionPageUtils {
             e.printStackTrace();
         }
         if (packageinfo == null) {
+            goIntentSetting();
             return;
         }
         // 创建一个类别为CATEGORY_LAUNCHER的该包名的Intent
@@ -259,7 +263,8 @@ public class PermissionPageUtils {
                 .queryIntentActivities(resolveIntent, 0);
         Log.e("PermissionPageManager", "resolveinfoList" + resolveinfoList.size());
         for (int i = 0; i < resolveinfoList.size(); i++) {
-            Log.e("PermissionPageManager", resolveinfoList.get(i).activityInfo.packageName + resolveinfoList.get(i).activityInfo.name);
+            Log.e("PermissionPageManager", resolveinfoList.get(i).activityInfo.packageName + resolveinfoList.get(i)
+                    .activityInfo.name);
         }
         ResolveInfo resolveinfo = resolveinfoList.iterator().next();
         if (resolveinfo != null) {
