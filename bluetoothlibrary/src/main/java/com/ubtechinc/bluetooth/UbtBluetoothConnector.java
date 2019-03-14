@@ -291,19 +291,23 @@ class UbtBluetoothConnector {
      * @param msg 消息
      */
     void sendMessage(String msg) {
-        if (connectState == UbtBluetoothConnector.ConnectState.DISCOVERED) {
-            Message message = Message.obtain();
-            message.obj = msg;
-            message.what = MSG_WRITE_REQUEST;
-            lazySetupMessageHandler();
-            mMessageHandler.sendMessage(message);
-            mConnectTime=0;
-        } else {
-            Log.e(TAG, "Illegal State: 还未与蓝牙设备建立服务连接...");
+        try {
+            if (connectState == UbtBluetoothConnector.ConnectState.DISCOVERED) {
+                Message message = Message.obtain();
+                message.obj = msg;
+                message.what = MSG_WRITE_REQUEST;
+                lazySetupMessageHandler();
+                mMessageHandler.sendMessage(message);
+                mConnectTime=0;
+            } else {
+                Log.d(TAG, "Illegal State: 还未与蓝牙设备建立服务连接...");
 //            if (mConnectTime<6&&mCurrentDevice!=null){
 //                mConnectTime++;
 //                connect(mCurrentDevice);
 //            }
+            }
+        } catch (Exception e) {
+            Log.d(TAG, "蓝牙发送数据异常" + e.getMessage());
         }
     }
 

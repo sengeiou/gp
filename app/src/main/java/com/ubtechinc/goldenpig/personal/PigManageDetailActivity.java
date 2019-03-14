@@ -110,6 +110,8 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
 
     private boolean needUnBindByClear;
 
+    private boolean isUnbindAll;
+
     @Override
     protected int getConentView() {
         return R.layout.activity_device_manage_detail;
@@ -457,7 +459,11 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
                     if (unBindConfirmDialog.isRadioSelected()) {
                         doClearInfoByIM();
                     } else {
-                        doUnbind();
+                        if (isUnbindAll) {
+                            doUnbindAllMember();
+                        } else {
+                            doUnbind();
+                        }
                     }
                 }
             });
@@ -477,7 +483,9 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
 
                 @Override
                 public void onFunc2Click(View view) {
-                    doUnbindAllMember();
+                    isUnbindAll = true;
+                    showUnBindConfirmDialog(true);
+//                    doUnbindAllMember();
                 }
 
                 @Override
@@ -729,7 +737,11 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
                 if (!needUnBindByClear) return;
                 if ((boolean) event.getData()) {
                     com.ubtech.utilcode.utils.ToastUtils.showShortToast("机器人数据清除成功");
-                    doUnbind();
+                    if (isUnbindAll) {
+                        doUnbindAllMember();
+                    } else {
+                        doUnbind();
+                    }
                 } else {
                     com.ubtech.utilcode.utils.ToastUtils.showShortToast("机器人数据清除失败，请重试");
                 }

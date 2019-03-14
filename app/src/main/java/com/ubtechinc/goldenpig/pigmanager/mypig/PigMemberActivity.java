@@ -88,6 +88,8 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
 
     private TextView tvMemberTip;
 
+    private boolean isUnbindAll;
+
     @Override
     protected int getConentView() {
         return R.layout.activity_pigmember;
@@ -619,7 +621,11 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
             case RECEIVE_CLEAR_PIG_INFO:
                 if ((boolean) event.getData()) {
                     com.ubtech.utilcode.utils.ToastUtils.showShortToast("机器人数据清除成功");
-                    doUnbind();
+                    if (isUnbindAll) {
+                        doUnbindAllMember();
+                    } else {
+                        doUnbind();
+                    }
                 } else {
                     com.ubtech.utilcode.utils.ToastUtils.showShortToast("机器人数据清除失败，请重试");
                 }
@@ -686,7 +692,9 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
 
                     @Override
                     public void onFunc2Click(View view) {
-                        doUnbindAllMember();
+                        isUnbindAll = true;
+                        showUnBindConfirmDialog(userId);
+//                        doUnbindAllMember();
                     }
 
                     @Override
@@ -782,7 +790,11 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
                 if (unBindConfirmDialog.isRadioSelected()) {
                     doClearInfoByIM();
                 } else {
-                    doUnbind();
+                    if (isUnbindAll) {
+                        doUnbindAllMember();
+                    } else {
+                        doUnbind();
+                    }
                 }
             }
         });
