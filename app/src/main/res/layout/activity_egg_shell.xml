@@ -60,6 +60,14 @@
         android:layout_margin="@dimen/dp_14"
         android:text="Push通道"/>
 
+    <TextView
+        android:id="@+id/tv_tvs_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_margin="@dimen/dp_14"
+        android:text="tvs数据"/>
+
     <Button
         android:id="@+id/bt_test_push"
         android:layout_width="wrap_content"

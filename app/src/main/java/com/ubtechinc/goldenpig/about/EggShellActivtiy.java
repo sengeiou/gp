@@ -11,11 +11,13 @@ import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
+import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.push.PushAppInfo;
 import com.ubtechinc.goldenpig.push.PushHttpProxy;
 import com.ubtechinc.nets.utils.DeviceUtils;
+import com.ubtechinc.tvlloginlib.entity.LoginInfo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +56,23 @@ public class EggShellActivtiy extends BaseToolBarActivity {
         TextView tvPushStatus = findViewById(R.id.tv_push_status);
         PushAppInfo pushAppInfo = AuthLive.getInstance().getPushAppInfo();
         tvPushStatus.setText(getResources().getString(R.string.ubt_push_channel, pushAppInfo.isBindStatus() ? "正常" : "异常"));
+
+        TextView tvTvsData = findViewById(R.id.tv_tvs_data);
+        StringBuilder stringBuilder = new StringBuilder();
+        LoginInfo loginInfo = CookieInterceptor.get().getThridLogin();
+        String accessToken = "";
+        String appId = "";
+        String loginType = "";
+        String openeId = "";
+        if (loginInfo != null) {
+            accessToken = loginInfo.getAccessToken();
+            appId = loginInfo.getAppId();
+            loginType = loginInfo.getLoginType();
+            openeId = loginInfo.getOpenId();
+        }
+        stringBuilder.append("openID:").append(openeId).append("}");
+        String data = stringBuilder.toString();
+        tvTvsData.setText("tvs数据:{" + data);
 
         findViewById(R.id.bt_test_push).setOnClickListener(v -> {
             try {

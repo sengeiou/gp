@@ -1,9 +1,12 @@
 package com.ubtechinc.goldenpig.pigmanager;
 
 
+import android.app.PendingIntent;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.content.Intent;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -221,6 +224,20 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
                 scanDisposable.dispose();
             }
         }
+    }
+
+    /**
+     * 判断位置信息是否开启
+     * @param context
+     * @return
+     */
+    private static boolean isLocationOpen(final Context context) {
+        LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        //gps定位
+        boolean isGpsProvider = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        //网络定位
+        boolean isNetWorkProvider = manager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        return isGpsProvider || isNetWorkProvider;
     }
 
     @Override
@@ -529,6 +546,7 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
 
                 @Override
                 public void onRightButtonClick(View view) {
+//                    openGPS(BleClosePigActivity.this);
                     isAutoScan = true;
                     isManualScan = false;
                     startScanBle(true);
@@ -538,6 +556,19 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
         }
         if (!isDestroyed() && !isFinishing()) {
             mGpsTipDialog.show();
+        }
+    }
+
+    private void openGPS(Context context) {
+        Intent GPSIntent = new Intent();
+        GPSIntent.setClassName("com.android.settings",
+                "com.android.settings.widget.SettingsAppWidgetProvider");
+        GPSIntent.addCategory("android.intent.category.ALTERNATIVE");
+        GPSIntent.setData(Uri.parse("custom:3"));
+        try {
+            PendingIntent.getBroadcast(context, 0, GPSIntent, 0).send();
+        } catch (PendingIntent.CanceledException e) {
+            e.printStackTrace();
         }
     }
 
