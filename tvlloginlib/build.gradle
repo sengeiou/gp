@@ -40,7 +40,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    compile(name: 'tvsloginlib-ubt_goldenpig-release2018_10_15', ext: 'aar')
+    compile(name: 'tvsloginlib-ubt_goldenpig-release-20190314', ext: 'aar')
     implementation rootProject.ext.deps.appCompatV7
     implementation rootProject.ext.deps.supportV4
     implementation rootProject.ext.deps.tencentOpenSDK

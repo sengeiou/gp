@@ -117,6 +117,15 @@ public class AuthLive extends LiveData<AuthLive> {
         return null;
     }
 
+    public String getRobotUserId() {
+        PigInfo pigInfo = getCurrentPig();
+        if (pigInfo != null) {
+            return pigInfo.getRobotName();
+        } else {
+            return "";
+        }
+    }
+
     public ArrayList<PigInfo> getCurrentPigList() {
         if (currentPigList == null) {
             currentPigList = new ArrayList<>();
