@@ -127,11 +127,10 @@ public class PigNewFragment extends BaseFragment {
     @BindView(R.id.btn_config_wifi)
     View btnConfigWifi;
 
-    PigFragmentAdapter catetoryAdapter;
+    PigFragmentAdapter statementAdapter;
 
-    MainFunctionAdapter mainFunctionAdapter;
     private CustomPopupWindow mCustomPopupWindow = null;
-    MainFunctionAdapter statementAdapter;
+    MainFunctionAdapter functionAdapter;
 
     private boolean hasRefreshFromServer;
 
@@ -187,26 +186,26 @@ public class PigNewFragment extends BaseFragment {
      * 功能卡片更新
      */
     private void showFunctionRedPoint(MainFunctionAdapter.FunctionEnum functionEnum, boolean isShow) {
-        if (statementAdapter != null) {
+        if (functionAdapter != null) {
             functionEnum.hasRedPoint = isShow;
-            statementAdapter.notifyItemChanged(functionEnum);
+            functionAdapter.notifyItemChanged(functionEnum);
         }
     }
 
     private void initFunctionCard() {
-        if (statementAdapter == null) {
-            statementAdapter = new MainFunctionAdapter(getActivity(), new ArrayList<>(Arrays.asList(MainFunctionAdapter.FunctionEnum.values())));
+        if (functionAdapter == null) {
+            functionAdapter = new MainFunctionAdapter(getActivity(), new ArrayList<>(Arrays.asList(MainFunctionAdapter.FunctionEnum.values())));
         }
         rvFunctionCard.setLayoutManager(new GridLayoutManager(getActivity(), 4));
-        rvFunctionCard.setAdapter(statementAdapter);
+        rvFunctionCard.setAdapter(functionAdapter);
     }
 
     private void initRecycleList() {
-        if (catetoryAdapter == null) {
-            catetoryAdapter = new PigFragmentAdapter(getActivity(), list);
+        if (statementAdapter == null) {
+            statementAdapter = new PigFragmentAdapter(getActivity(), list);
         }
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(catetoryAdapter);
+        recyclerView.setAdapter(statementAdapter);
     }
 
     private void unReadVoiceMail(String setOnUbtTIMConver) {
@@ -522,7 +521,7 @@ public class PigNewFragment extends BaseFragment {
 
     private void updateFunctionCard(FunctionModel functionModel) {
         this.mFunctionModel = functionModel;
-        if (catetoryAdapter != null && statementAdapter != null) {
+        if (statementAdapter != null && functionAdapter != null) {
             hasRefreshFromServer = false;
             refreshData();
         } else {
@@ -533,8 +532,8 @@ public class PigNewFragment extends BaseFragment {
     private void refreshData() {
         try {
             if (!hasRefreshFromServer && mFunctionModel != null) {
-                catetoryAdapter.updateData(mFunctionModel);
                 statementAdapter.updateData(mFunctionModel);
+                functionAdapter.updateData(mFunctionModel);
                 tvStatementTitle.setText(mFunctionModel.statement.title);
                 hasRefreshFromServer = true;
             }
