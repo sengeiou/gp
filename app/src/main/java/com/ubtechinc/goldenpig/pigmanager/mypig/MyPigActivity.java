@@ -107,7 +107,8 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
                             int currentIndex = -1;
                             for (int index = 0; index < pigInfos.size(); index++) {
                                 PigInfo pigInfo = pigInfos.get(index);
-                                if (pigInfo.getRobotName().equals(AuthLive.getInstance().getCurrentPig().getRobotName())) {
+                                if (pigInfo.getRobotName().equals(AuthLive.getInstance().getCurrentPig().getRobotName
+                                        ())) {
                                     currentIndex = index;
                                     break;
                                 }
@@ -119,7 +120,8 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
                         } catch (RuntimeException e) {
                             e.printStackTrace();
                         }
-                        new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", null);
+                        new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID,
+                                "", null);
                         try {
                             Thread.sleep(100);
                         } catch (InterruptedException e) {
@@ -140,7 +142,10 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
             @Override
             public void onError(int i, String s) {
                 Log.e("setOnUbtTIMConver", s);
-                dismissLoadDialog();
+                try {
+                    dismissLoadDialog();
+                } catch (Exception e) {
+                }
 //                if (AuthLive.getInstance().getCurrentPig() != null) {
 //                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("八戒未登录");
 //                } else {
@@ -202,7 +207,8 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
 
     private void getPigVersionState() {
         showLoadingDialog();
-        UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getPigVersionState()));
+        UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getPigVersionState
+                ()));
     }
 
     @Override
@@ -218,7 +224,8 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
 
     private void getMember() {
         showLoadingDialog();
-        new CheckUserRepository().getRobotBindUsers(mPig.getRobotName(), CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new CheckUserRepository.ICheckBindStateCallBack() {
+        new CheckUserRepository().getRobotBindUsers(mPig.getRobotName(), CookieInterceptor.get().getToken(),
+                BuildConfig.APP_ID, "", new CheckUserRepository.ICheckBindStateCallBack() {
             @Override
             public void onError(ThrowableWrapper e) {
                 runOnUiThread(() -> {
@@ -251,7 +258,8 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
     }
 
     private void updatePigList() {
-        new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListHttpProxy.OnGetPigListLitener() {
+        new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new
+                GetPigListHttpProxy.OnGetPigListLitener() {
             @Override
             public void onError(ThrowableWrapper e) {
                 Log.e("getPigList", e.getMessage());
@@ -265,7 +273,8 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
             @Override
             public void onSuccess(String response) {
                 Log.e("getPigList", response);
-                PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance().getCurrentPigList());
+                PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance()
+                        .getCurrentPigList());
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -333,7 +342,8 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
             }
             dialog.setLeftButtonTxt(getString(R.string.ubt_cancel));
             dialog.setRightButtonTxt(getString(R.string.ubt_enter));
-            dialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
+            dialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color,
+                    null));
             dialog.setOnUbtDialogClickLinsenter(new UBTSubTitleDialog.OnUbtDialogClickLinsenter() {
                 @Override
                 public void onLeftButtonClick(View view) {
@@ -425,7 +435,8 @@ public class MyPigActivity extends BaseToolBarActivity implements Observer, View
             VersionInformation.UpgradeInfo info = msg.getPayload().unpack(VersionInformation.UpgradeInfo.class);
             if (info != null) {
                 if (mPigVersionTv != null) {
-                    mPigVersionTv.setText(String.format(getString(R.string.ubt_pig_version_format), info.getCurrentVersion()));
+                    mPigVersionTv.setText(String.format(getString(R.string.ubt_pig_version_format), info
+                            .getCurrentVersion()));
                 }
             }
         } else if (action.equals(ContactsProtoBuilder.GET_VERSION_STATE_ACTION)) {

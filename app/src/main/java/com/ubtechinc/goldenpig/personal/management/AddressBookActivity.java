@@ -110,11 +110,14 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
         @Override
         public void handleMessage(android.os.Message msg) {
             super.handleMessage(msg);
-            if (msg.what == 1) {
-                if (mWeakReference.get() != null) {
-                    UbtToastUtils.showCustomToast(mWeakReference.get(), getString(R.string.ubt_robot_offline));
-                    ((AddressBookActivity) mWeakReference.get()).mStateView.showRetry();
+            try {
+                if (msg.what == 1) {
+                    if (mWeakReference.get() != null) {
+                        UbtToastUtils.showCustomToast(mWeakReference.get(), getString(R.string.ubt_robot_offline));
+                        ((AddressBookActivity) mWeakReference.get()).mStateView.showRetry();
+                    }
                 }
+            } catch (Exception e) {
             }
         }
     }
@@ -228,11 +231,14 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
             @Override
             public void onError(int i, String s) {
                 Log.e("setOnUbtTIMConver", s);
-                LoadingDialog.getInstance(AddressBookActivity.this).dismiss();
-                if (AuthLive.getInstance().getCurrentPig() != null) {
-                    UbtToastUtils.showCustomToast(AddressBookActivity.this, "八戒未登录");
-                } else {
-                    UbtToastUtils.showCustomToast(AddressBookActivity.this, "未绑定八戒");
+                try {
+                    LoadingDialog.getInstance(AddressBookActivity.this).dismiss();
+                    if (AuthLive.getInstance().getCurrentPig() != null) {
+                        UbtToastUtils.showCustomToast(AddressBookActivity.this, "八戒未登录");
+                    } else {
+                        UbtToastUtils.showCustomToast(AddressBookActivity.this, "未绑定八戒");
+                    }
+                } catch (Exception e) {
                 }
             }
 
@@ -394,8 +400,9 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mHandler.removeCallbacksAndMessages(null);
-        mHandler = null;
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
         UbtTIMManager.getInstance().deleteMsgObserve(this);
     }
 

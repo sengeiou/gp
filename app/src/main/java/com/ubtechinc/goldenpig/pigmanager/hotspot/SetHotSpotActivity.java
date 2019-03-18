@@ -141,11 +141,14 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer,
             @Override
             public void onError(int i, String s) {
                 Log.e("setOnUbtTIMConver", s);
-                LoadingDialog.getInstance(SetHotSpotActivity.this).dismiss();
-                if (AuthLive.getInstance().getCurrentPig() != null) {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("八戒未登录");
-                } else {
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定八戒");
+                try {
+                    LoadingDialog.getInstance(SetHotSpotActivity.this).dismiss();
+                    if (AuthLive.getInstance().getCurrentPig() != null) {
+                        com.ubtech.utilcode.utils.ToastUtils.showShortToast("八戒未登录");
+                    } else {
+                        com.ubtech.utilcode.utils.ToastUtils.showShortToast("未绑定八戒");
+                    }
+                } catch (Exception e) {
                 }
             }
 
@@ -155,7 +158,8 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer,
         });
         if (UBTPGApplication.isNetAvailable) {
             if (UBTPGApplication.isRobotOnline) {
-                UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getHotSpot()));
+                UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getHotSpot
+                        ()));
             } else {
                 UbtToastUtils.showCustomToast(this, "八戒处于离线状态\n获取热点信息失败");
             }
@@ -196,7 +200,8 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer,
         }
         if (UBTPGApplication.isNetAvailable) {
             if (UBTPGApplication.isRobotOnline) {
-                TIMMessage message = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.updateHotSpot(hotSpotName, hotSpotPwd));
+                TIMMessage message = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.updateHotSpot
+                        (hotSpotName, hotSpotPwd));
                 UbtTIMManager.getInstance().sendTIM(message);
             } else {
                 UbtToastUtils.showCustomToast(this, getString(R.string.ubt_robot_offline));
@@ -269,7 +274,8 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer,
             if (result) {
                 ToastUtils.showLongToast("修改成功");
                 finish();
-//                UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getHotSpot()));
+//                UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder
+// .getHotSpot()));
             } else {
                 ToastUtils.showLongToast("修改失败");
             }

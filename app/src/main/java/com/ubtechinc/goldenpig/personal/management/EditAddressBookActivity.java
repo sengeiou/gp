@@ -1,17 +1,13 @@
 package com.ubtechinc.goldenpig.personal.management;
 
-import android.app.Activity;
 import android.app.Dialog;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -35,14 +31,7 @@ import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.utils.DialogUtil;
 import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -50,11 +39,9 @@ import java.util.Observer;
 
 import butterknife.BindView;
 
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CONTACT_CHECK_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_DELETE_CONTACTS;
 import static com.ubtechinc.goldenpig.personal.management.AddressBookActivity.MAXADD;
 import static com.ubtechinc.goldenpig.utils.CommendUtil.TIMEOUT;
-import static com.ubtechinc.goldenpig.utils.CommendUtil.TIMEOUT_MILLI;
 
 public class EditAddressBookActivity extends BaseNewActivity implements Observer {
     @BindView(R.id.tv_left)
@@ -152,11 +139,14 @@ public class EditAddressBookActivity extends BaseNewActivity implements Observer
             @Override
             public void onError(int i, String s) {
                 Log.e("setOnUbtTIMConver", s);
-                LoadingDialog.getInstance(EditAddressBookActivity.this).dismiss();
-                if (AuthLive.getInstance().getCurrentPig() != null) {
-                    UbtToastUtils.showCustomToast(getApplication(), "八戒未登录");
-                } else {
-                    UbtToastUtils.showCustomToast(getApplication(), "未绑定八戒");
+                try {
+                    LoadingDialog.getInstance(EditAddressBookActivity.this).dismiss();
+                    if (AuthLive.getInstance().getCurrentPig() != null) {
+                        UbtToastUtils.showCustomToast(getApplication(), "八戒未登录");
+                    } else {
+                        UbtToastUtils.showCustomToast(getApplication(), "未绑定八戒");
+                    }
+                } catch (Exception e) {
                 }
             }
 

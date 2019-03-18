@@ -88,13 +88,17 @@ public class RecordActivity extends BaseNewActivity implements Observer {
         public void handleMessage(android.os.Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
-                UbtToastUtils.showCustomToast(UBTPGApplication.getContext(), mWeakReference.get().getString(R.string
-                        .timeout_error_toast));
-                if (mWeakReference.get() != null) {
-                    LoadingDialog.getInstance(mWeakReference.get()).dismiss();
-                    if (mList.size() == 0) {
-                        mStateView.showRetry();
+                try {
+                    if (mWeakReference.get() != null) {
+                        UbtToastUtils.showCustomToast(UBTPGApplication.getContext(), mWeakReference.get().getString(R
+                                .string
+                                .timeout_error_toast));
+                        LoadingDialog.getInstance(mWeakReference.get()).dismiss();
+                        if (mList.size() == 0) {
+                            mStateView.showRetry();
+                        }
                     }
+                } catch (Exception e) {
                 }
             }
         }
@@ -173,19 +177,22 @@ public class RecordActivity extends BaseNewActivity implements Observer {
             @Override
             public void onError(int i, String s) {
                 Log.e("setOnUbtTIMConver", s);
-                LoadingDialog.getInstance(RecordActivity.this).dismiss();
-                if (NetworkHelper.sharedHelper() == null) {
-                    ToastUtils.showShortToast(getString(R.string.network_error));
-                } else if (NetworkHelper.sharedHelper().isNetworkAvailable()) {
-                    ToastUtils.showShortToast(getString(R.string.msg_error_toast));
-                } else {
-                    ToastUtils.showShortToast(getString(R.string.network_error));
-                }
-                if (mHandler.hasMessages(1)) {
-                    mHandler.removeMessages(1);
-                }
-                if (mList.size() == 0) {
-                    mStateView.showRetry();
+                try {
+                    LoadingDialog.getInstance(RecordActivity.this).dismiss();
+                    if (NetworkHelper.sharedHelper() == null) {
+                        ToastUtils.showShortToast(getString(R.string.network_error));
+                    } else if (NetworkHelper.sharedHelper().isNetworkAvailable()) {
+                        ToastUtils.showShortToast(getString(R.string.msg_error_toast));
+                    } else {
+                        ToastUtils.showShortToast(getString(R.string.network_error));
+                    }
+                    if (mHandler.hasMessages(1)) {
+                        mHandler.removeMessages(1);
+                    }
+                    if (mList.size() == 0) {
+                        mStateView.showRetry();
+                    }
+                } catch (Exception e) {
                 }
             }
 
@@ -295,8 +302,9 @@ public class RecordActivity extends BaseNewActivity implements Observer {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mHandler.removeCallbacksAndMessages(null);
-        mHandler = null;
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
         UbtTIMManager.getInstance().deleteMsgObserve(this);
     }
 

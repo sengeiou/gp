@@ -81,10 +81,13 @@ public class EditRecordActivity extends BaseNewActivity implements Observer {
         @Override
         public void handleMessage(android.os.Message msg) {
             super.handleMessage(msg);
-            if (msg.what == 1) {
-                if (mWeakReference.get() != null) {
-                    ToastUtils.showShortToast(mWeakReference.get().getString(R.string.timeout_error_toast));
+            try {
+                if (msg.what == 1) {
+                    if (mWeakReference.get() != null) {
+                        ToastUtils.showShortToast(mWeakReference.get().getString(R.string.timeout_error_toast));
+                    }
                 }
+            } catch (Exception e) {
             }
         }
     }
@@ -193,8 +196,11 @@ public class EditRecordActivity extends BaseNewActivity implements Observer {
             @Override
             public void onError(int i, String s) {
                 Log.e("setOnUbtTIMConver", s);
-                LoadingDialog.getInstance(EditRecordActivity.this).dismiss();
-                ToastUtils.showShortToast(s);
+                try {
+                    LoadingDialog.getInstance(EditRecordActivity.this).dismiss();
+                    ToastUtils.showShortToast(s);
+                } catch (Exception e) {
+                }
             }
 
             @Override
@@ -288,8 +294,9 @@ public class EditRecordActivity extends BaseNewActivity implements Observer {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mHandler.removeCallbacksAndMessages(null);
-        mHandler = null;
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
         UbtTIMManager.getInstance().deleteMsgObserve(this);
     }
 

@@ -79,12 +79,15 @@ public class ContactListActivity extends BaseNewActivity implements Observer {
         UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
             @Override
             public void onError(int i, String s) {
-                if (AuthLive.getInstance().getCurrentPig() != null) {
-                    UbtToastUtils.showCustomToast(getApplication(), "八戒未登录");
-                } else {
-                    UbtToastUtils.showCustomToast(getApplication(), "未绑定八戒");
+                try {
+                    if (AuthLive.getInstance().getCurrentPig() != null) {
+                        UbtToastUtils.showCustomToast(getApplication(), "八戒未登录");
+                    } else {
+                        UbtToastUtils.showCustomToast(getApplication(), "未绑定八戒");
+                    }
+                    LoadingDialog.getInstance(ContactListActivity.this).dismiss();
+                } catch (Exception e) {
                 }
-                LoadingDialog.getInstance(ContactListActivity.this).dismiss();
             }
 
             @Override

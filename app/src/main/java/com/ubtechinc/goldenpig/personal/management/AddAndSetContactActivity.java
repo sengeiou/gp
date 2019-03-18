@@ -110,11 +110,14 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
         @Override
         public void handleMessage(android.os.Message msg) {
             super.handleMessage(msg);
-            if (msg.what == 1) {
-                if (mWeakReference.get() != null) {
-                    UbtToastUtils.showCustomToast(mWeakReference.get(), getString(R.string.ubt_robot_offline));
-                    LoadingDialog.getInstance(mWeakReference.get()).dismiss();
+            try {
+                if (msg.what == 1) {
+                    if (mWeakReference.get() != null) {
+                        UbtToastUtils.showCustomToast(mWeakReference.get(), getString(R.string.ubt_robot_offline));
+                        LoadingDialog.getInstance(mWeakReference.get()).dismiss();
+                    }
                 }
+            } catch (Exception e) {
             }
         }
     }
@@ -138,12 +141,15 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
         UbtTIMManager.getInstance().setOnUbtTIMConverListener(new OnUbtTIMConverListener() {
             @Override
             public void onError(int i, String s) {
-                if (AuthLive.getInstance().getCurrentPig() != null) {
-                    UbtToastUtils.showCustomToast(getApplication(), "八戒未登录");
-                } else {
-                    UbtToastUtils.showCustomToast(getApplication(), "未绑定八戒");
+                try {
+                    if (AuthLive.getInstance().getCurrentPig() != null) {
+                        UbtToastUtils.showCustomToast(getApplication(), "八戒未登录");
+                    } else {
+                        UbtToastUtils.showCustomToast(getApplication(), "未绑定八戒");
+                    }
+                    LoadingDialog.getInstance(AddAndSetContactActivity.this).dismiss();
+                } catch (Exception e) {
                 }
-                LoadingDialog.getInstance(AddAndSetContactActivity.this).dismiss();
             }
 
             @Override
@@ -179,26 +185,26 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
         rl_titlebar.setRightOnclickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (TextUtils.isEmpty(strPhone) || TextUtils.isEmpty(strName)) {
-                    UbtToastUtils.showCustomToast(getApplication(), "电话或昵称不能为空");
-                    return;
-                }
-                if (!isGB2312(strName)) {
-                    UbtToastUtils.showCustomToast(AddAndSetContactActivity.this, "请输入6个字以内中文昵称");
-                    return;
-                }
-                if (!checkOldList()) {
-                    return;
-                }
-                if (!NetworkHelper.sharedHelper().isNetworkAvailable()) {
-                    UbtToastUtils.showCustomToast(AddAndSetContactActivity.this, getString(R.string.network_error));
-                    return;
-                }
-                if (mHandler.hasMessages(1)) {
-                    mHandler.removeMessages(1);
-                }
-                mHandler.sendEmptyMessageDelayed(1, TIMEOUT_MILLI);// 15s 秒后检查加载框是否还在
                 try {
+                    if (TextUtils.isEmpty(strPhone) || TextUtils.isEmpty(strName)) {
+                        UbtToastUtils.showCustomToast(getApplication(), "电话或昵称不能为空");
+                        return;
+                    }
+                    if (!isGB2312(strName)) {
+                        UbtToastUtils.showCustomToast(AddAndSetContactActivity.this, "请输入6个字以内中文昵称");
+                        return;
+                    }
+                    if (!checkOldList()) {
+                        return;
+                    }
+                    if (!NetworkHelper.sharedHelper().isNetworkAvailable()) {
+                        UbtToastUtils.showCustomToast(AddAndSetContactActivity.this, getString(R.string.network_error));
+                        return;
+                    }
+                    if (mHandler.hasMessages(1)) {
+                        mHandler.removeMessages(1);
+                    }
+                    mHandler.sendEmptyMessageDelayed(1, TIMEOUT_MILLI);// 15s 秒后检查加载框是否还在
                     if (type == 0) {
                         UbtTIMManager.getInstance().addUser(strName, strPhone);
                     } else {
