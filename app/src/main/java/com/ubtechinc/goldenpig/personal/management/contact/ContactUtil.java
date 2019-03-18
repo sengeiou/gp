@@ -426,6 +426,9 @@ public class ContactUtil {
         Uri uri = Data.CONTENT_URI; // 联系人Uri；
         Cursor cursor = context.getContentResolver().query(uri,
                 null, null, null, Data.RAW_CONTACT_ID);
+        if (cursor == null) {
+            return cache;
+        }
         while (cursor.moveToNext()) {
             try {
                 contactId = cursor.getInt(cursor
