@@ -91,8 +91,7 @@ public class RecordActivity extends BaseNewActivity implements Observer {
                 try {
                     if (mWeakReference.get() != null) {
                         UbtToastUtils.showCustomToast(UBTPGApplication.getContext(), mWeakReference.get().getString(R
-                                .string
-                                .timeout_error_toast));
+                                .string.ubt_robot_offline));
                         LoadingDialog.getInstance(mWeakReference.get()).dismiss();
                         if (mList.size() == 0) {
                             mStateView.showRetry();
