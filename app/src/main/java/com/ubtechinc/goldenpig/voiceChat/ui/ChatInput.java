@@ -9,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.Spannable;
@@ -29,9 +30,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ubtechinc.goldenpig.R;
-import com.ubtechinc.goldenpig.voiceChat.model.VoiceMessage;
+import com.ubtechinc.goldenpig.base.BaseActivity;
 import com.ubtechinc.goldenpig.voiceChat.util.MediaUtil;
 import com.ubtechinc.goldenpig.voiceChat.viewfeatures.ChatView;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Permission;
+import com.yanzhenjie.permission.PermissionListener;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -396,8 +400,9 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
             }
         }
         if (id == R.id.btn_voice){
-            if(activity!=null && requestAudio(activity)){
-                updateView(InputMode.VOICE);
+            if(activity != null){
+                requestAudio(activity);
+//                updateView(InputMode.VOICE);
             }
         }
         if (id == R.id.btn_keyboard){
@@ -485,16 +490,41 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
         return true;
     }
 
-    private boolean requestAudio(Activity activity){
-        if (afterM()){
-            int hasPermission = activity.checkSelfPermission(Manifest.permission.RECORD_AUDIO);
-            if (hasPermission != PackageManager.PERMISSION_GRANTED) {
-                activity.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},
-                        REQUEST_CODE_ASK_PERMISSIONS);
-                return false;
-            }
+//    private boolean requestAudio(Activity activity){
+//        if (afterM()){
+//            int hasPermission = activity.checkSelfPermission(Manifest.permission.RECORD_AUDIO);
+//            if (hasPermission != PackageManager.PERMISSION_GRANTED) {
+//                activity.requestPermissions(new String[]{Manifest.permission.RECORD_AUDIO},
+//                        REQUEST_CODE_ASK_PERMISSIONS);
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+
+    private void requestAudio(Activity activity) {
+        if (Build.VERSION.SDK_INT >= 23) {
+            AndPermission.with(activity)
+                    .requestCode(0x1101)
+                    .permission(Permission.MICROPHONE)
+                    .callback(new PermissionListener() {
+                        @Override
+                        public void onSucceed(int requestCode, @NonNull List<String> grantPermissions) {
+                            updateView(InputMode.VOICE);
+                        }
+
+                        @Override
+                        public void onFailed(int requestCode, @NonNull List<String> deniedPermissions) {
+                            if (activity instanceof BaseActivity) {
+                                ((BaseActivity)(activity)).showPermissionDialog(Permission.MICROPHONE);
+                            }
+                        }
+                    })
+                    .rationale((requestCode, rationale) -> rationale.resume())
+                    .start();
+        } else {
+            updateView(InputMode.VOICE);
         }
-        return true;
     }
 
     private boolean requestStorage(Activity activity){

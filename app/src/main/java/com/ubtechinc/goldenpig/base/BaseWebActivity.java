@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Animation;
@@ -13,7 +14,6 @@ import android.view.animation.AnimationUtils;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -46,13 +46,15 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
 
     private boolean isGoBack = false;
 
-    private ImageView iamgeView;
+    private ImageView imageView;
 
     private View mWebError;
 
     private boolean loadError;
 
     private Button btWebReload;
+
+    private String TAG = BaseWebActivity.class.getSimpleName();
 
     @Override
     protected int getConentView() {
@@ -74,8 +76,10 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
         btWebReload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mWebError.setVisibility(View.GONE);
-                mWebView.setVisibility(View.VISIBLE);
+                showLoadingDialog();
+//                mWebError.setVisibility(View.GONE);
+//                mWebView.setVisibility(View.VISIBLE);
+                loadError = false;
                 mWebView.reload();
             }
         });
@@ -109,7 +113,7 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
         processWeb();
 
         //开发稳定后需去掉该行代码
-        mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
+//        mWebView.getSettings().setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
 //        mWebView.getSettings().setUseWideViewPort(true);  //将图片调整到适合webview的大小
 //        mWebView.getSettings().setLoadWithOverviewMode(true); // 缩放至屏幕的大小
 //        mWebView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
@@ -140,9 +144,11 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
 
             @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+                Log.d(TAG, "onReceivedError:" + error);
                 loadError = true;
                 mWebError.setVisibility(View.VISIBLE);
                 mWebView.setVisibility(View.GONE);
+                dismissLoadDialog();
             }
         });
 
@@ -151,6 +157,12 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
             @Override
             public void onProgressChanged(WebView view, int newProgress) {
                 super.onProgressChanged(view, newProgress);
+                Log.d(TAG, "onProgressChanged:" + newProgress);
+                if (!loadError && newProgress == 100 && mWebError != null) {
+                    mWebError.setVisibility(View.GONE);
+                    view.setVisibility(View.VISIBLE);
+                    dismissLoadDialog();
+                }
                 if (isFirst) {
                     return; //刚进入页面不需要模拟效果，app自己有
                 }
@@ -158,8 +170,8 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
                 if (newProgress == 100) {
                     //加载完毕，显示webview 隐藏imageview
                     view.setVisibility(View.VISIBLE);
-                    if (iamgeView != null) {
-                        iamgeView.setVisibility(View.GONE);
+                    if (imageView != null) {
+                        imageView.setVisibility(View.GONE);
                     }
                     //页面进入效果的动画
                     Animation translate_in = AnimationUtils.loadAnimation(BaseWebActivity.this, R.anim.slide_right_in);
@@ -174,17 +186,17 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
                     translate_out.setFillAfter(true);
                     translate_out.setDetachWallpaper(true);
 //                     开启动画
-                    if (null != iamgeView) {
-                        iamgeView.startAnimation(translate_out);
+                    if (null != imageView) {
+                        imageView.startAnimation(translate_out);
                     }
                     view.startAnimation(translate_in);
                     //动画结束后，移除imageView
                     translate_out.setAnimationListener(new Animation.AnimationListener() {
                         @Override
                         public void onAnimationStart(Animation animation) {
-                            if (null != iamgeView) {
-                                root.removeView(iamgeView);
-                                iamgeView = null;
+                            if (null != imageView) {
+                                root.removeView(imageView);
+                                imageView = null;
                                 isGoBack = false;
                             }
                         }
@@ -201,15 +213,15 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
                     });
                 } else {
                     //url没加载好之前，隐藏webview，在主布局中，加入imageview显示当前页面快照
-                    if (null == iamgeView) {
-                        iamgeView = new ImageView(BaseWebActivity.this);
+                    if (null == imageView) {
+                        imageView = new ImageView(BaseWebActivity.this);
                         view.setDrawingCacheEnabled(true);
                         Bitmap bitmap = view.getDrawingCache();
                         if (null != bitmap) {
                             Bitmap b = Bitmap.createBitmap(bitmap);
-                            iamgeView.setImageBitmap(b);
+                            imageView.setImageBitmap(b);
                         }
-                        root.addView(iamgeView);
+                        root.addView(imageView);
                     }
                 }
             }

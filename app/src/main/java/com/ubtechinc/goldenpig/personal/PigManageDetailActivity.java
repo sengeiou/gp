@@ -60,6 +60,11 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 import static com.ubtechinc.goldenpig.app.Constant.SP_HAS_LOOK_LAST_RECORD;
 import static com.ubtechinc.goldenpig.app.Constant.SP_LAST_RECORD;
@@ -111,6 +116,8 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
     private boolean needUnBindByClear;
 
     private boolean isUnbindAll;
+
+    private Disposable imOutDisposable;
 
     @Override
     protected int getConentView() {
@@ -297,14 +304,16 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
                 }
                 break;
             case R.id.rl_hotpoint:
-                if (isNoSim) {
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put(KEY_TOOL_BAR_TITLE, getResources().getString(R.string.ubt_person_hotspot));
-                    enterFunction(NoSimActivity.class, map);
-                } else if (isBeeHiveOpen) {
-                    enterFunction(SetHotSpotActivity.class, null);
-                } else {
-                    UbtToastUtils.showCustomToast(this, getString(R.string.open_beehive_mobile));
+                if (checkOnlineState()) {
+                    if (isNoSim) {
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put(KEY_TOOL_BAR_TITLE, getResources().getString(R.string.ubt_person_hotspot));
+                        enterFunction(NoSimActivity.class, map);
+                    } else if (isBeeHiveOpen) {
+                        enterFunction(SetHotSpotActivity.class, null);
+                    } else {
+                        UbtToastUtils.showCustomToast(this, getString(R.string.open_beehive_mobile));
+                    }
                 }
                 break;
             case R.id.rl_continuity_voice:
@@ -549,6 +558,13 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
             UbtToastUtils.showCustomToast(this, getString(R.string.ubt_robot_offline_clear_tip));
             return;
         }
+        showLoadingDialog();
+        imOutDisposable = Observable.timer(15, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> {
+                    //TODO IM receive timeout
+                    dismissLoadDialog();
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("机器人数据清除失败，请重试");
+                });
         needUnBindByClear = true;
         List<ClearContainer.Categories.Builder> categorys = new ArrayList<>();
         ClearContainer.Categories.Builder categoryBuilder1 = ClearContainer.Categories.newBuilder();
@@ -620,6 +636,9 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
     protected void onDestroy() {
         super.onDestroy();
         EventBusUtil.unregister(this);
+        if (imOutDisposable != null) {
+            imOutDisposable.dispose();
+        }
     }
 
     private void updateNativeInfo(NativeInfoContainer.NativeInfo data) {
@@ -734,6 +753,9 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
                 }
                 break;
             case RECEIVE_CLEAR_PIG_INFO:
+                if (imOutDisposable != null) {
+                    imOutDisposable.dispose();
+                }
                 if (!needUnBindByClear) return;
                 if ((boolean) event.getData()) {
                     com.ubtech.utilcode.utils.ToastUtils.showShortToast("机器人数据清除成功");

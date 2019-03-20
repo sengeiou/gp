@@ -84,7 +84,7 @@ public class EditRecordActivity extends BaseNewActivity implements Observer {
             try {
                 if (msg.what == 1) {
                     if (mWeakReference.get() != null) {
-                        ToastUtils.showShortToast(mWeakReference.get().getString(R.string.timeout_error_toast));
+                        ToastUtils.showShortToast(mWeakReference.get().getString(R.string.ubt_robot_offline));
                     }
                 }
             } catch (Exception e) {

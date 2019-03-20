@@ -118,7 +118,6 @@ public class PigNewFragment extends BaseFragment {
     ImageView ivWifi;
     Unbinder unbinder;
 
-    PigFragmentAdapter adapter;
     @BindView(R.id.tv_statement_title)
     TextView tvStatementTitle;
 

@@ -613,7 +613,11 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
                     .rationale((requestCode, rationale) -> rationale.resume())
                     .start();
         } else {
-            intentToContact();
+            if (checkContact()) {
+                intentToContact();
+            } else {
+                showPermissionDialog(new String[]{Manifest.permission.READ_CONTACTS});
+            }
         }
     }
 
@@ -644,14 +648,21 @@ public class AddressBookActivity extends BaseNewActivity implements Observer {
     }
 
     public Boolean checkContact() {
-        Uri uri = ContactsContract.Data.CONTENT_URI; // 联系人Uri；
-        Cursor cursor = getContentResolver().query(uri,
-                null, null, null, ContactsContract.Data.RAW_CONTACT_ID);
-        Boolean flag = true;
-        if (!cursor.moveToNext()) {
-            flag = false;
+        try {
+            Uri uri = ContactsContract.Data.CONTENT_URI; // 联系人Uri；
+            Cursor cursor = getContentResolver().query(uri,
+                    null, null, null, ContactsContract.Data.RAW_CONTACT_ID);
+            Boolean flag = true;
+            if (cursor == null) {
+                return false;
+            }
+            if (!cursor.moveToNext()) {
+                flag = false;
+            }
+            cursor.close();
+            return flag;
+        } catch (Exception e) {
+            return false;
         }
-        cursor.close();
-        return flag;
     }
 }

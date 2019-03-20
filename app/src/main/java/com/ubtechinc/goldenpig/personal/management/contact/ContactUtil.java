@@ -418,16 +418,19 @@ public class ContactUtil {
     public List<MyContact> getContactList() {
         indexString = new ArrayList<String>();
         List<MyContact> cache = new ArrayList<MyContact>();
-        String mimetype = "";
-        int oldrid = -1;
-        int contactId = -1;
-        // 1.查询通讯录所有联系人信息，通过id排序，我们看下android联系人的表就知道，所有的联系人的数据是由RAW_CONTACT_ID来索引开的
-        // 所以，先获取所有的人的RAW_CONTACT_ID
-        Uri uri = Data.CONTENT_URI; // 联系人Uri；
-        Cursor cursor = context.getContentResolver().query(uri,
-                null, null, null, Data.RAW_CONTACT_ID);
-        while (cursor.moveToNext()) {
-            try {
+        try {
+            String mimetype = "";
+            int oldrid = -1;
+            int contactId = -1;
+            // 1.查询通讯录所有联系人信息，通过id排序，我们看下android联系人的表就知道，所有的联系人的数据是由RAW_CONTACT_ID来索引开的
+            // 所以，先获取所有的人的RAW_CONTACT_ID
+            Uri uri = Data.CONTENT_URI; // 联系人Uri；
+            Cursor cursor = context.getContentResolver().query(uri,
+                    null, null, null, Data.RAW_CONTACT_ID);
+            if (cursor == null) {
+                return cache;
+            }
+            while (cursor.moveToNext()) {
                 contactId = cursor.getInt(cursor
                         .getColumnIndex(Data.RAW_CONTACT_ID));
                 if (oldrid != contactId) {
@@ -468,6 +471,18 @@ public class ContactUtil {
                     if (!TextUtils.isEmpty(mobile)) {
                         mobile = mobile.replace(" ", "");
                     }
+                    //过滤86和+86开头
+                    if (!TextUtils.isEmpty(mobile)) {
+                        try {
+                            if (substring(mobile, 0, 2).equals("86")) {
+                                mobile = substring(mobile, 2);
+                            }
+                            if (substring(mobile, 0, 3).equals("+86")) {
+                                mobile = substring(mobile, 3);
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
                     if (!TextUtils.isEmpty(mobile)) {
                         if (cache.get(cache.size() - 1).numberList == null) {
                             List<String> numberList = new ArrayList<>();
@@ -494,49 +509,50 @@ public class ContactUtil {
 //                        cache.get(cache.size() - 1).mobile = cache.get(cache.size() - 1).mobile.replace(" ", "");
 //                    }
                 }
-            } catch (Exception e) {
             }
-        }
-        cursor.close();
+            cursor.close();
 
-        List<MyContact> list = new ArrayList<MyContact>();
-        for (int i = 0; i < cache.size(); i++) {
-            if (TextUtils.isEmpty(cache.get(i).name) || cache.get(i).numberList == null || cache.get(i).numberList
-                    .size() == 0) {
-                continue;
+            List<MyContact> list = new ArrayList<MyContact>();
+            for (int i = 0; i < cache.size(); i++) {
+                if (TextUtils.isEmpty(cache.get(i).name) || cache.get(i).numberList == null || cache.get(i).numberList
+                        .size() == 0) {
+                    continue;
+                }
+                for (int j = 0; j < cache.get(i).numberList.size(); j++) {
+                    MyContact myContact = new MyContact();
+                    myContact.id = cache.get(i).id;
+                    myContact.name = cache.get(i).name;
+                    myContact.mobile = cache.get(i).numberList.get(j);
+                    list.add(myContact);
+                }
             }
-            for (int j = 0; j < cache.get(i).numberList.size(); j++) {
-                MyContact myContact = new MyContact();
-                myContact.id = cache.get(i).id;
-                myContact.name = cache.get(i).name;
-                myContact.mobile = cache.get(i).numberList.get(j);
-                list.add(myContact);
-            }
-        }
 //        for (int i = 0; i < cache.size(); i++) {
 //            if (!TextUtils.isEmpty(cache.get(i).name) && !TextUtils.isEmpty(cache.get(i).mobile)) {
 //                list.add(cache.get(i));
 //            }
 //        }
-        for (int i = 0; i < list.size(); i++) {
-            String pinyin = PinyinUtils.getPingYin(list.get(i).name);
-            String sortString = pinyin.substring(0, 1).toUpperCase();
-            if (sortString.matches("[A-Z]")) {
-                list.get(i).sortLetter = sortString.toUpperCase();
-                list.get(i).pinyin = pinyin;
-                if (!indexString.contains(sortString)) {
-                    indexString.add(sortString);
-                }
-            } else {
-                list.get(i).sortLetter = "#";
-                list.get(i).pinyin = "#";
-                if (!indexString.contains("#")) {
-                    indexString.add("#");
+            for (int i = 0; i < list.size(); i++) {
+                String pinyin = PinyinUtils.getPingYin(list.get(i).name);
+                String sortString = pinyin.substring(0, 1).toUpperCase();
+                if (sortString.matches("[A-Z]")) {
+                    list.get(i).sortLetter = sortString.toUpperCase();
+                    list.get(i).pinyin = pinyin;
+                    if (!indexString.contains(sortString)) {
+                        indexString.add(sortString);
+                    }
+                } else {
+                    list.get(i).sortLetter = "#";
+                    list.get(i).pinyin = "#";
+                    if (!indexString.contains("#")) {
+                        indexString.add("#");
+                    }
                 }
             }
+            Collections.sort(indexString);
+            return list;
+        } catch (Exception e) {
+            return cache;
         }
-        Collections.sort(indexString);
-        return list;
     }
 
     public ArrayList<String> getIndexString() {
@@ -547,172 +563,204 @@ public class ContactUtil {
 
     public List<MyContact> fetchContact() {
         List<MyContact> cache = new ArrayList<>();
-        ContentResolver cr = context.getContentResolver();
-        Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
-        if (cur.getCount() > 0) {
-            while (cur.moveToNext()) {
-                String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
-                String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+        try {
+            ContentResolver cr = context.getContentResolver();
+            Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null, null, null, null);
+            if (cur == null) {
+                return cache;
+            }
+            if (cur.getCount() > 0) {
+                while (cur.moveToNext()) {
+                    String id = cur.getString(cur.getColumnIndex(ContactsContract.Contacts._ID));
+                    String name = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
 
-                if (cur.getInt(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
-                    Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
-                            new String[]{id}, null);
-                    while (pCur.moveToNext()) {
-                        String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone
-                                .NUMBER));
-                        if (!TextUtils.isEmpty(phoneNo)) {
-                            phoneNo = phoneNo.replace(" ", "");
+                    if (cur.getInt(cur.getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER)) > 0) {
+                        Cursor pCur = cr.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
+                                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ?",
+                                new String[]{id}, null);
+                        while (pCur.moveToNext()) {
+                            String phoneNo = pCur.getString(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone
+                                    .NUMBER));
+                            if (!TextUtils.isEmpty(phoneNo)) {
+                                phoneNo = phoneNo.replace(" ", "");
+                            }
+                            int type = pCur.getInt(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
+                            switch (type) {
+                                case ContactsContract.CommonDataKinds.Phone.TYPE_HOME:
+                                    try {
+                                        if (!TextUtils.isEmpty(phoneNo)) {
+                                            MyContact contactClass = new MyContact();
+                                            contactClass.id = id;
+                                            contactClass.name = name;
+                                            contactClass.mobile = phoneNo;
+                                            cache.add(contactClass);
+                                        }
+                                    } catch (Exception e) {
+                                        Log.d(TAG, e.toString());
+                                    }
+                                    break;
+                                case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
+                                    try {
+                                        if (!TextUtils.isEmpty(phoneNo)) {
+                                            MyContact contactClass = new MyContact();
+                                            contactClass.id = id;
+                                            contactClass.name = name;
+                                            contactClass.mobile = phoneNo;
+                                            cache.add(contactClass);
+                                        }
+                                    } catch (Exception e) {
+                                        Log.d(TAG, e.toString());
+                                    }
+                                    break;
+                                case ContactsContract.CommonDataKinds.Phone.TYPE_WORK:
+                                    try {
+                                        if (!TextUtils.isEmpty(phoneNo)) {
+                                            MyContact contactClass = new MyContact();
+                                            contactClass.id = id;
+                                            contactClass.name = name;
+                                            contactClass.mobile = phoneNo;
+                                            cache.add(contactClass);
+                                        }
+                                    } catch (Exception e) {
+                                        Log.d(TAG, e.toString());
+                                    }
+                                    break;
+                                case ContactsContract.CommonDataKinds.Phone.TYPE_FAX_HOME:
+                                    try {
+                                        if (!TextUtils.isEmpty(phoneNo)) {
+                                            MyContact contactClass = new MyContact();
+                                            contactClass.id = id;
+                                            contactClass.name = name;
+                                            contactClass.mobile = phoneNo;
+                                            cache.add(contactClass);
+                                        }
+                                    } catch (Exception e) {
+                                        Log.d(TAG, e.toString());
+                                    }
+                                    break;
+                                case ContactsContract.CommonDataKinds.Phone.TYPE_FAX_WORK:
+                                    try {
+                                        if (!TextUtils.isEmpty(phoneNo)) {
+                                            MyContact contactClass = new MyContact();
+                                            contactClass.id = id;
+                                            contactClass.name = name;
+                                            contactClass.mobile = phoneNo;
+                                            cache.add(contactClass);
+                                        }
+                                    } catch (Exception e) {
+                                        Log.d(TAG, e.toString());
+                                    }
+                                    break;
+                                case ContactsContract.CommonDataKinds.Phone.TYPE_MAIN:
+                                    try {
+                                        if (!TextUtils.isEmpty(phoneNo)) {
+                                            MyContact contactClass = new MyContact();
+                                            contactClass.id = id;
+                                            contactClass.name = name;
+                                            contactClass.mobile = phoneNo;
+                                            cache.add(contactClass);
+                                        }
+                                    } catch (Exception e) {
+                                        Log.d(TAG, e.toString());
+                                    }
+                                    break;
+                                case ContactsContract.CommonDataKinds.Phone.TYPE_OTHER:
+                                    try {
+                                        if (!TextUtils.isEmpty(phoneNo)) {
+                                            MyContact contactClass = new MyContact();
+                                            contactClass.id = id;
+                                            contactClass.name = name;
+                                            contactClass.mobile = phoneNo;
+                                            cache.add(contactClass);
+                                        }
+                                    } catch (Exception e) {
+                                        Log.d(TAG, e.toString());
+                                    }
+                                    break;
+                                case ContactsContract.CommonDataKinds.Phone.TYPE_CUSTOM:
+                                    try {
+                                        if (!TextUtils.isEmpty(phoneNo)) {
+                                            MyContact contactClass = new MyContact();
+                                            contactClass.id = id;
+                                            contactClass.name = name;
+                                            contactClass.mobile = phoneNo;
+                                            cache.add(contactClass);
+                                        }
+                                    } catch (Exception e) {
+                                        Log.d(TAG, e.toString());
+                                    }
+                                    break;
+                                case ContactsContract.CommonDataKinds.Phone.TYPE_PAGER:
+                                    try {
+                                        if (!TextUtils.isEmpty(phoneNo)) {
+                                            MyContact contactClass = new MyContact();
+                                            contactClass.id = id;
+                                            contactClass.name = name;
+                                            contactClass.mobile = phoneNo;
+                                            cache.add(contactClass);
+                                        }
+                                    } catch (Exception e) {
+                                        Log.d(TAG, e.toString());
+                                    }
+                                    break;
+                            }
                         }
-                        int type = pCur.getInt(pCur.getColumnIndex(ContactsContract.CommonDataKinds.Phone.TYPE));
-                        switch (type) {
-                            case ContactsContract.CommonDataKinds.Phone.TYPE_HOME:
-                                try {
-                                    if (!TextUtils.isEmpty(phoneNo)) {
-                                        MyContact contactClass = new MyContact();
-                                        contactClass.id = id;
-                                        contactClass.name = name;
-                                        contactClass.mobile = phoneNo;
-                                        cache.add(contactClass);
-                                    }
-                                } catch (Exception e) {
-                                    Log.d(TAG, e.toString());
-                                }
-                                break;
-                            case ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE:
-                                try {
-                                    if (!TextUtils.isEmpty(phoneNo)) {
-                                        MyContact contactClass = new MyContact();
-                                        contactClass.id = id;
-                                        contactClass.name = name;
-                                        contactClass.mobile = phoneNo;
-                                        cache.add(contactClass);
-                                    }
-                                } catch (Exception e) {
-                                    Log.d(TAG, e.toString());
-                                }
-                                break;
-                            case ContactsContract.CommonDataKinds.Phone.TYPE_WORK:
-                                try {
-                                    if (!TextUtils.isEmpty(phoneNo)) {
-                                        MyContact contactClass = new MyContact();
-                                        contactClass.id = id;
-                                        contactClass.name = name;
-                                        contactClass.mobile = phoneNo;
-                                        cache.add(contactClass);
-                                    }
-                                } catch (Exception e) {
-                                    Log.d(TAG, e.toString());
-                                }
-                                break;
-                            case ContactsContract.CommonDataKinds.Phone.TYPE_FAX_HOME:
-                                try {
-                                    if (!TextUtils.isEmpty(phoneNo)) {
-                                        MyContact contactClass = new MyContact();
-                                        contactClass.id = id;
-                                        contactClass.name = name;
-                                        contactClass.mobile = phoneNo;
-                                        cache.add(contactClass);
-                                    }
-                                } catch (Exception e) {
-                                    Log.d(TAG, e.toString());
-                                }
-                                break;
-                            case ContactsContract.CommonDataKinds.Phone.TYPE_FAX_WORK:
-                                try {
-                                    if (!TextUtils.isEmpty(phoneNo)) {
-                                        MyContact contactClass = new MyContact();
-                                        contactClass.id = id;
-                                        contactClass.name = name;
-                                        contactClass.mobile = phoneNo;
-                                        cache.add(contactClass);
-                                    }
-                                } catch (Exception e) {
-                                    Log.d(TAG, e.toString());
-                                }
-                                break;
-                            case ContactsContract.CommonDataKinds.Phone.TYPE_MAIN:
-                                try {
-                                    if (!TextUtils.isEmpty(phoneNo)) {
-                                        MyContact contactClass = new MyContact();
-                                        contactClass.id = id;
-                                        contactClass.name = name;
-                                        contactClass.mobile = phoneNo;
-                                        cache.add(contactClass);
-                                    }
-                                } catch (Exception e) {
-                                    Log.d(TAG, e.toString());
-                                }
-                                break;
-                            case ContactsContract.CommonDataKinds.Phone.TYPE_OTHER:
-                                try {
-                                    if (!TextUtils.isEmpty(phoneNo)) {
-                                        MyContact contactClass = new MyContact();
-                                        contactClass.id = id;
-                                        contactClass.name = name;
-                                        contactClass.mobile = phoneNo;
-                                        cache.add(contactClass);
-                                    }
-                                } catch (Exception e) {
-                                    Log.d(TAG, e.toString());
-                                }
-                                break;
-                            case ContactsContract.CommonDataKinds.Phone.TYPE_CUSTOM:
-                                try {
-                                    if (!TextUtils.isEmpty(phoneNo)) {
-                                        MyContact contactClass = new MyContact();
-                                        contactClass.id = id;
-                                        contactClass.name = name;
-                                        contactClass.mobile = phoneNo;
-                                        cache.add(contactClass);
-                                    }
-                                } catch (Exception e) {
-                                    Log.d(TAG, e.toString());
-                                }
-                                break;
-                            case ContactsContract.CommonDataKinds.Phone.TYPE_PAGER:
-                                try {
-                                    if (!TextUtils.isEmpty(phoneNo)) {
-                                        MyContact contactClass = new MyContact();
-                                        contactClass.id = id;
-                                        contactClass.name = name;
-                                        contactClass.mobile = phoneNo;
-                                        cache.add(contactClass);
-                                    }
-                                } catch (Exception e) {
-                                    Log.d(TAG, e.toString());
-                                }
-                                break;
-                        }
+                        pCur.close();
                     }
-                    pCur.close();
                 }
             }
-        }
-        List<MyContact> list = new ArrayList<MyContact>();
-        for (int i = 0; i < cache.size(); i++) {
-            if (!TextUtils.isEmpty(cache.get(i).name) && !TextUtils.isEmpty(cache.get(i).mobile)) {
-                list.add(cache.get(i));
+            List<MyContact> list = new ArrayList<MyContact>();
+            for (int i = 0; i < cache.size(); i++) {
+                if (!TextUtils.isEmpty(cache.get(i).name) && !TextUtils.isEmpty(cache.get(i).mobile)) {
+                    list.add(cache.get(i));
+                }
             }
-        }
 
-        indexString = new ArrayList<String>();
-        for (int i = 0; i < list.size(); i++) {
-            String pinyin = PinyinUtils.getPingYin(list.get(i).name);
-            String sortString = pinyin.substring(0, 1).toUpperCase();
-            if (sortString.matches("[A-Z]")) {
-                list.get(i).sortLetter = sortString.toUpperCase();
-                if (!indexString.contains(sortString)) {
-                    indexString.add(sortString);
-                }
-            } else {
-                list.get(i).sortLetter = "#";
-                if (!indexString.contains("#")) {
-                    indexString.add("#");
+            indexString = new ArrayList<String>();
+            for (int i = 0; i < list.size(); i++) {
+                String pinyin = PinyinUtils.getPingYin(list.get(i).name);
+                String sortString = pinyin.substring(0, 1).toUpperCase();
+                if (sortString.matches("[A-Z]")) {
+                    list.get(i).sortLetter = sortString.toUpperCase();
+                    if (!indexString.contains(sortString)) {
+                        indexString.add(sortString);
+                    }
+                } else {
+                    list.get(i).sortLetter = "#";
+                    if (!indexString.contains("#")) {
+                        indexString.add("#");
+                    }
                 }
             }
+            Collections.sort(indexString);
+            return list;
+        } catch (Exception e) {
+            return cache;
         }
-        Collections.sort(indexString);
-        return list;
+    }
+
+    /**
+     * 截取字符串
+     *
+     * @param s
+     * @param from
+     * @return
+     */
+    public static String substring(String s, int from) {
+        try {
+            return s.substring(from);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static String substring(String s, int from, int len) {
+        try {
+            return s.substring(from, from + len);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 }

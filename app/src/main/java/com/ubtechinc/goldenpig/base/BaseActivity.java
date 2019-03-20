@@ -108,12 +108,14 @@ public abstract class BaseActivity extends AppCompatActivity {
         LoadingDialog.dissMiss();
     }
 
-    protected void showPermissionDialog(String[] permission) {
+    public void showPermissionDialog(String[] permission) {
         String subTip = "";
         if (permission == Permission.LOCATION) {
             subTip = "使用该功能需要定位权限，请前往系统设置开启权限";
         } else if (permission == Permission.CAMERA) {
             subTip = "使用该功能需要拍照权限，请前往系统设置开启权限";
+        } else if (permission == Permission.MICROPHONE) {
+            subTip = "使用该功能需要录音权限，请前往系统设置开启权限";
         }
         if (dialog == null) {
             dialog = new UBTSubTitleDialog(this);
