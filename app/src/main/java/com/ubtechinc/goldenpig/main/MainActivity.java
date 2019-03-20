@@ -54,13 +54,16 @@ public class MainActivity extends BaseActivity {
     private FragmentManager mFragmentManager;
 
     public static final String HOME_TAG = "home";
-    public static final String SMARTHOOME_TAG="smarthome";
+    public static final String SMARTHOOME_TAG = "smarthome";
     public static final String SKILL_TAG = "skill";
     public static final String MINE_TAG = "mine";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        StatusBarWrapUtil.translucentStatusBar(this, true);
+//        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View
+//                .SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         initViews();
         checkInitInterlocution();
     }
@@ -122,8 +125,8 @@ public class MainActivity extends BaseActivity {
             mMineFragment = BaseFragment.newInstance(PersonalNewFragment.class);
             fragmentTransaction.add(R.id.main_content, mMineFragment, MINE_TAG);
         }
-        if(mSmartHomeFragment==null){
-            mSmartHomeFragment= BaseFragment.newInstance(SmartHomeFragment.class);
+        if (mSmartHomeFragment == null) {
+            mSmartHomeFragment = BaseFragment.newInstance(SmartHomeFragment.class);
             fragmentTransaction.add(R.id.main_content, mSmartHomeFragment, SMARTHOOME_TAG);
         }
         fragmentTransaction.commit();
@@ -193,7 +196,7 @@ public class MainActivity extends BaseActivity {
         showOrHideFragment(fragmentTransaction, mHomeFragment, false);
         showOrHideFragment(fragmentTransaction, mSkillFragment, false);
         showOrHideFragment(fragmentTransaction, mMineFragment, false);
-        showOrHideFragment(fragmentTransaction,mSmartHomeFragment,false);
+        showOrHideFragment(fragmentTransaction, mSmartHomeFragment, false);
     }
 
     @Override

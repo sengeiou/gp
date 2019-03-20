@@ -36,13 +36,15 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
     private List<TVSLoginListener> loginListeners;
     private List<TVSAuthListener> authListeners;
 
-    private volatile static TVSManager instance;
+    public volatile static TVSManager instance;
 
     private Context context;
 
     private LoginProxy proxy;
     private TVSAlarmListener mTVSAlarmListener;
     public LoginInfo info;
+
+    public static ELoginEnv tvsEnv = ELoginEnv.EX;
 
     public static TVSManager getInstance(Context context, String wxId, String qqOpenId) {
         if (instance == null) {
@@ -58,12 +60,19 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
     private TVSManager(Context context, String wxId, String qqOpenId) {
         this.context = context;
         proxy = LoginProxy.getInstance(wxId, qqOpenId, context);
-        proxy.setLoginEnv(ELoginEnv.FORMAL);
+        proxy.setLoginEnv(tvsEnv);
+        proxy.setUserCenterEnv(tvsEnv);
+        proxy.setDDQREnv(tvsEnv);
+        printTvsEnvLog(tvsEnv);
         wxClient = new WXClient(proxy, this);
         qqClient = new QQClient(proxy, this);
         /**这步监听主要是作tvs相关的结果回调主要方法onSuccess和onError*/
         proxy.setAuthorizeListener(this);
 
+    }
+
+    private void printTvsEnvLog(ELoginEnv tvsEnv) {
+        Log.i(TAG, "printTvsEnvLog:" + tvsEnv.name());
     }
 
     public String getClientId() {

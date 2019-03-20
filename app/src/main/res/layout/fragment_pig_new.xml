@@ -114,7 +114,7 @@
                         android:layout_toRightOf="@id/tv_net_tip"
                         android:layout_below="@+id/ubt_tv_pig_title"
                         android:layout_marginLeft="5dp"
-                        android:background="@drawable/btn_binding"
+                        android:background="@drawable/btn_retry"
                         android:text="重新配网"
                         android:visibility="gone"
                         android:textColor="#29AAFF" />

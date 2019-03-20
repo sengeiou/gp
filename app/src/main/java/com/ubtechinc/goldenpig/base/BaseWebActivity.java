@@ -129,17 +129,18 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Log.d(TAG, "shouldOverrideUrlLoading|url:" + url);
                 if (url.startsWith("tel:")) {
                     startActivity(new Intent(Intent.ACTION_DIAL, Uri.parse(url)));
+                    return true;
                 } else {
                     scrollY = view.getScrollY();
                     scrollX = view.getScrollX();
                     isGoBack = false;
                     isFirst = false;
-                    view.loadUrl(url);
                     onGoNextWeb();
                 }
-                return true;
+                return false;
             }
 
             @Override
