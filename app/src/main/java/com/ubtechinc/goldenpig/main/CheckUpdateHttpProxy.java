@@ -24,33 +24,21 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-/**
- * @auther :zzj
- * @email :zhijun.zhou@ubtrobot.com
- * @Description: :首页功能卡片数据
- * @time :2018/12/24 17:20
- * @change :
- * @changetime :2018/12/24 17:20
- */
-public class HomeDataHttpProxy extends BaseHttpProxy {
+public class CheckUpdateHttpProxy extends BaseHttpProxy {
 
-    public void getData(final Context context, String category, String statement, final GetFunctionCallback callback) {
+    private static final String URL = "http://10.10.1.14:8090/cloud-ppi/pig/sys/update";
+
+    public void checkUpdate( final GetFunctionCallback callback) {
 
         OkHttpClient okHttpClient = getHttpClient();
 
         Map<String, Object> map = new HashMap<>();
-        map.put("md5_category", category);
-        map.put("md5_statement", statement);
+        map.put("version", "V" + BuildConfig.VERSION_NAME);
+        map.put("clientType", 1);
         String content = JsonUtils.map2Json(map);
         RequestBody body = RequestBody.create(JSON, content);
-        String url = null;
-        if(BuildConfig.DEBUG){
-            url = BuildConfig.HOME_HOST + "/cloud-ppi/pig/index";
-        }else {
-            url = BuildConfig.HOST + "/v1/cloud-ppi/pig/index";
-        }
         final Request okrequest = new Request.Builder()
-                .url(url)
+                .url(BuildConfig.HOME_HOST + "/cloud-ppi/pig/sys/update")
                 .post(body)
                 .build();
         Call call = okHttpClient.newCall(okrequest);
@@ -66,29 +54,25 @@ public class HomeDataHttpProxy extends BaseHttpProxy {
             public void onResponse(Call call, Response response) {
                 try {
                     String result = response.body().source().readUtf8();
-                    LogUtils.d("HomeDataHttpProxy", result);
-                    if (response.isSuccessful()) {
+                    LogUtils.d("CheckUpdateHttpProxy result:", result);
+                   if (response.isSuccessful()) {
                         JSONObject jsonObject = new JSONObject(result);
                         boolean status = jsonObject.optBoolean("status");
                         if (status) {
                             JSONObject modelJson = jsonObject.optJSONObject("models");
-                            Type type = new TypeToken<FunctionModel>() {
+                            Type type = new TypeToken<UpdateInfoModel>() {
                             }.getType();
-                            FunctionModel model = JsonUtils.getObject(modelJson.toString(), type);
-                            LogUtils.d("HomeDataHttpProxy", "getData|success:" + model);
-                            String md5_category = model.catetory.md5;
-                            String md5_statement = model.statement.md5;
-                            SharedPreferencesUtils.putString(context, "md5_category", md5_category);
-                            SharedPreferencesUtils.putString(context, "md5_statement", md5_statement);
+                            UpdateInfoModel model = JsonUtils.getObject(modelJson.toString(), type);
+
                             if (callback != null) {
                                 callback.onSuccess(model);
                             }
                         }
                     } else {
-                        LogUtils.d("HomeDataHttpProxy", "getData|fail" + result);
+                        LogUtils.d("CheckUpdateHttpProxy", "getData|fail" + result);
                     }
                 } catch (Exception e) {
-                    LogUtils.e("HomeDataHttpProxy", e.getMessage());
+                    LogUtils.e("CheckUpdateHttpProxy", e.getMessage());
                 }
             }
         });
@@ -98,7 +82,7 @@ public class HomeDataHttpProxy extends BaseHttpProxy {
 
         void onError(String error);
 
-        void onSuccess(FunctionModel functionModel);
+        void onSuccess(UpdateInfoModel updateInfoModel);
     }
 
 }

@@ -245,21 +245,54 @@
                 android:layout_marginTop="@dimen/dp_20"
                 android:nestedScrollingEnabled="false" />
 
+            <ImageView
+                android:id="@+id/iv_pull"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_shangshou"
+                android:scaleType="fitXY"
+                android:layout_gravity="center"
+                android:paddingTop="@dimen/dp_10"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10"
+                android:visibility="visible"
+                />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
                 android:layout_marginTop="@dimen/dp_20"
                 android:background="#FFF5F8FB" />
 
-            <TextView
-                android:id="@+id/tv_statement_title"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/dp_16"
-                android:text="试试对八戒说"
-                android:textColor="#FF454B59"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tv_statement_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dp_16"
+                    android:text="试试对八戒说"
+                    android:textColor="#FF454B59"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tv_change"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dp_16"
+                    android:layout_alignParentRight="true"
+                    android:textSize="14sp"
+                    android:text="换一批"
+                    android:textColor="@color/ubt_tab_btn_txt_checked_color"
+
+                    />
+
+            </RelativeLayout>
+
+
 
             <RelativeLayout
                 android:layout_width="match_parent"

@@ -22,24 +22,32 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.scwang.smartrefresh.layout.util.DensityUtil;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.SPUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
+import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseFragment;
 import com.ubtechinc.goldenpig.comm.widget.CustomPopupWindow;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
+import com.ubtechinc.goldenpig.comm.widget.UBTUpdateDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
+import com.ubtechinc.goldenpig.main.CheckUpdateHttpProxy;
 import com.ubtechinc.goldenpig.main.FunctionModel;
 import com.ubtechinc.goldenpig.main.HomeDataHttpProxy;
 import com.ubtechinc.goldenpig.main.MainActivity;
+import com.ubtechinc.goldenpig.main.UpdateInfoModel;
+import com.ubtechinc.goldenpig.main.UpdateWebActivity;
 import com.ubtechinc.goldenpig.pigmanager.BleConfigReadyActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.utils.AnimUtil;
+import com.ubtechinc.goldenpig.utils.SCADAHelper;
 import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
 import com.ubtrobot.info.NativeInfoContainer;
 
@@ -48,6 +56,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -56,15 +65,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static com.ubtechinc.goldenpig.app.Constant.SP_HAS_LOOK_LAST_RECORD;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DO_GET_NATIVE_INFO;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.INVISE_RECORD_POINT;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NETWORK_STATE_CHANGED;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NEW_CALL_RECORD;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NEW_MESSAGE_NOTIFICATION;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_NATIVE_INFO;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_ONLINE_STATE;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.UPDATE_HOME_FUNCTION_CARD;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.*;
 
 /**
  * @author : HQT
@@ -127,6 +128,12 @@ public class PigNewFragment extends BaseFragment {
     @BindView(R.id.btn_config_wifi)
     View btnConfigWifi;
 
+    @BindView(R.id.tv_change)
+    TextView tvChange;
+
+    @BindView(R.id.iv_pull)
+    ImageView ivPull;
+
     PigFragmentAdapter statementAdapter;
 
     private CustomPopupWindow mCustomPopupWindow = null;
@@ -162,6 +169,7 @@ public class PigNewFragment extends BaseFragment {
 
     private FunctionModel mFunctionModel;
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -192,13 +200,80 @@ public class PigNewFragment extends BaseFragment {
         }
     }
 
+    List<MainFunctionAdapter.FunctionEnum> tempList;
     private void initFunctionCard() {
+        tempList = new ArrayList<>(Arrays.asList(MainFunctionAdapter.FunctionEnum.values()));
         if (functionAdapter == null) {
             functionAdapter = new MainFunctionAdapter(getActivity(), new ArrayList<>(Arrays.asList(MainFunctionAdapter.FunctionEnum.values())));
         }
         rvFunctionCard.setLayoutManager(new GridLayoutManager(getActivity(), 4));
         rvFunctionCard.setAdapter(functionAdapter);
+
     }
+
+
+    private boolean hiden = true;
+    private int baseHeight = 100; //后续看兼容性通过计算itemView高度或者在布局设置控件高度
+    private void changeFunctionCardListHeight(){
+//        int count = tempList.size();
+        int count = mFunctionModel.catetory.categorys.size();
+        if(count<=8){
+            return;  //增加异常判断，按照正常逻辑8个是不会显示下拉按钮
+        }
+
+
+        if (hiden) {
+            hiden = false;
+            UbtLogger.d(TAG, "hide:" + false);
+            ivPull.setImageResource(R.drawable.ic_xiala);
+            if(count<=12){
+                AnimUtil.changeViewHeightAnimatorStart(rvFunctionCard, DensityUtil.dp2px(baseHeight * 3), DensityUtil.dp2px(baseHeight*2));
+            }else{
+                AnimUtil.changeViewHeightAnimatorStart(rvFunctionCard, DensityUtil.dp2px(baseHeight * 4), DensityUtil.dp2px(baseHeight*2));
+            }
+
+        } else {
+            hiden = true;
+            UbtLogger.d(TAG, "hide:" + hiden);
+            ivPull.setImageResource(R.drawable.ic_shangshou);
+            if(count<=12){
+                AnimUtil.changeViewHeightAnimatorStart(rvFunctionCard, DensityUtil.dp2px(baseHeight*2), DensityUtil.dp2px(baseHeight * 3));
+            }else{
+                AnimUtil.changeViewHeightAnimatorStart(rvFunctionCard, DensityUtil.dp2px(baseHeight*2), DensityUtil.dp2px(baseHeight * 4));
+            }
+
+        }
+
+        UbtLogger.d(TAG, "sp hide:" + hiden);
+        SharedPreferencesUtils.putBoolean(getActivity(), "hiden", hiden);
+
+    }
+
+
+    private void restoreCard(){
+        boolean state = SharedPreferencesUtils.getBoolean(getActivity(), "hiden", true);
+        hiden = state;
+//        int count = tempList.size();
+        int count = mFunctionModel.catetory.categorys.size();
+        if(state){
+            UbtLogger.d(TAG, "restoreCard 不做处理");
+//            ivPull.setImageResource(R.drawable.ic_shangshou);
+//            if(count<=12){
+//                AnimUtil.changeViewHeightAnimatorStart(rvFunctionCard, DensityUtil.dp2px(baseHeight*2), DensityUtil.dp2px(baseHeight * 3));
+//            }else{
+//                AnimUtil.changeViewHeightAnimatorStart(rvFunctionCard, DensityUtil.dp2px(baseHeight*2), DensityUtil.dp2px(baseHeight * 4));
+//            }
+        }else{
+            UbtLogger.d(TAG, "restoreCard 收起");
+            ivPull.setImageResource(R.drawable.ic_xiala);
+            if(count<=12){
+                AnimUtil.changeViewHeightAnimatorStart(rvFunctionCard, DensityUtil.dp2px(baseHeight * 3), DensityUtil.dp2px(baseHeight*2));
+            }else{
+                AnimUtil.changeViewHeightAnimatorStart(rvFunctionCard, DensityUtil.dp2px(baseHeight * 4), DensityUtil.dp2px(baseHeight*2));
+            }
+        }
+    }
+
 
     private void initRecycleList() {
         if (statementAdapter == null) {
@@ -227,6 +302,7 @@ public class PigNewFragment extends BaseFragment {
         initRecycleList();
         fetchFunctionCardData();
         refreshData();
+        checkUpdate();
     }
 
     private void fetchFunctionCardData() {
@@ -235,11 +311,12 @@ public class PigNewFragment extends BaseFragment {
         new HomeDataHttpProxy().getData(getActivity(), md5_category, md5_statement, new HomeDataHttpProxy.GetFunctionCallback() {
             @Override
             public void onError(String error) {
-
+                UbtLogger.d(TAG, "fetchFunctionCardData error:" + error);
             }
 
             @Override
             public void onSuccess(FunctionModel functionModel) {
+                UbtLogger.d(TAG, "fetchFunctionCardData onSuccess");
                 Event<FunctionModel> event = new Event<>(EventBusUtil.UPDATE_HOME_FUNCTION_CARD);
                 event.setData(functionModel);
                 EventBusUtil.sendEvent(event);
@@ -247,7 +324,7 @@ public class PigNewFragment extends BaseFragment {
         });
     }
 
-    @OnClick({R.id.btn_bt_binding, R.id.rl_wifi})
+    @OnClick({R.id.btn_bt_binding, R.id.rl_wifi, R.id.tv_change, R.id.iv_pull})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.btn_bt_binding:
@@ -265,6 +342,15 @@ public class PigNewFragment extends BaseFragment {
                             }
                         });
                 ivUpDown.setImageResource(R.drawable.ic_arrow_up);
+                break;
+            case R.id.tv_change:
+                SCADAHelper.recordEvent("app_clickbtn_home_another");
+                if(mFunctionModel != null){
+                    statementAdapter.updateData(mFunctionModel);
+                }
+                break;
+            case R.id.iv_pull:
+                changeFunctionCardListHeight();
                 break;
         }
     }
@@ -355,6 +441,31 @@ public class PigNewFragment extends BaseFragment {
         if (pigInfo != null && pigInfo.isAdmin) {
             unReadVoiceMail("setOnUbtTIMConver-DEBUG");
         }
+
+//        restoreCard();
+
+    }
+
+
+    private void checkUpdate() {
+        if(SharedPreferencesUtils.getBoolean(getActivity(), "isNotNeedShow", false)){
+            return;
+        }
+        UbtLogger.d(TAG, "start checkUpdate");
+        new CheckUpdateHttpProxy().checkUpdate(new CheckUpdateHttpProxy.GetFunctionCallback() {
+            @Override
+            public void onError(String error) {
+                UbtLogger.d(TAG, "updateInfoModel onError:" + error);
+            }
+
+            @Override
+            public void onSuccess(UpdateInfoModel updateInfoModel) {
+                UbtLogger.d(TAG, "updateInfoModel:" + updateInfoModel.toString());
+                Event<UpdateInfoModel> event = new Event<>(APP_UPDATE_CHECK);
+                event.setData(updateInfoModel);
+                EventBusUtil.sendEvent(event);
+            }
+        });
     }
 
     @Override
@@ -424,7 +535,54 @@ public class PigNewFragment extends BaseFragment {
             case RECEIVE_ROBOT_ONLINE_STATE:
                 updateUserPig();
                 break;
+            case APP_UPDATE_CHECK:
+                showUpdateDialog((UpdateInfoModel)event.getData());
+                break;
         }
+    }
+
+
+    private void showUpdateDialog(UpdateInfoModel updateInfoModel){
+        UBTUpdateDialog dialog = new UBTUpdateDialog(getActivity());
+        dialog.setRightBtnColor(ContextCompat.getColor(getActivity(), R.color.ubt_tab_btn_txt_checked_color));
+        dialog.setTips("发现新版本"+ updateInfoModel.getVersion());
+        dialog.setSubTips(updateInfoModel.getVersionInfo());
+        dialog.setSubTipGravity(Gravity.CENTER);
+        dialog.setLeftButtonTxt("下次再说");
+        dialog.setRightButtonTxt("立即更新");
+        dialog.showNoTip(true);
+        if(updateInfoModel.getUpdateType().equals("2")){
+            dialog.setOnlyOneButton();
+        }
+        dialog.setOnUbtDialogContentClickLinsenter(new UBTUpdateDialog.OnUbtDialogContentClickLinsenter() {
+            @Override
+            public void onNotipClick(View view) {
+                //TODO sp记录勾选状态
+                UbtLogger.d(TAG, "view:" + view.isSelected());
+                if(view.isSelected()){
+                    SharedPreferencesUtils.putBoolean(getActivity(), "isNotNeedShow", true);
+                }else{
+                    SharedPreferencesUtils.putBoolean(getActivity(), "isNotNeedShow", false);
+                }
+            }
+        });
+        dialog.setOnUbtDialogClickLinsenter(new UBTUpdateDialog.OnUbtDialogClickLinsenter() {
+            @Override
+            public void onLeftButtonClick(View view) {
+
+            }
+
+            @Override
+            public void onRightButtonClick(View view) {
+                //TODO goto ble bind config
+                HashMap<String, String> map = new HashMap<>();
+                map.put("url",updateInfoModel.getUrl());
+                ActivityRoute.toAnotherActivity(getActivity(), UpdateWebActivity.class,map, false);
+                dialog.dismiss();
+
+            }
+        });
+        dialog.show();
     }
 
     /**
@@ -536,10 +694,21 @@ public class PigNewFragment extends BaseFragment {
                 functionAdapter.updateData(mFunctionModel);
                 tvStatementTitle.setText(mFunctionModel.statement.title);
                 hasRefreshFromServer = true;
+                changeLayout();
             }
         } catch (Exception e) {
             LogUtils.d("PigNewFragment", "refreshData:" + e.getMessage());
         }
+    }
+
+    private void changeLayout(){
+        if(mFunctionModel.catetory.categorys.size()>8){
+            ivPull.setVisibility(View.VISIBLE);
+            restoreCard();
+        }else{
+            ivPull.setVisibility(View.GONE);
+        }
+
     }
 
     private void showMobileFlowDialog() {
