@@ -304,14 +304,16 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
                 }
                 break;
             case R.id.rl_hotpoint:
-                if (isNoSim) {
-                    HashMap<String, String> map = new HashMap<>();
-                    map.put(KEY_TOOL_BAR_TITLE, getResources().getString(R.string.ubt_person_hotspot));
-                    enterFunction(NoSimActivity.class, map);
-                } else if (isBeeHiveOpen) {
-                    enterFunction(SetHotSpotActivity.class, null);
-                } else {
-                    UbtToastUtils.showCustomToast(this, getString(R.string.open_beehive_mobile));
+                if (checkOnlineState()) {
+                    if (isNoSim) {
+                        HashMap<String, String> map = new HashMap<>();
+                        map.put(KEY_TOOL_BAR_TITLE, getResources().getString(R.string.ubt_person_hotspot));
+                        enterFunction(NoSimActivity.class, map);
+                    } else if (isBeeHiveOpen) {
+                        enterFunction(SetHotSpotActivity.class, null);
+                    } else {
+                        UbtToastUtils.showCustomToast(this, getString(R.string.open_beehive_mobile));
+                    }
                 }
                 break;
             case R.id.rl_continuity_voice:
