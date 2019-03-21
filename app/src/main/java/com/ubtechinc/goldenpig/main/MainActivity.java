@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
 
 import com.bottomnavigation.BottomNavigationBar;
 import com.bottomnavigation.BottomNavigationItem;
@@ -25,6 +26,7 @@ import com.ubtechinc.goldenpig.main.fragment.SmartHomeFragment;
 import com.ubtechinc.goldenpig.model.JsonCallback;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionModel;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.goldenpig.utils.StatusBarWrapUtil;
 
 /**
  * @author : HQT
@@ -61,9 +63,9 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        StatusBarWrapUtil.translucentStatusBar(this, true);
-//        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View
-//                .SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        StatusBarWrapUtil.translucentStatusBar(this, true);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View
+                .SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         initViews();
         checkInitInterlocution();
     }

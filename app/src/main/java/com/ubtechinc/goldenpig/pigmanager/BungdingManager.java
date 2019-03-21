@@ -433,7 +433,12 @@ public class BungdingManager {
                             case MySelf: //TODO 如果IM未登录，进行IM登录
                                 doTIMLogin();
                                 sendClientIdToRobot(clientIdRecord);
-                                SCADAHelper.recordEvent(SCADAHelper.EVENET_APP_ROBOT_BIND, mSerialId);
+                                PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+                                if (pigInfo == null) {
+                                    pigInfo = new PigInfo();
+                                }
+                                pigInfo.setRobotName(mSerialId);
+                                SCADAHelper.recordEvent(SCADAHelper.EVENET_APP_ROBOT_BIND);
                                 if (mBanddingListener != null) {
                                     mBanddingListener.onMaster();
                                 }

@@ -3,6 +3,7 @@ package com.ubtechinc.goldenpig.main;
 import android.app.Activity;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.webkit.JavascriptInterface;
@@ -31,6 +32,11 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
+import static com.ubtechinc.goldenpig.main.CommonWebActivity.KEY_IMMERSE_STATUSBAR;
+import static com.ubtechinc.goldenpig.main.CommonWebActivity.KEY_NEED_ACTIONBAR;
+import static com.ubtechinc.goldenpig.main.CommonWebActivity.KEY_URL;
+
+@SuppressWarnings("unused")
 public class SmallPigObject {
 
     private Context mContext;
@@ -48,9 +54,24 @@ public class SmallPigObject {
 
     @JavascriptInterface
     public void openNewPage(String param) {
-        HashMap<String, String> map = new HashMap<>();
-        map.put("url", param);
-        ActivityRoute.toAnotherActivity((Activity) mContext, SkillDetailActivity.class, map, false);
+        LogUtils.d("SmallPigObject", "openNewPage:" + param);
+        if (TextUtils.isEmpty(param)) return;
+        HashMap<String, Object> map = new HashMap<>();
+        map.put(KEY_URL, param);
+        map.put(KEY_IMMERSE_STATUSBAR, true);
+        map.put(KEY_NEED_ACTIONBAR, false);
+        if (param.contains("smallSmartHome")) {
+            map.put(KEY_IMMERSE_STATUSBAR, false);
+            map.put(KEY_NEED_ACTIONBAR, true);
+        }
+        ActivityRoute.toAnotherActivity((Activity) mContext, CommonWebActivity.class, map, false);
+    }
+
+    @JavascriptInterface
+    public void goBack() {
+        if (mContext != null && mContext instanceof Activity) {
+            ((Activity) mContext).finish();
+        }
     }
 
     @JavascriptInterface

@@ -34,11 +34,11 @@ import com.ubtechinc.goldenpig.comm.img.GlideCircleTransform;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
-import com.ubtechinc.goldenpig.feedback.FeedBackActivity;
 import com.ubtechinc.goldenpig.login.LoginActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
+import com.ubtechinc.goldenpig.main.CommonWebActivity;
 import com.ubtechinc.goldenpig.main.MainActivity;
-import com.ubtechinc.goldenpig.main.QQMusicWebActivity;
+import com.ubtechinc.goldenpig.main.UbtWebHelper;
 import com.ubtechinc.goldenpig.me.UserInfoActivity;
 import com.ubtechinc.goldenpig.personal.BeeHiveMobileActivity;
 import com.ubtechinc.goldenpig.personal.ContinuousVoiceActivity;
@@ -339,7 +339,7 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
                 }
                 break;
             case R.id.ubt_btn_person_feedback:
-                ActivityRoute.toAnotherActivity(getActivity(), FeedBackActivity.class, false);
+                ActivityRoute.toAnotherActivity(getActivity(), CommonWebActivity.class, UbtWebHelper.getFeedBackWebviewData(getActivity()), false);
                 break;
             case R.id.ubt_btn_person_about:
                 ActivityRoute.toAnotherActivity(getActivity(), UbtAboutActivtiy.class, false);
@@ -354,7 +354,7 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
                 ActivityRoute.toAnotherActivity(getActivity(), RemindActivity.class, false);
                 break;
             case R.id.ubt_btn_person_qq:
-                ActivityRoute.toAnotherActivity(getActivity(), QQMusicWebActivity.class, false);
+                ActivityRoute.toAnotherActivity(getActivity(), CommonWebActivity.class, UbtWebHelper.getQQMusicWebviewData(getActivity()), false);
                 break;
             case R.id.rl_pig_state:
                 HashMap<String, Boolean> hashMap = new HashMap<>();
@@ -392,7 +392,7 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
                     HashMap<String, String> map = new HashMap<>();
                     map.put(KEY_TOOL_BAR_TITLE, getResources().getString(R.string.ubt_person_hotspot));
                     enterFunction(NoSimActivity.class, map);
-                } else if (isBeeHiveOpen){
+                } else if (isBeeHiveOpen) {
                     enterFunction(SetHotSpotActivity.class, null);
                 } else {
                     UbtToastUtils.showCustomToast(getActivity(), getString(R.string.open_beehive_mobile));

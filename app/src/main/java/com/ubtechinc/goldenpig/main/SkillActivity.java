@@ -6,7 +6,6 @@ import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseWebActivity;
 import com.ubtechinc.goldenpig.net.URestSigner;
-import com.ubtechinc.goldenpig.utils.StatusBarWrapUtil;
 import com.ubtechinc.nets.utils.DeviceUtils;
 
 /**
@@ -22,7 +21,6 @@ public class SkillActivity extends BaseWebActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // StatusBarWrapUtil.translucentStatusBar(this, true);
     }
 
     @Override
@@ -38,20 +36,12 @@ public class SkillActivity extends BaseWebActivity {
 
     @Override
     protected int getToolBarTitle() {
-        hideActionBar();
         return R.string.ubt_skills_manual;
     }
 
     @Override
-    protected void onGoNextWeb() {
-//        setToolBarTitle(R.string.ubt_skills_detail);
-        showActionBar();
-    }
-
-    @Override
-    protected void onGoBackWeb() {
-//        setToolBarTitle(R.string.ubt_skills_manual);
-        hideActionBar();
+    protected boolean needActionBar() {
+        return false;
     }
 
 }

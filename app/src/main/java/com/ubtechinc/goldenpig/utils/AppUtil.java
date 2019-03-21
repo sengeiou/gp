@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 
 public class AppUtil {
 
+    public static final String KEY_CHANNEL_META = "UMENG_CHANNEL";
+
     public static String getMetaDataFromApp(Context context, String key) {
         String value = "";
         try {

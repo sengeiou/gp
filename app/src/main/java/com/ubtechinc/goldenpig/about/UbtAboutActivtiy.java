@@ -15,6 +15,8 @@ import com.ubtechinc.commlib.utils.ContextUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
+import com.ubtechinc.goldenpig.main.CommonWebActivity;
+import com.ubtechinc.goldenpig.main.UbtWebHelper;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.goldenpig.utils.TvsUtil;
@@ -56,16 +58,11 @@ public class UbtAboutActivtiy extends BaseToolBarActivity {
         if (mVersionTv != null) {
             mVersionTv.setText(String.format(getString(R.string.ubt_version_format), ContextUtils.getVerName(this)));
         }
-        mPrivacyBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityRoute.toAnotherActivity(UbtAboutActivtiy.this, PrivacyPolicyActivity.class, false);
-            }
-        });
+        mPrivacyBtn.setOnClickListener(v -> ActivityRoute.toAnotherActivity(UbtAboutActivtiy.this, CommonWebActivity.class,
+                UbtWebHelper.getPrivacyPolicyWebviewData(UbtAboutActivtiy.this), false));
 
-        findViewById(R.id.ubt_btn_service_policy).setOnClickListener(v -> {
-            ActivityRoute.toAnotherActivity(UbtAboutActivtiy.this, ServicePolicyActivity.class, false);
-        });
+        findViewById(R.id.ubt_btn_service_policy).setOnClickListener(v -> ActivityRoute.toAnotherActivity(UbtAboutActivtiy.this, CommonWebActivity.class,
+                UbtWebHelper.getServicePolicyWebviewData(UbtAboutActivtiy.this), false));
 
         findViewById(R.id.ubt_bottom_nav).setOnClickListener(new View.OnClickListener() {
             @Override

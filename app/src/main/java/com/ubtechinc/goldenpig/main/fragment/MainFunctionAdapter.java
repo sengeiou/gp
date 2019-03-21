@@ -22,14 +22,14 @@ import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseActivity;
-import com.ubtechinc.goldenpig.children.ChildrenActivity;
 import com.ubtechinc.goldenpig.comm.entity.PairPig;
 import com.ubtechinc.goldenpig.comm.img.GlideCircleTransform;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
-import com.ubtechinc.goldenpig.main.BleWebActivity;
+import com.ubtechinc.goldenpig.main.CommonWebActivity;
 import com.ubtechinc.goldenpig.main.FunctionModel;
 import com.ubtechinc.goldenpig.main.MainActivity;
+import com.ubtechinc.goldenpig.main.UbtWebHelper;
 import com.ubtechinc.goldenpig.personal.alarm.AlarmListActivity;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionActivity;
 import com.ubtechinc.goldenpig.personal.management.AddressBookActivity;
@@ -142,13 +142,13 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
                     enterFunction(RecordActivity.class, null);
                     break;
                 case MAIL_LIST:
-                    HashMap<String,Object> map = new HashMap<>();
-                    map.put("noCard",((MainActivity)context).isNoSim);
-                    map.put("pigPhoneNumber",((MainActivity)context).pigPhoneNumber);
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("noCard", ((MainActivity) context).isNoSim);
+                    map.put("pigPhoneNumber", ((MainActivity) context).pigPhoneNumber);
                     enterFunction(AddressBookActivity.class, map);
                     break;
                 case BLE:
-                    ActivityRoute.toAnotherActivity((Activity) context, BleWebActivity.class, false);
+                    ActivityRoute.toAnotherActivity((Activity) context, CommonWebActivity.class, UbtWebHelper.getBleWebviewData(context), false);
 //                     ActivityRoute.toAnotherActivity(((MainActivity)context),ChildrenActivity.class, false);
                     break;
             }

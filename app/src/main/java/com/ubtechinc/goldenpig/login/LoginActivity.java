@@ -19,11 +19,11 @@ import android.widget.TextView;
 import com.ubtechinc.commlib.network.NetworkHelper;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
-import com.ubtechinc.goldenpig.about.PrivacyPolicyActivity;
-import com.ubtechinc.goldenpig.about.ServicePolicyActivity;
 import com.ubtechinc.goldenpig.base.BaseActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
+import com.ubtechinc.goldenpig.main.CommonWebActivity;
 import com.ubtechinc.goldenpig.main.MainActivity;
+import com.ubtechinc.goldenpig.main.UbtWebHelper;
 import com.ubtechinc.goldenpig.pigmanager.BleConfigReadyActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.CheckUtil;
@@ -152,7 +152,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         spannableString.setSpan(new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                ActivityRoute.toAnotherActivity(LoginActivity.this, ServicePolicyActivity.class, false);
+                ActivityRoute.toAnotherActivity(LoginActivity.this, CommonWebActivity.class,
+                        UbtWebHelper.getServicePolicyWebviewData(LoginActivity.this), false);
             }
 
             @Override
@@ -166,7 +167,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         spannableString.setSpan(new ClickableSpan() {
             @Override
             public void onClick(View widget) {
-                ActivityRoute.toAnotherActivity(LoginActivity.this, PrivacyPolicyActivity.class, false);
+                ActivityRoute.toAnotherActivity(LoginActivity.this, CommonWebActivity.class,
+                        UbtWebHelper.getPrivacyPolicyWebviewData(LoginActivity.this), false);
             }
 
             @Override

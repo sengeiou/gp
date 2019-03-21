@@ -155,6 +155,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
         //bugly
         if (!BuildConfig.DEBUG) {
             CrashReport.initCrashReport(getApplicationContext(), "a6f55be79e", false);
+            CrashReport.setAppChannel(getApplicationContext(), AppUtil.getMetaDataFromApp(this, AppUtil.KEY_CHANNEL_META));
         }
 
         MultiDex.install(this);
@@ -383,7 +384,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
             case TVS_LOGIN_SUCCESS:
                 String userId = AuthLive.getInstance().getUserId();
                 AnalyticsKit.setUserId(userId);
-                AnalyticsKit.setDeviceInfo(userId, AppUtil.getMetaDataFromApp(this, "UMENG_CHANNEL"));
+                AnalyticsKit.setDeviceInfo(userId, AppUtil.getMetaDataFromApp(this, AppUtil.KEY_CHANNEL_META));
                 PushAppInfo pushAppInfo = AuthLive.getInstance().getPushAppInfo();
                 String pushToken = pushAppInfo.getPushToken();
                 if (!TextUtils.isEmpty(userId) && !TextUtils.isEmpty(pushToken)) {

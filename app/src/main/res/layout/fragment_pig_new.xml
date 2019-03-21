@@ -257,8 +257,7 @@
                 android:paddingTop="@dimen/dp_10"
                 android:paddingLeft="@dimen/dp_10"
                 android:paddingRight="@dimen/dp_10"
-                android:visibility="visible"
-                />
+                android:visibility="gone" />
 
             <View
                 android:layout_width="match_parent"

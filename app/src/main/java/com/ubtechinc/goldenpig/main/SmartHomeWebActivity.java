@@ -16,7 +16,6 @@ public class SmartHomeWebActivity extends BaseWebActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        StatusBarWrapUtil.translucentStatusBar(this, true);
     }
 
     @Override
@@ -41,18 +40,11 @@ public class SmartHomeWebActivity extends BaseWebActivity {
 
     @Override
     protected int getToolBarTitle() {
-
-        hideActionBar();
         return R.string.main_smarthome;
     }
 
     @Override
-    protected void onGoNextWeb() {
-        showActionBar();
-    }
-
-    @Override
-    protected void onGoBackWeb() {
-        hideActionBar();
+    protected boolean needActionBar() {
+        return false;
     }
 }

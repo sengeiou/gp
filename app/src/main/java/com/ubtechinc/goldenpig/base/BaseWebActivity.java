@@ -88,6 +88,18 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
         setToolBarTitle(getToolBarTitle());
 
         initWebView();
+        initActionBar();
+    }
+
+    /**
+     * 初始化actionbar
+     */
+    private void initActionBar() {
+        if (needActionBar()) {
+            showActionBar();
+        } else {
+            hideActionBar();
+        }
     }
 
     protected void processWeb() {
@@ -264,6 +276,15 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
 
     @Override
     protected boolean isInterceptBack() {
+        return true;
+    }
+
+    /**
+     * 是否需要原生标题栏
+     *
+     * @return
+     */
+    protected boolean needActionBar() {
         return true;
     }
 }

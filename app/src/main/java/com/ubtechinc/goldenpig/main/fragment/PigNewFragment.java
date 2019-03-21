@@ -37,11 +37,12 @@ import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.CheckUpdateHttpProxy;
+import com.ubtechinc.goldenpig.main.CommonWebActivity;
 import com.ubtechinc.goldenpig.main.FunctionModel;
 import com.ubtechinc.goldenpig.main.HomeDataHttpProxy;
 import com.ubtechinc.goldenpig.main.MainActivity;
+import com.ubtechinc.goldenpig.main.UbtWebHelper;
 import com.ubtechinc.goldenpig.main.UpdateInfoModel;
-import com.ubtechinc.goldenpig.main.UpdateWebActivity;
 import com.ubtechinc.goldenpig.pigmanager.BleConfigReadyActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
@@ -55,7 +56,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -208,6 +208,7 @@ public class PigNewFragment extends BaseFragment {
     }
 
     List<MainFunctionAdapter.FunctionEnum> tempList;
+
     private void initFunctionCard() {
         tempList = new ArrayList<>(Arrays.asList(MainFunctionAdapter.FunctionEnum.values()));
         if (functionAdapter == null) {
@@ -221,10 +222,11 @@ public class PigNewFragment extends BaseFragment {
 
     private boolean hiden = true;
     private int baseHeight = 100; //后续看兼容性通过计算itemView高度或者在布局设置控件高度
-    private void changeFunctionCardListHeight(){
+
+    private void changeFunctionCardListHeight() {
 //        int count = tempList.size();
         int count = mFunctionModel.catetory.categorys.size();
-        if(count<=8){
+        if (count <= 8) {
             return;  //增加异常判断，按照正常逻辑8个是不会显示下拉按钮
         }
 
@@ -233,20 +235,20 @@ public class PigNewFragment extends BaseFragment {
             hiden = false;
             UbtLogger.d(TAG, "hide:" + false);
             ivPull.setImageResource(R.drawable.ic_xiala);
-            if(count<=12){
-                AnimUtil.changeViewHeightAnimatorStart(rvFunctionCard, DensityUtil.dp2px(baseHeight * 3), DensityUtil.dp2px(baseHeight*2));
-            }else{
-                AnimUtil.changeViewHeightAnimatorStart(rvFunctionCard, DensityUtil.dp2px(baseHeight * 4), DensityUtil.dp2px(baseHeight*2));
+            if (count <= 12) {
+                AnimUtil.changeViewHeightAnimatorStart(rvFunctionCard, DensityUtil.dp2px(baseHeight * 3), DensityUtil.dp2px(baseHeight * 2));
+            } else {
+                AnimUtil.changeViewHeightAnimatorStart(rvFunctionCard, DensityUtil.dp2px(baseHeight * 4), DensityUtil.dp2px(baseHeight * 2));
             }
 
         } else {
             hiden = true;
             UbtLogger.d(TAG, "hide:" + hiden);
             ivPull.setImageResource(R.drawable.ic_shangshou);
-            if(count<=12){
-                AnimUtil.changeViewHeightAnimatorStart(rvFunctionCard, DensityUtil.dp2px(baseHeight*2), DensityUtil.dp2px(baseHeight * 3));
-            }else{
-                AnimUtil.changeViewHeightAnimatorStart(rvFunctionCard, DensityUtil.dp2px(baseHeight*2), DensityUtil.dp2px(baseHeight * 4));
+            if (count <= 12) {
+                AnimUtil.changeViewHeightAnimatorStart(rvFunctionCard, DensityUtil.dp2px(baseHeight * 2), DensityUtil.dp2px(baseHeight * 3));
+            } else {
+                AnimUtil.changeViewHeightAnimatorStart(rvFunctionCard, DensityUtil.dp2px(baseHeight * 2), DensityUtil.dp2px(baseHeight * 4));
             }
 
         }
@@ -257,12 +259,12 @@ public class PigNewFragment extends BaseFragment {
     }
 
 
-    private void restoreCard(){
+    private void restoreCard() {
         boolean state = SharedPreferencesUtils.getBoolean(getActivity(), "hiden", true);
         hiden = state;
 //        int count = tempList.size();
         int count = mFunctionModel.catetory.categorys.size();
-        if(state){
+        if (state) {
             UbtLogger.d(TAG, "restoreCard 不做处理");
 //            ivPull.setImageResource(R.drawable.ic_shangshou);
 //            if(count<=12){
@@ -270,13 +272,13 @@ public class PigNewFragment extends BaseFragment {
 //            }else{
 //                AnimUtil.changeViewHeightAnimatorStart(rvFunctionCard, DensityUtil.dp2px(baseHeight*2), DensityUtil.dp2px(baseHeight * 4));
 //            }
-        }else{
+        } else {
             UbtLogger.d(TAG, "restoreCard 收起");
             ivPull.setImageResource(R.drawable.ic_xiala);
-            if(count<=12){
-                AnimUtil.changeViewHeightAnimatorStart(rvFunctionCard, DensityUtil.dp2px(baseHeight * 3), DensityUtil.dp2px(baseHeight*2));
-            }else{
-                AnimUtil.changeViewHeightAnimatorStart(rvFunctionCard, DensityUtil.dp2px(baseHeight * 4), DensityUtil.dp2px(baseHeight*2));
+            if (count <= 12) {
+                AnimUtil.changeViewHeightAnimatorStart(rvFunctionCard, DensityUtil.dp2px(baseHeight * 3), DensityUtil.dp2px(baseHeight * 2));
+            } else {
+                AnimUtil.changeViewHeightAnimatorStart(rvFunctionCard, DensityUtil.dp2px(baseHeight * 4), DensityUtil.dp2px(baseHeight * 2));
             }
         }
     }
@@ -352,7 +354,7 @@ public class PigNewFragment extends BaseFragment {
                 break;
             case R.id.tv_change:
                 SCADAHelper.recordEvent("app_clickbtn_home_another");
-                if(mFunctionModel != null){
+                if (mFunctionModel != null) {
                     statementAdapter.updateData(mFunctionModel);
                 }
                 break;
@@ -455,7 +457,7 @@ public class PigNewFragment extends BaseFragment {
 
 
     private void checkUpdate() {
-        if(SharedPreferencesUtils.getBoolean(getActivity(), "isNotNeedShow", false)){
+        if (SharedPreferencesUtils.getBoolean(getActivity(), "isNotNeedShow", false)) {
             return;
         }
         UbtLogger.d(TAG, "start checkUpdate");
@@ -543,22 +545,22 @@ public class PigNewFragment extends BaseFragment {
                 updateUserPig();
                 break;
             case APP_UPDATE_CHECK:
-                showUpdateDialog((UpdateInfoModel)event.getData());
+                showUpdateDialog((UpdateInfoModel) event.getData());
                 break;
         }
     }
 
 
-    private void showUpdateDialog(UpdateInfoModel updateInfoModel){
+    private void showUpdateDialog(UpdateInfoModel updateInfoModel) {
         UBTUpdateDialog dialog = new UBTUpdateDialog(getActivity());
         dialog.setRightBtnColor(ContextCompat.getColor(getActivity(), R.color.ubt_tab_btn_txt_checked_color));
-        dialog.setTips("发现新版本"+ updateInfoModel.getVersion());
+        dialog.setTips("发现新版本" + updateInfoModel.getVersion());
         dialog.setSubTips(updateInfoModel.getVersionInfo());
         dialog.setSubTipGravity(Gravity.CENTER);
         dialog.setLeftButtonTxt("下次再说");
         dialog.setRightButtonTxt("立即更新");
         dialog.showNoTip(true);
-        if(updateInfoModel.getUpdateType().equals("2")){
+        if (updateInfoModel.getUpdateType().equals("2")) {
             dialog.setOnlyOneButton();
         }
         dialog.setOnUbtDialogContentClickLinsenter(new UBTUpdateDialog.OnUbtDialogContentClickLinsenter() {
@@ -566,9 +568,9 @@ public class PigNewFragment extends BaseFragment {
             public void onNotipClick(View view) {
                 //TODO sp记录勾选状态
                 UbtLogger.d(TAG, "view:" + view.isSelected());
-                if(view.isSelected()){
+                if (view.isSelected()) {
                     SharedPreferencesUtils.putBoolean(getActivity(), "isNotNeedShow", true);
-                }else{
+                } else {
                     SharedPreferencesUtils.putBoolean(getActivity(), "isNotNeedShow", false);
                 }
             }
@@ -582,9 +584,10 @@ public class PigNewFragment extends BaseFragment {
             @Override
             public void onRightButtonClick(View view) {
                 //TODO goto ble bind config
-                HashMap<String, String> map = new HashMap<>();
-                map.put("url",updateInfoModel.getUrl());
-                ActivityRoute.toAnotherActivity(getActivity(), UpdateWebActivity.class,map, false);
+//                HashMap<String, String> map = new HashMap<>();
+//                map.put("url", updateInfoModel.getUrl());
+                ActivityRoute.toAnotherActivity(getActivity(), CommonWebActivity.class, UbtWebHelper.getUpdateInfoWebviewData(getActivity(), updateInfoModel.getUrl()),
+                        false);
                 dialog.dismiss();
 
             }
@@ -708,11 +711,11 @@ public class PigNewFragment extends BaseFragment {
         }
     }
 
-    private void changeLayout(){
-        if(mFunctionModel.catetory.categorys.size()>8){
+    private void changeLayout() {
+        if (mFunctionModel.catetory.categorys.size() > 8) {
             ivPull.setVisibility(View.VISIBLE);
             restoreCard();
-        }else{
+        } else {
             ivPull.setVisibility(View.GONE);
         }
 
