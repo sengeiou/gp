@@ -16,7 +16,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -65,7 +64,16 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static com.ubtechinc.goldenpig.app.Constant.SP_HAS_LOOK_LAST_RECORD;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.*;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.APP_UPDATE_CHECK;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DO_GET_NATIVE_INFO;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.INVISE_RECORD_POINT;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NETWORK_STATE_CHANGED;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NEW_CALL_RECORD;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NEW_MESSAGE_NOTIFICATION;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_NATIVE_INFO;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_ONLINE_STATE;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.UPDATE_HOME_FUNCTION_CARD;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
 
 /**
  * @author : HQT
@@ -85,7 +93,7 @@ public class PigNewFragment extends BaseFragment {
     TextView tvPigSn;
 
     @BindView(R.id.btn_bt_binding)
-    Button btnBinding;
+    TextView btnBinding;
 
     @BindView(R.id.tv_net_tip)
     TextView tvNetTip;
