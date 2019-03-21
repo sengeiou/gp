@@ -1,10 +1,5 @@
 apply plugin: 'com.android.application'
 
-// 打包时间
-def releaseTime() {
-    return new Date().format("yyMMddHH")
-}
-
 android {
     compileSdkVersion COMPILE_SDK_VERSION
     compileOptions {
@@ -86,11 +81,11 @@ android {
             shrinkResources false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "goldpig_test"]
             ndk {
                 // 需要将 x86 架构过滤掉
                 abiFilters "armeabi", "armeabi-v7a", "arm64-v8a"
             }
+            buildapkName()
         }
         release {
             //微信APP_ID
@@ -125,12 +120,13 @@ android {
             minifyEnabled false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "goldpig_issue"]
             ndk {
                 // 需要将 x86 架构过滤掉
                 abiFilters "armeabi", "armeabi-v7a", "arm64-v8a"
             }
+            buildapkName()
         }
+
     }
     //优化打包流程
     dexOptions {
@@ -138,17 +134,77 @@ android {
         jumboMode = true
         threadCount = "4"
     }
-    android.applicationVariants.all {
-        variant ->
-            variant.outputs.all {
-                if (variant.buildType.name.equals('release')) {
-                    outputFileName = "goldenPig_${defaultConfig.versionName}_${releaseTime()}_release.apk"
-                } else {
-                    outputFileName = "goldenPig_${defaultConfig.versionName}_${releaseTime()}_debug.apk"
-                }
-            }
+//    android.applicationVariants.all {
+//        variant ->
+//            variant.outputs.all {
+//                if (variant.buildType.name.equals('release')) {
+//                    outputFileName = "goldenPig_${defaultConfig.versionName}_${releaseTime()}_release.apk"
+//                } else {
+//                    outputFileName = "goldenPig_${defaultConfig.versionName}_${releaseTime()}_debug.apk"
+//                }
+//            }
+//    }
+
+    flavorDimensions "ubt_official"
+
+    //渠道包配置
+    productFlavors {
+
+        ubt_official {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "ubt"]
+        }
+
+        ubt_xiaomi {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "xiaomi"]
+        }
+
+        ubt_huawei {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "huawei"]
+        }
+
+        ubt_myapp {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "yingyongbao"]
+        }
+
+        ubt_vivo {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "vivo"]
+        }
+
+        ubt_oppo {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "oppo"]
+        }
+
+        ubt_360 {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "360"]
+        }
+
+        ubt_ali {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "ali"]
+        }
+
+        ubt_google {
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "google"]
+        }
+
     }
 
+}
+
+// 打包时间
+def releaseTime() {
+    return new Date().format("yyMMddHH")
+}
+
+//生成文件的名称
+def  buildapkName(){
+    android.applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                def fileName = "goldenPig_${variant.versionName}_${variant.productFlavors[0].name}_${releaseTime()}_${variant.buildType.name}.apk"
+                outputFileName = new File(fileName)
+            }
+        }
+    }
 }
 
 repositories {
