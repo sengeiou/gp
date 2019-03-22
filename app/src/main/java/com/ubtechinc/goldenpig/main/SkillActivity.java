@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseWebActivity;
+import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.net.URestSigner;
 import com.ubtechinc.nets.utils.DeviceUtils;
 
@@ -30,7 +31,7 @@ public class SkillActivity extends BaseWebActivity {
         String deviceId = DeviceUtils.getDeviceId(this);
 
         String url = baseUrl + "appId=" + BuildConfig.APP_ID + "&sign=" + URestSigner.sign(this, deviceId).replace(" ", "%20")
-                + "&product=" + BuildConfig.product + "&deviceId=" + deviceId;
+                + "&product=" + BuildConfig.product + "&deviceId=" + deviceId + "&authorization=" + CookieInterceptor.get().getToken();
         return url;
     }
 

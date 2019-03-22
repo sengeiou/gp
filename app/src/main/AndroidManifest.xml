@@ -227,7 +227,6 @@
             android:launchMode="singleTop"
             ></activity>
 
-        <activity android:name=".main.UpdateWebActivity"/>
         <activity android:name=".main.CommonWebActivity" />
 
 

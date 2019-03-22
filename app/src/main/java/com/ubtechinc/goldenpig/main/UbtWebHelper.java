@@ -31,7 +31,7 @@ public class UbtWebHelper {
         String baseUrl = BuildConfig.H5_URL + "/small/smallComment.html?";
         String deviceId = DeviceUtils.getDeviceId(context);
         String url = baseUrl + "appId=" + BuildConfig.APP_ID + "&sign=" + URestSigner.sign(context, deviceId).replace(" ", "%20")
-                + "&product=" + BuildConfig.product + "&deviceId=" + deviceId;
+                + "&product=" + BuildConfig.product + "&deviceId=" + deviceId + "&authorization=" + CookieInterceptor.get().getToken();
         map.put(KEY_URL, url);
         map.put(KEY_IMMERSE_STATUSBAR, true);
         map.put(KEY_NEED_ACTIONBAR, false);
