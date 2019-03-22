@@ -59,10 +59,18 @@ android {
 //                buildConfigField 'String', 'IM_HOST', "\"http://210.75.21.106:9080\""
 //                buildConfigField 'String', 'IM_HOST', "\"https://internal.ubtrobot.com\""
 
-                buildConfigField 'String', 'HOST', "\"https://internal.ubtrobot.com\""
+//                buildConfigField 'String', 'HOST', "\"https://internal.ubtrobot.com\""
+//                buildConfigField 'String', 'PUSH_HOST', "\"https://internal.ubtrobot.com\""
+//                buildConfigField 'String', 'IM_HOST', "\"https://internal.ubtrobot.com\""
+//                buildConfigField 'String', 'HOME_HOST', "\"https://internal.ubtrobot.com\""  //后台测试环境地址和之前不一致
+
+                /****预发布****/
+
+                buildConfigField 'String', 'HOST', "\"https://testwx.ubtrobot.com\""
                 buildConfigField 'String', 'PUSH_HOST', "\"https://internal.ubtrobot.com\""
                 buildConfigField 'String', 'IM_HOST', "\"https://internal.ubtrobot.com\""
-                buildConfigField 'String', 'HOME_HOST', "\"https://internal.ubtrobot.com\""  //后台测试环境地址和之前不一致
+                buildConfigField 'String', 'HOME_HOST', "\"https://prerelease.ubtrobot.com\""
+
 
                 buildConfigField 'String', 'USER_HOST', props['user_host']
                 buildConfigField 'String', 'XINGE_HOST', props['xinge_host']
