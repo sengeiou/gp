@@ -28,7 +28,7 @@ public class UbtWebHelper {
      */
     public static HashMap<String, Object> getFeedBackWebviewData(Context context) {
         HashMap<String, Object> map = new HashMap<>();
-        String baseUrl = BuildConfig.H5_URL + "/small/smallComment.html?";
+        String baseUrl = BuildConfig.H5_URL + "/small/smallPigHelpBack.html?";
         String deviceId = DeviceUtils.getDeviceId(context);
         String url = baseUrl + "appId=" + BuildConfig.APP_ID + "&sign=" + URestSigner.sign(context, deviceId).replace(" ", "%20")
                 + "&product=" + BuildConfig.product + "&deviceId=" + deviceId + "&authorization=" + CookieInterceptor.get().getToken();

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/ubt_transparent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_camera"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_52"
+        android:background="@drawable/btn_bg_no_corner_white"
+        android:gravity="center"
+        android:text="相机"
+        android:textColor="#184065"
+        android:textSize="@dimen/dp_16" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ubt_1px"
+        android:background="@color/ubt_wifi_list_divider" />
+
+    <TextView
+        android:id="@+id/tv_get_content"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_52"
+        android:background="@drawable/btn_bg_no_corner_white"
+        android:gravity="center"
+        android:text="从手机相册选择"
+        android:textColor="#184065"
+        android:textSize="@dimen/dp_16" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_5"
+        android:background="@color/ubt_wifi_list_divider" />
+
+    <TextView
+        android:id="@+id/tv_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_52"
+        android:background="@drawable/btn_bg_no_corner_white"
+        android:gravity="center"
+        android:text="取消"
+        android:textColor="@color/ubt_tips_txt_color"
+        android:textSize="@dimen/dp_16" />
+
+</LinearLayout>
