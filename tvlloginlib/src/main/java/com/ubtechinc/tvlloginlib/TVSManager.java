@@ -82,6 +82,7 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
 
     public void init(Activity activity) {
         proxy.setOwnActivity(activity);
+        proxy.setAuthorizeListener(this);
     }
 
     public void wxLogin(Activity activity, String pid, String dns, TVSLoginListener listener) {

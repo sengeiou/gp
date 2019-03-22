@@ -183,8 +183,9 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
 
     public void onRefresh() {
         ELoginPlatform platform = TvsUtil.currentPlatform();
-        TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ)
-                .requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils
+        TVSManager tvsManager = TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ);
+        tvsManager.init(this);
+        tvsManager.requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils
                         .getAlarmUniAccessinfo(0, 1, 0, 0), new TVSManager
                         .TVSAlarmListener() {
                     @Override
@@ -407,8 +408,9 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
         AlarmModel model = mList.get(position);
         LoadingDialog.getInstance(this).show();
         ELoginPlatform platform = TvsUtil.currentPlatform();
-        TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ)
-                .requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils
+        TVSManager tvsManager = TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ);
+        tvsManager.init(this);
+        tvsManager.requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils
                         .getAlarmUniAccessinfo(2, model.eRepeatType, model.lAlarmId, model
                                 .lStartTimeStamp), new TVSManager.TVSAlarmListener() {
                     @Override

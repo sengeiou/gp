@@ -4,11 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.Selection;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -26,8 +24,6 @@ import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.model.RemindModel;
-import com.ubtechinc.goldenpig.route.ActivityRoute;
-import com.ubtechinc.goldenpig.utils.CommendUtil;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.tvlloginlib.TVSManager;
 import com.weigan.loopview.LoopView;
@@ -360,8 +356,9 @@ public class AddRemindActivity extends BaseNewActivity {
             return;
         }
         LoadingDialog.getInstance(this).show();
-        TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ)
-                .requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils.getRemindUniAccessinfo
+        TVSManager tvsManager = TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ);
+        tvsManager.init(this);
+        tvsManager.requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils.getRemindUniAccessinfo
                         (sNote, eCloud_type, repeatType, lReminderId, timeMill), new TVSManager
                         .TVSAlarmListener() {
                     @Override
