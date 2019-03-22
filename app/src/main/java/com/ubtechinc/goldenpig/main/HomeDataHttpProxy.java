@@ -41,6 +41,8 @@ public class HomeDataHttpProxy extends BaseHttpProxy {
         Map<String, Object> map = new HashMap<>();
         map.put("md5_category", category);
         map.put("md5_statement", statement);
+        map.put("version", "V" + com.ubtechinc.goldenpig.BuildConfig.VERSION_NAME);
+        map.put("clientType", 1);
         String content = JsonUtils.map2Json(map);
         RequestBody body = RequestBody.create(JSON, content);
         String url = null;

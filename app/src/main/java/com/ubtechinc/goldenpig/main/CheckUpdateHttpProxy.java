@@ -33,7 +33,7 @@ public class CheckUpdateHttpProxy extends BaseHttpProxy {
         OkHttpClient okHttpClient = getHttpClient();
 
         Map<String, Object> map = new HashMap<>();
-        map.put("version", "V" + BuildConfig.VERSION_NAME);
+        map.put("version", "V" + com.ubtechinc.goldenpig.BuildConfig.VERSION_NAME);
         map.put("clientType", 1);
         String content = JsonUtils.map2Json(map);
         RequestBody body = RequestBody.create(JSON, content);
