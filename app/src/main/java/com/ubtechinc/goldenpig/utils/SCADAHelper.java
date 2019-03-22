@@ -1,5 +1,6 @@
 package com.ubtechinc.goldenpig.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 
@@ -15,6 +16,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
+
+import static com.ubtechinc.goldenpig.main.CommonWebActivity.KEY_URL;
 
 public class SCADAHelper {
 
@@ -113,13 +116,22 @@ public class SCADAHelper {
             while (iterator.hasNext()) {
                 Map.Entry entry = (Map.Entry) iterator.next();
                 String key = (String) entry.getKey();
-                if (simpleName.equals(key)) {
-                    String eventId = (String) entry.getValue();
-                    recordEvent(eventId);
-                    return;
+                String eventId = (String) entry.getValue();
+                if (simpleName.equals("CommonWebActivity")) {
+                    String url = ((Activity)context).getIntent().getStringExtra(KEY_URL);
+                    if (url.contains(key)) {
+                        recordEvent(eventId);
+                        return;
+                    }
+                } else {
+                    if (simpleName.equals(key)) {
+                        recordEvent(eventId);
+                        return;
+                    }
                 }
             }
         }
 
     }
+
 }

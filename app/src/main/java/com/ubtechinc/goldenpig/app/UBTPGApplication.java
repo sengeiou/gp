@@ -211,7 +211,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
             @Override
             public void onActivityCreated(Activity activity, Bundle bundle) {
                 ActivityTool.addActivity(activity);
-                SCADAHelper.handleSCADAForPage(activity, getClass().getSimpleName());
+                SCADAHelper.handleSCADAForPage(activity, activity.getClass().getSimpleName());
             }
 
             @Override

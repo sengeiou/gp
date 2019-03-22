@@ -26,7 +26,7 @@ RecordActivity=app_pv_recentcalls
 
 AddressBookActivity=app_pv_addressbook
 
-#CommonWebActivity=app_pv_bluetoothspeaker
+smallBlue=app_pv_bluetoothspeaker
 
 SmartHomeFragment=app_pv_smarthome
 
@@ -60,16 +60,16 @@ PigMemberActivity=app_pv_group
 
 AboutBleBJActivity=app_pv_aboutRobot
 
-#CommonWebActivity=app_pv_qqmusic
+smallqqMusic=app_pv_qqmusic
 
-#CommonWebActivity=app_pv_helpandfeedback
+smallPigHelpBack=app_pv_helpandfeedback
 
 #CommonWebActivity=app_pv_feedback
 
 UbtAboutActivtiy=app_pv_aboutapp
 
-#CommonWebActivity=app_pv_serviceagreement
+smallService=app_pv_serviceagreement
 
-#CommonWebActivity=app_pv_privacyagreement
+smallProcy=app_pv_privacyagreement
 
 
