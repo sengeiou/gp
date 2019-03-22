@@ -1,5 +1,6 @@
 package com.ubtechinc.goldenpig.utils;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.ubtech.utilcode.utils.LogUtils;
@@ -9,12 +10,17 @@ import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtrobot.analytics.mobile.AnalyticsKit;
 
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
 
 public class SCADAHelper {
 
     public static final String TAG = SCADAHelper.class.getSimpleName();
+
+    public static Properties mSCADAProps;
 
     /**
      * 绑定机器
@@ -84,5 +90,36 @@ public class SCADAHelper {
      */
     public static void recordEvent(String eventId) {
         recordEvent(eventId, null);
+    }
+
+    /**
+     * 处理页面埋点
+     * @param context
+     * @param simpleName
+     */
+    public static void handleSCADAForPage(Context context, String simpleName) {
+        if (mSCADAProps == null) {
+            Properties props = new Properties();
+            try {
+                InputStream in = context.getAssets().open("scadaConfig");
+                props.load(in);
+            } catch (Exception e1) {
+                e1.printStackTrace();
+            }
+            mSCADAProps = props;
+        }
+        if (mSCADAProps != null) {
+            Iterator iterator = mSCADAProps.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Map.Entry entry = (Map.Entry) iterator.next();
+                String key = (String) entry.getKey();
+                if (simpleName.equals(key)) {
+                    String eventId = (String) entry.getValue();
+                    recordEvent(eventId);
+                    return;
+                }
+            }
+        }
+
     }
 }
