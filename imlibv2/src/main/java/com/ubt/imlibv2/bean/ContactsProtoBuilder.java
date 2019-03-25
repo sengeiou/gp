@@ -65,6 +65,14 @@ public class ContactsProtoBuilder {
      * 清除本体信息
      */
     public static final String IM_CLEAR_REQUEST = "/im/clear/request";
+    /**
+     * 设置关机闹钟
+     */
+    public static final String IM_SET_SHUTDOWN_ALARM_REQUEST = "/im/shutdown/alert/set";
+    /**
+     * 获取关机闹钟
+     */
+    public static final String IM_GET_SHUTDOWN_ALARM_REQUEST = "/im/shutdown/alert/get";
 
     public static byte[] getAddContactsInfo(String name, String number) {
 
@@ -159,7 +167,7 @@ public class ContactsProtoBuilder {
                 .setAction("/im/mail/delete").setTime(System.currentTimeMillis()).build();
         UserContacts.UserContact.Builder userContactBuilder = UserContacts.UserContact.newBuilder();
         for (int i = 0; i < list.size(); i++) {
-            try{
+            try {
                 AddressBook book = list.get(i);
                 UserContacts.User.Builder builder = UserContacts.User.newBuilder();
                 builder.setName(book.nikeName);
@@ -167,7 +175,7 @@ public class ContactsProtoBuilder {
                 builder.setId(Integer.valueOf(book.userId));
                 UserContacts.User user = builder.build();
                 userContactBuilder.addUser(user);
-            }catch (Exception e){
+            } catch (Exception e) {
             }
 
         }
@@ -251,6 +259,7 @@ public class ContactsProtoBuilder {
 
     /**
      * 获取八戒OTA升级结果
+     *
      * @return
      */
     public static byte[] getRobotUpdateResult() {
@@ -372,6 +381,29 @@ public class ContactsProtoBuilder {
      */
     public static byte[] requestContinuousVoiceState() {
         return createBaseData(IM_DIALOG_REQUEST);
+    }
+
+    /**
+     * 获取关机闹钟
+     *
+     * @return
+     */
+    public static byte[] requestShutdownAlarmState() {
+        return createBaseData(IM_GET_SHUTDOWN_ALARM_REQUEST);
+    }
+
+
+    public static byte[] requestShutdownAlarmSwitch(boolean state) {
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction(IM_SET_SHUTDOWN_ALARM_REQUEST)
+                .setTime(System.currentTimeMillis()).build();
+        GPSwitchContainer.Switch.Builder builder = GPSwitchContainer.Switch.newBuilder();
+        builder.setState(state);
+        GPSwitchContainer.Switch message = builder.build();
+        ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer.ChannelMessage.newBuilder()
+                .setHeader(header)
+                .setPayload(Any.pack(message))
+                .build();
+        return channelMessage.toByteArray();
     }
 
     public static byte[] requestContinuousVoiceSwitch(boolean state) {

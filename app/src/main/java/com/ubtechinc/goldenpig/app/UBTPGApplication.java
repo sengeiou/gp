@@ -155,7 +155,8 @@ public class UBTPGApplication extends LoginApplication implements Observer {
         //bugly
         if (!BuildConfig.DEBUG) {
             CrashReport.initCrashReport(getApplicationContext(), "a6f55be79e", false);
-            CrashReport.setAppChannel(getApplicationContext(), AppUtil.getMetaDataFromApp(this, AppUtil.KEY_CHANNEL_META));
+            CrashReport.setAppChannel(getApplicationContext(), AppUtil.getMetaDataFromApp(this, AppUtil
+                    .KEY_CHANNEL_META));
         }
 
         MultiDex.install(this);
@@ -392,7 +393,8 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                     String authorization = pushAppInfo.getToken();
                     String appVersion = ContextUtils.getVerName(this);
                     PushHttpProxy pushHttpProxy = new PushHttpProxy();
-                    pushHttpProxy.bindToken(appId, pushToken, userId, appVersion, BuildConfig.product, authorization, null);
+                    pushHttpProxy.bindToken(appId, pushToken, userId, appVersion, BuildConfig.product, authorization,
+                            null);
                 }
                 updatePigPair(true);
                 break;
@@ -475,7 +477,8 @@ public class UBTPGApplication extends LoginApplication implements Observer {
     }
 
     private void updatePigList() {
-        new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListHttpProxy.OnGetPigListLitener() {
+        new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new
+                GetPigListHttpProxy.OnGetPigListLitener() {
             @Override
             public void onError(ThrowableWrapper e) {
                 Log.e("getPigList", e.getMessage());
@@ -489,12 +492,14 @@ public class UBTPGApplication extends LoginApplication implements Observer {
             @Override
             public void onSuccess(String response) {
                 Log.e("getPigList", response);
-                PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance().getCurrentPigList());
+                PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance()
+                        .getCurrentPigList());
                 PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
 
                 if (pigInfo != null && pigInfo.isAdmin) {
                     UbtTIMManager.avatarURL = UserInfoManager.getInstance().headImgUrl;
-                    UbtTIMManager.getInstance().loginTIM(AuthLive.getInstance().getUserId(), pigInfo.getRobotName(), com.ubt.imlibv2.BuildConfig.IM_Channel);
+                    UbtTIMManager.getInstance().loginTIM(AuthLive.getInstance().getUserId(), pigInfo.getRobotName(),
+                            com.ubt.imlibv2.BuildConfig.IM_Channel);
                 }
             }
         });
@@ -545,7 +550,8 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                 .parseFrom((byte[]) arg);
         String action = msg.getHeader().getAction();
         if (action.equals(ContactsProtoBuilder.IM_RELATIONSHIP_CHANGED)) {
-            GPRelationshipContainer.RelationShip info = msg.getPayload().unpack(GPRelationshipContainer.RelationShip.class);
+            GPRelationshipContainer.RelationShip info = msg.getPayload().unpack(GPRelationshipContainer.RelationShip
+                    .class);
             if (info != null) {
                 int event = info.getEvent();
                 handleRelationShip(event);
@@ -593,7 +599,8 @@ public class UBTPGApplication extends LoginApplication implements Observer {
             event.setData(result);
             EventBusUtil.sendEvent(event);
         } else if (action.equals(ContactsProtoBuilder.IM_DEVICE_INFO)) {
-            DeviceInfoContainer.GPDeviceInfo deviceInfo = msg.getPayload().unpack(DeviceInfoContainer.GPDeviceInfo.class);
+            DeviceInfoContainer.GPDeviceInfo deviceInfo = msg.getPayload().unpack(DeviceInfoContainer.GPDeviceInfo
+                    .class);
             Event<DeviceInfoContainer.GPDeviceInfo> event = new Event<>(EventBusUtil.RECEIVE_PIG_DEVICE_INFO);
             event.setData(deviceInfo);
             EventBusUtil.sendEvent(event);
@@ -606,7 +613,8 @@ public class UBTPGApplication extends LoginApplication implements Observer {
 
         } else if (action.equals(ContactsProtoBuilder.IM_CONNECT_WIFI)) {
             //TODO wifi切换
-            WifiMessageContainer.ConnectStatus connectStatus = msg.getPayload().unpack(WifiMessageContainer.ConnectStatus.class);
+            WifiMessageContainer.ConnectStatus connectStatus = msg.getPayload().unpack(WifiMessageContainer
+                    .ConnectStatus.class);
             Event<WifiMessageContainer.ConnectStatus> event = new Event<>(EventBusUtil.RECEIVE_PIG_WIFI_CONNECT);
             event.setData(connectStatus);
             EventBusUtil.sendEvent(event);
@@ -616,13 +624,25 @@ public class UBTPGApplication extends LoginApplication implements Observer {
             Event<Boolean> event = new Event<>(EventBusUtil.RECEIVE_CLEAR_PIG_INFO);
             event.setData(result);
             EventBusUtil.sendEvent(event);
-        } else if (action.equals(ContactsProtoBuilder.UPATE_VERSION_ACTION) || action.equals(ContactsProtoBuilder.UPATE_VERSION_RESULT_ACTION)) {
+        } else if (action.equals(ContactsProtoBuilder.UPATE_VERSION_ACTION) || action.equals(ContactsProtoBuilder
+                .UPATE_VERSION_RESULT_ACTION)) {
             final int result = msg.getPayload().unpack(VersionInformation.UpgradeInfo.class).getStatus();
             handleOTADialog(result, action);
         } else if (action.equals(ContactsProtoBuilder.GET_VERSION_STATE_ACTION)) {
             VersionInformation.UpgradeInfo info = msg.getPayload().unpack(VersionInformation.UpgradeInfo.class);
             Event<VersionInformation.UpgradeInfo> event = new Event<>(EventBusUtil.RECEIVE_ROBOT_VERSION_STATE);
             event.setData(info);
+            EventBusUtil.sendEvent(event);
+        } else if (action.equals(ContactsProtoBuilder.IM_GET_SHUTDOWN_ALARM_REQUEST)) {
+            GPSwitchContainer.Switch switchInfo = msg.getPayload().unpack(GPSwitchContainer.Switch.class);
+            boolean state = switchInfo.getState();
+            Event<Boolean> event = new Event<>(EventBusUtil.RECEIVE_SHUTDOWN_STATE);
+            event.setData(state);
+            EventBusUtil.sendEvent(event);
+        } else if (action.equals(ContactsProtoBuilder.IM_SET_SHUTDOWN_ALARM_REQUEST)) {
+            final boolean result = msg.getPayload().unpack(GPResponse.Response.class).getResult();
+            Event<Boolean> event = new Event<>(EventBusUtil.RECEIVE_SHUTDOWN_SWITCH_STATE);
+            event.setData(result);
             EventBusUtil.sendEvent(event);
         }
     }

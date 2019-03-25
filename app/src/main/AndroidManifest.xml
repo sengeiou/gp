@@ -229,7 +229,9 @@
 
         <activity android:name=".main.CommonWebActivity" />
 
-
+        <activity
+            android:name=".personal.ShutdownAlarmActivity"
+            android:launchMode="singleTop"></activity>
     </application>
 
 </manifest>

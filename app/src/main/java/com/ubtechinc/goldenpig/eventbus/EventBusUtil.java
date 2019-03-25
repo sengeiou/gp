@@ -63,6 +63,7 @@ public class EventBusUtil {
     public static final int APP_UPDATE_CHECK = 20016;
 
     public static final int SERVER_RESPONSE_UNAUTHORIZED = 401;
-
+    public static final int RECEIVE_SHUTDOWN_STATE = 20017;
+    public static final int RECEIVE_SHUTDOWN_SWITCH_STATE = 20018;
 
 }

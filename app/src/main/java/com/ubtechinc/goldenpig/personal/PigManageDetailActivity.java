@@ -21,6 +21,7 @@ import com.ubtech.utilcode.utils.SPUtils;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.app.Constant;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.entity.PairPig;
@@ -66,14 +67,6 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 
-import static com.ubtechinc.goldenpig.app.Constant.SP_HAS_LOOK_LAST_RECORD;
-import static com.ubtechinc.goldenpig.app.Constant.SP_LAST_RECORD;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NETWORK_STATE_CHANGED;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_CLEAR_PIG_INFO;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_NATIVE_INFO;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_ONLINE_STATE;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_VERSION_STATE;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
 import static com.ubtechinc.goldenpig.personal.BeeHiveMobileActivity.KEY_BEE_HIVE_OPEN;
 import static com.ubtechinc.goldenpig.personal.NoSimActivity.KEY_TOOL_BAR_TITLE;
 
@@ -81,7 +74,7 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
 
     private View rl_wifi, rl_member_group;
 
-    private View rl_4g, rl_hotpoint, rl_continuity_voice, rl_about, rl_update;
+    private View rl_4g, rl_hotpoint, rl_continuity_voice, rl_about, rl_update, rl_shutdown_alarm;
 
     private View ivRedPoint;
 
@@ -141,11 +134,13 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
         rl_4g = findViewById(R.id.rl_4g);
         rl_hotpoint = findViewById(R.id.rl_hotpoint);
         rl_continuity_voice = findViewById(R.id.rl_continuity_voice);
+        rl_shutdown_alarm = findViewById(R.id.rl_shutdown_alarm);
         rl_about = findViewById(R.id.rl_about);
         rl_update = findViewById(R.id.rl_update);
         rl_4g.setOnClickListener(this);
         rl_hotpoint.setOnClickListener(this);
         rl_continuity_voice.setOnClickListener(this);
+        rl_shutdown_alarm.setOnClickListener(this);
         rl_about.setOnClickListener(this);
         rl_update.setOnClickListener(this);
 
@@ -203,8 +198,8 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
                             }
                             AuthLive.getInstance().getCurrentPigList().remove(currentIndex);
                             EventBusUtil.sendEvent(new Event<>(EventBusUtil.USER_PIG_UPDATE));
-                            SPUtils.get().put(SP_LAST_RECORD, "");
-                            SPUtils.get().put(SP_HAS_LOOK_LAST_RECORD, 0);
+                            SPUtils.get().put(Constant.SP_LAST_RECORD, "");
+                            SPUtils.get().put(Constant.SP_HAS_LOOK_LAST_RECORD, 0);
                         } catch (RuntimeException e) {
                             e.printStackTrace();
                         }
@@ -319,6 +314,9 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
             case R.id.rl_continuity_voice:
                 enterFunction(ContinuousVoiceActivity.class, null);
                 break;
+            case R.id.rl_shutdown_alarm:
+                //enterFunction(ShutdownAlarmActivity.class, null);
+                break;
             case R.id.rl_member_group:
                 ActivityRoute.toAnotherActivity(this, PigMemberActivity.class, false);
                 break;
@@ -374,11 +372,13 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
     private void getPigVersionState() {
         showLoadingDialog();
         needHandleUpdate = true;
-        UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getPigVersionState()));
+        UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getPigVersionState
+                ()));
     }
 
     private void getRobotOTAResult() {
-        UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getRobotUpdateResult()));
+        UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder
+                .getRobotUpdateResult()));
     }
 
     private void unBindCheck() {
@@ -450,7 +450,8 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
     private void showUnBindConfirmDialog(boolean onlySelf) {
         if (onlySelf) {
             UBTSubTitleDialog unBindConfirmDialog = new UBTSubTitleDialog(this);
-            unBindConfirmDialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
+            unBindConfirmDialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color
+                    .ubt_tab_btn_txt_checked_color, null));
             unBindConfirmDialog.setSubTipColor(ContextCompat.getColor(this, R.color.ubt_tips_txt_color));
             unBindConfirmDialog.setTips(getString(R.string.unbind_confirm));
             unBindConfirmDialog.setRadioText(getString(R.string.unbind_confirm_tip2));
@@ -487,7 +488,8 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
             dialog.setOnUbtDialogClickLinsenter(new UBTFunctionDialog.OnUbtDialogClickLinsenter() {
                 @Override
                 public void onFunc1Click(View view) {
-                    ActivityRoute.toAnotherActivity(PigManageDetailActivity.this, TransferAdminActivity.class, 0x01, false);
+                    ActivityRoute.toAnotherActivity(PigManageDetailActivity.this, TransferAdminActivity.class, 0x01,
+                            false);
                 }
 
                 @Override
@@ -530,27 +532,29 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
         if (AuthLive.getInstance().getCurrentPigList() != null) {
             AuthLive.getInstance().getCurrentPigList().clear();
         }
-        new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new GetPigListHttpProxy.OnGetPigListLitener() {
-            @Override
-            public void onError(ThrowableWrapper e) {
-                Log.e("getPigList", e.getMessage());
-            }
+        new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new
+                GetPigListHttpProxy.OnGetPigListLitener() {
+                    @Override
+                    public void onError(ThrowableWrapper e) {
+                        Log.e("getPigList", e.getMessage());
+                    }
 
-            @Override
-            public void onException(Exception e) {
-                Log.e("getPigList", e.getMessage());
-            }
+                    @Override
+                    public void onException(Exception e) {
+                        Log.e("getPigList", e.getMessage());
+                    }
 
-            @Override
-            public void onSuccess(String response) {
-                Log.e("getPigList", response);
-                PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance().getCurrentPigList());
-                ArrayList<PigInfo> list = AuthLive.getInstance().getCurrentPigList();
-                if (list == null || list.isEmpty()) {
-                    finish();
-                }
-            }
-        });
+                    @Override
+                    public void onSuccess(String response) {
+                        Log.e("getPigList", response);
+                        PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance()
+                                .getCurrentPigList());
+                        ArrayList<PigInfo> list = AuthLive.getInstance().getCurrentPigList();
+                        if (list == null || list.isEmpty()) {
+                            finish();
+                        }
+                    }
+                });
     }
 
     private void doClearInfoByIM() {
@@ -573,7 +577,8 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
         categoryBuilder2.setName("Record.deleteData");
         categorys.add(categoryBuilder1);
         categorys.add(categoryBuilder2);
-        UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.clearInfo(categorys)));
+        UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.clearInfo
+                (categorys)));
     }
 
     private List<CheckBindRobotModule.User> jsonToUserList(String jsonStr) {
@@ -644,8 +649,10 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
     private void updateNativeInfo(NativeInfoContainer.NativeInfo data) {
         NativeInfoContainer.NativeInfo nativeInfo = data;
         try {
-            NativeInfoContainer.SimStatus simStatus = nativeInfo.getSimStatus().unpack(NativeInfoContainer.SimStatus.class);
-            NativeInfoContainer.NetworkStatus networkStatus = nativeInfo.getNetworkStatus().unpack(NativeInfoContainer.NetworkStatus.class);
+            NativeInfoContainer.SimStatus simStatus = nativeInfo.getSimStatus().unpack(NativeInfoContainer.SimStatus
+                    .class);
+            NativeInfoContainer.NetworkStatus networkStatus = nativeInfo.getNetworkStatus().unpack
+                    (NativeInfoContainer.NetworkStatus.class);
 
             if (simStatus.getInserted()) {
                 isNoSim = false;
@@ -713,13 +720,13 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
         if (event == null) return;
         int code = event.getCode();
         switch (code) {
-            case USER_PIG_UPDATE:
+            case EventBusUtil.USER_PIG_UPDATE:
                 updateRobotView();
                 break;
-            case RECEIVE_NATIVE_INFO:
+            case EventBusUtil.RECEIVE_NATIVE_INFO:
                 updateNativeInfo((NativeInfoContainer.NativeInfo) event.getData());
                 break;
-            case RECEIVE_ROBOT_VERSION_STATE:
+            case EventBusUtil.RECEIVE_ROBOT_VERSION_STATE:
                 if (!needHandleUpdate) return;
                 needHandleUpdate = false;
                 VersionInformation.UpgradeInfo info = (VersionInformation.UpgradeInfo) event.getData();
@@ -752,7 +759,7 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
                     }
                 }
                 break;
-            case RECEIVE_CLEAR_PIG_INFO:
+            case EventBusUtil.RECEIVE_CLEAR_PIG_INFO:
                 if (imOutDisposable != null) {
                     imOutDisposable.dispose();
                 }
@@ -768,10 +775,10 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
                     com.ubtech.utilcode.utils.ToastUtils.showShortToast("机器人数据清除失败，请重试");
                 }
                 break;
-            case RECEIVE_ROBOT_ONLINE_STATE:
+            case EventBusUtil.RECEIVE_ROBOT_ONLINE_STATE:
                 updateTopTip();
                 break;
-            case NETWORK_STATE_CHANGED:
+            case EventBusUtil.NETWORK_STATE_CHANGED:
                 updateTopTip();
                 break;
         }
