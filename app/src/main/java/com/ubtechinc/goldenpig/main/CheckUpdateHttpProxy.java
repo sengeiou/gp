@@ -33,12 +33,12 @@ public class CheckUpdateHttpProxy extends BaseHttpProxy {
         OkHttpClient okHttpClient = getHttpClient();
 
         Map<String, Object> map = new HashMap<>();
-        map.put("version", "V" + BuildConfig.VERSION_NAME);
-        map.put("clientType", 1);
+        map.put("version", "V" + com.ubtechinc.goldenpig.BuildConfig.VERSION_NAME);
+        map.put("clientType", "1");
         String content = JsonUtils.map2Json(map);
         RequestBody body = RequestBody.create(JSON, content);
         final Request okrequest = new Request.Builder()
-                .url(BuildConfig.HOME_HOST + "/cloud-ppi/pig/sys/update")
+                .url(BuildConfig.HOME_HOST + "/v1/cloud-ppi/pig/sys/update")
                 .post(body)
                 .build();
         Call call = okHttpClient.newCall(okrequest);

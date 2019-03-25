@@ -60,6 +60,7 @@ import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.AppUtil;
 import com.ubtechinc.goldenpig.utils.OSUtils;
 import com.ubtechinc.goldenpig.utils.PigUtils;
+import com.ubtechinc.goldenpig.utils.SCADAHelper;
 import com.ubtechinc.nets.HttpManager;
 import com.ubtechinc.nets.http.ThrowableWrapper;
 import com.ubtechinc.nets.utils.DeviceUtils;
@@ -211,6 +212,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
             @Override
             public void onActivityCreated(Activity activity, Bundle bundle) {
                 ActivityTool.addActivity(activity);
+                SCADAHelper.handleSCADAForPage(activity, activity.getClass().getSimpleName());
             }
 
             @Override

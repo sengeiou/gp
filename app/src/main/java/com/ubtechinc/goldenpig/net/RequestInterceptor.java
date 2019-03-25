@@ -21,6 +21,7 @@ public class RequestInterceptor implements Interceptor {
     @Override
     public Response intercept(Chain chain) throws IOException {
         String token = CookieInterceptor.get().getToken();
+        Log.d(TAG, "token      =  : " + token);
         String deviceId = DeviceUtils.getDeviceId(Utils.getContext());
         Request request = chain.request()
                 .newBuilder()

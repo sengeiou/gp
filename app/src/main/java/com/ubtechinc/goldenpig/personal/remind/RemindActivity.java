@@ -185,8 +185,9 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
 
     public void onRefresh() {
         ELoginPlatform platform = TvsUtil.currentPlatform();
-        TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ)
-                .requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils.getRemindUniAccessinfo
+        TVSManager tvsManager = TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ);
+        tvsManager.init(this);
+        tvsManager.requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils.getRemindUniAccessinfo
                         ("", 0, 1, 0, 0), new TVSManager.TVSAlarmListener() {
                     @Override
                     public void onSuccess(CommOpInfo msg) {
@@ -379,8 +380,9 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
         RemindModel model = mList.get(position);
         LoadingDialog.getInstance(this).show();
         ELoginPlatform platform = TvsUtil.currentPlatform();
-        TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ)
-                .requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils.getRemindUniAccessinfo
+        TVSManager tvsManager = TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ);
+        tvsManager.init(this);
+        tvsManager.requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils.getRemindUniAccessinfo
                         (model.sNote, 2, model.eRepeatType, model.lReminderId, model.lStartTimeStamp), new TVSManager
                         .TVSAlarmListener() {
                     @Override

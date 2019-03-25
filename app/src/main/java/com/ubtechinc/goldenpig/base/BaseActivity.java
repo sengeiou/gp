@@ -116,6 +116,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             subTip = "使用该功能需要拍照权限，请前往系统设置开启权限";
         } else if (permission == Permission.MICROPHONE) {
             subTip = "使用该功能需要录音权限，请前往系统设置开启权限";
+        } else if (permission == Permission.STORAGE) {
+            subTip = "使用该功能需要存储权限，请前往系统设置开启权限";
         }
         if (dialog == null) {
             dialog = new UBTSubTitleDialog(this);

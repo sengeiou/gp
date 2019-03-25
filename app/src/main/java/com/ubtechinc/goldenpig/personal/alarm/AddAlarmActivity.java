@@ -20,7 +20,6 @@ import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.model.AlarmModel;
-import com.ubtechinc.goldenpig.personal.remind.SetRemindRepeatActivity;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.tvlloginlib.TVSManager;
 import com.weigan.loopview.LoopView;
@@ -317,8 +316,9 @@ public class AddAlarmActivity extends BaseNewActivity {
 //                break;
         }
 
-        TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ)
-                .requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils
+        TVSManager tvsManager = TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ);
+        tvsManager.init(this);
+        tvsManager.requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils
                         .getAlarmUniAccessinfo(eCloud_type, eRepeatType, lAlarmId, timeMill), new TVSManager
                         .TVSAlarmListener() {
                     @Override

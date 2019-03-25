@@ -1,6 +1,7 @@
 package com.ubtechinc.goldenpig.main;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
@@ -26,12 +27,16 @@ public class SkillActivity extends BaseWebActivity {
 
     @Override
     protected String getURL() {
-        String baseUrl = BuildConfig.H5_URL + "/small/smallSkill.html?";
+        String baseUrl = BuildConfig.H5_URL + "/small/smallPigSkillList.html?";
 
         String deviceId = DeviceUtils.getDeviceId(this);
 
+        String token = CookieInterceptor.get().getToken();
+
+        Log.d("SkillActivity", "token:" + token);
+
         String url = baseUrl + "appId=" + BuildConfig.APP_ID + "&sign=" + URestSigner.sign(this, deviceId).replace(" ", "%20")
-                + "&product=" + BuildConfig.product + "&deviceId=" + deviceId + "&authorization=" + CookieInterceptor.get().getToken();
+                + "&product=" + BuildConfig.product + "&deviceId=" + deviceId + "&authorization=" + token;
         return url;
     }
 
