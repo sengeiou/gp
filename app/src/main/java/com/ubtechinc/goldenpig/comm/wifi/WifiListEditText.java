@@ -203,7 +203,7 @@ public class WifiListEditText extends RelativeLayout implements View.OnClickList
                 mCurrSsid = wifiInfo.getSsid();
                 mCurrCtype = wifiInfo.getEncryptionKey();
                 if (mWifiNameEdt != null) {
-                    if(TextUtils.isEmpty(mWifiNameEdt.getText().toString())){
+                    if (TextUtils.isEmpty(mWifiNameEdt.getText().toString())) {
                         mWifiNameEdt.setText(mCurrSsid);
                     }
                 }
@@ -268,16 +268,16 @@ public class WifiListEditText extends RelativeLayout implements View.OnClickList
         void doRetry();
     }
 
-    public String getWifiCtype(String wifiName){
-        if(mWifiList.size()>0){
-            for(int i = 0; i<mWifiList.size(); i++){
-                if(wifiName.equals(mWifiList.get(i).getSsid())){
-                    UbtLogger.d("getWifiCtype", "getWifiCtype:" +mWifiList.get(i).getEncryptionKey());
+    public String getWifiCtype(String wifiName) {
+        if (mWifiList != null && !mWifiList.isEmpty()) {
+            for (int i = 0; i < mWifiList.size(); i++) {
+                if (wifiName.equals(mWifiList.get(i).getSsid())) {
+                    UbtLogger.d("getWifiCtype", "getWifiCtype:" + mWifiList.get(i).getEncryptionKey());
                     return mWifiList.get(i).getEncryptionKey();
                 }
             }
         }
-
         return "WPA2";
     }
+
 }

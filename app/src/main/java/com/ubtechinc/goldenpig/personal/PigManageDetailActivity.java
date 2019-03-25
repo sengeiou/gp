@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -513,19 +514,21 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
      */
     private void doUnbindAllMember() {
         UnbindAllMemberProxy proxy = new UnbindAllMemberProxy();
-        final String serialNo = AuthLive.getInstance().getCurrentPig().getRobotName();
-        proxy.unbind(serialNo, new UnbindAllMemberProxy.UnBindPigCallback() {
-            @Override
-            public void onError(String msg) {
-                runOnUiThread(() -> ToastUtils.showShortToast(PigManageDetailActivity.this, msg));
-            }
+        final String serialNo = AuthLive.getInstance().getRobotUserId();
+        if (!TextUtils.isEmpty(serialNo)) {
+            proxy.unbind(serialNo, new UnbindAllMemberProxy.UnBindPigCallback() {
+                @Override
+                public void onError(String msg) {
+                    runOnUiThread(() -> ToastUtils.showShortToast(PigManageDetailActivity.this, msg));
+                }
 
-            @Override
-            public void onSuccess() {
-                imSyncRelationShip();
-                runOnUiThread(() -> updatePigList());
-            }
-        });
+                @Override
+                public void onSuccess() {
+                    imSyncRelationShip();
+                    runOnUiThread(() -> updatePigList());
+                }
+            });
+        }
     }
 
     private void updatePigList() {
