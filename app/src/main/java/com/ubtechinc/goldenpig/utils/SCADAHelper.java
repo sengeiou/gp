@@ -55,7 +55,7 @@ public class SCADAHelper {
         Map<String, String> segmentation = new HashMap<>();
         segmentation.put("app_version", ContextUtils.getVerName(UBTPGApplication.getContext()));
         String userId = AuthLive.getInstance().getUserId();
-        if (TextUtils.isEmpty(userId)) {
+        if (!TextUtils.isEmpty(userId)) {
             segmentation.put("user_id", userId);
         }
         String robotSn = AuthLive.getInstance().getRobotUserId();
