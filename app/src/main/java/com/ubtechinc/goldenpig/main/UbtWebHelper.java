@@ -6,6 +6,7 @@ import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.net.URestSigner;
 import com.ubtechinc.nets.utils.DeviceUtils;
+import com.ubtechinc.tvlloginlib.entity.LoginInfo;
 
 import java.util.HashMap;
 
@@ -112,6 +113,27 @@ public class UbtWebHelper {
         map.put(KEY_IMMERSE_STATUSBAR, false);
         map.put(KEY_NEED_ACTIONBAR, true);
         return map;
+    }
+
+    /**
+     * 获取tvs智能家居相关参数
+     * @return
+     */
+    public static String getTvsSmartHomeParam() {
+        LoginInfo loginInfo = CookieInterceptor.get().getThridLogin();
+        String accessToken = "";
+        String appId = "";
+        String loginType = "";
+        String openId = "";
+        if (loginInfo != null) {
+            accessToken = loginInfo.getAccessToken();
+            appId = loginInfo.getAppId();
+            loginType = loginInfo.getLoginType();
+            openId = loginInfo.getOpenId();
+        }
+        String param = "accessToken=" + accessToken + "&appId=" + appId
+                + "&loginType=" + loginType + "&openId=" + openId;
+        return param;
     }
 
 }
