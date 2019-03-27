@@ -27,9 +27,19 @@
         android:divider="@null"
         android:overScrollMode="never"
         android:layout_above="@id/input_panel"
-        android:layout_below="@id/chat_title">
+        android:layout_below="@id/chat_title" />
 
-    </ListView>
+    <TextView
+        android:id="@+id/tv_voice_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="给自己的音箱发送语音留言"
+        android:textColor="#FFB4C0C7"
+        android:textSize="14sp"
+        android:visibility="gone"
+        android:layout_marginTop="22dp"
+        android:layout_centerHorizontal="true" />
+
     <com.ubtechinc.goldenpig.voiceChat.ui.VoiceSendingView
         android:id="@+id/voice_sending"
         android:layout_width="130dp"

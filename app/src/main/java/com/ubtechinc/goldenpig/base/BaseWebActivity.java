@@ -285,14 +285,14 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
                 LogUtils.d("basewebview", "title:" + title);
-                if (!TextUtils.isEmpty(title)) {
+                if (!TextUtils.isEmpty(title) && !title.contains("https")) {
                     setToolBarTitle(title);
                 }
             }
         });
 
         String url = getURL();
-        LogUtils.d("goldPig", "URL:" + url);
+        LogUtils.d(TAG, "getURL:" + url);
         mWebView.loadUrl(url);
     }
 

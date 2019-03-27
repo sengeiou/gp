@@ -601,6 +601,7 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
             mNoTelepathicDialog.setOnlyOneButton();
             mNoTelepathicDialog.setRightButtonTxt(getString(R.string.i_know_text));
             mNoTelepathicDialog.setSubTips(getString(R.string.ubt_notelepathic_tip));
+            mNoTelepathicDialog.setSubTipColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tips_txt_color, null));
             mNoTelepathicDialog.setSubTipGravity(Gravity.LEFT);
             mNoTelepathicDialog.setOnUbtDialogClickLinsenter(new UBTSubTitleDialog.OnUbtDialogClickLinsenter() {
                 @Override

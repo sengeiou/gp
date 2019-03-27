@@ -7,12 +7,14 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.FrameLayout;
 
+import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseFragment;
-import com.ubtechinc.goldenpig.main.SkillActivity;
 import com.ubtechinc.goldenpig.main.SmartHomeWebActivity;
+import com.ubtechinc.goldenpig.main.UbtWebHelper;
 
 /**
  * @author : HQT
@@ -25,6 +27,8 @@ import com.ubtechinc.goldenpig.main.SmartHomeWebActivity;
 public class SmartHomeFragment extends BaseFragment {
 
     private FrameLayout content;
+
+    private WebView mWebView;
 
     private LocalActivityManager manager;
 
@@ -65,11 +69,25 @@ public class SmartHomeFragment extends BaseFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        content.removeAllViews();
         content.addView(getContentView());
+        if (content.getChildCount() > 0) {
+            mWebView = content.getChildAt(0).findViewById(R.id.web_common);
+        }
     }
 
     private View getContentView() {
         Intent intent = new Intent(getActivity(), SmartHomeWebActivity.class);
         return manager.startActivity("View" + 0, intent).getDecorView();
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        if (isVisibleToUser && mWebView != null) {
+            String script = "javascript:sendTvsParam(\"" + UbtWebHelper.getTvsSmartHomeParam() + "\")";
+            LogUtils.d("goldPig", "SmartHomeFragment:" + script);
+            mWebView.post(() -> mWebView.evaluateJavascript(script, value -> LogUtils.d("goldPig", "SmartHomeFragment|tvs_smart:" + value)));
+        }
+        super.setUserVisibleHint(isVisibleToUser);
     }
 }

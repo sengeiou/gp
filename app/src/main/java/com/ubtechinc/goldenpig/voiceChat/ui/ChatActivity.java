@@ -3,7 +3,6 @@ package com.ubtechinc.goldenpig.voiceChat.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,15 +20,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.protobuf.Any;
-import com.google.protobuf.ByteString;
 import com.tencent.TIMConversationType;
 import com.tencent.TIMGroupSystemElem;
 import com.tencent.TIMMessage;
 import com.tencent.TIMMessageDraft;
 import com.tencent.TIMMessageStatus;
 import com.ubt.imlibv2.bean.UbtTIMManager;
-import com.ubt.improtolib.VoiceMailContainer;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
@@ -50,13 +46,10 @@ import com.ubtechinc.goldenpig.voiceChat.util.FileUtil;
 import com.ubtechinc.goldenpig.voiceChat.util.MediaUtil;
 import com.ubtechinc.goldenpig.voiceChat.util.RecorderUtil;
 import com.ubtechinc.goldenpig.voiceChat.viewfeatures.ChatView;
-import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import static com.tencent.TIMElemType.GroupSystem;
 
@@ -65,6 +58,7 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
     private List<Message> messageList = new ArrayList<>();
     private ChatAdapter adapter;
     private ListView listView;
+    private View mEmptyView;
     private ChatPresenter presenter;
     private ChatInput input;
     private static final int IMAGE_STORE = 200;
@@ -114,7 +108,9 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
 
         adapter = new ChatAdapter(this, messageList, R.layout.item_message);
         listView = (ListView) findViewById(R.id.list);
+        mEmptyView = findViewById(R.id.tv_voice_empty);
         listView.setAdapter(adapter);
+        showEmptyView();
         listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
         listView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -160,6 +156,17 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
         voiceSendingView = (VoiceSendingView) findViewById(R.id.voice_sending);
         voiceCancelView = (VoiceCancelView) findViewById(R.id.voice_cancel);
         presenter.start();
+    }
+
+    private void showEmptyView() {
+        if (mEmptyView == null || listView == null) return;
+        if (messageList == null || messageList.isEmpty()) {
+            mEmptyView.setVisibility(View.VISIBLE);
+            listView.setVisibility(View.GONE);
+        } else {
+            mEmptyView.setVisibility(View.GONE);
+            listView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -223,6 +230,7 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
      */
     @Override
     public void showMessage(TIMMessage message) {
+        showEmptyView();
         if (message == null) {
             adapter.update(messageList);
         } else {
