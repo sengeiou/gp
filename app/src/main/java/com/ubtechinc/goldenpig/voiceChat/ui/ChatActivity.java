@@ -230,7 +230,6 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
      */
     @Override
     public void showMessage(TIMMessage message) {
-        showEmptyView();
         if (message == null) {
             adapter.update(messageList);
         } else {
@@ -248,9 +247,11 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
                     messageList.add(mMessage);
                     adapter.update(messageList);
                     listView.setSelection(adapter.getCount()-1);
+
                 }
             }
         }
+        showEmptyView();
     }
 
     /**
@@ -283,6 +284,7 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
         }
         adapter.update(messageList);
         listView.setSelection(newMsgNum);
+        showEmptyView();
         UbtLogger.d(TAG,"showMessage number   "+newMsgNum);
     }
 
@@ -573,6 +575,7 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
                 message.remove();
                 messageList.remove(mi.position);
                 adapter.update(messageList);
+                showEmptyView();
                 break;
             case 2:
                 messageList.remove(message);
