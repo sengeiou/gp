@@ -241,6 +241,10 @@
         <activity
             android:name=".personal.ShutdownAlarmActivity"
             android:launchMode="singleTop"></activity>
+
+        <activity
+            android:name=".personal.NoDelayWakeupActivity"
+            android:launchMode="singleTop"></activity>
     </application>
 
 </manifest>

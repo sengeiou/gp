@@ -74,6 +74,17 @@ public class ContactsProtoBuilder {
      */
     public static final String IM_GET_SHUTDOWN_ALARM_REQUEST = "/im/shutdown/alert/get";
 
+    /**
+     * 设置零延时唤醒
+     */
+    public static final String IM_SET_NO_DELAY_WAKEUP_REQUEST = "/im/wakeup/nodelay/set";
+    /**
+     * 获取零延时唤醒状态
+     */
+    public static final String IM_GET_NO_DELAY_WAKEUP_REQUEST = "/im/wakeup/nodelay/get";
+
+
+
     public static byte[] getAddContactsInfo(String name, String number) {
 
         ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder()
@@ -395,6 +406,29 @@ public class ContactsProtoBuilder {
 
     public static byte[] requestShutdownAlarmSwitch(boolean state) {
         ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction(IM_SET_SHUTDOWN_ALARM_REQUEST)
+                .setTime(System.currentTimeMillis()).build();
+        GPSwitchContainer.Switch.Builder builder = GPSwitchContainer.Switch.newBuilder();
+        builder.setState(state);
+        GPSwitchContainer.Switch message = builder.build();
+        ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer.ChannelMessage.newBuilder()
+                .setHeader(header)
+                .setPayload(Any.pack(message))
+                .build();
+        return channelMessage.toByteArray();
+    }
+
+    /**
+     * 获取零延时唤醒
+     *
+     * @return
+     */
+    public static byte[] requestNoDelayWakeupState() {
+        return createBaseData(IM_GET_NO_DELAY_WAKEUP_REQUEST);
+    }
+
+
+    public static byte[] requestNoDelayWakeupSwitch(boolean state) {
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction(IM_SET_NO_DELAY_WAKEUP_REQUEST)
                 .setTime(System.currentTimeMillis()).build();
         GPSwitchContainer.Switch.Builder builder = GPSwitchContainer.Switch.newBuilder();
         builder.setState(state);

@@ -75,7 +75,7 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
 
     private View rl_wifi, rl_member_group;
 
-    private View rl_4g, rl_hotpoint, rl_continuity_voice, rl_about, rl_update, rl_shutdown_alarm;
+    private View rl_4g, rl_hotpoint, rl_continuity_voice, rl_about, rl_update, rl_shutdown_alarm, rl_no_delay_wakeup, rl_do_not_disturb;
 
     private View ivRedPoint;
 
@@ -136,12 +136,16 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
         rl_hotpoint = findViewById(R.id.rl_hotpoint);
         rl_continuity_voice = findViewById(R.id.rl_continuity_voice);
         rl_shutdown_alarm = findViewById(R.id.rl_shutdown_alarm);
+        rl_no_delay_wakeup = findViewById(R.id.rl_no_delay_wakeup);
+        rl_do_not_disturb = findViewById(R.id.rl_do_not_disturb);
         rl_about = findViewById(R.id.rl_about);
         rl_update = findViewById(R.id.rl_update);
         rl_4g.setOnClickListener(this);
         rl_hotpoint.setOnClickListener(this);
         rl_continuity_voice.setOnClickListener(this);
         rl_shutdown_alarm.setOnClickListener(this);
+        rl_no_delay_wakeup.setOnClickListener(this);
+        rl_do_not_disturb.setOnClickListener(this);
         rl_about.setOnClickListener(this);
         rl_update.setOnClickListener(this);
 
@@ -317,6 +321,11 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
                 break;
             case R.id.rl_shutdown_alarm:
                 //enterFunction(ShutdownAlarmActivity.class, null);
+                break;
+            case R.id.rl_no_delay_wakeup:
+                enterFunction(NoDelayWakeupActivity.class, null);
+                break;
+            case R.id.rl_do_not_disturb:
                 break;
             case R.id.rl_member_group:
                 ActivityRoute.toAnotherActivity(this, PigMemberActivity.class, false);
