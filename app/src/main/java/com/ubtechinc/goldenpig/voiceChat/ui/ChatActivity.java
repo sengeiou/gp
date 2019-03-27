@@ -110,7 +110,7 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
         listView = (ListView) findViewById(R.id.list);
         mEmptyView = findViewById(R.id.tv_voice_empty);
         listView.setAdapter(adapter);
-        showEmptyView();
+       // showEmptyView();
         listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
         listView.setOnTouchListener(new View.OnTouchListener() {
             @Override
