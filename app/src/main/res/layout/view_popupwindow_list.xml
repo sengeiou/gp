@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipe_menu"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/ubt_transparent"
+    android:orientation="horizontal">
+    <!--com.bigman.wmzx.customcardview.library.CardView-->
+    <com.meetsl.scardview.SCardView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="@dimen/dp_1"
+        app:cardLightDirection="none"
+        app:cardShadowEndColor="@color/ubt_white"
+        app:cardShadowStartColor="@color/cardview_line">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </com.meetsl.scardview.SCardView>
+</RelativeLayout>

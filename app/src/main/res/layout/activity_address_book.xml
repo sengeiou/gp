@@ -49,7 +49,7 @@
             android:singleLine="true"
             android:text="通讯录"
             android:textColor="@color/ubt_tips_txt_color"
-            android:textSize="@dimen/sp_16"
+            style="@style/UBTToolBarTitleTheme"
             android:textStyle="normal" />
 
         <TextView
@@ -68,10 +68,10 @@
 
     </RelativeLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/ubt_1px"
-        android:background="@color/ubt_wifi_list_divider" />
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="@dimen/ubt_1px"-->
+        <!--android:background="@color/ubt_wifi_list_divider" />-->
 
     <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
         android:id="@+id/recycler"

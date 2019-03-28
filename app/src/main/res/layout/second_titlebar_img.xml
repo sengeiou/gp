@@ -25,8 +25,8 @@
         android:singleLine="true"
         android:text="@null"
         android:textColor="@color/ubt_tips_txt_color"
-        android:textSize="@dimen/sp_16"
-        android:textStyle="normal" />
+        android:textStyle="normal"
+        style="@style/UBTToolBarTitleTheme"/>
 
     <ImageView
         android:id="@+id/iv_right"

@@ -7,7 +7,11 @@
     android:background="@color/ubt_main_bg_color"
     android:orientation="vertical">
 
-    <include layout="@layout/view_item_second_titlebar_tv" />
+    <com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewTv
+        android:id="@+id/rl_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:background="@color/ubt_white"/>
 
     <View
         android:layout_width="match_parent"
@@ -16,5 +20,5 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 </LinearLayout>

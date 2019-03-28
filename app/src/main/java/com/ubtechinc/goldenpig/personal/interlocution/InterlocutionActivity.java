@@ -21,8 +21,11 @@ import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.model.InterlocutionItemModel;
 import com.ubtechinc.goldenpig.model.JsonCallback;
+import com.ubtechinc.goldenpig.pigmanager.popup.PopupWindowList;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.view.Divider;
+import com.ubtechinc.goldenpig.view.RecyclerItemClickListener;
+import com.ubtechinc.goldenpig.view.RecyclerOnItemLongListener;
 import com.ubtechinc.goldenpig.view.StateView;
 import com.yanzhenjie.recyclerview.swipe.SwipeItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
@@ -44,7 +47,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
     @BindView(R.id.rl_titlebar)
     SecondTitleBarViewImg rl_titlebar;
     @BindView(R.id.recycler)
-    SwipeMenuRecyclerView recycler;
+    RecyclerView recycler;
     InterlocutionAdapter adapter;
     private ArrayList<InterlocutionItemModel> mList;
     /**
@@ -95,50 +98,70 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
         mList = new ArrayList<>();
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        recycler.setCustomBackgroundSize(getResources().getDimensionPixelSize(R.dimen.dp_94) + 1);
+        //recycler.setCustomBackgroundSize(getResources().getDimensionPixelSize(R.dimen.dp_94) + 1);
         recycler.setLayoutManager(linearLayoutManager);
         recycler.setHasFixedSize(true);
         Divider divider = new Divider(new ColorDrawable(getResources().getColor(R.color
                 .ubt_main_bg_color)), OrientationHelper.VERTICAL);
         divider.setHeight((int) getResources().getDimension(R.dimen.dp_10));
         recycler.addItemDecoration(divider);
-        recycler.setSwipeMenuCreator(swipeMenuCreator);
-        recycler.setSwipeItemClickListener(this);
-        recycler.setSwipeMenuItemClickListener(mMenuItemClickListener);
-        adapter = new InterlocutionAdapter(this, mList);
-        recycler.setAdapter(adapter);
-        requestModel = new InterlocutionModel();
-        recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//        recycler.setSwipeMenuCreator(swipeMenuCreator);
+//        recycler.setSwipeItemClickListener(this);
+//        recycler.setSwipeMenuItemClickListener(mMenuItemClickListener);
+        adapter = new InterlocutionAdapter(this, mList, new RecyclerOnItemLongListener() {
             @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
+            public void onItemLongClick(View v, int position) {
+                showPopWindows(v, position);
+                mList.get(position).select = 1;
+                adapter.notifyDataSetChanged();
             }
 
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
-                //获取最后一个完全显示的ItemPosition ,角标值
-                int firstVisibleItem = manager.findFirstVisibleItemPosition();
-                if (firstVisibleItem > 0) {
-                    rl_titlebar.showIvRight();
+            public void onItemClick(View v, int position) {
+                LogUtils.d("hdf", "position:" + position);
+                if (mList.get(position).type == 1) {
+                    Intent it = new Intent(InterlocutionActivity.this, AddInterlocutionActivity.class);
+                    startActivity(it);
                 } else {
-                    View firstVisiableChildView = manager.findViewByPosition(firstVisibleItem);
-                    //获取当前显示条目的高度
-                    int itemHeight = firstVisiableChildView.getHeight();
-                    //获取当前Recyclerview 偏移量
-                    int flag = -firstVisiableChildView.getTop();
-//                    LogUtils.d("hdf", "flag:" + flag + ",firstY:" + firstY + ",itemHeight:" + itemHeight + "," +
-//                            "firstVisiableChildView.getTop:" + firstVisiableChildView.getTop());
-                    if (flag > firstY) {
-                        rl_titlebar.showIvRight();
-                    } else {
-                        rl_titlebar.hideIvRight();
-                    }
-
+                    Intent it = new Intent(InterlocutionActivity.this, AddInterlocutionActivity.class);
+                    it.putExtra("item", mList.get(position));
+                    startActivity(it);
                 }
             }
         });
+        recycler.setAdapter(adapter);
+        requestModel = new InterlocutionModel();
+//        recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//            }
+//
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//                LinearLayoutManager manager = (LinearLayoutManager) recyclerView.getLayoutManager();
+//                //获取最后一个完全显示的ItemPosition ,角标值
+//                int firstVisibleItem = manager.findFirstVisibleItemPosition();
+//                if (firstVisibleItem > 0) {
+//                    rl_titlebar.showIvRight();
+//                } else {
+//                    View firstVisiableChildView = manager.findViewByPosition(firstVisibleItem);
+//                    //获取当前显示条目的高度
+//                    int itemHeight = firstVisiableChildView.getHeight();
+//                    //获取当前Recyclerview 偏移量
+//                    int flag = -firstVisiableChildView.getTop();
+////                    LogUtils.d("hdf", "flag:" + flag + ",firstY:" + firstY + ",itemHeight:" + itemHeight + "," +
+////                            "firstVisiableChildView.getTop:" + firstVisiableChildView.getTop());
+//                    if (flag > firstY) {
+//                        rl_titlebar.showIvRight();
+//                    } else {
+//                        rl_titlebar.hideIvRight();
+//                    }
+//
+//                }
+//            }
+//        });
         onRefresh();
     }
 
@@ -165,15 +188,15 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
                     public void run() {
                         LoadingDialog.getInstance(InterlocutionActivity.this).dismiss();
                         mList.clear();
-                        InterlocutionItemModel model = new InterlocutionItemModel();
-                        model.type = 1;
-                        mList.add(model);
-//                        if (reponse == null || reponse.size() == 0) {
-//                            rl_titlebar.hideIvRight();
-//                        } else {
-//                            //Collections.reverse(reponse);
-//                            rl_titlebar.showIvRight();
-//                        }
+                        if (reponse == null || reponse.size() == 0) {
+                            InterlocutionItemModel model = new InterlocutionItemModel();
+                            model.type = 1;
+                            mList.add(model);
+                            rl_titlebar.hideIvRight();
+                        } else {
+                            //Collections.reverse(reponse);
+                            rl_titlebar.showIvRight();
+                        }
                         mList.addAll(reponse);
                         adapter.notifyDataSetChanged();
                     }
@@ -294,5 +317,71 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
             it.putExtra("item", mList.get(position));
             startActivity(it);
         }
+    }
+
+    private void deleteInterloc(int position) {
+        requestModel.deleteInterlocRequest(mList.get(position).strDocId, new
+                JsonCallback<String>(String.class) {
+                    @Override
+                    public void onSuccess(String reponse) {
+                        mHander.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtils.showShortToast("删除成功");
+                                LoadingDialog.getInstance(InterlocutionActivity.this)
+                                        .dismiss();
+                                mList.remove(position);
+                                if (mList.size() == 0) {
+                                    InterlocutionItemModel model = new
+                                            InterlocutionItemModel();
+                                    model.type = 1;
+                                    mList.add(model);
+                                    rl_titlebar.hideIvRight();
+                                } else {
+                                    rl_titlebar.showIvRight();
+                                }
+                                adapter.notifyDataSetChanged();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(String str) {
+                        mHander.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                LoadingDialog.getInstance(InterlocutionActivity.this)
+                                        .dismiss();
+                                ToastUtils.showShortToast(str);
+                            }
+                        });
+                    }
+                });
+        LoadingDialog.getInstance(InterlocutionActivity.this).setTimeout(20)
+                .setShowToast(true).show();
+    }
+
+    private void showPopWindows(View view, int deletePosition) {
+        List<String> dataList = new ArrayList<>();
+        dataList.add("删除该问答");
+        PopupWindowList mPopupWindowList = new PopupWindowList(view.getContext());
+        mPopupWindowList.setDissListener(new PopupWindowList.DissListener() {
+            @Override
+            public void onDissListener() {
+                mList.get(deletePosition).select = 0;
+                adapter.notifyItemChanged(deletePosition);
+            }
+        });
+        mPopupWindowList.setAnchorView(view);
+        mPopupWindowList.setItemData(dataList);
+        mPopupWindowList.setModal(true);
+        mPopupWindowList.show();
+        mPopupWindowList.setOnItemClickListener(new RecyclerItemClickListener(this) {
+            @Override
+            protected void onItemClick(View view, int position) {
+                mPopupWindowList.hide();
+                deleteInterloc(deletePosition);
+            }
+        });
     }
 }

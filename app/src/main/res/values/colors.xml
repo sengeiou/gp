@@ -59,4 +59,6 @@
     <color name="gold_red_color">#FF3A30</color>
 
     <color name="cardview_line">#1ff2f2f2</color>
+    <color name="alarm_press_item">#fbfbfb</color>
+    <color name="item_un_select">#f1f1f1</color>
 </resources>

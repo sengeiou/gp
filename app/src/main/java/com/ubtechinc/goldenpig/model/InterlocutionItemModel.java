@@ -15,7 +15,10 @@ public class InterlocutionItemModel implements Parcelable {
     public String strDocId;
     public List<QueriesModel> vQueries = new ArrayList<>();
     public List<AnswersModel> vAnswers = new ArrayList<>();
-
+    /**
+     * 0为否，1为是
+     */
+    public int select = 0;
     public InterlocutionItemModel() {
     }
 

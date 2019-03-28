@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ubtechinc.goldenpig.R;
-import com.ubtechinc.goldenpig.model.AddressBookmodel;
 import com.ubtechinc.goldenpig.model.AlarmModel;
+import com.ubtechinc.goldenpig.view.RecyclerOnItemLongListener;
 
 import java.util.List;
 
@@ -20,10 +20,12 @@ import java.util.List;
 public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.AlarmListHolder> {
     private Context mContext;
     private List<AlarmModel> mList;
+    private RecyclerOnItemLongListener listener;
 
-    public AlarmListAdapter(Context mContext, List<AlarmModel> mList) {
+    public AlarmListAdapter(Context mContext, List<AlarmModel> mList, RecyclerOnItemLongListener listener) {
         this.mContext = mContext;
         this.mList = mList;
+        this.listener = listener;
     }
 
     @Override
@@ -39,6 +41,28 @@ public class AlarmListAdapter extends RecyclerView.Adapter<AlarmListAdapter.Alar
         holder.tv_amorpm.setText(model.amOrpm);
         holder.tv_time.setText(model.time);
         holder.tv_repeat.setText(model.repeatName);
+        if (model.select == 1) {
+            holder.itemView.setSelected(true);
+        } else {
+            holder.itemView.setSelected(false);
+        }
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (listener != null) {
+                    listener.onItemLongClick(v, position);
+                }
+                return false;
+            }
+        });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onItemClick(v, position);
+                }
+            }
+        });
     }
 
 

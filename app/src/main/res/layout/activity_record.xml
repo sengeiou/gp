@@ -14,15 +14,6 @@
         android:layout_height="@dimen/dp_50"
         android:background="@color/ubt_white" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/ubt_1px"
-        android:background="@color/ubt_wifi_list_divider" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_15" />
-
     <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"

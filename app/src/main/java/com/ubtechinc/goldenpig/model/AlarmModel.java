@@ -13,7 +13,10 @@ public class AlarmModel implements Parcelable {
     public int eRepeatType;
     public long lStartTimeStamp;
     public String repeatName;
-
+    /**
+     * 0为否，1为是
+     */
+    public int select = 0;
     public AlarmModel() {
     }
 

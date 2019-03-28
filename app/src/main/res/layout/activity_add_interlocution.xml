@@ -11,7 +11,8 @@
     <RelativeLayout
         android:id="@+id/rl_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_45">
+        android:layout_height="@dimen/dp_45"
+        android:background="@color/ubt_white">
 
         <TextView
             android:id="@+id/tv_left"
@@ -37,7 +38,7 @@
             android:singleLine="true"
             android:text="定制问答"
             android:textColor="@color/ubt_tips_txt_color"
-            android:textSize="@dimen/sp_16"
+            style="@style/UBTToolBarTitleTheme"
             android:textStyle="normal" />
 
         <TextView

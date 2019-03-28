@@ -13,7 +13,10 @@ public class RemindModel implements Parcelable {
     public String repeatName;
     public String sNote;
     public String date;
-
+    /**
+     * 0为否，1为是
+     */
+    public int select = 0;
     public RemindModel() {
     }
 

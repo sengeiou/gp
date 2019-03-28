@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.ubtech.utilcode.utils.ToastUtils;
@@ -15,6 +16,7 @@ import com.ubtechinc.goldenpig.model.AddressBookmodel;
 import com.ubtechinc.goldenpig.model.InterlocutionItemModel;
 import com.ubtechinc.goldenpig.pigmanager.bean.RecordModel;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.view.RecyclerOnItemLongListener;
 
 import java.util.List;
 
@@ -25,10 +27,13 @@ import java.util.List;
 public class InterlocutionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private Context mContext;
     private List<InterlocutionItemModel> mList;
+    private RecyclerOnItemLongListener listener;
 
-    public InterlocutionAdapter(Context mContext, List<InterlocutionItemModel> mList) {
+    public InterlocutionAdapter(Context mContext, List<InterlocutionItemModel> mList, RecyclerOnItemLongListener
+            listener) {
         this.mContext = mContext;
         this.mList = mList;
+        this.listener = listener;
     }
 
     @Override
@@ -60,9 +65,39 @@ public class InterlocutionAdapter extends RecyclerView.Adapter<RecyclerView.View
                     }
                 }
             }
+            if (model.select == 1) {
+                holder.itemView.setSelected(true);
+            } else {
+                holder.itemView.setSelected(false);
+            }
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (listener != null) {
+                        listener.onItemLongClick(v, position);
+                    }
+                    return false;
+                }
+            });
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onItemClick(v, position);
+                    }
+                }
+            });
         } else {
             InterlocutionHolder2 aHolder = (InterlocutionHolder2) holder;
             aHolder.tv_add.setText("添加问答");
+            aHolder.iv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.onItemClick(v, position);
+                    }
+                }
+            });
         }
     }
 
@@ -89,10 +124,11 @@ public class InterlocutionAdapter extends RecyclerView.Adapter<RecyclerView.View
 
     public class InterlocutionHolder2 extends RecyclerView.ViewHolder {
         TextView tv_add;
-
+        ImageView iv;
         public InterlocutionHolder2(View itemView) {
             super(itemView);
             tv_add = itemView.findViewById(R.id.tv_add);
+            iv = itemView.findViewById(R.id.iv);
         }
     }
 }

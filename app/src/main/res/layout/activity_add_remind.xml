@@ -10,7 +10,8 @@
     <RelativeLayout
         android:id="@+id/rl_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_45">
+        android:layout_height="@dimen/dp_45"
+        android:background="@color/ubt_white">
 
         <TextView
             android:id="@+id/tv_left"
@@ -36,7 +37,7 @@
             android:singleLine="true"
             android:text="新建提醒"
             android:textColor="@color/ubt_tips_txt_color"
-            android:textSize="@dimen/sp_16"
+            style="@style/UBTToolBarTitleTheme"
             android:textStyle="normal" />
 
         <TextView
@@ -77,6 +78,8 @@
             android:paddingRight="@dimen/dp_20"
             android:singleLine="true"
             android:textColor="@color/ubt_tips_txt_color"
+            android:textColorHint="@color/ubt_version_color"
+            android:textCursorDrawable="@drawable/color_cursor2"
             android:textSize="@dimen/sp_16" />
 
         <View

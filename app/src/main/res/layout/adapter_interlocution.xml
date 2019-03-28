@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerInParent="true"
-    android:background="@color/ubt_white"
+    android:background="@drawable/selector_alarm_item"
     android:orientation="horizontal"
     app:right_id="@+id/ll_right_menu">
 

@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.model.InterlocutionItemModel;
 import com.ubtechinc.goldenpig.model.RemindModel;
+import com.ubtechinc.goldenpig.view.RecyclerOnItemLongListener;
 
 import java.util.List;
 
@@ -20,10 +21,12 @@ import java.util.List;
 public class RemindAdapter extends RecyclerView.Adapter<RemindAdapter.RemindHolder> {
     private Context mContext;
     private List<RemindModel> mList;
+    private RecyclerOnItemLongListener listener;
 
-    public RemindAdapter(Context mContext, List<RemindModel> mList) {
+    public RemindAdapter(Context mContext, List<RemindModel> mList, RecyclerOnItemLongListener listener) {
         this.mContext = mContext;
         this.mList = mList;
+        this.listener = listener;
     }
 
     @Override
@@ -31,12 +34,6 @@ public class RemindAdapter extends RecyclerView.Adapter<RemindAdapter.RemindHold
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout
                 .adapter_remind, parent, false);
         return new RemindHolder(view);
-//        if (viewType == 0) {
-//        } else {
-//            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout
-//                    .adapter_remind_header, parent, false);
-//            return new RemindHolder2(view);
-//        }
     }
 
     @Override
@@ -47,6 +44,20 @@ public class RemindAdapter extends RecyclerView.Adapter<RemindAdapter.RemindHold
         aHolder.tv_am.setText(model.amOrpm);
         aHolder.tv_time.setText(model.time);
         aHolder.tv_date.setText(model.date);
+        if (model.select == 1) {
+            holder.itemView.setSelected(true);
+        } else {
+            holder.itemView.setSelected(false);
+        }
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (listener != null) {
+                    listener.onItemLongClick(v, position);
+                }
+                return false;
+            }
+        });
 //        if (mList.get(position).type == 0) {
 //        } else {
 //            RemindHolder2 aHolder = (RemindHolder2) holder;
