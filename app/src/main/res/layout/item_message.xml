@@ -96,7 +96,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_toLeftOf="@id/rightAvatar"
-                android:background="@drawable/bubble_blue"
+                android:background="@drawable/bubble_blue_new"
                 android:clickable="true"
                 android:gravity="center"
                 android:longClickable="true"
