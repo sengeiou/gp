@@ -63,7 +63,7 @@
         android:drawableStart="@drawable/selector_xuanze_radio"
         android:drawablePadding="@dimen/dp_8"
         android:text="@string/ubt_startup_done"
-        android:textColor="#FF454B59"
+        android:textColor="#FFB4C0C7"
         android:textSize="14sp"
         app:layout_constraintBottom_toTopOf="@id/tv_startup_next"
         app:layout_constraintLeft_toLeftOf="@id/tv_startup_next"

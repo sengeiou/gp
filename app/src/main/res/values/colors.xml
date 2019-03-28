@@ -9,6 +9,7 @@
     <color name="ubt_tab_btn_txt_color">#B4C0C7</color>
     <color name="ubt_tab_btn_txt_checked_color">#29AAFF</color>
     <color name="ubt_skip_txt_unenable_color">#FFB4C0C7</color>
+    <color name="ubt_txt_unenable_color">#FFF1F1F1</color>
     <!--透明-->
     <color name="ubt_transparent">#0000</color>
     <color name="ubt_tips_txt_color">#454B59</color>
@@ -23,7 +24,7 @@
     <color name="ubt_notify_tv_bg_color">#55FE4C4C </color>
     <color name="ubt_global_bg_color">#FFF5F8FB</color>
     <!--等待弹框背景色-->
-    <color name="ubt_loading_dialog_bg">#4D010101</color>
+    <color name="ubt_loading_dialog_bg">#FFE2E2E2</color>
     <color name="ubt_layout_bg_color">#365779</color>
     <color name="ubt_version_color">#B4C0C7</color>
     <!--卡片阴影颜色-->

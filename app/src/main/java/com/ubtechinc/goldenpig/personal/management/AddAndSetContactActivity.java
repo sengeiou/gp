@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -62,7 +63,6 @@ import java.util.Observable;
 import java.util.Observer;
 
 import butterknife.BindView;
-import okio.Timeout;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CONTACT_CHECK_SUCCESS;
 import static com.ubtechinc.goldenpig.utils.CommendUtil.TIMEOUT_MILLI;
@@ -237,17 +237,21 @@ public class AddAndSetContactActivity extends BaseNewActivity implements Observe
             @Override
             protected void convert(BaseViewHolder helper, String item) {
                 helper.setText(R.id.tv_name, item);
+                helper.setTextColor(R.id.tv_name, ContextCompat.getColor(AddAndSetContactActivity.this, R.color.ubt_main_item_tab_color));
 
                 //TODO
                 if (curPosition >= 0 && curPosition < mList.size()) {
                     String curText = mList.get(curPosition);
                     if (curText.equals(item)) {
-                        helper.setBackgroundRes(R.id.tv_name, R.drawable.shape_ubt_btn_cyan_gb);
+                        helper.setBackgroundRes(R.id.tv_name, R.drawable.shape_ubt_blue_biground);
+                        helper.setTextColor(R.id.tv_name, ContextCompat.getColor(AddAndSetContactActivity.this, R.color.white));
                     } else {
                         helper.setBackgroundRes(R.id.tv_name, R.drawable.gray_round_frame);
+                        helper.setTextColor(R.id.tv_name, ContextCompat.getColor(AddAndSetContactActivity.this, R.color.ubt_main_item_tab_color));
                     }
                 } else {
                     helper.setBackgroundRes(R.id.tv_name, R.drawable.gray_round_frame);
+                    helper.setTextColor(R.id.tv_name, ContextCompat.getColor(AddAndSetContactActivity.this, R.color.ubt_main_item_tab_color));
                 }
             }
         });

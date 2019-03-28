@@ -70,7 +70,7 @@ public class QRCodeActivity extends BaseToolBarActivity implements View.OnClickL
         mQRImg = findViewById(R.id.ubt_img_qrcode);
         mQRImg.setOnClickListener(this);
 
-        mQRSize = getResources().getDimensionPixelOffset(R.dimen.dp_250);
+        mQRSize = getResources().getDimensionPixelOffset(R.dimen.dp_230);
     }
 
     private void initContent(Intent intent) {
@@ -85,7 +85,7 @@ public class QRCodeActivity extends BaseToolBarActivity implements View.OnClickL
             ((TextView) findViewById(R.id.ubt_tv_qrcode_sub_title)).setText(R.string.ubt_pair_pig);
             ((TextView) findViewById(R.id.ubt_tv_qrcode_desc)).setText(R.string.ubt_pair_pig_desc);
             mToolbarRightBtn = findViewById(R.id.ubt_imgbtn_add);
-            mToolbarRightBtn.setImageResource(R.drawable.ic_shaoyishao); ///暂时使用这个图标，目前还没有图标
+            mToolbarRightBtn.setImageResource(R.drawable.ic_shaoyishao);
             mToolbarRightBtn.setVisibility(View.VISIBLE);
             mToolbarRightBtn.setOnClickListener(this);
 
@@ -128,7 +128,7 @@ public class QRCodeActivity extends BaseToolBarActivity implements View.OnClickL
                                 @Override
                                 public void run() {
                                     if (mQRImg != null) {
-                                        mQRImg.setImageBitmap(ZxingUtils.createBitmap(singa, mQRSize, mQRSize));
+                                        mQRImg.setImageBitmap(ZxingUtils.createBitmap(singa, mQRSize, mQRSize, 1));
                                     }
                                 }
                             });
