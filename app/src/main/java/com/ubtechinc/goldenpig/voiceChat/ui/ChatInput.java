@@ -225,7 +225,7 @@ public class ChatInput extends RelativeLayout implements TextWatcher,View.OnClic
     private void updateVoiceView(){
         if (isHoldVoiceBtn) {
             voicePanel.setText(getResources().getString(R.string.chat_release_send));
-            voicePanel.setBackground(getResources().getDrawable(R.drawable.btn_voice_pressed));
+            voicePanel.setBackground(getResources().getDrawable(R.drawable.btn_voice_normal));
             chatView.startSendVoice();
             //todo refactor
             try {
