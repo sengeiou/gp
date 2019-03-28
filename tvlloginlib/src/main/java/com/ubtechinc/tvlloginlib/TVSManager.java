@@ -44,7 +44,7 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
     private TVSAlarmListener mTVSAlarmListener;
     public LoginInfo info;
 
-    public static ELoginEnv tvsEnv = ELoginEnv.TEST;
+    public static ELoginEnv tvsEnv = ELoginEnv.FORMAL;
 
     public static TVSManager getInstance(Context context, String wxId, String qqOpenId) {
         if (instance == null) {
