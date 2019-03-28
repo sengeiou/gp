@@ -175,7 +175,7 @@ public class StateView extends View {
             mRetryResource = R.layout.base_retry;
         }
         if (mLoadingResource == 0) {
-            mLoadingResource = R.layout.dialog_loading;
+            mLoadingResource = R.layout.base_loading;
         }
 
         if (attrs == null) {
