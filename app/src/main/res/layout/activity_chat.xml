@@ -33,7 +33,7 @@
         android:id="@+id/tv_voice_empty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="给自己的音箱发送语音留言"
+        android:text="@string/ubt_send_voice"
         android:textColor="#FFB4C0C7"
         android:textSize="14sp"
         android:visibility="gone"
