@@ -198,7 +198,7 @@
     <string name="failed_retry">操作失败，请重试</string>
 
     <string name="ubt_page_bottom">优必选科技有限公司   版权所有</string>
-    <string name="ubt_page_bottom_sub">Copyright © 2018 Ubtech Robotics Corp.All rights reserved</string>
+    <string name="ubt_page_bottom_sub">Copyright © 2018~Present Ubtech Robotics Corp.All rights reserved</string>
 
     <string name="ubt_login_agree_policy">同意《优必选服务协议》与《隐私协议》</string>
     <string name="ubt_login_agree_policy_tip">请确认并同意《优必选服务协议》与《隐私协议》</string>

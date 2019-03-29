@@ -154,10 +154,13 @@ public class UBTPGApplication extends LoginApplication implements Observer {
         initSCADA();
 
         //bugly
+        Log.d(TAG, "BuildConfig.DEBUG:" + BuildConfig.DEBUG);
         if (!BuildConfig.DEBUG) {
             CrashReport.initCrashReport(getApplicationContext(), "a6f55be79e", false);
             CrashReport.setAppChannel(getApplicationContext(), AppUtil.getMetaDataFromApp(this, AppUtil
                     .KEY_CHANNEL_META));
+        } else {
+            Stetho.initializeWithDefaults(this);
         }
 
         MultiDex.install(this);
@@ -165,7 +168,6 @@ public class UBTPGApplication extends LoginApplication implements Observer {
         instance = this;
         Foreground.init(this);
         mContext = this.getApplicationContext();
-        Stetho.initializeWithDefaults(this);
         UbtLogger.init(getApplicationContext());
         UbtLogger.i("", ProtoBufferDisposer.TAG);
         EventBusUtil.register(this);
