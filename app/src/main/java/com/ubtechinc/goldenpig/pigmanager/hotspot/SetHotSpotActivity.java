@@ -193,7 +193,7 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer,
         }
         try {
             if (hotSpotName.getBytes("utf8").length > 31) {
-                ToastUtils.showShortToast("热点名称长度不允许超过31个字节");
+                ToastUtils.showShortToast("热点名称不允许超过31个字节");
                 return;
             }
         } catch (UnsupportedEncodingException e) {

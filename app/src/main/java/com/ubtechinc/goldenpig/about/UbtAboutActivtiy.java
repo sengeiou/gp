@@ -119,7 +119,7 @@ public class UbtAboutActivtiy extends BaseToolBarActivity {
                     frequencyCount = 0;
                     lastClickTime = 0;
 //                    Toast.makeText(UBTPGApplication.getContext(), "厉害，这都被你发现了", Toast.LENGTH_SHORT).show();
-                    ActivityRoute.toAnotherActivity(UbtAboutActivtiy.this, EggShellActivtiy.class, false);
+//                    ActivityRoute.toAnotherActivity(UbtAboutActivtiy.this, EggShellActivtiy.class, false);
                 }
             }
         });
