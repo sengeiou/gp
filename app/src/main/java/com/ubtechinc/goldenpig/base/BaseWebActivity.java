@@ -307,9 +307,9 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
                     //处理监听事件
-                    if (!isCameraOrPhone) {
-                        cancelFilePathCallback();
-                    }
+//                    if (!isCameraOrPhone) {
+//                        cancelFilePathCallback();
+//                    }
                 }
             });
         }

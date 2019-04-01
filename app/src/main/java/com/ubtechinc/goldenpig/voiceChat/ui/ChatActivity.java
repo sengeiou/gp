@@ -574,6 +574,7 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
             case 1:
                 message.remove();
                 messageList.remove(mi.position);
+                handle(messageList);
                 adapter.update(messageList);
                 showEmptyView();
                 break;
@@ -588,6 +589,15 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
                 break;
         }
         return super.onContextItemSelected(item);
+    }
+
+    private void handle(List<Message> messageList) {
+        int size = messageList.size();
+        for (int i = 1; i < size; i++) {
+            Message message = messageList.get(i);
+            Message PreMessage = messageList.get(i - 1);
+            message.setHasTime(PreMessage.getMessage());
+        }
     }
 
 

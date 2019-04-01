@@ -34,7 +34,7 @@
             android:id="@+id/ubt_tv_about_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp_20"
+            android:layout_marginTop="@dimen/dp_16"
             android:textColor="@color/ubt_version_color"
             android:textSize="@dimen/sp_14"
             />

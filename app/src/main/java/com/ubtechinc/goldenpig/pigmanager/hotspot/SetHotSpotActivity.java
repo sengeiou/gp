@@ -26,6 +26,7 @@ import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.ubtrobot.gold.UserContacts;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -190,8 +191,13 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer,
             ToastUtils.showShortToast("热点名称或密码不允许为空");
             return;
         }
-        if (hotSpotName.length() > 10) {
-            ToastUtils.showShortToast("热点名称长度不允许超过10个字符");
+        try {
+            if (hotSpotName.getBytes("utf8").length > 31) {
+                ToastUtils.showShortToast("热点名称不允许超过31个字节");
+                return;
+            }
+        } catch (UnsupportedEncodingException e) {
+            //TODO 编码出错
             return;
         }
         if (hotSpotPwd.length() < 8) {
