@@ -351,7 +351,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/dp_45"
                     android:background="@color/ubt_white"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView
                         android:id="@+id/tv_no_delay_wakeup"
