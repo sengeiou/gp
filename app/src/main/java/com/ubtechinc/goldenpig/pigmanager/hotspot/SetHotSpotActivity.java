@@ -15,6 +15,7 @@ import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.imlibv2.bean.listener.OnUbtTIMConverListener;
 import com.ubt.improtolib.GPResponse;
+import com.ubtech.utilcode.utils.StringUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
@@ -193,7 +194,7 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer,
         }
         try {
             if (hotSpotName.getBytes("utf8").length > 31) {
-                ToastUtils.showShortToast("热点名称不允许超过31个字节");
+                ToastUtils.showShortToast("热点名称过长");
                 return;
             }
         } catch (UnsupportedEncodingException e) {
@@ -201,9 +202,23 @@ public class SetHotSpotActivity extends BaseToolBarActivity implements Observer,
             return;
         }
         if (hotSpotPwd.length() < 8) {
-            ToastUtils.showShortToast("热点密码长度至少需输入8个字符");
+            ToastUtils.showShortToast("热点密码过短");
             return;
         }
+        if (StringUtils.isContainChinese(hotSpotPwd)) {
+            ToastUtils.showShortToast("热点密码不支持汉字");
+            return;
+        }
+        try {
+            if (hotSpotPwd.getBytes("utf8").length > 31) {
+                ToastUtils.showShortToast("热点密码过长");
+                return;
+            }
+        } catch (UnsupportedEncodingException e) {
+            //TODO 编码出错
+            return;
+        }
+
         if (UBTPGApplication.isNetAvailable) {
             if (UBTPGApplication.isRobotOnline) {
                 TIMMessage message = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.updateHotSpot
