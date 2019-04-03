@@ -15,7 +15,7 @@
         android:layout_width="@dimen/dp_157"
         android:layout_height="@dimen/dp_94"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/icon_shibai" />
+        android:src="@drawable/img_failed_to_load" />
 
     <TextView
         android:id="@+id/tv_reload"

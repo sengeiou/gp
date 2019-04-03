@@ -9,7 +9,7 @@
         android:id="@+id/iv_web_fail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/icon_shibai"
+        android:src="@drawable/img_failed_to_load"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
