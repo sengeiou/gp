@@ -32,17 +32,13 @@ import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseFragment;
 import com.ubtechinc.goldenpig.comm.widget.CustomPopupWindow;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
-import com.ubtechinc.goldenpig.comm.widget.UBTUpdateDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
-import com.ubtechinc.goldenpig.main.CheckUpdateHttpProxy;
-import com.ubtechinc.goldenpig.main.CommonWebActivity;
+import com.ubtechinc.goldenpig.main.DownloadUtils;
 import com.ubtechinc.goldenpig.main.FunctionModel;
 import com.ubtechinc.goldenpig.main.HomeDataHttpProxy;
 import com.ubtechinc.goldenpig.main.MainActivity;
-import com.ubtechinc.goldenpig.main.UbtWebHelper;
-import com.ubtechinc.goldenpig.main.UpdateInfoModel;
 import com.ubtechinc.goldenpig.pigmanager.BleConfigReadyActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
@@ -64,7 +60,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static com.ubtechinc.goldenpig.app.Constant.SP_HAS_LOOK_LAST_RECORD;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.APP_UPDATE_CHECK;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DO_GET_NATIVE_INFO;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.INVISE_RECORD_POINT;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NETWORK_STATE_CHANGED;
@@ -88,6 +83,8 @@ public class PigNewFragment extends BaseFragment {
     private static final String TAG = PigNewFragment.class.getSimpleName();
 
     private static final int GET_NATIVE_INFO = 1;
+
+
 
     @BindView(R.id.tv_pig_sn)
     TextView tvPigSn;
@@ -176,6 +173,10 @@ public class PigNewFragment extends BaseFragment {
 
     private FunctionModel mFunctionModel;
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+    }
 
     @Nullable
     @Override
@@ -262,16 +263,9 @@ public class PigNewFragment extends BaseFragment {
     private void restoreCard() {
         boolean state = SharedPreferencesUtils.getBoolean(getActivity(), "hiden", true);
         hiden = state;
-//        int count = tempList.size();
         int count = mFunctionModel.catetory.categorys.size();
         if (state) {
             UbtLogger.d(TAG, "restoreCard 不做处理");
-//            ivPull.setImageResource(R.drawable.ic_shangshou);
-//            if(count<=12){
-//                AnimUtil.changeViewHeightAnimatorStart(rvFunctionCard, DensityUtil.dp2px(baseHeight*2), DensityUtil.dp2px(baseHeight * 3));
-//            }else{
-//                AnimUtil.changeViewHeightAnimatorStart(rvFunctionCard, DensityUtil.dp2px(baseHeight*2), DensityUtil.dp2px(baseHeight * 4));
-//            }
         } else {
             UbtLogger.d(TAG, "restoreCard 收起");
             ivPull.setImageResource(R.drawable.ic_xiala);
@@ -311,7 +305,7 @@ public class PigNewFragment extends BaseFragment {
         initRecycleList();
         fetchFunctionCardData();
         refreshData();
-        checkUpdate();
+//        checkUpdate();
     }
 
     private void fetchFunctionCardData() {
@@ -451,30 +445,12 @@ public class PigNewFragment extends BaseFragment {
             unReadVoiceMail("setOnUbtTIMConver-DEBUG");
         }
 
-//        restoreCard();
 
     }
 
 
     private void checkUpdate() {
-        if (SharedPreferencesUtils.getBoolean(getActivity(), "isNotNeedShow", false)) {
-            return;
-        }
-        UbtLogger.d(TAG, "start checkUpdate");
-        new CheckUpdateHttpProxy().checkUpdate(new CheckUpdateHttpProxy.GetFunctionCallback() {
-            @Override
-            public void onError(String error) {
-                UbtLogger.d(TAG, "updateInfoModel onError:" + error);
-            }
-
-            @Override
-            public void onSuccess(UpdateInfoModel updateInfoModel) {
-                UbtLogger.d(TAG, "updateInfoModel:" + updateInfoModel.toString());
-                Event<UpdateInfoModel> event = new Event<>(APP_UPDATE_CHECK);
-                event.setData(updateInfoModel);
-                EventBusUtil.sendEvent(event);
-            }
-        });
+      new DownloadUtils().doCheckUpdate(getActivity());
     }
 
     @Override
@@ -544,56 +520,40 @@ public class PigNewFragment extends BaseFragment {
             case RECEIVE_ROBOT_ONLINE_STATE:
                 updateUserPig();
                 break;
-            case APP_UPDATE_CHECK:
+          /*  case APP_UPDATE_CHECK:
                 showUpdateDialog((UpdateInfoModel) event.getData());
                 break;
-        }
-    }
 
-
-    private void showUpdateDialog(UpdateInfoModel updateInfoModel) {
-        UBTUpdateDialog dialog = new UBTUpdateDialog(getActivity());
-        dialog.setRightBtnColor(ContextCompat.getColor(getActivity(), R.color.ubt_tab_btn_txt_checked_color));
-        dialog.setTips("发现新版本" + updateInfoModel.getVersion());
-        dialog.setSubTips(updateInfoModel.getVersionInfo());
-        dialog.setSubTipGravity(Gravity.CENTER);
-        dialog.setLeftButtonTxt("下次再说");
-        dialog.setRightButtonTxt("立即更新");
-        dialog.showNoTip(true);
-        if (updateInfoModel.getUpdateType().equals("2")) {
-            dialog.setOnlyOneButton();
-        }
-        dialog.setOnUbtDialogContentClickLinsenter(new UBTUpdateDialog.OnUbtDialogContentClickLinsenter() {
-            @Override
-            public void onNotipClick(View view) {
-                //TODO sp记录勾选状态
-                UbtLogger.d(TAG, "view:" + view.isSelected());
-                if (view.isSelected()) {
-                    SharedPreferencesUtils.putBoolean(getActivity(), "isNotNeedShow", true);
-                } else {
-                    SharedPreferencesUtils.putBoolean(getActivity(), "isNotNeedShow", false);
+            case DOWNLOAD_APK_STAR:
+                showDialog(getActivity());
+                break;
+            case DOWNLOAD_APK_PROGRESS:
+                if(updialog != null){
+                    UbtLogger.d("DOWNLOAD_APK_PROGRESS","DOWNLOAD_APK_PROGRESS:" + event.getData());
+                    updialog.updateProgress((int)event.getData());
                 }
-            }
-        });
-        dialog.setOnUbtDialogClickLinsenter(new UBTUpdateDialog.OnUbtDialogClickLinsenter() {
-            @Override
-            public void onLeftButtonClick(View view) {
-
-            }
-
-            @Override
-            public void onRightButtonClick(View view) {
-                //TODO goto ble bind config
-//                HashMap<String, String> map = new HashMap<>();
-//                map.put("url", updateInfoModel.getUrl());
-                ActivityRoute.toAnotherActivity(getActivity(), CommonWebActivity.class, UbtWebHelper.getUpdateInfoWebviewData(getActivity(), updateInfoModel.getUrl()),
-                        false);
-                dialog.dismiss();
-
-            }
-        });
-        dialog.show();
+                break;
+            case DOWNLOAD_APK_SUCCESS:
+                if(updialog != null){
+                    updialog.dismiss();
+                }
+                ToastUtils.showShortToast("下载成功");
+                UbtLogger.d("wmma", "ssssss");
+                DownloadUtils.installApk(getActivity());
+                break;
+            case DOWNLOAD_APK_FAILED:
+                if(updialog != null){
+                    updialog.dismiss();
+                }
+                ToastUtils.showShortToast("下载失败");
+                break;*/
+        }
     }
+
+
+
+
+
 
     /**
      * 更新小猪基本信息

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_dialog_bg">
+
+    <TextView
+        android:id="@+id/ubt_tv_dialog_tips"
+        style="@style/UBTDialogTipsTheme"
+        android:layout_marginBottom="@dimen/dp_12"
+        android:background="@null"
+        android:textColor="@color/ubt_tips_txt_color"
+        android:textSize="@dimen/sp_18"
+        android:text="正在更新，请稍候"
+        />
+
+    <SeekBar
+        android:id="@+id/sk_update_progress"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_5"
+        android:layout_below="@+id/ubt_tv_dialog_tips"
+        android:layout_marginLeft="@dimen/dp_22"
+        android:layout_marginRight="@dimen/dp_22"
+        android:layout_marginTop="@dimen/dp_30"
+        android:layout_marginBottom="@dimen/dp_54"
+        android:progressDrawable="@drawable/update_progress"
+        android:thumb="@null"
+        android:max="100"
+        android:progress="0"
+        />
+
+
+
+
+
+</RelativeLayout>

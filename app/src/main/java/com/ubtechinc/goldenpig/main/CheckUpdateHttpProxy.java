@@ -26,7 +26,7 @@ import okhttp3.Response;
 
 public class CheckUpdateHttpProxy extends BaseHttpProxy {
 
-    private static final String URL = "http://10.10.1.14:8090/cloud-ppi/pig/sys/update";
+    private static final String URL = "https://prerelease.ubtrobot.com/cloud-ppi/pig/sys/update";
 
     public void checkUpdate( final GetFunctionCallback callback) {
 
@@ -60,13 +60,20 @@ public class CheckUpdateHttpProxy extends BaseHttpProxy {
                         boolean status = jsonObject.optBoolean("status");
                         if (status) {
                             JSONObject modelJson = jsonObject.optJSONObject("models");
-                            Type type = new TypeToken<UpdateInfoModel>() {
-                            }.getType();
-                            UpdateInfoModel model = JsonUtils.getObject(modelJson.toString(), type);
+                            if(modelJson != null){
+                                Type type = new TypeToken<UpdateInfoModel>() {
+                                }.getType();
+                                UpdateInfoModel model = JsonUtils.getObject(modelJson.toString(), type);
 
-                            if (callback != null) {
-                                callback.onSuccess(model);
+                                if (callback != null) {
+                                    callback.onSuccess(model);
+                                }
+                            }else{
+                                if (callback != null) {
+                                    callback.noUpdate();
+                                }
                             }
+
                         }
                     } else {
                         LogUtils.d("CheckUpdateHttpProxy", "getData|fail" + result);
@@ -83,6 +90,7 @@ public class CheckUpdateHttpProxy extends BaseHttpProxy {
         void onError(String error);
 
         void onSuccess(UpdateInfoModel updateInfoModel);
+        void noUpdate();
     }
 
 }

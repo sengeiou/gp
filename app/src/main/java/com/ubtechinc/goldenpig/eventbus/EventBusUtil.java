@@ -68,5 +68,11 @@ public class EventBusUtil {
     public static final int RECEIVE_NO_DELAY_WAKEUP_STATE = 20019;
     public static final int RECEIVE_NO_DELAY_WAKEUP_SWITCH_STATE = 20020;
 
+    public static final int DOWNLOAD_APK_STAR = 20021;
+    public static final int DOWNLOAD_APK_PROGRESS = 20022;
+    public static final int DOWNLOAD_APK_SUCCESS = 20023;
+    public static final int DOWNLOAD_APK_FAILED = 20024;
+    public static final int DOWNLOAD_APK_CANCLE = 20025;
+    public static final int CHECK_NO_UPDATE = 20026;
 
 }

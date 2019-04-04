@@ -12,4 +12,5 @@
     <root-path
         name="images"
         path="" />
+    <external-path name="down" path="Download" />
 </paths>

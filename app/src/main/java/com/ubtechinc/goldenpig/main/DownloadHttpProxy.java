@@ -1,10 +1,12 @@
 package com.ubtechinc.goldenpig.main;
 
 import android.content.Context;
+import android.os.Environment;
 
 import com.google.gson.reflect.TypeToken;
 import com.ubtech.utilcode.utils.JsonUtils;
 import com.ubtech.utilcode.utils.LogUtils;
+import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.net.BaseHttpProxy;
 import com.ubtechinc.nets.BuildConfig;
 import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
@@ -21,6 +23,7 @@ import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -29,80 +32,70 @@ import okhttp3.Response;
 
 public class DownloadHttpProxy extends BaseHttpProxy {
 
-    public void getData(final Context context,final String url, final String destFileDir, final String destFileName, final DownloadCallBack callback) {
+    private static final String TAG = "DownloadHttpProxy";
 
-        OkHttpClient okHttpClient = getHttpClient();
 
-     /*   Map<String, Object> map = new HashMap<>();
-        map.put("md5_category", category);
-        map.put("md5_statement", statement);
-        map.put("version", "V" + com.ubtechinc.goldenpig.BuildConfig.VERSION_NAME);
-        map.put("clientType", 1);
-        String content = JsonUtils.map2Json(map);
-        RequestBody body = RequestBody.create(JSON, content);*/
-
-        final Request okrequest = new Request.Builder()
+    public void downloadApk(String url, final DownloadCallBack callback){
+        OkHttpClient client = new OkHttpClient();
+        FormBody.Builder builder = new FormBody.Builder();
+        FormBody body = builder.build();
+        Request request = new Request.Builder()
                 .url(url)
                 .build();
-        Call call = okHttpClient.newCall(okrequest);
-        call.enqueue(new Callback() {
+        client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                if (callback != null) {
-                    callback.onError(e.getMessage());
-                }
+
             }
 
             @Override
-            public void onResponse(Call call, Response response) {
-                InputStream is = null;
-                byte[] buf = new byte[2048];
-                int len = 0;
-                FileOutputStream fos = null;
-
-                //储存下载文件的目录
-                File dir = new File(destFileDir);
-                if (!dir.exists()) {
-                    dir.mkdirs();
-                }
-                File file = new File(dir, destFileName);
-
+            public void onResponse(Call call, Response response) throws IOException {
+                InputStream is = null;//输入流
+                FileOutputStream fos = null;//输出流
                 try {
+                    is = response.body().byteStream();//获取输入流
+                    long total = response.body().contentLength();//获取文件大小
+                    if(is != null){
+                        UbtLogger.d(TAG, "onResponse: 不为空");
+                        File file = new File(Environment.getExternalStorageDirectory()+ File.separator + "Download","Pig.apk");// 设置路径
+                        fos = new FileOutputStream(file);
+                        byte[] buf = new byte[1024];
+                        int ch = -1;
+                        int process = 0;
+                        while ((ch = is.read(buf)) != -1) {
+                            fos.write(buf, 0, ch);
+                            process += ch;
+                            int progress = (int) (process * 1.0f  / total *100 );
+                            callback.onProgress(progress);       //这里就是关键的实时更新进度了！
+                        }
 
-                    is = response.body().byteStream();
-                    long total = response.body().contentLength();
-                    fos = new FileOutputStream(file);
-                    long sum = 0;
-                    while ((len = is.read(buf)) != -1) {
-                        fos.write(buf, 0, len);
-                        sum += len;
-                        int progress = (int) (sum * 1.0f / total * 100);
-                        //下载中更新进度条
-                        callback.onProgress(progress);
                     }
                     fos.flush();
-                    //下载完成
+                    // 下载完成
+                    if(fos != null){
+                        fos.close();
+                    }
                     callback.onSuccess();
                 } catch (Exception e) {
                     callback.onError(e.getMessage());
-                }finally {
-
+                } finally {
                     try {
-                        if (is != null) {
+                        if (is != null)
                             is.close();
-                        }
-                        if (fos != null) {
-                            fos.close();
-                        }
                     } catch (IOException e) {
-
                     }
-
+                    try {
+                        if (fos != null)
+                            fos.close();
+                    } catch (IOException e) {
+                    }
                 }
 
             }
         });
+
     }
+
 
     public interface DownloadCallBack {
 
