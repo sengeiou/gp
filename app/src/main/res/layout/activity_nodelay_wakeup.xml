@@ -42,6 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp_15"
         android:layout_marginTop="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_15"
         android:text="开启后，oneshot模式下有唤醒音，普通模式下不存在唤醒音延时"
         android:textColor="#FF454B59"
         android:textSize="@dimen/sp_14" />
@@ -50,7 +51,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/dp_15"
-        android:layout_marginRight="@dimen/dp_10"
+        android:layout_marginRight="@dimen/dp_15"
         android:layout_marginTop="@dimen/dp_15">
 
 
