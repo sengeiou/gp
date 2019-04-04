@@ -81,13 +81,23 @@ public class SmartHomeFragment extends BaseFragment {
         return manager.startActivity("View" + 0, intent).getDecorView();
     }
 
+    private void sendTvsParam() {
+        String script = "javascript:sendTvsParam(\"" + UbtWebHelper.getTvsSmartHomeParam() + "\")";
+        LogUtils.d("goldPig", "SmartHomeFragment:" + script);
+        mWebView.post(() -> mWebView.evaluateJavascript(script, value -> LogUtils.d("goldPig", "SmartHomeFragment|tvs_smart:" + value)));
+    }
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         if (isVisibleToUser && mWebView != null) {
-            String script = "javascript:sendTvsParam(\"" + UbtWebHelper.getTvsSmartHomeParam() + "\")";
-            LogUtils.d("goldPig", "SmartHomeFragment:" + script);
-            mWebView.post(() -> mWebView.evaluateJavascript(script, value -> LogUtils.d("goldPig", "SmartHomeFragment|tvs_smart:" + value)));
+            sendTvsParam();
         }
         super.setUserVisibleHint(isVisibleToUser);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        sendTvsParam();
     }
 }
