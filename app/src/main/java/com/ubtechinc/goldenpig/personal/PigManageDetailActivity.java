@@ -435,24 +435,30 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
     }
 
     private void getMember() {
+        showLoadingDialog();
         new CheckUserRepository().getRobotBindUsers(mPig.getRobotName(), CookieInterceptor.get().getToken(),
                 BuildConfig.APP_ID, "", new CheckUserRepository.ICheckBindStateCallBack() {
                     @Override
                     public void onError(ThrowableWrapper e) {
+                        dismissLoadDialog();
                     }
 
                     @Override
                     public void onSuccess(CheckBindRobotModule.Response response) {
+                        dismissLoadDialog();
                     }
 
                     @Override
                     public void onSuccessWithJson(String jsonStr) {
-                        List<CheckBindRobotModule.User> bindUsers = jsonToUserList(jsonStr);
-                        if (bindUsers != null && bindUsers.size() > 1) {
-                            showUnBindConfirmDialog(false);
-                        } else {
-                            showUnBindConfirmDialog(true);
-                        }
+                        dismissLoadDialog();
+                        runOnUiThread(() -> {
+                            List<CheckBindRobotModule.User> bindUsers = jsonToUserList(jsonStr);
+                            if (bindUsers != null && bindUsers.size() > 1) {
+                                showUnBindConfirmDialog(false);
+                            } else {
+                                showUnBindConfirmDialog(true);
+                            }
+                        });
                     }
                 });
     }

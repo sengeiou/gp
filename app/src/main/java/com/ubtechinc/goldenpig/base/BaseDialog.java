@@ -33,7 +33,9 @@ public class BaseDialog extends Dialog {
     @Override
     public void show() {
         setDialogWidth();
-        super.show();
+        if (ContextUtils.isContextExisted(mContext)) {
+            super.show();
+        }
     }
 
     private void setDialogWidth(){

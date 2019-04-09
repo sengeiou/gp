@@ -67,6 +67,9 @@ public class UbtAboutActivtiy extends BaseToolBarActivity {
         findViewById(R.id.ubt_bottom_nav).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!com.ubtechinc.goldenpig.BuildConfig.DEBUG) {
+                    return;
+                }
                 click_times++;
                 if (click_times > debug_open) {
                     String text = "";
@@ -87,15 +90,11 @@ public class UbtAboutActivtiy extends BaseToolBarActivity {
         findViewById(R.id.iv_ubt_logo).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //TODO Test smarthome
-//                LoginProxy proxy = TVSManager.getInstance(UbtAboutActivtiy.this,
-//                        com.ubtechinc.goldenpig.BuildConfig.APP_ID_WX, com.ubtechinc.goldenpig.BuildConfig.APP_ID_QQ).getProxy();
-//                String url = "https://ddsdk.html5.qq.com/smartHome";
-//                proxy.tvsRequestUrl(url, null, null, null);
-
-                long time = SystemClock.elapsedRealtime();
                 updateVersion();
+                if (!com.ubtechinc.goldenpig.BuildConfig.DEBUG) {
+                    return;
+                }
+                long time = SystemClock.elapsedRealtime();
                 if (lastClickTime == 0) {
                     lastClickTime = time;
                 }
@@ -118,8 +117,8 @@ public class UbtAboutActivtiy extends BaseToolBarActivity {
                 if (frequencyCount >= 6) {
                     frequencyCount = 0;
                     lastClickTime = 0;
-//                    Toast.makeText(UBTPGApplication.getContext(), "厉害，这都被你发现了", Toast.LENGTH_SHORT).show();
-//                    ActivityRoute.toAnotherActivity(UbtAboutActivtiy.this, EggShellActivtiy.class, false);
+                    Toast.makeText(UBTPGApplication.getContext(), "厉害，这都被你发现了", Toast.LENGTH_SHORT).show();
+                    ActivityRoute.toAnotherActivity(UbtAboutActivtiy.this, EggShellActivtiy.class, false);
                 }
             }
         });
