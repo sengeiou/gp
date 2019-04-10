@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
 
 import com.bottomnavigation.BottomNavigationBar;
 import com.bottomnavigation.BottomNavigationItem;
@@ -65,8 +66,8 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         StatusBarWrapUtil.translucentStatusBar(this, true);
         StatusBarUtil.setStatusBarTextColor(this, false);
-//        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View
-//                .SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View
+                .SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         initViews();
         checkInitInterlocution();
     }
