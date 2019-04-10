@@ -43,6 +43,7 @@ import io.reactivex.disposables.Disposable;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.APP_UPDATE_CHECK;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CHECK_NO_UPDATE;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CHECK_UPDATE_ERROR;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DOWNLOAD_APK_CANCLE;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DOWNLOAD_APK_FAILED;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DOWNLOAD_APK_PROGRESS;
@@ -201,6 +202,10 @@ public class SplashActivity extends BaseActivity {
             case CHECK_NO_UPDATE:
                 checkLogin();
                 break;
+            case CHECK_UPDATE_ERROR:
+                checkLogin();
+                break;
+
 
         }
     }

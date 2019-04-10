@@ -74,5 +74,6 @@ public class EventBusUtil {
     public static final int DOWNLOAD_APK_FAILED = 20024;
     public static final int DOWNLOAD_APK_CANCLE = 20025;
     public static final int CHECK_NO_UPDATE = 20026;
+    public static final int CHECK_UPDATE_ERROR = 20027;
 
 }

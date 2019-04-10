@@ -23,6 +23,7 @@ import java.util.List;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.APP_UPDATE_CHECK;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CHECK_NO_UPDATE;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CHECK_UPDATE_ERROR;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DOWNLOAD_APK_FAILED;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DOWNLOAD_APK_PROGRESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DOWNLOAD_APK_STAR;
@@ -41,6 +42,8 @@ public class DownloadUtils {
             @Override
             public void onError(String error) {
                 UbtLogger.d(TAG, "updateInfoModel onError:" + error);
+                Event<UpdateInfoModel> event = new Event<>(CHECK_UPDATE_ERROR);
+                EventBusUtil.sendEvent(event);
             }
 
             @Override

@@ -520,33 +520,7 @@ public class PigNewFragment extends BaseFragment {
             case RECEIVE_ROBOT_ONLINE_STATE:
                 updateUserPig();
                 break;
-          /*  case APP_UPDATE_CHECK:
-                showUpdateDialog((UpdateInfoModel) event.getData());
-                break;
 
-            case DOWNLOAD_APK_STAR:
-                showDialog(getActivity());
-                break;
-            case DOWNLOAD_APK_PROGRESS:
-                if(updialog != null){
-                    UbtLogger.d("DOWNLOAD_APK_PROGRESS","DOWNLOAD_APK_PROGRESS:" + event.getData());
-                    updialog.updateProgress((int)event.getData());
-                }
-                break;
-            case DOWNLOAD_APK_SUCCESS:
-                if(updialog != null){
-                    updialog.dismiss();
-                }
-                ToastUtils.showShortToast("下载成功");
-                UbtLogger.d("wmma", "ssssss");
-                DownloadUtils.installApk(getActivity());
-                break;
-            case DOWNLOAD_APK_FAILED:
-                if(updialog != null){
-                    updialog.dismiss();
-                }
-                ToastUtils.showShortToast("下载失败");
-                break;*/
         }
     }
 

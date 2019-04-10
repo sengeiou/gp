@@ -1,6 +1,7 @@
 package com.ubtechinc.goldenpig.pigmanager.mypig;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -42,6 +43,7 @@ public class QRCodeActivity extends BaseToolBarActivity implements View.OnClickL
     private long mQRClickTime;
     private boolean isPair; //用于区分两种配对八戒和添加成员功能，显示不同文字或导航栏按钮
     private String singa;
+    private int mQRLogoSize;
 
     private UBTSubTitleDialog dialog;
 
@@ -70,7 +72,8 @@ public class QRCodeActivity extends BaseToolBarActivity implements View.OnClickL
         mQRImg = findViewById(R.id.ubt_img_qrcode);
         mQRImg.setOnClickListener(this);
 
-        mQRSize = getResources().getDimensionPixelOffset(R.dimen.dp_230);
+        mQRSize = getResources().getDimensionPixelOffset(R.dimen.dp_250);
+        mQRLogoSize = getResources().getDimensionPixelOffset(R.dimen.dp_83);
     }
 
     private void initContent(Intent intent) {
@@ -128,7 +131,8 @@ public class QRCodeActivity extends BaseToolBarActivity implements View.OnClickL
                                 @Override
                                 public void run() {
                                     if (mQRImg != null) {
-                                        mQRImg.setImageBitmap(ZxingUtils.createBitmap(singa, mQRSize, mQRSize, 1));
+//                                        mQRImg.setImageBitmap(ZxingUtils.createBitmap(singa, mQRSize, mQRSize, 1));
+                                        mQRImg.setImageBitmap(ZxingUtils.createQRCodeWithLogo(singa, mQRSize,BitmapFactory.decodeResource(getResources(), R.drawable.img_hulian)));
                                     }
                                 }
                             });

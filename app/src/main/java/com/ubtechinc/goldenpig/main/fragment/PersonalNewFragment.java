@@ -95,6 +95,10 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
     TextView tv_pig;
     @BindView(R.id.tv_pig_state)
     TextView tv_pig_state;
+    @BindView(R.id.iv_online_state)
+    ImageView iv_online_state;
+    @BindView(R.id.iv_go_to)
+    ImageView iv_goto;
     @BindView(R.id.ubt_tv_pig_name)
     TextView ubt_tv_pig_name;
     @BindView(R.id.ll_version)
@@ -300,14 +304,21 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null && pigInfo.isAdmin) {
             tv_pig_state.setVisibility(View.VISIBLE);
+            iv_goto.setVisibility(View.VISIBLE);
+            iv_online_state.setVisibility(View.VISIBLE);
             if (UBTPGApplication.isRobotOnline) {
                 tv_pig_state.setText("(在线)");
+                iv_online_state.setImageResource(R.drawable.ic_line);
+
             } else {
                 tv_pig_state.setText("(离线)");
+                iv_online_state.setImageResource(R.drawable.ic_off_line);
                 ll_version.setVisibility(View.GONE);
             }
         } else {
             tv_pig_state.setVisibility(View.GONE);
+            iv_goto.setVisibility(View.GONE);
+            iv_online_state.setVisibility(View.GONE);
         }
     }
 

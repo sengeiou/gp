@@ -41,7 +41,7 @@
                     android:id="@+id/ll_voicechat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/ic_001"
+                    android:background="@drawable/img_bg_binding"
                     android:orientation="vertical">
 
                     <ImageView
@@ -93,7 +93,8 @@
                         android:layout_marginLeft="-5dp"
                         android:background="@drawable/btn_binding"
                         android:text="@string/ubt_start_set_net"
-                        android:textColor="#29AAFF" />
+                        android:textColor="#29AAFF"
+                        />
 
                     <TextView
                         android:id="@+id/tv_net_tip"
@@ -133,32 +134,9 @@
                         >
 
                         <ImageView
-                            android:id="@+id/iv_battery"
-                            android:layout_width="@dimen/dp_22"
-                            android:layout_height="@dimen/dp_22"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_battery_level"
-                            />
-
-                        <TextView
-                            android:id="@+id/tv_battery"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_toRightOf="@id/iv_battery"
-                            android:layout_marginLeft="@dimen/dp_1"
-                            android:textColor="@color/white"
-                            android:gravity="center"
-                            android:text="100%"
-                            android:textSize="11sp"
-                            />
-
-                        <ImageView
                             android:id="@+id/iv_ble"
                             android:layout_width="@dimen/dp_22"
                             android:layout_height="@dimen/dp_22"
-                            android:layout_marginLeft="@dimen/dp_5"
-                            android:layout_toRightOf="@id/tv_battery"
                             android:src="@drawable/ic_bt_connected"
                             android:layout_centerVertical="true"
                             />
@@ -185,10 +163,45 @@
                             />
 
                         <RelativeLayout
-                            android:id="@+id/rl_wifi"
+                            android:id="@+id/rl_battery"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_toRightOf="@+id/iv_signal"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/bg_battery"
+                            android:layout_marginLeft="@dimen/dp_5"
+                            android:paddingTop="1dp"
+                            >
+
+                            <ImageView
+                                android:id="@+id/iv_battery"
+                                android:layout_width="@dimen/dp_12"
+                                android:layout_height="@dimen/dp_22"
+                                android:layout_centerVertical="true"
+                                android:src="@drawable/ic_battery_level"
+                                />
+
+                            <TextView
+                                android:id="@+id/tv_battery"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_toRightOf="@id/iv_battery"
+                                android:paddingLeft="@dimen/dp_5"
+                                android:textColor="@color/white"
+                                android:gravity="center"
+                                android:text="100%"
+                                android:paddingRight="@dimen/dp_5"
+                                android:textSize="@dimen/sp_11"
+                                />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/rl_wifi"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/rl_battery"
                             android:layout_marginLeft="@dimen/dp_5"
                             android:layout_marginRight="@dimen/dp_10"
                             android:paddingTop="1dp"
@@ -196,7 +209,7 @@
                             android:paddingLeft="4dp"
                             android:paddingRight="4dp"
                             android:layout_centerVertical="true"
-                            android:background="@drawable/bg_wifi">
+                            android:background="@drawable/bg_battery">
 
                             <ImageView
                                 android:id="@+id/iv_wifi"

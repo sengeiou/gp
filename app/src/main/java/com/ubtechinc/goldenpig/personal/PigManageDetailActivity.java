@@ -79,7 +79,7 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
 
     private View ivRedPoint;
 
-    private TextView tv_4g, tv_hot_point, tv_continuity_voice, tv_about, tv_update;
+    private TextView tv_4g, tv_hot_point, tv_continuity_voice, tv_about, tv_update, tv_no_delay_wakeup;
 
     private TextView tv_manager;
 
@@ -156,6 +156,7 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
         tv_continuity_voice = findViewById(R.id.tv_continuity_voice);
         tv_about = findViewById(R.id.tv_about);
         tv_update = findViewById(R.id.tv_update);
+        tv_no_delay_wakeup = findViewById(R.id.tv_no_delay_wakeup);
 
         tv_manager = findViewById(R.id.tv_manager);
         tv_manager_state = findViewById(R.id.tv_manager_state);
@@ -267,12 +268,14 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
         rl_continuity_voice.setEnabled(isAdmin);
         rl_about.setEnabled(isAdmin);
         rl_update.setEnabled(isAdmin);
+        rl_no_delay_wakeup.setEnabled(isAdmin);
 
         tv_4g.setEnabled(isAdmin);
         tv_hot_point.setEnabled(isAdmin);
         tv_continuity_voice.setEnabled(isAdmin);
         tv_about.setEnabled(isAdmin);
         tv_update.setEnabled(isAdmin);
+        tv_no_delay_wakeup.setEnabled(isAdmin);
     }
 
     public void onClick(View v) {

@@ -270,7 +270,7 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
     enum FunctionEnum {
 
         VOICE_MAIL("语音留言", R.drawable.ic_voicemail),
-        PAIR("配对八戒", R.drawable.ic_pair),
+        PAIR("八戒互联", R.drawable.ic_pair),
         ALARM("闹钟", R.drawable.ic_alarm),
         REMIND("日程提醒", R.drawable.ic_scheduel),
         CUSTOM_QA("定制问答", R.drawable.ic_question_answer),
