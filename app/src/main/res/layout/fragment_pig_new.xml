@@ -150,17 +150,6 @@
                             android:src="@drawable/ic_signal"
                             />
 
-                        <ImageView
-                            android:id="@+id/iv_sim_net"
-                            android:layout_width="@dimen/dp_22"
-                            android:layout_height="@dimen/dp_22"
-                            android:layout_toRightOf="@+id/iv_signal"
-                            android:layout_marginLeft="@dimen/dp_5"
-                            android:layout_centerVertical="true"
-                            android:src="@drawable/ic_sim_net"
-                            android:visibility="gone"
-                            />
-
                         <RelativeLayout
                             android:id="@+id/rl_battery"
                             android:layout_width="wrap_content"
@@ -198,6 +187,17 @@
                                 />
 
                         </RelativeLayout>
+
+                        <ImageView
+                            android:id="@+id/iv_sim_net"
+                            android:layout_width="@dimen/dp_22"
+                            android:layout_height="@dimen/dp_22"
+                            android:layout_toRightOf="@+id/rl_battery"
+                            android:layout_marginLeft="@dimen/dp_5"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/ic_sim_net"
+                            android:visibility="gone"
+                            />
 
                         <RelativeLayout
                             android:id="@+id/rl_wifi"
