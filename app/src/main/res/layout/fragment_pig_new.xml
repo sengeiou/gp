@@ -174,10 +174,13 @@
 
                             <ImageView
                                 android:id="@+id/iv_battery"
-                                android:layout_width="@dimen/dp_12"
-                                android:layout_height="@dimen/dp_22"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_centerVertical="true"
                                 android:src="@drawable/ic_battery_level"
+                                android:paddingTop="@dimen/dp_4_5"
+                                android:paddingBottom="@dimen/dp_4_5"
+                                android:paddingLeft="@dimen/dp_5"
                                 />
 
                             <TextView

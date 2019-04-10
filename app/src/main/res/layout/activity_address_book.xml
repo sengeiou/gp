@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:contentDescription="@null"
             android:paddingBottom="@dimen/dp_11"
-            android:paddingLeft="@dimen/dp_4"
+            android:paddingLeft="@dimen/dp_16"
             android:paddingTop="@dimen/dp_11"
             android:scaleType="fitCenter"
             android:src="@drawable/ic_back" />
