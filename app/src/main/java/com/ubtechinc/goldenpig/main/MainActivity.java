@@ -7,13 +7,13 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
 
 import com.bottomnavigation.BottomNavigationBar;
 import com.bottomnavigation.BottomNavigationItem;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtech.utilcode.utils.SPUtils;
 import com.ubtechinc.bluetooth.UbtBluetoothManager;
+import com.ubtechinc.commlib.utils.StatusBarUtil;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.Constant;
 import com.ubtechinc.goldenpig.base.BaseActivity;
@@ -64,8 +64,9 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         StatusBarWrapUtil.translucentStatusBar(this, true);
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View
-                .SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        StatusBarUtil.setStatusBarTextColor(this, false);
+//        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View
+//                .SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         initViews();
         checkInitInterlocution();
     }
