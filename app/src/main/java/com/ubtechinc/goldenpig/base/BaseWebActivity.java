@@ -87,7 +87,10 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
     /** 相册相关，待优化 */
     private Dialog picDialog;
     private View picView;
-    private Boolean isCameraOrPhone = false;
+
+    /** 是否选择了图片 */
+    private boolean isCameraOrPhone = false;
+
     private ValueCallback<Uri[]> mUploadMessageForAndroid5;
     private File cameraFile;
     private Uri imageUri;
@@ -298,6 +301,7 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
 
     private void gotoSelectPhoto(ValueCallback<Uri[]> filePathCallback) {
         mUploadMessageForAndroid5 = filePathCallback;
+        isCameraOrPhone = false;
         if (picDialog == null) {
             picView = LayoutInflater.from(this).inflate(
                     R.layout.dialog_album_selector, null);
@@ -307,18 +311,18 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
                 @Override
                 public void onDismiss(DialogInterface dialog) {
                     //处理监听事件
-//                    if (!isCameraOrPhone) {
-//                        cancelFilePathCallback();
-//                    }
+                    if (!isCameraOrPhone) {
+                        cancelFilePathCallback();
+                    }
                 }
             });
         }
         picDialog.show();
-        isCameraOrPhone = false;
         picView.findViewById(R.id.tv_get_content).setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
+                isCameraOrPhone = true;
                 picDialog.dismiss();
                 openAlbum();
             }
@@ -327,6 +331,7 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
 
             @Override
             public void onClick(View v) {
+                isCameraOrPhone = true;
                 picDialog.dismiss();
                 openCamera();
             }
@@ -356,6 +361,7 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
 
                         @Override
                         public void onFailed(int requestCode, @NonNull List<String> deniedPermissions) {
+                            cancelFilePathCallback();
                             showPermissionDialog(Permission.STORAGE);
                         }
                     })
@@ -372,7 +378,6 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
                 Intent.ACTION_GET_CONTENT);
         openAlbumIntent.setType("image/*");
         startActivityForResult(openAlbumIntent, PHOTO_BY_FILE);
-        isCameraOrPhone = true;
     }
 
     /**
@@ -391,6 +396,7 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
 
                         @Override
                         public void onFailed(int requestCode, @NonNull List<String> deniedPermissions) {
+                            cancelFilePathCallback();
                             showPermissionDialog(Permission.CAMERA);
                         }
                     })
@@ -422,7 +428,6 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
         //将拍照结果保存至photo_file的Uri中，不保留在相册中
         intentCamera.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(intentCamera, PHOTO_BY_SHOOT);
-        isCameraOrPhone = true;
     }
 
     /**
