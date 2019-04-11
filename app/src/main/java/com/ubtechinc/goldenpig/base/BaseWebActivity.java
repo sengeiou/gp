@@ -128,7 +128,10 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
         });
 
         setTitleBack(true);
-        setToolBarTitle(getToolBarTitle());
+        int titleRes = getToolBarTitle();
+        if (titleRes != - 1) {
+            setToolBarTitle(titleRes);
+        }
 
         initWebView();
         initActionBar();

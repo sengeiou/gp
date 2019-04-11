@@ -155,13 +155,13 @@ public class UBTUpdateDialog extends BaseDialog implements View.OnClickListener 
                 if (onUbtDialogClickLinsenter != null) {
                     onUbtDialogClickLinsenter.onLeftButtonClick(v);
                 }
-                dismiss();
+//                dismiss();
                 break;
             case R.id.ubt_dialog_right_btn:
                 if (onUbtDialogClickLinsenter != null) {
                     onUbtDialogClickLinsenter.onRightButtonClick(v);
                 }
-                dismiss();
+//                dismiss();
                 break;
             case R.id.ubt_tv_dialog_notip:
                 mRadioTip.setSelected(!mRadioTip.isSelected());

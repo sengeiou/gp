@@ -58,7 +58,7 @@ public class CommonWebActivity extends BaseWebActivity {
 
     @Override
     protected int getToolBarTitle() {
-        return R.string.ubt_skills_detail;
+        return -1;
     }
 
     @Override

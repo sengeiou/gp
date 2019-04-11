@@ -15,6 +15,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import com.ubtech.utilcode.utils.ToastUtils;
+import com.ubtechinc.commlib.log.UBTLog;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseActivity;
@@ -49,6 +50,7 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DOWNLOAD_APK_FAILED;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DOWNLOAD_APK_PROGRESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DOWNLOAD_APK_STAR;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DOWNLOAD_APK_SUCCESS;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NO_NEED_CHECK;
 
 
 /**
@@ -88,12 +90,13 @@ public class SplashActivity extends BaseActivity {
 
 
 //        checkLogin();
+        checkUpdate();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        checkP();
+//        checkP();
     }
 
     private void checkUpdate(){
@@ -140,9 +143,9 @@ public class SplashActivity extends BaseActivity {
             public void onNotipClick(View view) {
                 //TODO sp记录勾选状态
                 if (view.isSelected()) {
-                    SharedPreferencesUtils.putBoolean(context, "isNotNeedShow", true);
+                    SharedPreferencesUtils.putString(context, "isNotNeedShow", updateInfoModel.getVersion());
                 } else {
-                    SharedPreferencesUtils.putBoolean(context, "isNotNeedShow", false);
+                    SharedPreferencesUtils.putString(context, "isNotNeedShow", "");
                 }
             }
         });
@@ -157,8 +160,11 @@ public class SplashActivity extends BaseActivity {
             @Override
             public void onRightButtonClick(View view) {
 
-                new DownloadUtils().downloadApk((BaseActivity) context, updateInfoModel.getUrl());
-                dialog.dismiss();
+//                new DownloadUtils().downloadApk((BaseActivity) context, updateInfoModel.getUrl());
+//                dialog.dismiss();
+                ActivityRoute.toAnotherActivity((Activity) context, CommonWebActivity.class,
+                        UbtWebHelper.getUpdateInfoWebviewData(SplashActivity.this, updateInfoModel.getUrl()), false);
+
 
             }
         });
@@ -170,8 +176,19 @@ public class SplashActivity extends BaseActivity {
         if (event == null || isFinishing()) return;
         int code = event.getCode();
         switch (code) {
+            case NO_NEED_CHECK:
+                checkLogin();
+                break;
             case APP_UPDATE_CHECK:
-                showUpdateDialog(this, (UpdateInfoModel) event.getData());
+                String version = ((UpdateInfoModel) event.getData()).getVersion();
+                String  noNeedVersion = SharedPreferencesUtils.getString(this, "isNotNeedShow", "");
+                UbtLogger.d("APP_UPDATE_CHECK", "update version:" + version + "local noNeedVersion:" + noNeedVersion);
+                if (noNeedVersion.equalsIgnoreCase(version)) {
+                    checkLogin();
+                }else{
+                    showUpdateDialog(this, (UpdateInfoModel) event.getData());
+                }
+
                 break;
             case DOWNLOAD_APK_CANCLE:
                 checkLogin();

@@ -28,15 +28,18 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DOWNLOAD_APK_FAILED;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DOWNLOAD_APK_PROGRESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DOWNLOAD_APK_STAR;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DOWNLOAD_APK_SUCCESS;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NO_NEED_CHECK;
 
 public class DownloadUtils {
 
     private static final String TAG = "DownloadUtils";
 
     public void doCheckUpdate(Context context){
-        if (SharedPreferencesUtils.getBoolean(context, "isNotNeedShow", false)) {
+     /*   if (SharedPreferencesUtils.getBoolean(context, "isNotNeedShow", false)) {
+            Event<UpdateInfoModel> event = new Event<>(NO_NEED_CHECK);
+            EventBusUtil.sendEvent(event);
             return;
-        }
+        }*/
         UbtLogger.d(TAG, "start checkUpdate");
         new CheckUpdateHttpProxy().checkUpdate(new CheckUpdateHttpProxy.GetFunctionCallback() {
             @Override
