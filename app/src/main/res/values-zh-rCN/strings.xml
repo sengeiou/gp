@@ -278,6 +278,9 @@
     <string name="robot_no_delay_wakeup">关闭后，一语联控时会自动消除唤醒音，但正常唤醒时唤醒音存在延时</string>
     <string name="robot_no_delay_wakeup_des">*一语联控：无需等待八戒回答\"咚\"，直接发出语音指令，也能方便快捷地顺畅沟通</string>
 
+    <string name="robot_no_disturb">22:00-07:00</string>
+    <string name="robot_no_disturb_des">开启后，八戒机器人将在设置时间段内屏蔽被动的声音、灯光和震动，默认时间段为22:00-07:00</string>
+
     <!--child mode-->
     <string name="help_sleep">哄睡助眠</string>
     <string name="develop_habit">习惯养成</string>

@@ -317,7 +317,7 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
             }
         } else {
             tv_pig_state.setVisibility(View.GONE);
-            iv_goto.setVisibility(View.GONE);
+            iv_goto.setVisibility(View.VISIBLE);
             iv_online_state.setVisibility(View.GONE);
         }
     }

@@ -9,12 +9,12 @@
             android:scaleGravity="center"
             android:scaleHeight="50%"
             android:scaleWidth="50%"
-            android:drawable="@drawable/ic_back"
-            android:src="@drawable/ic_back">
+            android:drawable="@drawable/ic_return"
+            android:src="@drawable/ic_return">
 
             <bitmap
                 android:gravity="center"
-                android:src="@drawable/ic_back"/>
+                android:src="@drawable/ic_return"/>
 
         </scale>
     </item>

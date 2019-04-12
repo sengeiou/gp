@@ -83,6 +83,10 @@ public class ContactsProtoBuilder {
      */
     public static final String IM_GET_NO_DELAY_WAKEUP_REQUEST = "/im/wakeup/nodelay/get";
 
+    //免打扰模式
+    public static final String IM_SET_NO_DISTURB_REQUEST = "/im/nodisturb/set";
+    public static final String IM_GET_NO_DISTURB_REQUEST = "/im/nodisturb/get";
+
 
 
     public static byte[] getAddContactsInfo(String name, String number) {
@@ -439,6 +443,34 @@ public class ContactsProtoBuilder {
                 .build();
         return channelMessage.toByteArray();
     }
+
+    /**
+     * 获取免打扰模式状态
+     * @param
+     * @return
+     */
+    public static byte[] requestNoDisturbState() {
+        return createBaseData(IM_GET_NO_DISTURB_REQUEST);
+    }
+
+
+    public static byte[] requestNoDisturbSwitch(boolean state) {
+        ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction(IM_SET_NO_DISTURB_REQUEST)
+                .setTime(System.currentTimeMillis()).build();
+        GPSwitchContainer.Switch.Builder builder = GPSwitchContainer.Switch.newBuilder();
+        builder.setState(state);
+        GPSwitchContainer.Switch message = builder.build();
+        ChannelMessageContainer.ChannelMessage channelMessage = ChannelMessageContainer.ChannelMessage.newBuilder()
+                .setHeader(header)
+                .setPayload(Any.pack(message))
+                .build();
+        return channelMessage.toByteArray();
+    }
+
+
+
+
+
 
     public static byte[] requestContinuousVoiceSwitch(boolean state) {
         ChannelMessageContainer.Header header = ChannelMessageContainer.Header.newBuilder().setAction(IM_DIALOG_SWITCH)

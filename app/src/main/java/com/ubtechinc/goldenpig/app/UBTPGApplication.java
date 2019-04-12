@@ -659,6 +659,17 @@ public class UBTPGApplication extends LoginApplication implements Observer {
             Event<Boolean> event = new Event<>(EventBusUtil.RECEIVE_NO_DELAY_WAKEUP_SWITCH_STATE);
             event.setData(result);
             EventBusUtil.sendEvent(event);
+        }else if(action.equals(ContactsProtoBuilder.IM_GET_NO_DISTURB_REQUEST)){
+            GPSwitchContainer.Switch switchInfo = msg.getPayload().unpack(GPSwitchContainer.Switch.class);
+            boolean state = switchInfo.getState();
+            Event<Boolean> event = new Event<>(EventBusUtil.RECEIVE_NO_DISTURB_STATE);
+            event.setData(state);
+            EventBusUtil.sendEvent(event);
+        }else if(action.equals(ContactsProtoBuilder.IM_SET_NO_DISTURB_REQUEST)){
+            final boolean result = msg.getPayload().unpack(GPResponse.Response.class).getResult();
+            Event<Boolean> event = new Event<>(EventBusUtil.RECEIVE_NO_DISTURB_SWITCH_STATE);
+            event.setData(result);
+            EventBusUtil.sendEvent(event);
         }
     }
 

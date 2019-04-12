@@ -30,13 +30,13 @@ public class DoNotDisturbActivity extends BaseToolBarActivity implements SwitchB
 
     @Override
     protected int getConentView() {
-        return R.layout.activity_shutdown_alarm;
+        return R.layout.activity_not_disturb;
     }
 
     @Override
     protected void init(Bundle savedInstanceState) {
         EventBusUtil.register(this);
-        setToolBarTitle("关机闹钟");
+        setToolBarTitle("免打扰模式");
         setTitleBack(true);
         initViews();
     }
@@ -49,7 +49,7 @@ public class DoNotDisturbActivity extends BaseToolBarActivity implements SwitchB
             if (UBTPGApplication.isRobotOnline) {
                 getContinuousVoiceState();
             } else {
-                UbtToastUtils.showCustomToast(this, "八戒处于离线状态\n获取关机闹钟失败");
+                UbtToastUtils.showCustomToast(this, "八戒处于离线状态\n获取免打扰模式失败");
             }
         } else {
             UbtToastUtils.showCustomToast(this, getString(R.string.network_error));
@@ -64,7 +64,7 @@ public class DoNotDisturbActivity extends BaseToolBarActivity implements SwitchB
 
     private void getContinuousVoiceState() {
         UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder
-                .requestShutdownAlarmState()));
+                .requestNoDisturbState()));
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -72,12 +72,12 @@ public class DoNotDisturbActivity extends BaseToolBarActivity implements SwitchB
         if (event == null) return;
         int code = event.getCode();
         switch (code) {
-            case EventBusUtil.RECEIVE_SHUTDOWN_STATE: {
+            case EventBusUtil.RECEIVE_NO_DISTURB_STATE: {
                 boolean result = (boolean) event.getData();
                 updateSwitchBtn(result);
             }
             break;
-            case EventBusUtil.RECEIVE_SHUTDOWN_SWITCH_STATE: {
+            case EventBusUtil.RECEIVE_NO_DISTURB_SWITCH_STATE: {
                 boolean result = (boolean) event.getData();
                 if (result) {
                     ToastUtils.showShortToast("设置成功");
@@ -115,7 +115,7 @@ public class DoNotDisturbActivity extends BaseToolBarActivity implements SwitchB
         if (UBTPGApplication.isNetAvailable) {
             if (UBTPGApplication.isRobotOnline) {
                 UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder
-                        .requestShutdownAlarmSwitch(isChecked)));
+                        .requestNoDisturbSwitch(isChecked)));
             } else {
                 UbtToastUtils.showCustomToast(this, getString(R.string.ubt_robot_offline));
             }
