@@ -26,7 +26,6 @@ import com.ubtechinc.bluetooth.command.ICommandProduce;
 import com.ubtechinc.bluetooth.command.JsonCommandProduce;
 import com.ubtechinc.bluetooth.event.BleScanResultEvent;
 import com.ubtechinc.commlib.log.UbtLogger;
-import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
@@ -169,7 +168,7 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
     @Override
     protected void onResume() {
         super.onResume();
-        if (checkBle()) {
+        if (UbtBluetoothManager.isBleEnabled()) {
             isAutoScan = true;
             isManualScan = false;
             startScanBle(true);
@@ -457,38 +456,13 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.dtv_manual_search_pig:
-                if (checkBle()) {
+                if (UbtBluetoothManager.isBleEnabled()) {
                     startSearchPig();
                 }
                 break;
             default:
                 break;
         }
-    }
-
-    private boolean checkBle() {
-        boolean isOpen = false;
-        final byte state = UbtBluetoothManager.getBluetoothState();
-        switch (state) {
-            case UbtBluetoothManager.BLUETOOTH_STATE_OPEN:
-                //TODO 蓝牙已开启
-                isOpen = true;
-                break;
-
-            case UbtBluetoothManager.BLUETOOTH_STATE_CLOSED:
-                //TODO 蓝牙已关闭
-                isOpen = false;
-                break;
-
-            case UbtBluetoothManager.BLUETOOTH_STATE_NONE:
-                //TODO 蓝牙模块不存在
-                isOpen = false;
-                ToastUtils.showShortToast(this, getString(R.string.ubt_bluetooth_none));
-                break;
-            default:
-                break;
-        }
-        return isOpen;
     }
 
     private void startSearchPig() {
