@@ -31,6 +31,7 @@ import android.widget.ImageView;
 
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
+import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.lubans.Luban;
 import com.ubtechinc.goldenpig.lubans.UriTofilePath;
@@ -175,7 +176,7 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
 //        mWebView.getSettings().setDatabaseEnabled(true);
         mWebView.getSettings().setDomStorageEnabled(true);
 //        mWebView.getSettings().setAppCacheEnabled(true);
-        WebView.setWebContentsDebuggingEnabled(true);
+        WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG);
 
 
         mWebView.setWebViewClient(new WebViewClient() {

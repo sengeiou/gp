@@ -13,12 +13,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 
-import com.ubtechinc.commlib.utils.ToastUtils;
+import com.ubtechinc.bluetooth.UbtBluetoothManager;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.widget.DrawableTextView;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
-import com.ubtechinc.goldenpig.pigmanager.bluetooth.BlueToothManager;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
@@ -115,7 +114,7 @@ public class BleConfigReadyActivity extends BaseToolBarActivity implements View.
     }
 
     private void updateBleView() {
-        if (checkBle()) {
+        if (UbtBluetoothManager.isBleEnabled()) {
             tvBleOpen.setEnabled(false);
             tvBleOpen.setDrawable(DrawableTextView.LEFT, ContextCompat.getDrawable(this, R.drawable.ic_done_only));
         } else {
@@ -151,7 +150,7 @@ public class BleConfigReadyActivity extends BaseToolBarActivity implements View.
 
             @Override
             public void onRightButtonClick(View view) {
-                BlueToothManager.openBlueToothSetting(BleConfigReadyActivity.this, BLUETOOTH_REQUESTCODE);
+                UbtBluetoothManager.openBlueToothSetting(BleConfigReadyActivity.this, BLUETOOTH_REQUESTCODE);
             }
 
         });
@@ -164,33 +163,6 @@ public class BleConfigReadyActivity extends BaseToolBarActivity implements View.
         if (requestCode == BLUETOOTH_REQUESTCODE) {
             updateBleView();
         }
-    }
-
-
-
-    private boolean checkBle() {
-        boolean isOpen = false;
-        final byte state = BlueToothManager.getBluetoothState();
-        switch (state) {
-            case BlueToothManager.BLUETOOTH_STATE_OPEN:
-                //TODO 蓝牙已开启
-                isOpen = true;
-                break;
-
-            case BlueToothManager.BLUETOOTH_STATE_CLOSED:
-                //TODO 蓝牙已关闭
-                isOpen = false;
-                break;
-
-            case BlueToothManager.BLUETOOTH_STATE_NONE:
-                //TODO 蓝牙模块不存在
-                isOpen = false;
-                ToastUtils.showShortToast(this, getString(R.string.ubt_bluetooth_none));
-                break;
-            default:
-                break;
-        }
-        return isOpen;
     }
 
     private boolean checkLocation() {

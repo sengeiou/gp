@@ -1,13 +1,10 @@
 package com.ubtechinc.goldenpig.app;
 
-import android.app.Notification;
-import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
-import android.os.IBinder;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
+import android.support.v4.app.JobIntentService;
 
-import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.push.PushAppInfo;
 import com.ubtechinc.goldenpig.push.PushHttpProxy;
@@ -15,28 +12,22 @@ import com.ubtechinc.goldenpig.push.PushListener;
 import com.ubtechinc.push.PushBrandType;
 import com.ubtechinc.push.UbtPushManager;
 
-@Deprecated
-public class StartUpService extends Service {
+/**
+ * @Description: ${DESCRIPTION}
+ * @Author: zhijunzhou
+ * @CreateDate: 2019/4/11 15:13
+ */
+public class StartUpJobIntentService extends JobIntentService {
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        LogUtils.d(UBTPGApplication.TAG, "StartUpService|onCreate");
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            startForeground(1, new Notification());
-        }
-    }
+    static final int JOB_ID = 1000;
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+    public static void enqueueWork(Context context, Intent work) {
+        enqueueWork(context, StartUpJobIntentService.class, JOB_ID, work);
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    protected void onHandleWork(@NonNull Intent intent) {
         getPushToken();
-        return super.onStartCommand(intent, flags, startId);
     }
 
     private void getPushToken() {
@@ -77,4 +68,5 @@ public class StartUpService extends Service {
             }
         });
     }
+
 }

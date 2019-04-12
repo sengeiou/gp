@@ -199,10 +199,11 @@ public class UBTPGApplication extends LoginApplication implements Observer {
     }
 
     private void initService() {
+        StartUpJobIntentService.enqueueWork(this, new Intent());
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 //            startForegroundService(new Intent(this, StartUpService.class));
 //        } else {
-        startService(new Intent(this, StartUpService.class));
+//            startService(new Intent(this, StartUpService.class));
 //        }
     }
 
@@ -483,30 +484,30 @@ public class UBTPGApplication extends LoginApplication implements Observer {
     private void updatePigList() {
         new GetPigListHttpProxy().getUserPigs(CookieInterceptor.get().getToken(), BuildConfig.APP_ID, "", new
                 GetPigListHttpProxy.OnGetPigListLitener() {
-            @Override
-            public void onError(ThrowableWrapper e) {
-                Log.e("getPigList", e.getMessage());
-            }
+                    @Override
+                    public void onError(ThrowableWrapper e) {
+                        Log.e("getPigList", e.getMessage());
+                    }
 
-            @Override
-            public void onException(Exception e) {
-                Log.e("getPigList", e.getMessage());
-            }
+                    @Override
+                    public void onException(Exception e) {
+                        Log.e("getPigList", e.getMessage());
+                    }
 
-            @Override
-            public void onSuccess(String response) {
-                Log.e("getPigList", response);
-                PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance()
-                        .getCurrentPigList());
-                PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+                    @Override
+                    public void onSuccess(String response) {
+                        Log.e("getPigList", response);
+                        PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance()
+                                .getCurrentPigList());
+                        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
 
-                if (pigInfo != null && pigInfo.isAdmin) {
-                    UbtTIMManager.avatarURL = UserInfoManager.getInstance().headImgUrl;
-                    UbtTIMManager.getInstance().loginTIM(AuthLive.getInstance().getUserId(), pigInfo.getRobotName(),
-                            com.ubt.imlibv2.BuildConfig.IM_Channel);
-                }
-            }
-        });
+                        if (pigInfo != null && pigInfo.isAdmin) {
+                            UbtTIMManager.avatarURL = UserInfoManager.getInstance().headImgUrl;
+                            UbtTIMManager.getInstance().loginTIM(AuthLive.getInstance().getUserId(), pigInfo.getRobotName(),
+                                    com.ubt.imlibv2.BuildConfig.IM_Channel);
+                        }
+                    }
+                });
     }
 
 
@@ -648,7 +649,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
             Event<Boolean> event = new Event<>(EventBusUtil.RECEIVE_SHUTDOWN_SWITCH_STATE);
             event.setData(result);
             EventBusUtil.sendEvent(event);
-        }else if (action.equals(ContactsProtoBuilder.IM_GET_NO_DELAY_WAKEUP_REQUEST)) {
+        } else if (action.equals(ContactsProtoBuilder.IM_GET_NO_DELAY_WAKEUP_REQUEST)) {
             GPSwitchContainer.Switch switchInfo = msg.getPayload().unpack(GPSwitchContainer.Switch.class);
             boolean state = switchInfo.getState();
             Event<Boolean> event = new Event<>(EventBusUtil.RECEIVE_NO_DELAY_WAKEUP_STATE);
