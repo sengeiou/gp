@@ -2,13 +2,18 @@ package com.ubtechinc.bluetooth;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.ubtechinc.bluetooth.event.BleScanFailEvent;
 import com.ubtechinc.bluetooth.event.BleScanFinishedEvent;
 import com.ubtechinc.bluetooth.event.BleScanResultEvent;
+import com.ubtechinc.commlib.utils.ContextUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -193,13 +198,13 @@ public class UbtBluetoothManager {
      * 开始搜索蓝牙
      */
     synchronized public void startScanBluetooth() {
-        if (!btScanner.isScanning()) {
+        if (isBleEnabled() && !btScanner.isScanning()) {
             btScanner.scanDevices();
         }
     }
 
     synchronized public void stopScanBluetooth() {
-        if (btScanner.isScanning()) {
+        if (isBleEnabled() && btScanner.isScanning()) {
             btScanner.stopScanDevices();
         }
     }
@@ -209,7 +214,7 @@ public class UbtBluetoothManager {
      */
     synchronized public void connectBluetooth(UbtBluetoothDevice device) {
         Log.i(TAG,"isNotInConnecting========" + btConnector.isNotInConnecting());
-        if (btConnector.isNotInConnecting()) {
+        if (isBleEnabled() && btConnector.isNotInConnecting()) {
             //btScanner.stopScanDevices();
             this.device = device;
             btConnector.connect(device);
@@ -279,4 +284,48 @@ public class UbtBluetoothManager {
     public void setFromCodeMao(boolean fromCodeMao) {
         isFromCodeMao = fromCodeMao;
     }
+
+    /**
+     * 蓝牙状态
+     **/
+    public final static byte BLUETOOTH_STATE_NONE = 0;
+    public final static byte BLUETOOTH_STATE_CLOSED = 1;
+    public final static byte BLUETOOTH_STATE_OPEN = 2;
+
+    public static byte getBluetoothState() {
+        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        if (adapter == null) {
+            return BLUETOOTH_STATE_NONE;
+        } else if (adapter.isEnabled()) {
+            return BLUETOOTH_STATE_OPEN;
+        } else {
+            return BLUETOOTH_STATE_CLOSED;
+        }
+    }
+
+    /***打开蓝牙设置界面**/
+    public static void openBlueToothSetting(Activity context, int requestCode) {
+
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_BLUETOOTH_SETTINGS);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        try {
+            if (ContextUtils.isContextExisted(context)) {
+                context.startActivityForResult(intent, requestCode);
+            }
+        } catch (ActivityNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean isBleEnabled() {
+        if (getBluetoothState() == BLUETOOTH_STATE_OPEN) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

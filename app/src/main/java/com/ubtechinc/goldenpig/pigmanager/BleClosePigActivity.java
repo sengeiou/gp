@@ -35,7 +35,6 @@ import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
 import com.ubtechinc.goldenpig.net.RegisterRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.bean.BundingListenerAbster;
-import com.ubtechinc.goldenpig.pigmanager.bluetooth.BlueToothManager;
 import com.ubtechinc.goldenpig.pigmanager.widget.PigListDialog;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.UbtToastUtils;
@@ -469,19 +468,19 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
 
     private boolean checkBle() {
         boolean isOpen = false;
-        final byte state = BlueToothManager.getBluetoothState();
+        final byte state = UbtBluetoothManager.getBluetoothState();
         switch (state) {
-            case BlueToothManager.BLUETOOTH_STATE_OPEN:
+            case UbtBluetoothManager.BLUETOOTH_STATE_OPEN:
                 //TODO 蓝牙已开启
                 isOpen = true;
                 break;
 
-            case BlueToothManager.BLUETOOTH_STATE_CLOSED:
+            case UbtBluetoothManager.BLUETOOTH_STATE_CLOSED:
                 //TODO 蓝牙已关闭
                 isOpen = false;
                 break;
 
-            case BlueToothManager.BLUETOOTH_STATE_NONE:
+            case UbtBluetoothManager.BLUETOOTH_STATE_NONE:
                 //TODO 蓝牙模块不存在
                 isOpen = false;
                 ToastUtils.showShortToast(this, getString(R.string.ubt_bluetooth_none));

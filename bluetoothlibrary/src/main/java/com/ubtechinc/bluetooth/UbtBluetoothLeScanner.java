@@ -10,7 +10,6 @@ import android.bluetooth.le.ScanSettings;
 import android.os.Build;
 import android.os.ParcelUuid;
 import android.os.SystemClock;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -69,7 +68,6 @@ import java.util.ArrayList;
       if (mScanning || mScanner == null) {
         return;
       }
-      Log.w("Logic", "开始扫描蓝牙....");
       mScanner.startScan(new ArrayList<ScanFilter>() {{
                            add(new ScanFilter.Builder().setServiceUuid(ParcelUuid.fromString(UUID_FILTER)).build());
                          }}, new ScanSettings.Builder().setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY).build(),
@@ -82,7 +80,6 @@ import java.util.ArrayList;
    * 结束扫描
    */
   void stopScan() {
-    Log.w("Logic", "停止扫描蓝牙....");
     synchronized (mLock) {
       if (mScanning) {
         mScanning = false;

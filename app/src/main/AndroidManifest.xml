@@ -47,7 +47,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
 
-
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:name=".app.UBTPGApplication"
@@ -83,10 +83,6 @@
             android:exported="true"
             android:process=":tcm_service" />
 
-        <activity
-            android:name=".pigmanager.SearchPigActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait" />
         <activity
             android:name=".main.MainActivity"
             android:launchMode="singleTask"
@@ -220,6 +216,9 @@
         <activity android:name=".personal.RobotOfflineActivity" />
 
         <service android:name=".app.StartUpService" />
+
+        <service android:name=".app.StartUpJobIntentService"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
 
         <activity
             android:name=".personal.management.contact.ContactListActivity"

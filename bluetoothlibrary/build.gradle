@@ -32,5 +32,6 @@ dependencies {
     implementation rootProject.ext.deps.appCompatV7
     testCompile rootProject.ext.deps.junit
     compileOnly project(':netutils')
+    compileOnly project(path: ':commlib')
     compileOnly project(':protocollibrary')
 }
