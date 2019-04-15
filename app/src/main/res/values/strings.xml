@@ -122,8 +122,8 @@
 
     <string name="record_empty_prompt">没有最近通话</string>
     <string name="ubt_coming_soon">敬请期待</string>
-    <string name="ubt_pair_pig">八戒互联</string>
-    <string name="ubt_pair_pig_desc">·两台八戒扫码互联后可以互相发送语音留言；\n·请让另一台八戒的管理员打开八戒机器人APP，并在首页点击进入“八戒互联”页面；\n·点击右上角“扫一扫”，扫描上面的二维码，进行八戒互联。</string>
+    <string name="ubt_pair_pig">配对八戒</string>
+    <string name="ubt_pair_pig_desc">·两台八戒扫码配对互联后可以互相发送语音留言；\n·请让另一台八戒的管理员打开八戒机器人APP，并在首页点击进入“配对八戒”页面；\n·点击右上角“扫一扫”，扫描上面的二维码，完成配对互联，两台八戒即可畅享互动发送留言。</string>
     <string name="ubt_san_formember">扫码进入</string>
     <string name="ubt_drop_up_tips">您是八戒的管理员，退出群组会解绑八戒，确认要退出群组吗？</string>
     <string name="exit_group">退出群组</string>

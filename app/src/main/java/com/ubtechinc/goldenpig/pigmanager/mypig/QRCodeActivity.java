@@ -85,7 +85,7 @@ public class QRCodeActivity extends BaseToolBarActivity implements View.OnClickL
         }
         if (isPair) {
             setToolBarTitle(R.string.ubt_pair_pig);
-            ((TextView) findViewById(R.id.ubt_tv_qrcode_sub_title)).setText(R.string.ubt_pair_pig);
+            ((TextView) findViewById(R.id.ubt_tv_qrcode_sub_title)).setText("配对攻略");
             ((TextView) findViewById(R.id.ubt_tv_qrcode_desc)).setText(R.string.ubt_pair_pig_desc);
             mToolbarRightBtn = findViewById(R.id.ubt_imgbtn_add);
             mToolbarRightBtn.setImageResource(R.drawable.ic_shaoyishao);

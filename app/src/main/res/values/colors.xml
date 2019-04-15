@@ -61,4 +61,6 @@
     <color name="cardview_line">#1ff2f2f2</color>
     <color name="alarm_press_item">#fbfbfb</color>
     <color name="item_un_select">#f1f1f1</color>
+
+    <color name="txt_child_close">#FF474D5A</color>
 </resources>

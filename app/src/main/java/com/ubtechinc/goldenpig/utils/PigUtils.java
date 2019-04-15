@@ -2,9 +2,11 @@ package com.ubtechinc.goldenpig.utils;
 
 import android.text.TextUtils;
 
+import com.google.gson.JsonObject;
 import com.tencent.ai.tvs.business.UniAccessInfo;
 import com.tencent.ai.tvs.info.DeviceManager;
 import com.ubt.imlibv2.bean.UbtTIMManager;
+import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
@@ -165,4 +167,48 @@ public class PigUtils {
         deviceManager.dsn = AuthLive.getInstance().getCurrentPig().getRobotName();
         return deviceManager;
     }
+
+
+    public static UniAccessInfo setChildMode(int mode){
+        UniAccessInfo info = new UniAccessInfo();
+        info.domain = "child_ctrl";
+        info.intent = "set_child_mode_info";
+        JSONObject obj = new JSONObject();
+        try {
+            JSONObject param = new JSONObject();
+            param.put("eActionType", 1);
+            param.put("deviceId",/*AuthLive.getInstance().getCurrentPig().getGuid()*/ "");
+            param.put("deviceAppkey", TVS_APP_KEY);
+            param.put("ePlatformType", mode);
+            obj.put("childControlInfo", param);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        info.jsonBlobInfo = obj.toString();
+        UbtLogger.d("setChildMode", "info:" + info.toString());
+        return info;
+    }
+
+
+    public static UniAccessInfo getChildMode() {
+        UniAccessInfo info = new UniAccessInfo();
+        info.domain = "child_ctrl";
+        info.intent = "get_child_mode_info";
+        JSONObject obj = new JSONObject();
+        try {
+            JSONObject param = new JSONObject();
+            param.put("deviceId",/*AuthLive.getInstance().getCurrentPig().getGuid()*/ "");
+            obj.put("childModeInfo", param);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        info.jsonBlobInfo = obj.toString();
+        UbtLogger.d("getChildMode", "info:" + info.toString());
+        return info;
+    }
+
+
+
+
+
 }

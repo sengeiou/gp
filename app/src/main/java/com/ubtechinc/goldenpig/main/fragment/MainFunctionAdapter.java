@@ -22,6 +22,7 @@ import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseActivity;
+import com.ubtechinc.goldenpig.children.ChildrenActivity;
 import com.ubtechinc.goldenpig.comm.entity.PairPig;
 import com.ubtechinc.goldenpig.comm.img.GlideCircleTransform;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
@@ -48,6 +49,7 @@ import java.util.List;
 import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.ALARM;
 import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.BLE;
 import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.CALL_RECORD;
+import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.CHILD;
 import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.CUSTOM_QA;
 import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.MAIL_LIST;
 import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.PAIR;
@@ -149,7 +151,9 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
                     break;
                 case BLE:
                     ActivityRoute.toAnotherActivity((Activity) context, CommonWebActivity.class, UbtWebHelper.getBleWebviewData(context), false);
-//                     ActivityRoute.toAnotherActivity(((MainActivity)context),ChildrenActivity.class, false);
+                    break;
+                case CHILD:
+                    ActivityRoute.toAnotherActivity(((MainActivity)context),ChildrenActivity.class, false);
                     break;
             }
         }
@@ -242,6 +246,9 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
             case 8:
                 functionEnum = BLE;
                 break;
+            case 9:
+                functionEnum = CHILD;
+                break;
             default:
         }
         if (functionEnum != null) {
@@ -270,13 +277,15 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
     enum FunctionEnum {
 
         VOICE_MAIL("语音留言", R.drawable.ic_voicemail),
-        PAIR("八戒互联", R.drawable.ic_pair),
+        PAIR("配对八戒", R.drawable.ic_pair),
         ALARM("闹钟", R.drawable.ic_alarm),
         REMIND("日程提醒", R.drawable.ic_scheduel),
         CUSTOM_QA("定制问答", R.drawable.ic_question_answer),
         CALL_RECORD("最近通话", R.drawable.ic_call_record),
         MAIL_LIST("通讯录", R.drawable.ic_mail_list),
-        BLE("蓝牙音箱", R.drawable.ic_bt_speaker),;
+        BLE("蓝牙音箱", R.drawable.ic_bt_speaker),
+        CHILD("儿童模式", R.drawable.ic_home_children),
+        ;
 
         String label;
         int resIcon;
