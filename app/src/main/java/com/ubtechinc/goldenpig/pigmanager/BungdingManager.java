@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.tencent.ai.tvs.ConstantValues;
-import com.tencent.ai.tvs.info.ProductManager;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtech.utilcode.utils.JsonUtils;
 import com.ubtechinc.bluetooth.BleConnectAbstract;
@@ -293,10 +292,7 @@ public class BungdingManager {
     private void getClientId(final String productId, final String dsn) {
         final String userId = AuthLive.getInstance().getUserId();
         final String token = CookieInterceptor.get().getToken();
-
-        ProductManager.getInstance().productId = productId;
-        ProductManager.getInstance().dsn = dsn;
-        String clientId = TVSManager.getInstance(mContext, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ).getClientId();
+        String clientId = TVSManager.getInstance(mContext, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ).getClientId(productId, dsn);
         if (!ConstantValues.INVALID_CLIENTID.equals(clientId)) {
             Log.i(TAG, "BungdingManager|getClientId:" + clientId);
             clientIdRecord = clientId;

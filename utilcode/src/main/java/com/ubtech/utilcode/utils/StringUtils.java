@@ -9,23 +9,21 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *
- *     @author: logic.peng
- *     @email  : pdlogic1987@gmail.com
- *     @time  : 2016/8/16
- *     @desc  : 字符串相关工具类
- *
+ * @author: logic.peng
+ * @email : pdlogic1987@gmail.com
+ * @time : 2016/8/16
+ * @desc : 字符串相关工具类
  */
 public class StringUtils {
 
     private StringUtils() {
         throw new UnsupportedOperationException("u can't instantiate me...");
     }
-
 
 
     /**
@@ -178,51 +176,47 @@ public class StringUtils {
 
     /**
      * 字符串转成int
+     *
      * @param s
      * @param defaultValue
      * @return
      */
-    public static int stringToInt(String s,int defaultValue) {
-        if (TextUtils.isEmpty(s)){
+    public static int stringToInt(String s, int defaultValue) {
+        if (TextUtils.isEmpty(s)) {
             return defaultValue;
         }
         Integer integer = defaultValue;
         try {
             integer = Integer.valueOf(s);
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return integer.intValue();
     }
 
     /**
-     *
      * 字符解析器
      */
-    public interface CharSpeller
-    {
+    public interface CharSpeller {
         String spell(char c);
     }
 
-    private final static char[]	HEX_DIGITS	= { '0', '1', '2', '3', '4',
-            '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'a', 'b', 'c', 'd', 'e', 'f' };
+    private final static char[] HEX_DIGITS = {'0', '1', '2', '3', '4',
+            '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'a', 'b', 'c', 'd', 'e', 'f'};
 
-    private static CharSpeller		speller		= null;
+    private static CharSpeller speller = null;
 
-    public static void registerSpeller(CharSpeller cs)
-    {
+    public static void registerSpeller(CharSpeller cs) {
         speller = cs;
     }
 
     /**
      * 将指定字节转换成16进制字符
      *
-     * @param b
-     *            待转换字节
+     * @param b 待转换字节
      * @return 返回转换后的字符串
      */
-    public static String byteToHexDigits(byte b)
-    {
+    public static String byteToHexDigits(byte b) {
         int n = b;
         if (n < 0)
             n += 256;
@@ -236,19 +230,15 @@ public class StringUtils {
     /**
      * 将指定字节数组转换成16进制字符串
      *
-     * @param bytes
-     *            待转换的字节数组
+     * @param bytes 待转换的字节数组
      * @return 返回转换后的字符串
      */
-    public static String bytesToHexes(byte[] bytes)
-    {
-        if (bytes == null || bytes.length == 0)
-        {
+    public static String bytesToHexes(byte[] bytes) {
+        if (bytes == null || bytes.length == 0) {
             return null;
         }
         StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < bytes.length; i++)
-        {
+        for (int i = 0; i < bytes.length; i++) {
             sb.append(byteToHexDigits(bytes[i]));
         }
         return sb.toString();
@@ -257,8 +247,7 @@ public class StringUtils {
     /**
      * 十六进制字符转换为整数
      *
-     * @param hex
-     *            小写十六进制字符
+     * @param hex 小写十六进制字符
      * @return 返回整数
      */
     public static int hexToInteger(char hex) {
@@ -273,20 +262,17 @@ public class StringUtils {
     /**
      * 十六进制字符串转换为字节数组
      *
-     * @param hexes
-     *            十六进制字符串
+     * @param hexes 十六进制字符串
      * @return 返回字节数组
      */
-    public static byte[] hexesToBytes(String hexes)
-    {
+    public static byte[] hexesToBytes(String hexes) {
         if (hexes == null || hexes.length() == 0)
             return null;
 
         int slen = hexes.length();
-        int len = (slen + 1)/ 2;
+        int len = (slen + 1) / 2;
         byte[] bytes = new byte[len];
-        for (int i = 0; i < len; i++)
-        {
+        for (int i = 0; i < len; i++) {
             char c = hexes.charAt(2 * i);
             int val = hexToInteger(c);
             val *= 16;
@@ -295,7 +281,7 @@ public class StringUtils {
                 val += hexToInteger(c);
             }
 
-            bytes[i] = (byte)(val & 0xff);
+            bytes[i] = (byte) (val & 0xff);
 
         }
         return bytes;
@@ -304,33 +290,26 @@ public class StringUtils {
     /**
      * 比较两个字符串大小，考虑汉字拼音顺序, 忽略大小写
      *
-     * @param s1
-     *            字符串1
-     * @param s2
-     *            字符串2
+     * @param s1 字符串1
+     * @param s2 字符串2
      * @return 返回比较结果。0： s1 = s2， >0： s1 > s2, <0: s1 < s2
      */
     @SuppressLint("DefaultLocale")
-    public static int compareToIgnoreCase(String s1, String s2)
-    {
+    public static int compareToIgnoreCase(String s1, String s2) {
         // 两者为空，相同
-        if (s1 == null && s2 == null)
-        {
+        if (s1 == null && s2 == null) {
             return 0;
         }
         // 某项为空，则以它为小
-        if (s1 == null)
-        {
+        if (s1 == null) {
             return -1;
         }
 
-        if (s2 == null)
-        {
+        if (s2 == null) {
             return 1;
         }
 
-        if (s1.equals(s2))
-        {
+        if (s1.equals(s2)) {
             return 0;
         }
 
@@ -343,120 +322,96 @@ public class StringUtils {
     /**
      * 比较两个字符串大小，考虑汉字拼音顺序
      *
-     * @param s1
-     *            字符串1
-     * @param s2
-     *            字符串2
+     * @param s1 字符串1
+     * @param s2 字符串2
      * @return 返回比较结果。0： s1 = s2， >0： s1 > s2, <0: s1 < s2
      */
-    public static int compareTo(String s1, String s2)
-    {
+    public static int compareTo(String s1, String s2) {
 
         // 两者为空，相同
-        if (s1 == null && s2 == null)
-        {
+        if (s1 == null && s2 == null) {
             return 0;
         }
         // 某项为空，则以它为小
-        if (s1 == null)
-        {
+        if (s1 == null) {
             return -1;
         }
 
-        if (s2 == null)
-        {
+        if (s2 == null) {
             return 1;
         }
 
-        if (s1.equals(s2))
-        {
+        if (s1.equals(s2)) {
             return 0;
         }
 
-        if (s1.length() == 0)
-        {
+        if (s1.length() == 0) {
             return -1;
         }
 
-        if (s2.length() == 0)
-        {
+        if (s2.length() == 0) {
             return 1;
         }
 
         return compareToUnicode(s1, s2);
     }
 
-    public static boolean isLetter(int ch)
-    {
+    public static boolean isLetter(int ch) {
         return (ch >= 'A' && ch <= 'Z') || (ch >= 'a' && ch <= 'z');
     }
 
-    public static boolean isDigit(int ch)
-    {
+    public static boolean isDigit(int ch) {
         return ch >= '0' && ch <= '9';
     }
 
-    static final int	UPPER_LOWER_SPAN	= 'A' - 'a';
-    static final int	LOWER_UPPER_SPAN	= -UPPER_LOWER_SPAN;
+    static final int UPPER_LOWER_SPAN = 'A' - 'a';
+    static final int LOWER_UPPER_SPAN = -UPPER_LOWER_SPAN;
 
-    private static int compareToGBK(String s1, String s2)
-    {
+    private static int compareToGBK(String s1, String s2) {
         int ret = 0;
-        try
-        {
+        try {
             byte[] bytes1 = s1.getBytes("gbk");
             byte[] bytes2 = s2.getBytes("gbk");
 
             int len = Math.min(bytes1.length, bytes2.length);
-            for (int i = 0; i < len; i++)
-            {
+            for (int i = 0; i < len; i++) {
 
-                if (bytes1[i] > 0 && bytes2[i] > 0)
-                {
+                if (bytes1[i] > 0 && bytes2[i] > 0) {
                     ret = Character.toLowerCase(bytes1[i])
                             - Character.toLowerCase(bytes2[i]);
                     if (ret == 0)
                         ret = bytes1[i] - bytes2[i];
-                }
-                else
-                {
+                } else {
                     int b1 = (bytes1[i] + 256) % 256;
                     int b2 = (bytes2[i] + 256) % 256;
                     ret = b1 - b2;
                 }
 
-                if (ret != 0)
-                {
+                if (ret != 0) {
                     break;
                 }
 
             }
-            if (ret == 0)
-            {
+            if (ret == 0) {
                 ret = bytes1.length - bytes2.length;
             }
 
-        }
-        catch (UnsupportedEncodingException e)
-        {
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
 
         return ret;
     }
 
-    private static int compareToUnicode(String s1, String s2)
-    {
+    private static int compareToUnicode(String s1, String s2) {
 
-        if (speller == null)
-        {
+        if (speller == null) {
             return compareToGBK(s1, s2);
         }
 
         int ret = 0;
         int len = Math.min(s1.length(), s2.length());
-        for (int i = 0; i < len; i++)
-        {
+        for (int i = 0; i < len; i++) {
             char c1 = s1.charAt(i);
             char c2 = s2.charAt(i);
 
@@ -465,20 +420,17 @@ public class StringUtils {
                 break;
         }
 
-        if (ret == 0)
-        {
+        if (ret == 0) {
             ret = s1.length() - s2.length();
         }
 
         return ret;
     }
 
-    private static int compareTo(char c1, char c2)
-    {
+    private static int compareTo(char c1, char c2) {
         int ret = 0;
         // 字母比较，直接比较ASCII
-        if (isLetter(c1) && isLetter(c2))
-        {
+        if (isLetter(c1) && isLetter(c2)) {
             ret = Character.toLowerCase(c1) - Character.toLowerCase(c2);
             if (ret == 0)
                 ret = c1 - c2;
@@ -489,88 +441,61 @@ public class StringUtils {
         String s1 = null;
         String s2 = null;
 
-        if (isLetter(c1))
-        {
+        if (isLetter(c1)) {
             s2 = speller.spell(c2);
             char cc2 = s2.charAt(0);
-            if (isLetter(cc2))
-            {
+            if (isLetter(cc2)) {
                 ret = Character.toLowerCase(c1) - Character.toLowerCase(cc2);
-                if (ret == 0)
-                {
+                if (ret == 0) {
                     ret = 1;
                 }
 
                 return ret;
-            }
-            else
+            } else
                 return -1;
-        }
-
-        else if (isLetter(c2))
-        {
+        } else if (isLetter(c2)) {
             s1 = speller.spell(c1);
             char cc1 = s1.charAt(0);
-            if (isLetter(cc1))
-            {
+            if (isLetter(cc1)) {
                 ret = Character.toLowerCase(cc1) - Character.toLowerCase(c2);
-                if (ret == 0)
-                {
+                if (ret == 0) {
                     ret = -1;
                 }
 
                 return ret;
-            }
-            else
-            {
+            } else {
                 return 1;
             }
-        }
-        else
-        {
+        } else {
             s1 = speller.spell(c1);
             s2 = speller.spell(c2);
         }
 
         int len = Math.min(s1.length(), s2.length());
 
-        for (int i = 0; i < len; i++)
-        {
+        for (int i = 0; i < len; i++) {
             char cc1 = s1.charAt(i);
             char cc2 = s2.charAt(i);
 
-            if (isLetter(cc1) && isLetter(cc2))
-            {
+            if (isLetter(cc1) && isLetter(cc2)) {
                 ret = Character.toLowerCase(cc1) - Character.toLowerCase(cc2);
-                if (ret == 0)
-                {
+                if (ret == 0) {
                     ret = cc1 - cc2;
                 }
-            }
-
-            else if (isLetter(cc1))
-            {
+            } else if (isLetter(cc1)) {
                 ret = -1;
-            }
-
-            else if (isLetter(cc2))
-            {
+            } else if (isLetter(cc2)) {
                 ret = 1;
-            }
-
-            else
-            {
+            } else {
                 ret = cc1 - cc2;
             }
 
-            if (ret != 0)
-            {
+            if (ret != 0) {
                 break;
             }
         }
 
-        if (ret == 0)
-        {
+        if (ret == 0) {
             ret = s1.length() - s2.length();
         }
 
@@ -578,8 +503,7 @@ public class StringUtils {
     }
 
     @SuppressWarnings("unused")
-    private static int compareToBigInteger(String s1, String s2)
-    {
+    private static int compareToBigInteger(String s1, String s2) {
         int ret = 0;
         char[] c1 = s1.toCharArray();
         char[] c2 = s2.toCharArray();
@@ -590,12 +514,9 @@ public class StringUtils {
         while (index2 < c2.length && c2[index2] == '0')
             index2++;
 
-        if (c1.length - index1 != c2.length - index2)
-        {
+        if (c1.length - index1 != c2.length - index2) {
             ret = (c1.length - index1) - (c2.length - index2);
-        }
-        else
-        {
+        } else {
             ret = c1[index1] - c2[index2];
         }
 
@@ -605,23 +526,17 @@ public class StringUtils {
     /**
      * 将作为文件名的字符串的特殊字符"\*?:$/'",`^<>+"替换成"_"，以便文件顺利创建成功
      *
-     * @param path
-     *            原待创建的文件名
+     * @param path 原待创建的文件名
      * @return 返回处理后的文件名
      */
-    public static String filterForFile(String path)
-    {
-        if (path == null || path.length() == 0)
-        {
+    public static String filterForFile(String path) {
+        if (path == null || path.length() == 0) {
             return "";
         }
         String need = path.replaceAll(
                 "\\\\|\\*|\\?|\\:|\\$|\\/|'|\"|,|`|\\^|<|>|\\+", "_");
         return need;
     }
-
-
-
 
 
     /**
@@ -766,6 +681,7 @@ public class StringUtils {
             .compile("^((13[0-9])|(15[0-9])|(19[0-9])|(14[0-9])|(11[0-9])|(12[0-9])|(18[0-9])|(16[0-9])|(17[0-9]))\\d{8}$");
 
     private final static Pattern dianhua = Pattern.compile("(0[0-9]{2,3}/-)?([2-9][0-9]{6,7})+(/-[0-9]{1,4})?$");
+
     /**
      * is null or its length is 0 or it is made by space
      * <p>
@@ -1057,8 +973,8 @@ public class StringUtils {
         return phone.matcher(phoneNum).matches();
     }
 
-    public static boolean isHomePhone(CharSequence homePhone){
-        if (isEmpty(homePhone)){
+    public static boolean isHomePhone(CharSequence homePhone) {
+        if (isEmpty(homePhone)) {
             return false;
         }
         return dianhua.matcher(homePhone).matches();
@@ -1153,7 +1069,7 @@ public class StringUtils {
         return true;
     }
 
-    public static boolean isLong(CharSequence str){
+    public static boolean isLong(CharSequence str) {
         try {
             Long.parseLong(str.toString());
         } catch (Exception e) {
@@ -1202,26 +1118,81 @@ public class StringUtils {
         return (str == null || isEquals("null", str)) ? "" : str;
     }
 
-    public static boolean onlyChineseOrEnglish(String str){
-        Pattern pattern = Pattern.compile("^[\\u4E00-\\u9FA5A-Za-z]+$");
+    public static boolean onlyChineseOrEnglish(String str) {
+        Pattern pattern = Pattern.compile("^[\\u4E00-\\u9FBBA-Za-z]+$");
         Matcher matcher = pattern.matcher(str);
         return matcher.matches();
     }
 
-    public static boolean onlyChineseOrNumber(String str){
-        Pattern pattern = Pattern.compile("^[\\u4E00-\\u9FA50-9]+$");
+    public static boolean onlyChineseOrNumber(String str) {
+        Pattern pattern = Pattern.compile("^[\\u4E00-\\u9FBB0-9]+$");
         Matcher matcher = pattern.matcher(str);
         return matcher.matches();
     }
 
     public static boolean isContainChinese(String str) {
 
-        Pattern p = Pattern.compile("[\u4e00-\u9fa5]");
+        Pattern p = Pattern.compile("[\u4e00-\u9fbb]");
         Matcher m = p.matcher(str);
         if (m.find()) {
             return true;
         }
         return false;
+    }
+
+    public static boolean isChinese(char c) {
+        Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
+        if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
+                || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
+                || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A
+                || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_B
+                || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
+                || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS
+                || ub == Character.UnicodeBlock.GENERAL_PUNCTUATION) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * unicode转中文
+     * @param dataStr
+     * @return
+     */
+    public static String decodeUnicode(final String dataStr) {
+        int start = 0;
+        int end = 0;
+        final StringBuffer buffer = new StringBuffer();
+        while (start > -1) {
+            end = dataStr.indexOf("\\u", start + 2);
+            String charStr = "";
+            if (end == -1) {
+                charStr = dataStr.substring(start + 2, dataStr.length());
+            } else {
+                charStr = dataStr.substring(start + 2, end);
+            }
+            char letter = (char) Integer.parseInt(charStr, 16); // 16进制parse整形字符串。
+            buffer.append(new Character(letter).toString());
+            start = end;
+        }
+        return buffer.toString();
+    }
+
+    public static void main(String[] args) {
+//        int start = Integer.parseInt("4e00", 16);
+//        int end = Integer.parseInt("9fbb", 16);
+//        System.out.println("总共有汉字:" + (end - start));
+//        for (int i = start; i <= end; i++) {
+//            String hanzi = decodeUnicode("0x" + Integer.toHexString(i));
+//            System.out.print(hanzi);
+//        }
+        Scanner scanner = new Scanner(System.in);
+        while (true) {
+            String s = scanner.nextLine();
+            System.out.println(Integer.toHexString(s.charAt(0)));
+            System.out.println(isContainChinese(s) ? "含中文" : "NO");
+            System.out.println(isChinese(s.charAt(0)) ? "isc含中文" : "iscNO");
+        }
     }
 
     /**

@@ -304,7 +304,7 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
                     }
                     break;
                 case 2040:
-//                    ToastUtils.showShortToast(BleClosePigActivity.this, message);
+                    message = getResources().getString(R.string.ubt_one_pig_five_user);
                     break;
                 default:
                     message = Constants.getErrorMsg(errorCode);
@@ -333,11 +333,11 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
         @Override
         public void connectFailed() {
             super.connectFailed();
-            dismissLoadDialog();
-            if (pigListDialog != null) {
-                pigListDialog.dismiss();
-            }
-            showErrorDialog("连接失败");
+//            dismissLoadDialog();
+//            if (pigListDialog != null) {
+//                pigListDialog.dismiss();
+//            }
+//            showErrorDialog("连接失败");
 //            ToastUtils.showShortToast(BleClosePigActivity.this, R.string.failed_retry);
         }
 
@@ -413,7 +413,6 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
     private void showErrorDialog(String message) {
         if (mErrorDialog == null) {
             mErrorDialog = new UBTBaseDialog(this);
-            mErrorDialog.setTips(message);
             mErrorDialog.setLeftBtnShow(false);
             mErrorDialog.setRightButtonTxt("我知道了");
             mErrorDialog.setRightBtnColor(ContextCompat.getColor(this, R.color.ubt_tab_btn_txt_checked_color));
@@ -433,6 +432,7 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
             });
         }
         if (!isDestroyed() && !isFinishing() && !mErrorDialog.isShowing()) {
+            mErrorDialog.setTips(message);
             mErrorDialog.show();
         }
     }

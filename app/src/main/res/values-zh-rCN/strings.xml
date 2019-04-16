@@ -38,7 +38,8 @@
     <string name="ubt_wifi_no_pwd_tips">确认此Wi-Fi无密码？</string>
     <string name="ubt_set_pig_net">八戒配网</string>
     <string name="ubt_bunding_ping_timeout">绑定八戒超时，请稍后重试</string>
-    <string name="ubt_one_user_one_pig">一个账号已被绑定八戒</string>
+    <string name="ubt_one_user_one_pig">一个账号只能绑定一台八戒</string>
+    <string name="ubt_one_pig_five_user">一台八戒只能绑定5个账号</string>
     <string name="ubt_set_net_success">配网成功</string>
     <string name="ubt_connecting">连接中</string>
     <string name="ubt_mina">我的</string>

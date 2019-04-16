@@ -335,50 +335,55 @@ class UbtBluetoothConnector {
                             long beforeTime = System.currentTimeMillis();
                             int tryCount = 5;// 一直发送直至超时
                             boolean sendCmdSuccess = false, sendPacketSuccess;
-                            while (--tryCount > 0) {
-                                sendCmdSuccess = true;
-                                for (byte[] bytes : packets) {
-                                    d(TAG, "ble分段发送: " + ByteHexHelper.bytesToHexString(bytes));
-                                    sendPacketSuccess = false;
-                                    if (mCurrentBluetoothGatt != null) {
-                                        BluetoothGattService service =
-                                                mCurrentBluetoothGatt.getService(UUID.fromString(UUID_SERVICE));
-                                        if (service != null) {
-                                            BluetoothGattCharacteristic characteristic =
-                                                    service.getCharacteristic(UUID.fromString(UUID_WRITE_CHARACTER));
-                                            characteristic.setValue(bytes);
-                                            synchronized (mSyncLock) {
-                                                onceResponse.success = false;
-                                                onceResponse.hasResponse = false;
-                                                //发送数组内元素
-                                                boolean writeSuccess =
-                                                        mCurrentBluetoothGatt.writeCharacteristic(characteristic);
-                                                // 等待发送成功回调
-                                                Log.e(TAG, "wait ----- 1");
-                                                try {
-                                                    if (!onceResponse.hasResponse && writeSuccess) {
-                                                        mSyncLock.wait();
+                            try {
+                                while (--tryCount > 0) {
+                                    sendCmdSuccess = true;
+                                    for (byte[] bytes : packets) {
+                                        d(TAG, "ble分段发送: " + ByteHexHelper.bytesToHexString(bytes));
+                                        sendPacketSuccess = false;
+                                        if (mCurrentBluetoothGatt != null) {
+                                            BluetoothGattService service =
+                                                    mCurrentBluetoothGatt.getService(UUID.fromString(UUID_SERVICE));
+                                            if (service != null) {
+                                                BluetoothGattCharacteristic characteristic =
+                                                        service.getCharacteristic(UUID.fromString(UUID_WRITE_CHARACTER));
+                                                characteristic.setValue(bytes);
+                                                synchronized (mSyncLock) {
+                                                    onceResponse.success = false;
+                                                    onceResponse.hasResponse = false;
+                                                    //发送数组内元素
+                                                    boolean writeSuccess =
+                                                            mCurrentBluetoothGatt.writeCharacteristic(characteristic);
+                                                    // 等待发送成功回调
+                                                    Log.e(TAG, "wait ----- 1");
+                                                    try {
+                                                        if (!onceResponse.hasResponse && writeSuccess) {
+                                                            mSyncLock.wait();
+                                                        }
+                                                    } catch (InterruptedException e) {
+                                                        e.printStackTrace();
                                                     }
-                                                } catch (InterruptedException e) {
-                                                    e.printStackTrace();
+                                                    Log.e(TAG, "wait ----- 2 -- onceResponse: " + onceResponse.success);
+                                                    sendPacketSuccess = onceResponse.success;
                                                 }
-                                                Log.e(TAG, "wait ----- 2 -- onceResponse: " + onceResponse.success);
-                                                sendPacketSuccess = onceResponse.success;
                                             }
                                         }
+                                        if (!sendPacketSuccess) {//如果发数组第一个元素失败,则直接跳出for循环,尝试重试
+                                            sendCmdSuccess = false;
+                                            break;
+                                        }
                                     }
-                                    if (!sendPacketSuccess) {//如果发数组第一个元素失败,则直接跳出for循环,尝试重试
-                                        sendCmdSuccess = false;
+                                    if (mIsShutdown) {
+                                        Log.d(TAG, "用户断开连接连接");
+                                        break;
+                                    } else if (sendCmdSuccess) {
+                                        Log.d(TAG, "命令发送成功-> costTime : " + (System.currentTimeMillis() - beforeTime));
                                         break;
                                     }
                                 }
-                                if (mIsShutdown) {
-                                    Log.d(TAG, "用户断开连接连接");
-                                    break;
-                                } else if (sendCmdSuccess) {
-                                    Log.d(TAG, "命令发送成功-> costTime : " + (System.currentTimeMillis() - beforeTime));
-                                    break;
-                                }
+
+                            } catch (Exception e) {
+                                sendCmdSuccess = false;
                             }
 
                             if (sendCmdSuccess && !mIsShutdown) {

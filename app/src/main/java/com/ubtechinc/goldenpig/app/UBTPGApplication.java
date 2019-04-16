@@ -22,7 +22,6 @@ import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
 import com.tencent.TIMSoundElem;
 import com.tencent.ai.tvs.LoginApplication;
-import com.tencent.ai.tvs.info.ProductManager;
 import com.tencent.ai.tvs.info.UserInfoManager;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.ubt.imlibv2.bean.ContactsProtoBuilder;
@@ -311,11 +310,8 @@ public class UBTPGApplication extends LoginApplication implements Observer {
     private void sendClientIdToPig() {
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null && pigInfo.isAdmin) {
-            ProductManager.getInstance().productId = BuildConfig.PRODUCT_ID;
-            ProductManager.getInstance().dsn = pigInfo.getRobotName();
-
             TVSManager tvsManager = TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ);
-            String clientId = tvsManager.getClientId();
+            String clientId = tvsManager.getClientId(BuildConfig.PRODUCT_ID, pigInfo.getRobotName());
             Log.i(TAG, "sendClientIdToPig|clientId : " + clientId);
             TIMMessage selfMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getClientId(clientId));
             TIMConversation pigConversation = TIMManager.getInstance().getConversation(
