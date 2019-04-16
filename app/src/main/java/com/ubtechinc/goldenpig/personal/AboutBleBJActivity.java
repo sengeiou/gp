@@ -40,6 +40,10 @@ public class AboutBleBJActivity extends BaseToolBarActivity {
 
     private TextView tvVersionValue;
 
+    public static final String KEY_PIGINFO_VERSION = "KEY_PIGINFO_VERSION";
+
+    public static final String KEY_PIGINFO_BASIC = "piginfo_basic";
+
     @Override
     protected int getConentView() {
         return R.layout.activity_ble_pig_info;
@@ -71,13 +75,13 @@ public class AboutBleBJActivity extends BaseToolBarActivity {
     }
 
     private void getPigInfo(String pigDsn) {
-        DeviceInfoContainer.GPDeviceInfo deviceInfo = (DeviceInfoContainer.GPDeviceInfo) SPUtils.get().readObject("piginfo_basic" + pigDsn);
+        DeviceInfoContainer.GPDeviceInfo deviceInfo = (DeviceInfoContainer.GPDeviceInfo) SPUtils.get().readObject(KEY_PIGINFO_BASIC + pigDsn);
         if (deviceInfo != null) {
             updateUI(deviceInfo);
         } else {
             getPigDeviceInfo();
         }
-        String pigVersion = SPUtils.get().getString("piginfo_version" + pigDsn);
+        String pigVersion = SPUtils.get().getString(KEY_PIGINFO_VERSION + pigDsn);
         if (!TextUtils.isEmpty(pigVersion)) {
             tvVersionValue.setText(pigVersion);
         } else {
@@ -108,14 +112,14 @@ public class AboutBleBJActivity extends BaseToolBarActivity {
         switch (code) {
             case RECEIVE_PIG_VERSION:
                 String currentVersion = (String) event.getData();
-                SPUtils.get().put("piginfo_version" + pigDsn, currentVersion);
+                SPUtils.get().put(KEY_PIGINFO_VERSION + pigDsn, currentVersion);
                 if (tvVersionValue != null) {
                     tvVersionValue.setText(currentVersion);
                 }
                 break;
             case RECEIVE_PIG_DEVICE_INFO:
                 DeviceInfoContainer.GPDeviceInfo deviceInfo = (DeviceInfoContainer.GPDeviceInfo) event.getData();
-                SPUtils.get().saveObject("piginfo_basic" + pigDsn, deviceInfo);
+                SPUtils.get().saveObject(KEY_PIGINFO_BASIC + pigDsn, deviceInfo);
                 updateUI(deviceInfo);
                 break;
         }

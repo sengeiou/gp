@@ -67,10 +67,8 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static com.ubtechinc.goldenpig.app.UBTPGApplication.TAG;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NETWORK_STATE_CHANGED;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_ONLINE_STATE;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_VERSION_STATE;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.*;
+import static com.ubtechinc.goldenpig.personal.AboutBleBJActivity.KEY_PIGINFO_VERSION;
 import static com.ubtechinc.goldenpig.personal.BeeHiveMobileActivity.KEY_BEE_HIVE_OPEN;
 import static com.ubtechinc.goldenpig.personal.NoSimActivity.KEY_TOOL_BAR_TITLE;
 
@@ -114,91 +112,53 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
     @BindView(R.id.ubt_btn_person_about)
     UbtSubTxtButton mAboutBtn; //关于页按钮
 
-    //    private View mToUserInfo;
-//    private View mSetNetBtn;   //绑定配网按钮
-//    private TextView mTitle;
-//    private View mCyanBg;  /// 蓝色渐进色背景板
-//    @BindView(R.id.ubt_btn_person_hotspot)
-//    Button mToHospotBtn;
-//    @BindView(R.id.ubt_btn_device_manager)
-//    Button mDevMangerBtn;
-//    @BindView(R.id.ubt_btn_person_answer)
-//    Button mAnswerBtn;
-//    @BindView(R.id.ubt_btn_person_clock)
-//    Button mClockBtn;
-//    @BindView(R.id.ubt_btn_person_remind)
-//    Button mRemindBtn;
     public PersonalNewFragment() {
         super();
     }
 
     @Override
     protected void onNoPig() {
-        //tv_pig_state.setVisibility(View.GONE);
         tv_manager.setVisibility(View.INVISIBLE);
         ll_bind.setVisibility(View.VISIBLE);
         ll_function.setVisibility(View.GONE);
         ll_version.setVisibility(View.GONE);
         ubt_tv_pig_name.setVisibility(View.GONE);
-        updateOnLineStateUI();
+        updateRobotUI(null);
         ll_version.setVisibility(View.GONE);
-//        if (mCyanBg != null) {
-//            mCyanBg.setVisibility(View.GONE);
-//        }
-//        if (mTitle != null) {
-//            mTitle.setTextColor(ResourcesCompat.getColor(getResources(), R.color
-//                    .ubt_tips_txt_color, null));
-//        }
     }
 
     @Override
     protected void onNoSetNet() {
-//        tv_pig_state.setVisibility(View.VISIBLE);
-//        tv_pig_state.setText("(离线)");
         tv_manager.setVisibility(View.INVISIBLE);
         ll_bind.setVisibility(View.VISIBLE);
         ll_function.setVisibility(View.GONE);
         ll_version.setVisibility(View.GONE);
         ubt_tv_pig_name.setVisibility(View.VISIBLE);
-//        if (mCyanBg != null) {
-//            mCyanBg.setVisibility(View.GONE);
-//        }
-//        if (mTitle != null) {
-//            mTitle.setTextColor(ResourcesCompat.getColor(getResources(), R.color
-//                    .ubt_tips_txt_color, null));
-//        }
     }
 
     @Override
     protected void onHasPig() {
 
-//        if (mCyanBg != null) {
-//            mCyanBg.setVisibility(View.VISIBLE);
-//        }
-//        if (mTitle != null) {
-//            mTitle.setTextColor(ResourcesCompat.getColor(getResources(), R.color.ubt_white, null));
-//        }
     }
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser) {
-            PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
-            if (pigInfo != null && pigInfo.isAdmin && UBTPGApplication.isNetAvailable && UBTPGApplication.isRobotOnline) {
-                UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getPigVersionState()));
-            }
+            getPigVersionState();
+        }
+    }
+
+    private void getPigVersionState() {
+        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+        if (pigInfo != null && pigInfo.isAdmin && UBTPGApplication.isNetAvailable && UBTPGApplication.isRobotOnline) {
+            UbtTIMManager.getInstance().sendTIM(ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getPigVersionState()));
         }
     }
 
     @Override
     protected void onSetedNet() {
-//        if (mCyanBg != null) {
-//            mCyanBg.setVisibility(View.VISIBLE);
-//        }
-//        if (mTitle != null) {
-//            mTitle.setTextColor(ResourcesCompat.getColor(getResources(), R.color.ubt_white, null));
-//        }
+
     }
 
     @Override
@@ -227,7 +187,7 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
         params.height = height;
         rl_pig_state.setLayoutParams(params);
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
-        updateOnLineStateUI();
+        updateRobotUI(null);
 
         if (pigInfo != null) {
             mQQMusicBtn.setAlpha(1.0f);
@@ -239,7 +199,6 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
                 tv_manager.setText("普通成员");
                 ll_version.setVisibility(View.GONE);
             }
-            //tv_pig_state.setVisibility(View.VISIBLE);
             String name = pigInfo.getRobotName();
             if (!TextUtils.isEmpty(name) && name.length() >= 4) {
                 name = name.substring(name.length() - 4, name.length());
@@ -257,7 +216,6 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
             ll_function.setVisibility(View.GONE);
             tv_manager.setVisibility(View.GONE);
             ll_version.setVisibility(View.GONE);
-            //tv_pig_state.setVisibility(View.GONE);
         }
         mFeedBackBtn.setOnClickListener(this);
         mAboutBtn.setOnClickListener(this);
@@ -297,28 +255,6 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
         } else {
             ActivityManager.getInstance().popAllActivityExcept(LoginActivity.class.getName());
             ActivityRoute.toAnotherActivity(getActivity(), LoginActivity.class, true);
-        }
-    }
-
-    private void updateOnLineStateUI() {
-        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
-        if (pigInfo != null && pigInfo.isAdmin) {
-            tv_pig_state.setVisibility(View.VISIBLE);
-            iv_goto.setVisibility(View.VISIBLE);
-            iv_online_state.setVisibility(View.VISIBLE);
-            if (UBTPGApplication.isRobotOnline) {
-                tv_pig_state.setText("(在线)");
-                iv_online_state.setImageResource(R.drawable.ic_line);
-
-            } else {
-                tv_pig_state.setText("(离线)");
-                iv_online_state.setImageResource(R.drawable.ic_off_line);
-                ll_version.setVisibility(View.GONE);
-            }
-        } else {
-            tv_pig_state.setVisibility(View.GONE);
-            iv_goto.setVisibility(View.VISIBLE);
-            iv_online_state.setVisibility(View.GONE);
         }
     }
 
@@ -435,30 +371,52 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
                 inits();
                 break;
             case NETWORK_STATE_CHANGED:
-                updateRobotVersionUI(null);
+                updateRobotUI(null);
                 break;
             case RECEIVE_ROBOT_ONLINE_STATE:
-                updateOnLineStateUI();
+                updateRobotUI(null);
                 break;
             case RECEIVE_ROBOT_VERSION_STATE:
-                updateRobotVersionUI((VersionInformation.UpgradeInfo) event.getData());
+                updateRobotUI((VersionInformation.UpgradeInfo) event.getData());
                 break;
         }
     }
 
-    private void updateRobotVersionUI(VersionInformation.UpgradeInfo info) {
-        if (!UBTPGApplication.isNetAvailable) {
+    /**
+     * 更新机器人面板ui
+     */
+    private void updateRobotUI(VersionInformation.UpgradeInfo info) {
+        if (UBTPGApplication.isNetAvailable) {
+            PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+            boolean hasPig = pigInfo != null;
+            boolean isAdmin = hasPig && pigInfo.isAdmin;
+            boolean isOnline = isAdmin && UBTPGApplication.isRobotOnline;
+            String robotName = hasPig ? pigInfo.getRobotName() : "";
+            iv_goto.setVisibility(hasPig ? View.VISIBLE : View.GONE);
+            tv_pig_state.setText(isOnline ? "(在线)" : "(离线)");
+            tv_pig_state.setVisibility(isAdmin ? View.VISIBLE : View.GONE);
+            iv_online_state.setVisibility(isAdmin ? View.VISIBLE : View.GONE);
+
+            if (!isOnline) {
+                ll_version.setVisibility(View.GONE);
+            }
+            iv_online_state.setImageResource(isOnline ? R.drawable.ic_line : R.drawable.ic_off_line);
+
+            if (info != null) {
+                int status = info.getStatus();
+                ll_version.setVisibility(status == 1 ? View.VISIBLE : View.GONE);
+                String currentVersion = info.getCurrentVersion();
+                SPUtils.get().put(KEY_PIGINFO_VERSION + robotName, currentVersion);
+            } else {
+                //TODO 如果设备切到在线状态且未显示版本更新
+                if (isOnline && (ll_version.getVisibility() != View.VISIBLE)) {
+                    getPigVersionState();
+                }
+            }
+        } else {
             tv_pig_state.setVisibility(View.GONE);
             ll_version.setVisibility(View.GONE);
-        } else if (info != null) {
-            tv_pig_state.setVisibility(View.VISIBLE);
-            int status = info.getStatus();
-            ll_version.setVisibility(status == 1 ? View.VISIBLE : View.GONE);
-            String currentVersion = info.getCurrentVersion();
-            PigInfo myPig = AuthLive.getInstance().getCurrentPig();
-            if (myPig != null && myPig.isAdmin) {
-                SPUtils.get().put("piginfo_version" + myPig.getRobotName(), currentVersion);
-            }
+            iv_online_state.setVisibility(View.GONE);
         }
     }
 

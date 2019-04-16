@@ -291,8 +291,8 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
-                LogUtils.d("basewebview", "title:" + title);
-                if (!TextUtils.isEmpty(title) && !title.contains("https")) {
+                LogUtils.d(TAG, "onReceivedTitle:" + title);
+                if (!loadError && !TextUtils.isEmpty(title) && !title.contains("https")) {
                     setToolBarTitle(title);
                 }
             }
