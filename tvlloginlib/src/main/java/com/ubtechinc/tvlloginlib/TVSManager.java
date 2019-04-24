@@ -75,10 +75,10 @@ public class TVSManager implements AuthorizeListener, BaseClient.ClientResultLis
         Log.i(TAG, "printTvsEnvLog:" + tvsEnv.name());
     }
 
-    public String getClientId() {
-        return proxy.getClientId(getELoginPlatform());
+    public String getClientId(String productId, String dsn) {
+        proxy.requestTokenVerify(getELoginPlatform(), productId, dsn);
+        return proxy.getClientId(getELoginPlatform(), productId, dsn);
     }
-
 
     public void init(Activity activity) {
         proxy.setOwnActivity(activity);

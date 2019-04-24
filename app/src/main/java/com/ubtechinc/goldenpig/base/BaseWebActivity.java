@@ -291,8 +291,8 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
             @Override
             public void onReceivedTitle(WebView view, String title) {
                 super.onReceivedTitle(view, title);
-                LogUtils.d("basewebview", "title:" + title);
-                if (!TextUtils.isEmpty(title) && !title.contains("https")) {
+                LogUtils.d(TAG, "onReceivedTitle:" + title);
+                if (!loadError && !TextUtils.isEmpty(title) && !title.contains("https")) {
                     setToolBarTitle(title);
                 }
             }
@@ -390,12 +390,17 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
     private void openCamera() {
         if (Build.VERSION.SDK_INT >= 23) {
             AndPermission.with(BaseWebActivity.this)
-                    .requestCode(0x1111)
-                    .permission(Permission.CAMERA)
+                    .requestCode(0x1112)
+                    .permission(Permission.CAMERA, Permission.STORAGE)
                     .callback(new PermissionListener() {
                         @Override
                         public void onSucceed(int requestCode, @NonNull List<String> grantPermissions) {
-                            doOpenSystemCamera();
+                            if (cameraIsCanUse()) {
+                                doOpenSystemCamera();
+                            } else {
+                                cancelFilePathCallback();
+                                showPermissionDialog(Permission.CAMERA);
+                            }
                         }
 
                         @Override
