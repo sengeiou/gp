@@ -166,6 +166,7 @@ public class ChildrenActivity extends BaseToolBarActivity {
             @Override
             public void onError(String str) {
                 UbtLogger.e(TAG, "onError str:" + str);
+                ToastUtils.showShortToast("获取儿童模式状态数据异常");
             }
         });
 

@@ -225,7 +225,6 @@ public class PigNewFragment extends BaseFragment {
     private int baseHeight = 100; //后续看兼容性通过计算itemView高度或者在布局设置控件高度
 
     private void changeFunctionCardListHeight() {
-//        int count = tempList.size();
         int count = mFunctionModel.catetory.categorys.size();
         if (count <= 8) {
             return;  //增加异常判断，按照正常逻辑8个是不会显示下拉按钮
@@ -305,7 +304,6 @@ public class PigNewFragment extends BaseFragment {
         initRecycleList();
         fetchFunctionCardData();
         refreshData();
-//        checkUpdate();
     }
 
     private void fetchFunctionCardData() {
@@ -387,8 +385,14 @@ public class PigNewFragment extends BaseFragment {
                     //TODO 管理员
                     if (UBTPGApplication.isRobotOnline) {
                         //TODO 在线
-                        tvPigTip.setVisibility(View.GONE);
-//                        rlNativeInfo.setVisibility(View.VISIBLE);
+
+                        Log.d(TAG, "isRobotOnline "  + (rlNativeInfo.getVisibility() == View.VISIBLE));
+                        if(rlNativeInfo.getVisibility() != View.VISIBLE){
+                            tvPigTip.setText("你的智能语音小伙伴");
+                            tvPigTip.setVisibility(View.VISIBLE);
+                        }else{
+                            tvPigTip.setVisibility(View.GONE);
+                        }
                     } else {
                         //TODO 离线
                         tvPigTip.setVisibility(View.GONE);
@@ -416,6 +420,7 @@ public class PigNewFragment extends BaseFragment {
      * 隐藏小猪基本状态信息栏
      */
     private void hideNativeInfo() {
+        Log.d(TAG, "hideNativeInfo");
         rlNativeInfo.setVisibility(View.GONE);
         if (mCustomPopupWindow != null) {
             mCustomPopupWindow.dismiss();
