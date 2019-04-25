@@ -99,7 +99,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     public void showLoadingDialog() {
-        LoadingDialog.getInstance(this).show();
+        if (!isFinishing() && !isDestroyed()) {
+            LoadingDialog.getInstance(this).show();
+        }
     }
 
     protected abstract int getContentViewId();
