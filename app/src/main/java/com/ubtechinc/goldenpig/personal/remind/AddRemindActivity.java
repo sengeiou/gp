@@ -11,21 +11,18 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.tencent.ai.tvs.comm.CommOpInfo;
-import com.tencent.ai.tvs.env.ELoginPlatform;
+import com.ubt.robot.dmsdk.TVSWrapBridge;
+import com.ubt.robot.dmsdk.TVSWrapConstant;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.TimeUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
-import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
-import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
+import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.model.RemindModel;
-import com.ubtechinc.goldenpig.utils.PigUtils;
-import com.ubtechinc.tvlloginlib.TVSManager;
 import com.weigan.loopview.LoopView;
 import com.weigan.loopview.OnItemSelectedListener;
 
@@ -328,12 +325,6 @@ public class AddRemindActivity extends BaseNewActivity {
     }
 
     public void addRemind(String sNote, int eCloud_type, long lReminderId) {
-        ELoginPlatform platform;
-        if (CookieInterceptor.get().getThridLogin().getLoginType().toLowerCase().equals("wx")) {
-            platform = ELoginPlatform.WX;
-        } else {
-            platform = ELoginPlatform.QQOpen;
-        }
         String ymd = dateList2.get(loopView_date.getSelectedItem());
         int hour = Integer.parseInt(hourList.get(loopView_hour.getSelectedItem()));
         if (hour == 12) {
@@ -356,13 +347,18 @@ public class AddRemindActivity extends BaseNewActivity {
             return;
         }
         LoadingDialog.getInstance(this).show();
-        TVSManager tvsManager = TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ);
-        tvsManager.init(this);
-        tvsManager.requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils.getRemindUniAccessinfo
-                        (sNote, eCloud_type, repeatType, lReminderId, timeMill), new TVSManager
-                        .TVSAlarmListener() {
+
+        TVSWrapBridge.tvsReminderManage(TVSWrapBridge.getRemindBlobInfo(sNote, eCloud_type, repeatType, lReminderId, timeMill),
+                TVSWrapConstant.PRODUCT_ID, AuthLive.getInstance().getRobotUserId(), new TVSWrapBridge.TVSWrapCallback() {
                     @Override
-                    public void onSuccess(CommOpInfo msg) {
+                    public void onError(int errCode) {
+                        LoadingDialog.getInstance(AddRemindActivity.this).dismiss();
+//                        ToastUtils.showShortToast(code);
+                        LogUtils.d("errCode:" + errCode);
+                    }
+
+                    @Override
+                    public void onSuccess(Object result) {
                         LoadingDialog.getInstance(AddRemindActivity.this).dismiss();
                         if (model == null) {
                             ToastUtils.showShortToast("新建提醒成功");
@@ -372,13 +368,6 @@ public class AddRemindActivity extends BaseNewActivity {
                         Event<String> event = new Event<>(ADD_REMIND_SUCCESS);
                         EventBusUtil.sendEvent(event);
                         finish();
-                    }
-
-                    @Override
-                    public void onError(String code) {
-                        LoadingDialog.getInstance(AddRemindActivity.this).dismiss();
-                        ToastUtils.showShortToast(code);
-                        LogUtils.d("code:" + code);
                     }
                 });
     }

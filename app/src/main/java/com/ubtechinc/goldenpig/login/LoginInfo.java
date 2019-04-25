@@ -1,4 +1,4 @@
-package com.ubtechinc.tvlloginlib.entity;
+package com.ubtechinc.goldenpig.login;
 
 import java.io.Serializable;
 import java.util.HashMap;

@@ -56,6 +56,14 @@ import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.Function
 import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.REMIND;
 import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.VOICE_MAIL;
 
+/**
+ *@auther        :zzj
+ *@email         :zhijun.zhou@ubtrobot.com
+ *@Description:  :首页功能卡片
+ *@time          :2019/4/24 10:33
+ *@change        :
+ *@changetime    :2019/4/24 10:33
+*/
 public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapter.ViewHodler> implements View.OnClickListener {
 
     private List<FunctionEnum> list;
@@ -145,7 +153,7 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
                     break;
                 case MAIL_LIST:
                     HashMap<String, Object> map = new HashMap<>();
-                    map.put("noCard", ((MainActivity) context).isNoSim);
+                    map.put("noCard", MainActivity.isNoSim);
                     map.put("pigPhoneNumber", ((MainActivity) context).pigPhoneNumber);
                     enterFunction(AddressBookActivity.class, map);
                     break;
@@ -155,6 +163,7 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
                 case CHILD:
                     ActivityRoute.toAnotherActivity(((MainActivity)context),ChildrenActivity.class, false);
                     break;
+                    default:
             }
         }
     }

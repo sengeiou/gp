@@ -4,9 +4,9 @@ import android.content.Context;
 
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
+import com.ubtechinc.goldenpig.login.LoginInfo;
 import com.ubtechinc.goldenpig.net.URestSigner;
 import com.ubtechinc.nets.utils.DeviceUtils;
-import com.ubtechinc.tvlloginlib.entity.LoginInfo;
 
 import java.util.HashMap;
 

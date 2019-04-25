@@ -1,4 +1,4 @@
-package com.ubtechinc.tvlloginlib.utils;
+package com.ubtechinc.goldenpig.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

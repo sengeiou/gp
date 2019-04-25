@@ -1,22 +1,23 @@
 package com.ubtechinc.goldenpig.about;
 
 import android.os.Bundle;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
-import com.suke.widget.SwitchButton;
 import com.tencent.TIMConversation;
 import com.tencent.TIMConversationType;
 import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
-import com.tencent.ai.tvs.env.ELoginEnv;
 import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
+import com.ubt.robot.dmsdk.TVSWrapBridge;
+import com.ubt.robot.dmsdk.TVSWrapLoginEnv;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.ActivityManager;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.login.LoginActivity;
-import com.ubtechinc.goldenpig.login.LoginModel;
+import com.ubtechinc.goldenpig.login.LoginInfo;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.push.PushAppInfo;
@@ -24,8 +25,6 @@ import com.ubtechinc.goldenpig.push.PushHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.ubtechinc.nets.utils.DeviceUtils;
-import com.ubtechinc.tvlloginlib.TVSManager;
-import com.ubtechinc.tvlloginlib.entity.LoginInfo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,8 +32,6 @@ import java.util.Map;
 public class EggShellActivtiy extends BaseToolBarActivity {
 
     private UbtTIMManager mUbtTIMManager;
-
-    private SwitchButton switchTvs;
 
     @Override
     protected int getConentView() {
@@ -100,24 +97,47 @@ public class EggShellActivtiy extends BaseToolBarActivity {
     }
 
     private void initTvs() {
-        switchTvs = findViewById(R.id.sb_tvs_swicth);
-        switchTvs.setChecked(TVSManager.tvsEnv == ELoginEnv.FORMAL ? true : false);
-        switchTvs.setOnCheckedChangeListener((view, isChecked) -> {
-            String msg;
-            if (isChecked) {
-                TVSManager.tvsEnv = ELoginEnv.FORMAL;
-                msg = "你已切到正式环境，请重新登录";
-            } else {
-                TVSManager.tvsEnv = ELoginEnv.TEST;
-                msg = "你已切到测试环境，请重新登录";
-            }
-            TVSManager.instance = null;
-            UbtToastUtils.showCustomToast(this, msg);
-            new LoginModel().logoutTVS();
-            AuthLive.getInstance().logout();
-            ActivityManager.getInstance().popAllActivity();
-            ActivityRoute.toAnotherActivity(this, LoginActivity.class, true);
+        RadioButton testingRadioButton = findViewById(R.id.testingRadioButton);
+        RadioButton experienceRadioButton = findViewById(R.id.experienceRadioButton);
+        RadioButton productionRadioButton = findViewById(R.id.productionRadioButton);
+
+        testingRadioButton.setOnClickListener(v -> {
+            TVSWrapBridge.tvsLogout();
+            TVSWrapBridge.setTvsEnv(TVSWrapLoginEnv.TEST);
+            String msg = "你已切到测试环境，请重新登录";
+            doLogout(msg);
         });
+        experienceRadioButton.setOnClickListener(v -> {
+            TVSWrapBridge.tvsLogout();
+            TVSWrapBridge.setTvsEnv(TVSWrapLoginEnv.EX);
+            String msg = "你已切到体验环境，请重新登录";
+            doLogout(msg);
+        });
+        productionRadioButton.setOnClickListener(v -> {
+            TVSWrapBridge.tvsLogout();
+            TVSWrapBridge.setTvsEnv(TVSWrapLoginEnv.FORMAL);
+            String msg = "你已切到正式环境，请重新登录";
+            doLogout(msg);
+        });
+        TVSWrapLoginEnv env = TVSWrapBridge.getTvsEnv();
+        switch (env) {
+            case FORMAL:
+                productionRadioButton.setChecked(true);
+                break;
+            case TEST:
+                testingRadioButton.setChecked(true);
+                break;
+            case EX:
+                experienceRadioButton.setChecked(true);
+                break;
+            default:
+        }
+    }
+
+    private void doLogout(String msg) {
+        UbtToastUtils.showCustomToast(this, msg);
+        ActivityManager.getInstance().popAllActivity();
+        ActivityRoute.toAnotherActivity(this, LoginActivity.class, true);
     }
 
     private void openADB(boolean open) {

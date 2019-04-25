@@ -11,27 +11,24 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.tencent.ai.tvs.comm.CommOpInfo;
-import com.tencent.ai.tvs.env.ELoginPlatform;
+import com.ubt.robot.dmsdk.TVSWrapBridge;
+import com.ubt.robot.dmsdk.TVSWrapConstant;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.TimeUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
-import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewImg;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
+import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.model.AlarmModel;
 import com.ubtechinc.goldenpig.pigmanager.popup.PopupWindowList;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
-import com.ubtechinc.goldenpig.utils.PigUtils;
-import com.ubtechinc.goldenpig.utils.TvsUtil;
 import com.ubtechinc.goldenpig.view.Divider;
 import com.ubtechinc.goldenpig.view.RecyclerItemClickListener;
 import com.ubtechinc.goldenpig.view.RecyclerOnItemLongListener;
 import com.ubtechinc.goldenpig.view.StateView;
-import com.ubtechinc.tvlloginlib.TVSManager;
 import com.yanzhenjie.recyclerview.swipe.SwipeItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
@@ -162,70 +159,89 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
     }
 
     public void onRefresh() {
-        ELoginPlatform platform = TvsUtil.currentPlatform();
-        TVSManager tvsManager = TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ);
-        tvsManager.init(this);
-        tvsManager.requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils
-                .getAlarmUniAccessinfo(0, 1, 0, 0), new TVSManager
-                .TVSAlarmListener() {
-            @Override
-            public void onSuccess(CommOpInfo msg) {
-                String str = msg.errMsg;
-                List<AlarmModel> list = new ArrayList<>();
-                try {
-                    JSONObject obj = new JSONObject(str);
-                    JSONArray narry = obj.getJSONArray("vCloudAlarmData");
-                    if (narry == null || narry.length() == 0) {
-                        onRefreshSuccess(list);
-                        return;
+        TVSWrapBridge.tvsAlarmManage(TVSWrapBridge.getAlarmBlobInfo(0, 1, 0, 0),
+                TVSWrapConstant.PRODUCT_ID, AuthLive.getInstance().getCurrentPig().getRobotName(), new TVSWrapBridge.TVSWrapCallback<String>() {
+                    @Override
+                    public void onError(int errCode) {
+                        LogUtils.d("code:" + errCode);
+                        LoadingDialog.getInstance(AlarmListActivity.this).dismiss();
+                        if (errCode == TVSWrapConstant.EC_NO_DATA) {
+                            mStateView.showEmpty();
+                        } else if (mList.size() == 0) {
+                            mStateView.showRetry();
+                        } else {
+                            mStateView.showContent();
+                        }
                     }
-                    for (int i = 0; i < narry.length(); i++) {
-                        AlarmModel model = new AlarmModel();
-                        JSONObject ob = narry.getJSONObject(i);
-                        model.eRepeatType = ob.getInt("eRepeatType");
-                        try {
-                            model.lAlarmId = ob.getLong("lAlarmId");
-                        } catch (Exception e) {
-                            model.lAlarmId = 0;
+
+                    @Override
+                    public void onSuccess(String result) {
+                        handleResult(result);
+                    }
+                });
+    }
+
+    /**
+     * 处理tvs数据
+     * @param result
+     */
+    private void handleResult(String result) {
+        List<AlarmModel> list = new ArrayList<>();
+        try {
+            JSONObject obj = new JSONObject(result);
+            JSONArray narry = obj.getJSONArray("vCloudAlarmData");
+            if (narry == null || narry.length() == 0) {
+                onRefreshSuccess(list);
+                return;
+            }
+            for (int i = 0; i < narry.length(); i++) {
+                AlarmModel model = new AlarmModel();
+                JSONObject ob = narry.getJSONObject(i);
+                model.eRepeatType = ob.getInt("eRepeatType");
+                try {
+                    model.lAlarmId = ob.getLong("lAlarmId");
+                } catch (Exception e) {
+                    model.lAlarmId = 0;
+                }
+                model.lStartTimeStamp = ob.getLong("lStartTimeStamp") * 1000;
+                switch (model.eRepeatType) {//0为异常类型，1为一次性，2为每天，3为每周，4为每月，5为工作日，6为节假日
+                    case 0:
+                    case 1:
+                        model.repeatName = "单次闹钟";
+                        break;
+                    case 2:
+                        model.repeatName = "每天";
+                        break;
+                    case 3:
+                        if (TimeUtils.getWeekIndex(model.lStartTimeStamp) == 1) {
+                            model.repeatName = "每周日";
+                        } else if (TimeUtils.getWeekIndex(model.lStartTimeStamp) == 2) {
+                            model.repeatName = "每周一";
+                        } else if (TimeUtils.getWeekIndex(model.lStartTimeStamp) == 3) {
+                            model.repeatName = "每周二";
+                        } else if (TimeUtils.getWeekIndex(model.lStartTimeStamp) == 4) {
+                            model.repeatName = "每周三";
+                        } else if (TimeUtils.getWeekIndex(model.lStartTimeStamp) == 5) {
+                            model.repeatName = "每周四";
+                        } else if (TimeUtils.getWeekIndex(model.lStartTimeStamp) == 6) {
+                            model.repeatName = "每周五";
+                        } else if (TimeUtils.getWeekIndex(model.lStartTimeStamp) == 7) {
+                            model.repeatName = "每周六";
                         }
-                        model.lStartTimeStamp = ob.getLong("lStartTimeStamp") * 1000;
-                        switch (model.eRepeatType) {//0为异常类型，1为一次性，2为每天，3为每周，4为每月，5为工作日，6为节假日
-                            case 0:
-                            case 1:
-                                model.repeatName = "单次闹钟";
-                                break;
-                            case 2:
-                                model.repeatName = "每天";
-                                break;
-                            case 3:
-                                if (TimeUtils.getWeekIndex(model.lStartTimeStamp) == 1) {
-                                    model.repeatName = "每周日";
-                                } else if (TimeUtils.getWeekIndex(model.lStartTimeStamp) == 2) {
-                                    model.repeatName = "每周一";
-                                } else if (TimeUtils.getWeekIndex(model.lStartTimeStamp) == 3) {
-                                    model.repeatName = "每周二";
-                                } else if (TimeUtils.getWeekIndex(model.lStartTimeStamp) == 4) {
-                                    model.repeatName = "每周三";
-                                } else if (TimeUtils.getWeekIndex(model.lStartTimeStamp) == 5) {
-                                    model.repeatName = "每周四";
-                                } else if (TimeUtils.getWeekIndex(model.lStartTimeStamp) == 6) {
-                                    model.repeatName = "每周五";
-                                } else if (TimeUtils.getWeekIndex(model.lStartTimeStamp) == 7) {
-                                    model.repeatName = "每周六";
-                                }
-                                break;
-                            case 4:
-                                model.repeatName = "每月";
-                                break;
-                            case 5:
-                                model.repeatName = "工作日";
-                                break;
-                            case 6:
-                                model.repeatName = "节假日";
-                                break;
-                        }
+                        break;
+                    case 4:
+                        model.repeatName = "每月";
+                        break;
+                    case 5:
+                        model.repeatName = "工作日";
+                        break;
+                    case 6:
+                        model.repeatName = "节假日";
+                        break;
+                    default:
+                }
 //                                model.repeatName += TimeUtils.getTime(model.lStartTimeStamp);
-                        try {
+                try {
 //                                    String time = null;
 //                                    String le = System.currentTimeMillis() + "";
 //                                    if (le.length() - (model.lStartTimeStamp + "").length() >= 3) {
@@ -233,16 +249,16 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
 //                                                .DATE_FORMAT_ONLY_TIME);
 //                                    } else {
 //                                    }
-                            String time = TimeUtils.getTime(model.lStartTimeStamp, TimeUtils
-                                    .DATE_FORMAT_ONLY_TIME_12);
-                            Calendar mCalendar = Calendar.getInstance();
-                            mCalendar.setTimeInMillis(model.lStartTimeStamp);
-                            if (mCalendar.get(Calendar.AM_PM) == 0) {//apm=0 表示上午，apm=1表示下午。
-                                model.amOrpm = "上午";
-                            } else {
-                                model.amOrpm = "下午";
-                            }
-                            model.time = time;
+                    String time = TimeUtils.getTime(model.lStartTimeStamp, TimeUtils
+                            .DATE_FORMAT_ONLY_TIME_12);
+                    Calendar mCalendar = Calendar.getInstance();
+                    mCalendar.setTimeInMillis(model.lStartTimeStamp);
+                    if (mCalendar.get(Calendar.AM_PM) == 0) {//apm=0 表示上午，apm=1表示下午。
+                        model.amOrpm = "上午";
+                    } else {
+                        model.amOrpm = "下午";
+                    }
+                    model.time = time;
 //                                    String[] times = time.split(":");
 //                                    int hour = Integer.parseInt(times[0]);
 //                                    if (hour == 12) {
@@ -272,32 +288,15 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
 //                                        model.amOrpm = "上午";
 //                                        model.time = time;
 //                                    }
-                        } catch (Exception e) {
-                        }
-                        list.add(model);
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                } catch (Exception e) {
                 }
-
-                onRefreshSuccess(list);
+                list.add(model);
             }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-            @Override
-            public void onError(String code) {
-                LoadingDialog.getInstance(AlarmListActivity.this).dismiss();
-                if (code.contains("没有")) {
-                    mStateView.showEmpty();
-                } else if (mList.size() == 0) {
-                    mStateView.showRetry();
-                    ToastUtils.showShortToast(code);
-                } else {
-                    mStateView.showContent();
-                    ToastUtils.showShortToast(code);
-                }
-                LogUtils.d("code:" + code);
-            }
-        });
+        onRefreshSuccess(list);
     }
 
     public void onRefreshSuccess(List<AlarmModel> list) {
@@ -387,17 +386,20 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
     public void deleteAlarm(int position) {
         AlarmModel model = mList.get(position);
         LoadingDialog.getInstance(this).show();
-        ELoginPlatform platform = TvsUtil.currentPlatform();
-        TVSManager tvsManager = TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ);
-        tvsManager.init(this);
-        tvsManager.requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils
-                .getAlarmUniAccessinfo(2, model.eRepeatType, model.lAlarmId, model
-                        .lStartTimeStamp), new TVSManager.TVSAlarmListener() {
+
+        TVSWrapBridge.tvsAlarmManage(TVSWrapBridge.getAlarmBlobInfo(2, model.eRepeatType, model.lAlarmId, model
+                .lStartTimeStamp), TVSWrapConstant.PRODUCT_ID, AuthLive.getInstance().getRobotUserId(), new TVSWrapBridge.TVSWrapCallback() {
             @Override
-            public void onSuccess(CommOpInfo msg) {
+            public void onError(int errCode) {
+                LoadingDialog.getInstance(AlarmListActivity.this).dismiss();
+//                ToastUtils.showShortToast(code);
+                LogUtils.d("errCode:" + errCode);
+            }
+
+            @Override
+            public void onSuccess(Object result) {
                 LoadingDialog.getInstance(AlarmListActivity.this).dismiss();
                 ToastUtils.showShortToast("删除成功");
-                String str = msg.errMsg;
                 mList.remove(position);
                 adapter.notifyDataSetChanged();
                 if (mList.size() == 0) {
@@ -407,13 +409,6 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
                     rl_titlebar.getIvRight().setVisibility(View.VISIBLE);
                     mStateView.showContent();
                 }
-            }
-
-            @Override
-            public void onError(String code) {
-                LoadingDialog.getInstance(AlarmListActivity.this).dismiss();
-                ToastUtils.showShortToast(code);
-                LogUtils.d("code:" + code);
             }
         });
     }

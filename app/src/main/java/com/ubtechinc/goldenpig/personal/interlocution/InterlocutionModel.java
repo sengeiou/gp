@@ -2,16 +2,14 @@ package com.ubtechinc.goldenpig.personal.interlocution;
 
 import android.os.Handler;
 import android.os.Looper;
-import android.text.TextUtils;
 
+import com.ubt.robot.dmsdk.TVSWrapBridge;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
-import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.model.InterlocutionItemModel;
 import com.ubtechinc.goldenpig.model.JsonCallback;
 import com.ubtechinc.goldenpig.net.BaseHttpProxy;
-import com.ubtechinc.tvlloginlib.TVSManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -99,15 +97,7 @@ public class InterlocutionModel extends BaseHttpProxy {
         sb.append(CookieInterceptor.get().getThridLogin().getAppId() + "|");
         sb.append(CookieInterceptor.get().getThridLogin().getOpenId() + "|");
         sb.append(CookieInterceptor.get().getThridLogin().getAccessToken() + "|");
-        if (TextUtils.isEmpty(CookieInterceptor.get().getThridLogin().getTvsId())) {
-            if (TVSManager.getInstance(UBTPGApplication.getInstance(), BuildConfig.APP_ID_WX, BuildConfig
-                    .APP_ID_QQ).info != null) {
-                sb.append(TVSManager.getInstance(UBTPGApplication.getInstance(), BuildConfig.APP_ID_WX, BuildConfig
-                        .APP_ID_QQ).info.getTvsId());
-            }
-        } else {
-            sb.append(CookieInterceptor.get().getThridLogin().getTvsId());
-        }
+        sb.append(TVSWrapBridge.getTVSAccountInfo().getTvsID());
         LogUtils.d("sb.toString():" + sb.toString());
         OkHttpClient okHttpClient = getHttpClient();
         final Request okrequest = new Request.Builder()
@@ -133,16 +123,7 @@ public class InterlocutionModel extends BaseHttpProxy {
         sb.append(CookieInterceptor.get().getThridLogin().getAppId() + "|");
         sb.append(CookieInterceptor.get().getThridLogin().getOpenId() + "|");
         sb.append(CookieInterceptor.get().getThridLogin().getAccessToken() + "|");
-        if (TextUtils.isEmpty(CookieInterceptor.get().getThridLogin().getTvsId())) {
-            if (TVSManager.getInstance(UBTPGApplication.getInstance(), BuildConfig.APP_ID_WX, BuildConfig
-                    .APP_ID_QQ).info != null) {
-                sb.append(TVSManager.getInstance(UBTPGApplication.getInstance(), BuildConfig.APP_ID_WX, BuildConfig
-                        .APP_ID_QQ).info.getTvsId());
-            }
-        } else {
-            sb.append(CookieInterceptor.get().getThridLogin().getTvsId());
-        }
-
+        sb.append(TVSWrapBridge.getTVSAccountInfo().getTvsID());
         OkHttpClient okHttpClient = getHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         JSONObject obj = new JSONObject();
@@ -194,15 +175,7 @@ public class InterlocutionModel extends BaseHttpProxy {
         sb.append(CookieInterceptor.get().getThridLogin().getAppId() + "|");
         sb.append(CookieInterceptor.get().getThridLogin().getOpenId() + "|");
         sb.append(CookieInterceptor.get().getThridLogin().getAccessToken() + "|");
-        if (TextUtils.isEmpty(CookieInterceptor.get().getThridLogin().getTvsId())) {
-            if (TVSManager.getInstance(UBTPGApplication.getInstance(), BuildConfig.APP_ID_WX, BuildConfig
-                    .APP_ID_QQ).info != null) {
-                sb.append(TVSManager.getInstance(UBTPGApplication.getInstance(), BuildConfig.APP_ID_WX, BuildConfig
-                        .APP_ID_QQ).info.getTvsId());
-            }
-        } else {
-            sb.append(CookieInterceptor.get().getThridLogin().getTvsId());
-        }
+        sb.append(TVSWrapBridge.getTVSAccountInfo().getTvsID());
 
         OkHttpClient okHttpClient = getHttpClient();
         final Request okrequest = new Request.Builder()
@@ -229,15 +202,7 @@ public class InterlocutionModel extends BaseHttpProxy {
         sb.append(CookieInterceptor.get().getThridLogin().getAppId() + "|");
         sb.append(CookieInterceptor.get().getThridLogin().getOpenId() + "|");
         sb.append(CookieInterceptor.get().getThridLogin().getAccessToken() + "|");
-        if (TextUtils.isEmpty(CookieInterceptor.get().getThridLogin().getTvsId())) {
-            if (TVSManager.getInstance(UBTPGApplication.getInstance(), BuildConfig.APP_ID_WX, BuildConfig
-                    .APP_ID_QQ).info != null) {
-                sb.append(TVSManager.getInstance(UBTPGApplication.getInstance(), BuildConfig.APP_ID_WX, BuildConfig
-                        .APP_ID_QQ).info.getTvsId());
-            }
-        } else {
-            sb.append(CookieInterceptor.get().getThridLogin().getTvsId());
-        }
+        sb.append(TVSWrapBridge.getTVSAccountInfo().getTvsID());
 
         OkHttpClient okHttpClient = getHttpClient();
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");

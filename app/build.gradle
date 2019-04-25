@@ -39,7 +39,14 @@ android {
 
                 XG_ACCESS_ID : "注册应用的accessid",
                 XG_ACCESS_KEY: "注册应用的accesskey",
+                qqOpenAppId  : "1107514711"
         ]
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [moduleName: project.getName()]
+            }
+        }
     }
     signingConfigs {
         release {
@@ -196,7 +203,7 @@ def releaseTime() {
 }
 
 //生成文件的名称
-def  buildapkName(){
+def buildapkName() {
     android.applicationVariants.all { variant ->
         variant.outputs.all { output ->
             if (outputFile != null && outputFile.name.endsWith('.apk')) {
@@ -209,7 +216,7 @@ def  buildapkName(){
 
 repositories {
     flatDir {
-        dirs '../tvlloginlib/libs', 'libs'
+        dirs 'libs', project(':dmsdk').file('libs')
     }
 }
 dependencies {
@@ -224,7 +231,7 @@ dependencies {
     /*androidTestImplementation 'com.android.support.test:runner:1.0.2'
                                 androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'*/
     implementation project(path: ':commlib')
-    implementation project(path: ':tvlloginlib')
+//    implementation project(path: ':tvlloginlib')
     implementation project(path: ':xingemodule')
     implementation rootProject.ext.deps.okhttp
     implementation rootProject.ext.deps.gson
@@ -268,4 +275,6 @@ dependencies {
     implementation 'com.github.zcweng:switch-button:0.0.3@aar'
     implementation project(path: ':scardview')
     implementation files('libs/pinyin4j-2.5.0.jar')
+
+    api project(':dmsdk')
 }

@@ -7,12 +7,14 @@ import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.support.annotation.ColorInt
+import android.support.annotation.RequiresApi
 import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
 
 
+@RequiresApi(Build.VERSION_CODES.M)
 /**
  * Created by shilong
  *  2018/9/11.
@@ -50,7 +52,7 @@ class SCardView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : Fra
 
         override fun setCardBackground(drawable: Drawable) {
             mCardBackground = drawable
-            setBackgroundDrawable(drawable)
+            setBackground(drawable)
         }
 
         override fun getUseCompatPadding(): Boolean {
@@ -105,9 +107,9 @@ class SCardView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : Fra
             val hsv = FloatArray(3)
             Color.colorToHSV(themeColorBackground, hsv)
             backgroundColor = ColorStateList.valueOf(if (hsv[2] > 0.5f)
-                resources.getColor(R.color.sl_cardview_light_background)
+                resources.getColor(R.color.sl_cardview_light_background, null)
             else
-                resources.getColor(R.color.sl_cardview_dark_background))
+                resources.getColor(R.color.sl_cardview_dark_background, null))
         }
         val radius = a.getDimension(R.styleable.SCardView_cardCornerRadius, 0f)
         val elevation = a.getDimension(R.styleable.SCardView_cardElevation, 0f)
@@ -218,9 +220,9 @@ class SCardView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : Fra
         IMPL.updatePadding(mCardViewDelegate)
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        var widthMeasureSpec = widthMeasureSpec
-        var heightMeasureSpec = heightMeasureSpec
+    override fun onMeasure(widthMeasureSpec1: Int, heightMeasureSpec1: Int) {
+        var widthMeasureSpec = widthMeasureSpec1
+        var heightMeasureSpec = heightMeasureSpec1
         val widthMode = View.MeasureSpec.getMode(widthMeasureSpec)
         when (widthMode) {
             View.MeasureSpec.EXACTLY, View.MeasureSpec.AT_MOST -> {

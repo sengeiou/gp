@@ -14,7 +14,7 @@ import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.utils.CheckUtil;
-import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
+import com.ubtechinc.goldenpig.utils.SharedPreferencesUtils;
 
 import butterknife.ButterKnife;
 

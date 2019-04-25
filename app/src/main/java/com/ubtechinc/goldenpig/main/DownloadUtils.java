@@ -13,7 +13,6 @@ import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.base.BaseActivity;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
-import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 import com.yanzhenjie.permission.PermissionListener;
@@ -28,7 +27,6 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DOWNLOAD_APK_FAILED;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DOWNLOAD_APK_PROGRESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DOWNLOAD_APK_STAR;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DOWNLOAD_APK_SUCCESS;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NO_NEED_CHECK;
 
 public class DownloadUtils {
 
