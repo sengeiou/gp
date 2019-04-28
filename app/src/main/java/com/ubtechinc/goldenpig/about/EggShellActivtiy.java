@@ -18,6 +18,7 @@ import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.login.LoginActivity;
 import com.ubtechinc.goldenpig.login.LoginInfo;
+import com.ubtechinc.goldenpig.login.LoginModel;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.push.PushAppInfo;
@@ -136,6 +137,8 @@ public class EggShellActivtiy extends BaseToolBarActivity {
 
     private void doLogout(String msg) {
         UbtToastUtils.showCustomToast(this, msg);
+        new LoginModel().logoutTVS();
+        AuthLive.getInstance().logout();
         ActivityManager.getInstance().popAllActivity();
         ActivityRoute.toAnotherActivity(this, LoginActivity.class, true);
     }

@@ -10,7 +10,9 @@ import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
+import com.ubt.robot.dmsdk.TVSWrapBridge;
 import com.ubt.robot.dmsdk.TVSWrapConstant;
+import com.ubt.robot.dmsdk.TVSWrapLoginEnv;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
@@ -81,7 +83,21 @@ public class SmallPigObject {
         if (pigInfo != null) {
             if (pigInfo.isAdmin) {
                 Intent intent = new Intent(mContext, TVSWebActivity.class);
-                intent.putExtra(TVSWebActivity.TVS_WEB_URL, TVSWrapConstant.TVS_SMART_HOME_FORMAL);
+                TVSWrapLoginEnv tvsEnv = TVSWrapBridge.getTvsEnv();
+                String smartHomeUrl = TVSWrapConstant.TVS_SMART_HOME_FORMAL;
+                switch (tvsEnv) {
+                    case FORMAL:
+                        smartHomeUrl = TVSWrapConstant.TVS_SMART_HOME_FORMAL;
+                        break;
+                    case EX:
+                        smartHomeUrl = TVSWrapConstant.TVS_SMART_HOME_EX;
+                        break;
+                    case TEST:
+                        smartHomeUrl = TVSWrapConstant.TVS_SMART_HOME_TEST;
+                        break;
+                        default:
+                }
+                intent.putExtra(TVSWebActivity.TVS_WEB_URL, smartHomeUrl);
                 mContext.startActivity(intent);
             } else {
                 ToastUtils.showShortToast(R.string.only_admin_operate);
