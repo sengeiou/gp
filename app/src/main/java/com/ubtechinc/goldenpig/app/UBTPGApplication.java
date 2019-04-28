@@ -23,6 +23,7 @@ import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
 import com.tencent.TIMSoundElem;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.tqzhang.stateview.core.LoadState;
 import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.improtolib.GPResponse;
@@ -59,6 +60,8 @@ import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.push.PushAppInfo;
 import com.ubtechinc.goldenpig.push.PushHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.stateview.ErrorState;
+import com.ubtechinc.goldenpig.stateview.LoadingState;
 import com.ubtechinc.goldenpig.utils.AppUtil;
 import com.ubtechinc.goldenpig.utils.OSUtils;
 import com.ubtechinc.goldenpig.utils.PigUtils;
@@ -154,6 +157,9 @@ public class UBTPGApplication extends Application implements Observer {
         //SCADA
         initSCADA();
 
+        //TODO loadstate
+        initLoadState();
+
         //TODO 初始化tvs dmsdk
         TVSWrapBridge.init(this);
 
@@ -180,6 +186,14 @@ public class UBTPGApplication extends Application implements Observer {
         HttpManager.interceptors.add(new ResponseInterceptor());
         initService();
         initNetListener();
+    }
+
+    private void initLoadState() {
+        new LoadState.Builder()
+                .register(new ErrorState())
+                .register(new LoadingState())
+                .setDefaultCallback(LoadingState.class)
+                .build();
     }
 
     private void initNetListener() {
@@ -335,12 +349,12 @@ public class UBTPGApplication extends Application implements Observer {
                     TVSWrapBridge.tvsBindDevice(TVSWrapType.TVS, TVSWrapConstant.PRODUCT_ID, pigInfo.getRobotName(), new TVSWrapBridge.TVSWrapCallback() {
                         @Override
                         public void onError(int errCode) {
-                            com.ubtech.utilcode.utils.ToastUtils.showShortToast("注册音乐会员失败，错误码：" + errCode);
+                            Log.i(TAG, "tvsbind|注册音乐会员失败，错误码：" + errCode);
                         }
 
                         @Override
                         public void onSuccess(Object result) {
-                            com.ubtech.utilcode.utils.ToastUtils.showShortToast("注册音乐会员成功");
+                            Log.i(TAG, "tvsbind|注册音乐会员成功");
                         }
                     });
 

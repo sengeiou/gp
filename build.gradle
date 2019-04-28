@@ -39,8 +39,8 @@ allprojects {
         maven { url 'https://maven.aliyun.com/nexus/content/groups/public/' }
         maven { url 'https://repo.spring.io/libs-snapshot/' }
         maven { url 'https://dl.google.com/dl/android/maven2/' }
-        jcenter {url 'https://maven.aliyun.com/repository/jcenter'}
-        maven { url "https://jitpack.io" }*/
+        jcenter {url 'https://maven.aliyun.com/repository/jcenter'}*/
+        maven { url "https://jitpack.io" }
 
         maven {
             url "${artifactory_url}/${artifactory_rose_release}"

@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
@@ -13,16 +14,23 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.tqzhang.stateview.core.LoadManager;
+import com.tqzhang.stateview.stateview.BaseStateControl;
 import com.ubtechinc.commlib.utils.StatusBarUtil;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.ActivityManager;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
+import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
+import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.pigmanager.BleConfigReadyActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PermissionPageUtils;
 import com.umeng.analytics.MobclickAgent;
 import com.yanzhenjie.permission.Permission;
+
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -42,13 +50,17 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private UBTSubTitleDialog dialog;
 
+    protected LoadManager loadManager;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         StatusBarUtil.setStatusBarColor(this, ContextCompat.getColor(this, R.color.white));
         StatusBarUtil.setStatusBarTextColor(this, false);
-        getWindow().setBackgroundDrawable(null);   ///减少过度绘制
+        //设置窗口背景减少过度绘制
+//        getWindow().setBackgroundDrawable(null);
+//        getWindow().setBackgroundDrawableResource(R.drawable.splash_icon);
 
         ActivityManager am = ActivityManager.getInstance();
         am.pushActivity(this);
@@ -56,8 +68,41 @@ public abstract class BaseActivity extends AppCompatActivity {
             //防止截屏
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         }
-        setContentView(getContentViewId());
+        int layoutResID = getContentViewId();
+        if (layoutResID != 0 && layoutResID != -1) {
+            setContentView(layoutResID);
+        }
+        if (needPreLoad()) {
+            initLoadState();
+        }
         unbinder = ButterKnife.bind(this);
+        EventBusUtil.register(this);
+    }
+
+    private void initLoadState() {
+        loadManager = new LoadManager.Builder()
+                .setViewParams(this)
+                .setListener((BaseStateControl.OnRefreshListener) v -> {
+                    onStateRefresh();
+                })
+                .build();
+    }
+
+    /**
+     * 状态刷新
+     */
+    protected void onStateRefresh() {
+        //TODO
+
+    }
+
+    /**
+     * 是否需要预加载
+     *
+     * @return
+     */
+    protected boolean needPreLoad() {
+        return false;
     }
 
     @Override
@@ -84,6 +129,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (unbinder != null) {
             unbinder.unbind();
         }
+        EventBusUtil.unregister(this);
     }
 
     @Override
@@ -104,7 +150,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    protected abstract int getContentViewId();
+    /**
+     * 设置布局
+     * @return
+     */
+    protected abstract @LayoutRes int getContentViewId();
 
     public void dismissLoadDialog() {
         LoadingDialog.dissMiss();
@@ -186,6 +236,23 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public void toBleConfigActivity(boolean closeSlf) {
         ActivityRoute.toAnotherActivity(this, BleConfigReadyActivity.class, closeSlf);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onReceiveMessage(Event event) {
+        if (event != null) {
+            onReceive(event, event.getCode());
+        }
+    }
+
+    /**
+     * eventbus
+     *
+     * @param event
+     * @param code
+     */
+    protected void onReceive(Event event, int code) {
+        //TODO
     }
 
 }

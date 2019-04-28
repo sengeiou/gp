@@ -222,6 +222,19 @@ public class MainActivity extends BaseActivity {
         super.onDestroy();
     }
 
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            //TODO 实现只在冷启动时显示启动页，即点击返回键与点击HOME键退出效果一致
+//            Intent intent = new Intent(Intent.ACTION_MAIN);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//            intent.addCategory(Intent.CATEGORY_HOME);
+//            startActivity(intent);
+//            return true;
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
+
     public void checkInitInterlocution() {
         if (!SPUtils.get().getBoolean(Constant.SP_ADDED_INIT_INTERLOCUTION, false)) {
             InterlocutionModel requestModel = new InterlocutionModel();

@@ -8,11 +8,17 @@ import org.greenrobot.eventbus.EventBus;
 public class EventBusUtil {
 
     public static void register(Object subscriber) {
-        EventBus.getDefault().register(subscriber);
+        EventBus eventBus = EventBus.getDefault();
+        if (!eventBus.isRegistered(subscriber)) {
+            eventBus.register(subscriber);
+        }
     }
 
     public static void unregister(Object subscriber) {
-        EventBus.getDefault().unregister(subscriber);
+        EventBus eventBus = EventBus.getDefault();
+        if (!eventBus.isRegistered(subscriber)) {
+            eventBus.unregister(subscriber);
+        }
     }
 
     public static void sendEvent(Event event) {
