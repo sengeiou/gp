@@ -126,11 +126,18 @@ public class ChildrenActivity extends BaseToolBarActivity {
                             JSONObject obj = new JSONObject(result);
                             JSONObject childModeInfo = obj.getJSONObject("childModeInfo");
                             isChildMode = childModeInfo.optBoolean("isChildMode");
+                            if (isChildMode) {
+                                openChildState();
+                            } else {
+                                closeChildState();
+                            }
                             UbtLogger.d(TAG, "childModeInfo:" + isChildMode);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                     }
                 });
+        return isChildMode;
+    }
 
 }
