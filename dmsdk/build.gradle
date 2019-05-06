@@ -1,0 +1,49 @@
+apply plugin: 'com.android.library'
+
+android {
+
+    compileSdkVersion COMPILE_SDK_VERSION
+    defaultConfig {
+        minSdkVersion MIN_SDK_VERSION
+        targetSdkVersion TARGET_SDK_VERSION
+        versionCode 1
+        versionName "2.1.1"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+repositories {
+    flatDir {
+        dirs 'libs'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    def tvsVer = '2.1.1'
+    // 核心模块，必须
+    api (name: "tvscore-${tvsVer}-release_beta2", ext: 'aar')
+    // 核心模块依赖微信登录
+    implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.1.0'
+
+    // TSKM技能服务模块，可选
+    implementation (name: "tvstskm-${tvsVer}-release_beta2", ext: 'aar')
+
+    // HTML5 WebView模块，可选
+    api (name: "tvsweb-${tvsVer}-release_beta2", ext: 'aar')
+}

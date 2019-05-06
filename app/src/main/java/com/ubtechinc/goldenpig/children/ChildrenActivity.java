@@ -1,38 +1,21 @@
 package com.ubtechinc.goldenpig.children;
 
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.tencent.ai.tvs.comm.CommOpInfo;
-import com.tencent.ai.tvs.env.ELoginPlatform;
-import com.ubtech.utilcode.utils.LogUtils;
+import com.ubt.robot.dmsdk.TVSWrapBridge;
+import com.ubt.robot.dmsdk.TVSWrapConstant;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.commlib.log.UbtLogger;
-import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
-import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
-import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
-import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
-import com.ubtechinc.goldenpig.eventbus.modle.Event;
-import com.ubtechinc.goldenpig.personal.alarm.AddAlarmActivity;
-import com.ubtechinc.goldenpig.utils.PigUtils;
-import com.ubtechinc.goldenpig.utils.TvsUtil;
-import com.ubtechinc.tvlloginlib.TVSManager;
+import com.ubtechinc.goldenpig.login.observable.AuthLive;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
-
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SET_ALARM_SUCCESS;
 
 public class ChildrenActivity extends BaseToolBarActivity {
 
@@ -54,14 +37,14 @@ public class ChildrenActivity extends BaseToolBarActivity {
         setToolBarTitle("儿童");
         setTitleBack(true);
         initView();
-        if(getChildMode()){
+        if (getChildMode()) {
             openChildState();
-        }else{
+        } else {
             closeChildState();
         }
     }
 
-    private void initView(){
+    private void initView() {
         iv_protect = (ImageView) findViewById(R.id.iv_protect);
         tv_child_mode_state = (TextView) findViewById(R.id.tv_child_mode_state);
         rl_child_off = (RelativeLayout) findViewById(R.id.rl_child_off);
@@ -86,7 +69,7 @@ public class ChildrenActivity extends BaseToolBarActivity {
         });
     }
 
-    private void openChildState(){
+    private void openChildState() {
         iv_protect.setVisibility(View.VISIBLE);
         rl_child_on.setVisibility(View.VISIBLE);
         rl_child_off.setVisibility(View.INVISIBLE);
@@ -95,7 +78,7 @@ public class ChildrenActivity extends BaseToolBarActivity {
 
     }
 
-    private void closeChildState(){
+    private void closeChildState() {
         iv_protect.setVisibility(View.INVISIBLE);
         rl_child_off.setVisibility(View.VISIBLE);
         rl_child_on.setVisibility(View.INVISIBLE);
@@ -104,77 +87,50 @@ public class ChildrenActivity extends BaseToolBarActivity {
     }
 
 
-    private void setChildMode(int mode){
-        ELoginPlatform platform;
-        if (CookieInterceptor.get().getThridLogin().getLoginType().toLowerCase().equals("wx")) {
-            platform = ELoginPlatform.WX;
-        } else {
-            platform = ELoginPlatform.QQOpen;
-        }
-
-        TVSManager tvsManager = TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ);
-        tvsManager.init(this);
-        tvsManager.requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils
-                .setChildMode(mode), new TVSManager.TVSAlarmListener() {
-            @Override
-            public void onSuccess(CommOpInfo msg) {
-                UbtLogger.d(TAG, "onSuccess msg:" + msg.toString());
-                if(TextUtils.isEmpty(msg.errMsg)){
-                    if(mode == 1){
-                        openChildState();
-                    }else{
-                        closeChildState();
+    private void setChildMode(int mode) {
+        TVSWrapBridge.tvsSetChildMode(TVSWrapBridge.setChildModeBlobInfo(mode), TVSWrapConstant.PRODUCT_ID,
+                AuthLive.getInstance().getCurrentPig().getRobotName(), new TVSWrapBridge.TVSWrapCallback<String>() {
+                    @Override
+                    public void onError(int errCode) {
+                        UbtLogger.e(TAG, "onError errCode:" + errCode);
+                        ToastUtils.showShortToast("儿童模式切换失败");
                     }
-                }else{
-                    ToastUtils.showShortToast("儿童模式切换失败");
-                }
 
-            }
-
-            @Override
-            public void onError(String str) {
-                UbtLogger.e(TAG, "onError str:" + str);
-                ToastUtils.showShortToast("儿童模式切换失败");
-            }
-        });
-
+                    @Override
+                    public void onSuccess(String result) {
+                        UbtLogger.d(TAG, "onSuccess result:" + result);
+                        if (mode == 1) {
+                            openChildState();
+                        } else {
+                            closeChildState();
+                        }
+                    }
+                });
     }
 
 
     private boolean isChildMode = false;
-    private boolean getChildMode(){
-        ELoginPlatform platform = TvsUtil.currentPlatform();
-        TVSManager tvsManager = TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ);
-        tvsManager.init(this);
-        tvsManager.requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils
-                .getChildMode(), new TVSManager.TVSAlarmListener() {
-            @Override
-            public void onSuccess(CommOpInfo msg) {
-                UbtLogger.d(TAG, "onSuccess msg:" + msg.toString());
-                String str = msg.errMsg;
-                try {
-                    JSONObject obj = new JSONObject(str);
-                    JSONObject childModeInfo = obj.getJSONObject("childModeInfo");
-                    isChildMode = childModeInfo.optBoolean("isChildMode");
-                    UbtLogger.d(TAG, "childModeInfo:" + isChildMode);
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
+    private boolean getChildMode() {
+        TVSWrapBridge.tvsGetChildMode(TVSWrapBridge.getChildModeBlobInfo(), TVSWrapConstant.PRODUCT_ID,
+                AuthLive.getInstance().getCurrentPig().getRobotName(), new TVSWrapBridge.TVSWrapCallback<String>() {
+                    @Override
+                    public void onError(int errCode) {
+                        UbtLogger.e(TAG, "onError errCode:" + errCode);
+                    }
 
-            @Override
-            public void onError(String str) {
-                UbtLogger.e(TAG, "onError str:" + str);
-                ToastUtils.showShortToast("获取儿童模式状态数据异常");
-            }
-        });
-
-        return isChildMode;
-
-    }
-
-
-
+                    @Override
+                    public void onSuccess(String result) {
+                        UbtLogger.d(TAG, "onSuccess result:" + result);
+                        try {
+                            JSONObject obj = new JSONObject(result);
+                            JSONObject childModeInfo = obj.getJSONObject("childModeInfo");
+                            isChildMode = childModeInfo.optBoolean("isChildMode");
+                            UbtLogger.d(TAG, "childModeInfo:" + isChildMode);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
 
 }

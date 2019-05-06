@@ -1,105 +1,89 @@
 package com.ubtechinc.goldenpig.repository;
 
 import android.app.Activity;
-import android.content.Intent;
 
-import com.ubtechinc.goldenpig.BuildConfig;
-import com.ubtechinc.goldenpig.app.UBTPGApplication;
-import com.ubtechinc.goldenpig.utils.PigUtils;
-import com.ubtechinc.tvlloginlib.TVSManager;
-import com.ubtechinc.tvlloginlib.entity.LoginInfo;
+import com.ubt.robot.dmsdk.TVSWrapBridge;
+import com.ubt.robot.dmsdk.TVSWrapPlatform;
+import com.ubt.robot.dmsdk.model.TVSWrapAccountInfo;
+import com.ubtechinc.goldenpig.login.LoginInfo;
 
 public class TVSAuthRepository {
 
-    private TVSManager tvsManager;
+//    private TVSManager tvsManager;
 
-    public TVSAuthRepository(String wxAppId,String qqOpenId) {
-        tvsManager = TVSManager.getInstance(UBTPGApplication.getInstance(),wxAppId,qqOpenId);
+    public TVSAuthRepository(String wxAppId, String qqOpenId) {
+//        tvsManager = TVSManager.getInstance(UBTPGApplication.getInstance(), wxAppId, qqOpenId);
     }
 
     public void loginWX(Activity activity, final AuthCallBack authCallBack) {
-        tvsManager.init(activity);
-        tvsManager.wxLogin(activity, BuildConfig.PRODUCT_ID, PigUtils.TVS_APP_KEY,new TVSManager.TVSLoginListener() {
+        TVSWrapBridge.tvsLogin(TVSWrapPlatform.WX, activity, new TVSWrapBridge.TVSWrapCallback() {
             @Override
-            public void onSuccess(LoginInfo t) {
-                callBackSuccess(authCallBack, t);
-            }
-
-            @Override
-            public void onError() {
+            public void onError(int errCode) {
                 callBackError(authCallBack);
             }
 
             @Override
-            public void onCancel() {
-                callBackCancel(authCallBack);
+            public void onSuccess(Object result) {
+                callBackSuccess(authCallBack, getLoginInfo());
             }
         });
     }
 
     public void loginQQ(Activity activity, final AuthCallBack authCallBack) {
-        tvsManager.init(activity);
-        tvsManager.qqLogin(activity, BuildConfig.PRODUCT_ID,PigUtils.TVS_APP_KEY, new TVSManager.TVSLoginListener() {
+        TVSWrapBridge.tvsLogin(TVSWrapPlatform.QQOpen, activity, new TVSWrapBridge.TVSWrapCallback() {
             @Override
-            public void onSuccess(LoginInfo t) {
-                callBackSuccess(authCallBack, t);
-            }
-
-            @Override
-            public void onError() {
+            public void onError(int errCode) {
                 callBackError(authCallBack);
             }
 
             @Override
-            public void onCancel() {
-                callBackCancel(authCallBack);
+            public void onSuccess(Object result) {
+                callBackSuccess(authCallBack, getLoginInfo());
+
             }
         });
     }
 
-    public boolean isWXInstall(){
-        return tvsManager.isWXInstall();
+    protected LoginInfo getLoginInfo() {
+        TVSWrapAccountInfo tvsWrapAccountInfo = TVSWrapBridge.getTVSAccountInfo();
+        LoginInfo loginInfo = new LoginInfo();
+        loginInfo.setAppId(tvsWrapAccountInfo.getAppID());
+        loginInfo.setAccessToken(tvsWrapAccountInfo.getAccessToken());
+        loginInfo.setMiniTvsId(tvsWrapAccountInfo.getUserID());
+        loginInfo.setLoginType(tvsWrapAccountInfo.ubtLoginType());
+        loginInfo.setOpenId(tvsWrapAccountInfo.getOpenID());
+        loginInfo.setTvsId(tvsWrapAccountInfo.getTvsID());
+        return loginInfo;
     }
 
-    public boolean isWXSupport(){
-        return tvsManager.isWXSupport();
+    public boolean isWXInstall() {
+        return TVSWrapBridge.isWXAppInstalled();
+    }
+
+    public boolean isWXSupport() {
+        return TVSWrapBridge.isWXAppSupportAPI();
     }
 
     public void refreshLogin(Activity activity, final AuthCallBack authCallBack) {
-        tvsManager.init(activity);
-        tvsManager.refreshLoginToken(new TVSManager.TVSLoginListener() {
+        TVSWrapBridge.tvsTokenVerify(new TVSWrapBridge.TVSWrapCallback() {
             @Override
-            public void onSuccess(LoginInfo loginInfo) {
-                callBackSuccess(authCallBack, loginInfo);
-            }
-
-            @Override
-            public void onError() {
+            public void onError(int errCode) {
                 callBackError(authCallBack);
             }
 
             @Override
-            public void onCancel() {
-                callBackCancel(authCallBack);
+            public void onSuccess(Object o) {
+                callBackSuccess(authCallBack, getLoginInfo());
             }
         });
     }
 
     public void logout() {
-        tvsManager.logout();
+        TVSWrapBridge.tvsLogout();
     }
 
     public boolean isTokenExist(Activity activity) {
-        return tvsManager.hasExistToken(activity);
-    }
-
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        tvsManager.onActivityResult(requestCode, resultCode, data);
-    }
-
-    public void onResume(){
-        tvsManager.onResume();
+        return TVSWrapBridge.isTokenExist();
     }
 
     public interface AuthCallBack {

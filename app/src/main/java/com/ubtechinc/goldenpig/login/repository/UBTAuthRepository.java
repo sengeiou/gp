@@ -5,12 +5,12 @@ import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.comm.entity.UserInfo;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
+import com.ubtechinc.goldenpig.login.LoginInfo;
 import com.ubtechinc.goldenpig.login.ThirdPartLoginModule;
 import com.ubtechinc.goldenpig.logout.LoginoutModule;
 import com.ubtechinc.nets.ResponseListener;
 import com.ubtechinc.nets.http.HttpProxy;
 import com.ubtechinc.nets.http.ThrowableWrapper;
-import com.ubtechinc.tvlloginlib.entity.LoginInfo;
 
 import java.util.HashMap;
 

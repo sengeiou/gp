@@ -21,6 +21,7 @@ import com.ubtechinc.bluetooth.command.ICommandEncode;
 import com.ubtechinc.bluetooth.command.JsonAbstractBleCommandFactory;
 import com.ubtechinc.bluetooth.utils.BLEcryption;
 
+import java.lang.reflect.Method;
 import java.util.UUID;
 
 import static android.util.Log.d;
@@ -123,7 +124,7 @@ class UbtBluetoothConnector {
             if (isNotInConnecting()) {
                 mCurrentDevice = device;
                 mIsShutdown = false;
-                if (device!=null) {
+                if (device != null) {
                     encrypt(device.getSn(), device.needEncrption);
                     connectInner(device.getDevice());
                     IAbstractBleCommandFactory abstractBleCommandFactory =
@@ -221,7 +222,7 @@ class UbtBluetoothConnector {
                 public void onServicesDiscovered(BluetoothGatt gatt, int status) {
                     super.onServicesDiscovered(gatt, status);
 
-                    Log.i(TAG,"mBleConnectAbstract==rePlyJson====gatt:" + gatt.getDevice().getAddress());
+                    Log.i(TAG, "mBleConnectAbstract==rePlyJson====gatt:" + gatt.getDevice().getAddress());
 
                     synchronized (mSyncLock) {
                         if (status == BluetoothGatt.GATT_SUCCESS) {
@@ -238,19 +239,19 @@ class UbtBluetoothConnector {
                                     UbtBluetoothConnector.this.connectState =
                                             ConnectState.DISCOVERED;//发现周边设备指定服务的指定特征
                                     boolean success = gatt.setCharacteristicNotification(notifyCharacteristic, true);
-                                    Log.i(TAG,"mBleConnectAbstract==rePlyJson====success:" + success);
+                                    Log.i(TAG, "mBleConnectAbstract==rePlyJson====success:" + success);
                                     if (success) {
                                         Message msg = Message.obtain();
                                         msg.what = MSG_CONNECT_SUCCESS;//特征激活成功, 通知外部模块写入数据,
                                         msg.obj = device;
                                         mMainHandler.sendMessage(msg);
-                                    }else {
+                                    } else {
                                         LogUtils.w("enable CharacteristicNotification fail ");
                                     }
-                                }else {
+                                } else {
                                     LogUtils.w("cannot find notify = " + UUID_NOTIFY_CHARACTER);
                                 }
-                            }else {
+                            } else {
                                 LogUtils.w("cannot find service = " + UUID_SERVICE);
                             }
                         }
@@ -298,7 +299,7 @@ class UbtBluetoothConnector {
                 message.what = MSG_WRITE_REQUEST;
                 lazySetupMessageHandler();
                 mMessageHandler.sendMessage(message);
-                mConnectTime=0;
+                mConnectTime = 0;
             } else {
                 Log.d(TAG, "Illegal State: 还未与蓝牙设备建立服务连接...");
 //            if (mConnectTime<6&&mCurrentDevice!=null){
@@ -431,10 +432,26 @@ class UbtBluetoothConnector {
     private void closeGatt(BluetoothGatt gatt) {
         if (gatt != null) {
             Log.w(TAG, "gatt close...");
+            refreshGattCache(gatt);
             gatt.close();
             connectState = ConnectState.INIT;
             mCurrentBluetoothGatt = null;
         }
+    }
+
+    private boolean refreshGattCache(BluetoothGatt gatt) {
+        boolean result = false;
+        try {
+            if (gatt != null) {
+                Method refresh = BluetoothGatt.class.getMethod("refresh");
+                if (refresh != null) {
+                    refresh.setAccessible(true);
+                    result = (boolean) refresh.invoke(gatt, new Object[0]);
+                }
+            }
+        } catch (Exception e) {
+        }
+        return result;
     }
 
     ConnectState getConnectState() {

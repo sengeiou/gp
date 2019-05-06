@@ -12,10 +12,8 @@ import android.support.v4.content.ContextCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 
 import com.ubtech.utilcode.utils.ToastUtils;
-import com.ubtechinc.commlib.log.UBTLog;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseActivity;
@@ -27,7 +25,7 @@ import com.ubtechinc.goldenpig.login.LoginActivity;
 import com.ubtechinc.goldenpig.login.LoginModel;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
-import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
+import com.ubtechinc.goldenpig.utils.SharedPreferencesUtils;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 import com.yanzhenjie.permission.PermissionListener;
@@ -78,9 +76,9 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setBackgroundDrawable(null);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+//        getWindow().setBackgroundDrawable(null);
+//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         super.onCreate(savedInstanceState);
         checkScanStartup();
         handler = new Handler();
@@ -173,7 +171,9 @@ public class SplashActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Event event) {
-        if (event == null || isFinishing()) return;
+        if (event == null || isFinishing()) {
+            return;
+        }
         int code = event.getCode();
         switch (code) {
             case NO_NEED_CHECK:
@@ -222,8 +222,7 @@ public class SplashActivity extends BaseActivity {
             case CHECK_UPDATE_ERROR:
                 checkLogin();
                 break;
-
-
+                default:
         }
     }
 
@@ -347,6 +346,7 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected int getContentViewId() {
-        return R.layout.activity_splash;
+//        return R.layout.activity_splash;
+        return 0;
     }
 }

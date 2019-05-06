@@ -1,6 +1,7 @@
 package com.ubtechinc.goldenpig.app;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -21,13 +22,16 @@ import com.tencent.TIMElem;
 import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
 import com.tencent.TIMSoundElem;
-import com.tencent.ai.tvs.LoginApplication;
-import com.tencent.ai.tvs.info.UserInfoManager;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.tqzhang.stateview.core.LoadState;
 import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.improtolib.GPResponse;
 import com.ubt.improtolib.UserRecords;
+import com.ubt.robot.dmsdk.TVSWrapBridge;
+import com.ubt.robot.dmsdk.TVSWrapConstant;
+import com.ubt.robot.dmsdk.TVSWrapType;
+import com.ubt.robot.dmsdk.model.TVSWrapAccountInfo;
 import com.ubtech.utilcode.utils.ActivityTool;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.SPUtils;
@@ -56,17 +60,18 @@ import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.push.PushAppInfo;
 import com.ubtechinc.goldenpig.push.PushHttpProxy;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.stateview.ErrorState;
+import com.ubtechinc.goldenpig.stateview.LoadingState;
 import com.ubtechinc.goldenpig.utils.AppUtil;
 import com.ubtechinc.goldenpig.utils.OSUtils;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.goldenpig.utils.SCADAHelper;
+import com.ubtechinc.goldenpig.utils.SharedPreferencesUtils;
 import com.ubtechinc.nets.HttpManager;
 import com.ubtechinc.nets.http.ThrowableWrapper;
 import com.ubtechinc.nets.utils.DeviceUtils;
 import com.ubtechinc.protocollibrary.communit.ProtoBufferDisposer;
 import com.ubtechinc.push.UbtPushModel;
-import com.ubtechinc.tvlloginlib.TVSManager;
-import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
 import com.ubtrobot.analytics.mobile.AnalyticsKit;
 import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 import com.ubtrobot.channelservice.proto.GPRelationshipContainer;
@@ -100,7 +105,7 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.TVS_LOGOUT_SUCCESS;
  * @des Ubt 金猪applicaption
  * @time 2018/08/17
  */
-public class UBTPGApplication extends LoginApplication implements Observer {
+public class UBTPGApplication extends Application implements Observer {
     private static UBTPGApplication instance;
     static Context mContext;
     public static boolean voiceMail_debug = false;
@@ -152,6 +157,12 @@ public class UBTPGApplication extends LoginApplication implements Observer {
         //SCADA
         initSCADA();
 
+        //TODO loadstate
+        initLoadState();
+
+        //TODO 初始化tvs dmsdk
+        TVSWrapBridge.init(this);
+
         //bugly
         Log.d(TAG, "BuildConfig.DEBUG:" + BuildConfig.DEBUG);
         if (!BuildConfig.DEBUG) {
@@ -175,6 +186,14 @@ public class UBTPGApplication extends LoginApplication implements Observer {
         HttpManager.interceptors.add(new ResponseInterceptor());
         initService();
         initNetListener();
+    }
+
+    private void initLoadState() {
+        new LoadState.Builder()
+                .register(new ErrorState())
+                .register(new LoadingState())
+                .setDefaultCallback(LoadingState.class)
+                .build();
     }
 
     private void initNetListener() {
@@ -310,21 +329,44 @@ public class UBTPGApplication extends LoginApplication implements Observer {
     private void sendClientIdToPig() {
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null && pigInfo.isAdmin) {
-            TVSManager tvsManager = TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ);
-            String clientId = tvsManager.getClientId(BuildConfig.PRODUCT_ID, pigInfo.getRobotName());
-            Log.i(TAG, "sendClientIdToPig|clientId : " + clientId);
-            TIMMessage selfMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getClientId(clientId));
-            TIMConversation pigConversation = TIMManager.getInstance().getConversation(
-                    TIMConversationType.C2C, pigInfo.getRobotName());
-            mUbtTIMManager.sendTIM(selfMessage, pigConversation);
+            TVSWrapBridge.tvsTokenVerify(new TVSWrapBridge.TVSWrapCallback() {
+                @Override
+                public void onError(int errCode) {
+                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("刷票失败，错误码：" + errCode);
+                }
 
-            //TODO dsn注册音乐会员
-            tvsManager.bindRobot(pigInfo.getRobotName());
+                @Override
+                public void onSuccess(Object result) {
+                    TVSWrapAccountInfo tvsWrapAccountInfo = TVSWrapBridge.getTVSAccountInfo(TVSWrapConstant.PRODUCT_ID, pigInfo.getRobotName());
+                    String clientId = tvsWrapAccountInfo.getClientID();
+                    Log.i(TAG, "sendClientIdToPig|clientId : " + clientId);
+                    TIMMessage selfMessage = ContactsProtoBuilder.createTIMMsg(ContactsProtoBuilder.getClientId(clientId));
+                    TIMConversation pigConversation = TIMManager.getInstance().getConversation(
+                            TIMConversationType.C2C, pigInfo.getRobotName());
+                    mUbtTIMManager.sendTIM(selfMessage, pigConversation);
+
+                    //TODO TVS绑定dsn注册音乐会员
+                    TVSWrapBridge.tvsBindDevice(TVSWrapType.TVS, TVSWrapConstant.PRODUCT_ID, pigInfo.getRobotName(), new TVSWrapBridge.TVSWrapCallback() {
+                        @Override
+                        public void onError(int errCode) {
+                            Log.i(TAG, "tvsbind|注册音乐会员失败，错误码：" + errCode);
+                        }
+
+                        @Override
+                        public void onSuccess(Object result) {
+                            Log.i(TAG, "tvsbind|注册音乐会员成功");
+                        }
+                    });
+
+                }
+            });
         }
     }
 
     private void showForceOfflineDialog(String tip) {
-        if (mTopActivity == null) return;
+        if (mTopActivity == null) {
+            return;
+        }
         mForceOfflineDialog = new UBTBaseDialog(mTopActivity);
         mForceOfflineDialog.setCancelable(false);
         mForceOfflineDialog.setCanceledOnTouchOutside(false);
@@ -377,7 +419,9 @@ public class UBTPGApplication extends LoginApplication implements Observer {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveEvent(Event event) {
-        if (event == null) return;
+        if (event == null) {
+            return;
+        }
         int code = event.getCode();
         switch (code) {
             case SERVER_RESPONSE_UNAUTHORIZED:
@@ -412,12 +456,15 @@ public class UBTPGApplication extends LoginApplication implements Observer {
             case DO_UPDATE_PAIR_PIG:
                 updatePigPair(true);
                 break;
+                default:
         }
     }
 
 
     private void showIKnowDialog(String content) {
-        if (mTopActivity == null || TextUtils.isEmpty(content)) return;
+        if (mTopActivity == null || TextUtils.isEmpty(content)) {
+            return;
+        }
         UBTBaseDialog iknowDialog = new UBTBaseDialog(mTopActivity);
         iknowDialog.setCancelable(false);
         iknowDialog.setCanceledOnTouchOutside(false);
@@ -445,7 +492,9 @@ public class UBTPGApplication extends LoginApplication implements Observer {
 
     private void showUnpairPigDialog() {
         updatePigList();
-        if (mTopActivity == null) return;
+        if (mTopActivity == null) {
+            return;
+        }
         UBTBaseDialog unpairPigDialog = new UBTBaseDialog(mTopActivity);
         unpairPigDialog.setCancelable(false);
         unpairPigDialog.setCanceledOnTouchOutside(false);
@@ -498,7 +547,7 @@ public class UBTPGApplication extends LoginApplication implements Observer {
                         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
 
                         if (pigInfo != null && pigInfo.isAdmin) {
-                            UbtTIMManager.avatarURL = UserInfoManager.getInstance().headImgUrl;
+                            UbtTIMManager.avatarURL = TVSWrapBridge.getTVSWrapUserInfo().getAvatar();
                             UbtTIMManager.getInstance().loginTIM(AuthLive.getInstance().getUserId(), pigInfo.getRobotName(),
                                     com.ubt.imlibv2.BuildConfig.IM_Channel);
                         }
@@ -656,13 +705,13 @@ public class UBTPGApplication extends LoginApplication implements Observer {
             Event<Boolean> event = new Event<>(EventBusUtil.RECEIVE_NO_DELAY_WAKEUP_SWITCH_STATE);
             event.setData(result);
             EventBusUtil.sendEvent(event);
-        }else if(action.equals(ContactsProtoBuilder.IM_GET_NO_DISTURB_REQUEST)){
+        } else if (action.equals(ContactsProtoBuilder.IM_GET_NO_DISTURB_REQUEST)) {
             GPSwitchContainer.Switch switchInfo = msg.getPayload().unpack(GPSwitchContainer.Switch.class);
             boolean state = switchInfo.getState();
             Event<Boolean> event = new Event<>(EventBusUtil.RECEIVE_NO_DISTURB_STATE);
             event.setData(state);
             EventBusUtil.sendEvent(event);
-        }else if(action.equals(ContactsProtoBuilder.IM_SET_NO_DISTURB_REQUEST)){
+        } else if (action.equals(ContactsProtoBuilder.IM_SET_NO_DISTURB_REQUEST)) {
             final boolean result = msg.getPayload().unpack(GPResponse.Response.class).getResult();
             Event<Boolean> event = new Event<>(EventBusUtil.RECEIVE_NO_DISTURB_SWITCH_STATE);
             event.setData(result);

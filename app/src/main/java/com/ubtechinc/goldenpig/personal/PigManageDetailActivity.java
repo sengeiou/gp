@@ -738,7 +738,9 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Event event) {
-        if (event == null) return;
+        if (event == null) {
+            return;
+        }
         int code = event.getCode();
         switch (code) {
             case EventBusUtil.USER_PIG_UPDATE:
@@ -784,7 +786,9 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
                 if (imOutDisposable != null) {
                     imOutDisposable.dispose();
                 }
-                if (!needUnBindByClear) return;
+                if (!needUnBindByClear) {
+                    return;
+                }
                 if ((boolean) event.getData()) {
                     com.ubtech.utilcode.utils.ToastUtils.showShortToast("机器人数据清除成功");
                     if (isUnbindAll) {
@@ -802,6 +806,7 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
             case EventBusUtil.NETWORK_STATE_CHANGED:
                 updateTopTip();
                 break;
+                default:
         }
     }
 

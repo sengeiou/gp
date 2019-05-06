@@ -2,6 +2,7 @@ package com.ubtechinc.goldenpig.main;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -9,26 +10,20 @@ import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
-import com.tencent.ai.tvs.LoginProxy;
-import com.tencent.ai.tvs.comm.CommOpInfo;
-import com.tencent.ai.tvs.env.ELoginPlatform;
-import com.tencent.ai.tvs.info.DeviceManager;
-import com.tencent.ai.tvs.ui.MotionEventListener;
-import com.tencent.ai.tvs.ui.ProxyDataListener;
-import com.tencent.ai.tvs.ui.UserCenterStateListener;
+import com.ubt.robot.dmsdk.TVSWrapBridge;
+import com.ubt.robot.dmsdk.TVSWrapConstant;
+import com.ubt.robot.dmsdk.TVSWrapLoginEnv;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseActivity;
+import com.ubtechinc.goldenpig.base.TVSWebActivity;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.net.URestSigner;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.nets.utils.DeviceUtils;
-import com.ubtechinc.tvlloginlib.TVSManager;
-
-import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -87,36 +82,23 @@ public class SmallPigObject {
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null) {
             if (pigInfo.isAdmin) {
-                DeviceManager deviceManager = new DeviceManager();
-                deviceManager.productId = TVSManager.PRODUCT_ID;
-                deviceManager.dsn = AuthLive.getInstance().getRobotUserId();
-                LoginProxy proxy = TVSManager.getInstance(this.mContext, com.ubtechinc.goldenpig.BuildConfig.APP_ID_WX, com.ubtechinc.goldenpig.BuildConfig.APP_ID_QQ).getProxy();
-                String smarthomeUrl = "https://ddsdk.html5.qq.com/smartHome";
-                proxy.tvsRequestUrl(smarthomeUrl, new UserCenterStateListener() {
-                    @Override
-                    public void onSuccess(ELoginPlatform eLoginPlatform, int i, CommOpInfo commOpInfo) {
-                    }
-
-                    @Override
-                    public void onError(int i, CommOpInfo commOpInfo) {
-                    }
-
-                    @Override
-                    public void onCancel(int i, CommOpInfo commOpInfo) {
-                    }
-                }, new ProxyDataListener() {
-                    @Override
-                    public boolean onDataRecv(JSONObject jsonObject) {
-                        return false;
-                    }
-                }, new MotionEventListener() {
-                    @Override
-                    public void onMotionDown() {
-                    }
-                }, deviceManager);
-//                LoginProxy proxy = TVSManager.getInstance(this.mContext, com.ubtechinc.goldenpig.BuildConfig.APP_ID_WX, com.ubtechinc.goldenpig.BuildConfig.APP_ID_QQ).getProxy();
-//                String url = "https://ddsdk.html5.qq.com/smartHome";
-//                proxy.tvsRequestUrl(url, null, null, null);
+                Intent intent = new Intent(mContext, TVSWebActivity.class);
+                TVSWrapLoginEnv tvsEnv = TVSWrapBridge.getTvsEnv();
+                String smartHomeUrl = TVSWrapConstant.TVS_SMART_HOME_FORMAL;
+                switch (tvsEnv) {
+                    case FORMAL:
+                        smartHomeUrl = TVSWrapConstant.TVS_SMART_HOME_FORMAL;
+                        break;
+                    case EX:
+                        smartHomeUrl = TVSWrapConstant.TVS_SMART_HOME_EX;
+                        break;
+                    case TEST:
+                        smartHomeUrl = TVSWrapConstant.TVS_SMART_HOME_TEST;
+                        break;
+                        default:
+                }
+                intent.putExtra(TVSWebActivity.TVS_WEB_URL, smartHomeUrl);
+                mContext.startActivity(intent);
             } else {
                 ToastUtils.showShortToast(R.string.only_admin_operate);
             }

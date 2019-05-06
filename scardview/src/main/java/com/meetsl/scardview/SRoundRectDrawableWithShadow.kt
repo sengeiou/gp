@@ -55,8 +55,8 @@ class SRoundRectDrawableWithShadow(cardViewDelegate: SCardViewDelegate, resource
     private var mCardDelegate: SCardViewDelegate
 
     init {
-        mShadowStartColor = if (startColor == -1) resources.getColor(R.color.sl_cardview_shadow_start_color) else startColor
-        mShadowEndColor = if (endColor == -1) resources.getColor(R.color.sl_cardview_shadow_end_color) else endColor
+        mShadowStartColor = if (startColor == -1) resources.getColor(R.color.sl_cardview_shadow_start_color, null) else startColor
+        mShadowEndColor = if (endColor == -1) resources.getColor(R.color.sl_cardview_shadow_end_color, null) else endColor
         mInsetShadow = resources.getDimensionPixelSize(R.dimen.cardview_compat_inset_shadow)
         mPaint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DITHER_FLAG)
         setBackground(backgroundColor)
@@ -103,9 +103,9 @@ class SRoundRectDrawableWithShadow(cardViewDelegate: SCardViewDelegate, resource
         mDirty = true
     }
 
-    private fun setShadowSize(shadowSize: Float, maxShadowSize: Float) {
-        var shadowSize = shadowSize
-        var maxShadowSize = maxShadowSize
+    private fun setShadowSize(shadowSize1: Float, maxShadowSize1: Float) {
+        var shadowSize = shadowSize1
+        var maxShadowSize = maxShadowSize1
         if (shadowSize < 0f) {
             throw IllegalArgumentException("Invalid shadow size " + shadowSize
                     + ". Must be >= 0")
@@ -190,8 +190,8 @@ class SRoundRectDrawableWithShadow(cardViewDelegate: SCardViewDelegate, resource
         return PixelFormat.TRANSLUCENT
     }
 
-    fun setCornerRadius(radius: Float) {
-        var radius = radius
+    fun setCornerRadius(radius1: Float) {
+        var radius = radius1
         if (radius < 0f) {
             throw IllegalArgumentException("Invalid radius $radius. Must be >= 0")
         }

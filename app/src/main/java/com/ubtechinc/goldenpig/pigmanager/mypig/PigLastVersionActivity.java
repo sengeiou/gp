@@ -9,7 +9,7 @@ import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
-import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
+import com.ubtechinc.goldenpig.utils.SharedPreferencesUtils;
 
 public class PigLastVersionActivity extends BaseToolBarActivity {
     @Override

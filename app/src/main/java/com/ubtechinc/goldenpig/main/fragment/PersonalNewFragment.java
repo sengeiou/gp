@@ -54,8 +54,9 @@ import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.hotspot.SetHotSpotActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.utils.CheckUtil;
+import com.ubtechinc.goldenpig.utils.SharedPreferencesUtils;
 import com.ubtechinc.goldenpig.utils.UbtToastUtils;
-import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
 import com.ubtrobot.upgrade.VersionInformation;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -67,7 +68,10 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 import static com.ubtechinc.goldenpig.app.UBTPGApplication.TAG;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.*;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NETWORK_STATE_CHANGED;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_ONLINE_STATE;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_VERSION_STATE;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
 import static com.ubtechinc.goldenpig.personal.AboutBleBJActivity.KEY_PIGINFO_VERSION;
 import static com.ubtechinc.goldenpig.personal.BeeHiveMobileActivity.KEY_BEE_HIVE_OPEN;
 import static com.ubtechinc.goldenpig.personal.NoSimActivity.KEY_TOOL_BAR_TITLE;
@@ -262,7 +266,7 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
     @OnClick({R.id.rl_login_info, R.id.ubt_btn_person_qq, R.id.rl_pig_state, R.id.ll_bind, R.id.ll_wifi, R.id.ll_4g,
             R.id.ll_hot_pwd, R.id.ll_duihua})
     public void onClick(View v) {
-        if (!checkPhoneNetState()) {
+        if (!CheckUtil.checkPhoneNetState(getActivity())) {
             return;
         }
         boolean isNoSim = MainActivity.isNoSim;
@@ -352,19 +356,12 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
         }
     }
 
-    private boolean checkPhoneNetState() {
-        if (UBTPGApplication.isNetAvailable) {
-            return true;
-        } else {
-            UbtToastUtils.showCustomToast(getActivity(), getString(R.string.network_error));
-            return false;
-        }
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Event event) {
         Log.e("Personal", "isd:" + isDetached());
-        if (event == null || isDetached() || isRemoving() || !isAdded()) return;
+        if (event == null || isDetached() || isRemoving() || !isAdded()) {
+            return;
+        }
         int code = event.getCode();
         switch (code) {
             case USER_PIG_UPDATE:

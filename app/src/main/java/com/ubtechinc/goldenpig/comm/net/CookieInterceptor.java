@@ -3,7 +3,7 @@ package com.ubtechinc.goldenpig.comm.net;
 import android.text.TextUtils;
 
 import com.ubtech.utilcode.utils.SPUtils;
-import com.ubtechinc.tvlloginlib.entity.LoginInfo;
+import com.ubtechinc.goldenpig.login.LoginInfo;
 
 import java.io.IOException;
 

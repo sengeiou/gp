@@ -16,6 +16,8 @@ import android.text.style.ClickableSpan;
 import android.view.View;
 import android.widget.TextView;
 
+import com.ubt.robot.dmsdk.TVSWrapBridge;
+import com.ubt.robot.dmsdk.TVSWrapPlatform;
 import com.ubtechinc.commlib.network.NetworkHelper;
 import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
@@ -27,8 +29,8 @@ import com.ubtechinc.goldenpig.main.UbtWebHelper;
 import com.ubtechinc.goldenpig.pigmanager.BleConfigReadyActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.CheckUtil;
+import com.ubtechinc.goldenpig.utils.SharedPreferencesUtils;
 import com.ubtechinc.goldenpig.utils.UbtToastUtils;
-import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
 
 import java.lang.ref.WeakReference;
 
@@ -70,27 +72,56 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ubt_btn_qq_login:
+                doTVSLogin(TVSWrapPlatform.QQOpen);
+                break;
+            case R.id.ubt_btn_wechat_login:
+                doTVSLogin(TVSWrapPlatform.WX);
+                break;
+            default:
+        }
+    }
+
+    private void doTVSLogin(TVSWrapPlatform tvsWrapPlatform) {
         if (!CheckUtil.checkPhoneNetState(this)) {
             return;
         }
-        switch (v.getId()) {
-            case R.id.ubt_btn_qq_login:
-                qqLogin();
+        if (!ivSelectPrivacy.isSelected()) {
+            UbtToastUtils.showCustomToast(this, getString(R.string.ubt_login_agree_policy_tip));
+            return;
+        }
+        if (mLoginModel == null) {
+            return;
+        }
+        switch (tvsWrapPlatform) {
+            case WX:
+                if (mLoginModel.isWXInstall()) {
+                    if (mLoginModel.isWXSupport()) {
+                        if (mLoginModel != null) {
+                            mLoginModel.loginWX(this);
+                            isLogined = true;
+                        }
+                    } else {
+                        ToastUtils.showShortToast(this, getString(R.string.ubt_wx_unspported));
+                    }
+                } else {
+                    ToastUtils.showShortToast(this, getString(R.string.ubt_wx_uninstalled));
+                }
                 break;
-            case R.id.ubt_btn_wechat_login:
-                wxLogin();
+            case QQOpen:
+                if (mLoginModel != null) {
+                    mLoginModel.loginQQ(this);
+                    isLogined = true;
+                }
                 break;
-            default:
-                break;
+                default:
         }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (mLoginModel != null) {
-            mLoginModel.onResume();
-        }
         if (isLogined) {
             isLogined = false;
             registerProxy();
@@ -122,8 +153,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (TVSWrapBridge.handleQQOpenIntent(requestCode, resultCode, data)) {
+            return;
+        }
         super.onActivityResult(requestCode, resultCode, data);
-        mLoginModel.onActivityResult(requestCode, resultCode, data);
     }
 
     /**
@@ -139,6 +172,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         tvAgreementPolicy = findViewById(R.id.tv_agreement_policy);
         ivSelectPrivacy = findViewById(R.id.iv_select_privacy);
         ivSelectPrivacy.setOnClickListener(v -> ivSelectPrivacy.setSelected(!ivSelectPrivacy.isSelected()));
+
         processPolicy();
 
         mWechatLoginBtn = findViewById(R.id.ubt_btn_wechat_login);
@@ -217,39 +251,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
     }
 
-    private void wxLogin() {
-        if (mLoginModel == null) {
-            return;
-        }
-        if (!mLoginModel.isWXInstall()) {
-            ToastUtils.showShortToast(this, getString(R.string.ubt_wx_uninstalled));
-            return;
-        }
-        if (!mLoginModel.isWXSupport()) {
-            ToastUtils.showShortToast(this, getString(R.string.ubt_wx_unspported));
-            return;
-        }
-
-        if (!ivSelectPrivacy.isSelected()) {
-            UbtToastUtils.showCustomToast(this, getString(R.string.ubt_login_agree_policy_tip));
-            return;
-        }
-
-        mLoginModel.loginWX(LoginActivity.this);
-        isLogined = true;
-    }
-
-    private void qqLogin() {
-        if (!ivSelectPrivacy.isSelected()) {
-            UbtToastUtils.showCustomToast(this, getString(R.string.ubt_login_agree_policy_tip));
-            return;
-        }
-        if (mLoginModel != null) {
-            mLoginModel.loginQQ(this);
-            isLogined = true;
-        }
-    }
-
     private void registerEventObserve() {
         AuthLive.getInstance().observe(this, new Observer<AuthLive>() {
             @Override
@@ -305,6 +306,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     case 1:
 //                        ToastUtils.showShortToast(loginActivity, loginActivity.getString(R.string.ubt_net_error_tips));
                         break;
+                        default:
                 }
 
             }

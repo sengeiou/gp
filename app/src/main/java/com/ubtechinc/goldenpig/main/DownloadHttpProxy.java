@@ -1,32 +1,20 @@
 package com.ubtechinc.goldenpig.main;
 
-import android.content.Context;
 import android.os.Environment;
 
-import com.google.gson.reflect.TypeToken;
-import com.ubtech.utilcode.utils.JsonUtils;
-import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.net.BaseHttpProxy;
-import com.ubtechinc.nets.BuildConfig;
-import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
-
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Type;
-import java.util.HashMap;
-import java.util.Map;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 

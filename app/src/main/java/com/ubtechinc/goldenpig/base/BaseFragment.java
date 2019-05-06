@@ -40,6 +40,7 @@ import static com.ubtech.utilcode.utils.BarUtils.getStatusBarHeight;
  * @change :
  * @changTime :2018/8/17 17:58
  */
+@Deprecated
 public abstract class BaseFragment extends Fragment {
     private ViewGroup mView;
     protected View mStatusBarView;
