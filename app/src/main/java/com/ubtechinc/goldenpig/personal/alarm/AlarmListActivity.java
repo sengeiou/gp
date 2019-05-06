@@ -303,11 +303,16 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
         LoadingDialog.getInstance(this).dismiss();
         mList.clear();
         mList.addAll(list);
+
         if (mList.size() == 0) {
             mStateView.showEmpty();
-            rl_titlebar.getIvRight().setVisibility(View.GONE);
+            if (rl_titlebar != null) {
+                rl_titlebar.getIvRight().setVisibility(View.GONE);
+            }
         } else {
-            rl_titlebar.getIvRight().setVisibility(View.VISIBLE);
+            if (rl_titlebar != null) {
+                rl_titlebar.getIvRight().setVisibility(View.VISIBLE);
+            }
             mStateView.showContent();
         }
         adapter.notifyDataSetChanged();
