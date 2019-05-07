@@ -2,6 +2,7 @@ package com.ubtechinc.goldenpig.base;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 
 import com.tencent.ai.tvs.LoginProxy;
 import com.tencent.ai.tvs.env.ELoginPlatform;
@@ -16,6 +17,12 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.stateview.ErrorState;
 
 import org.json.JSONObject;
+
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 
 /**
  * @auther :zzj
@@ -32,6 +39,10 @@ public class TVSWebFragment extends AbstractFragment {
     public static final int ACTIVITY_RESULT_CODE_FILECHOOSER = 1000;
 
     private boolean mLoadError = false;
+
+    private long mLastLoadProgress;
+
+    private Disposable mDisposable;
 
     public static TVSWebFragment newInstance() {
         return new TVSWebFragment();
@@ -79,6 +90,7 @@ public class TVSWebFragment extends AbstractFragment {
         @Override
         public void onLoadProgress(int progress) {
             LogUtils.d("onLoadProgress:" + progress);
+            mLastLoadProgress = SystemClock.elapsedRealtime();
         }
 
         @Override
@@ -93,7 +105,13 @@ public class TVSWebFragment extends AbstractFragment {
             if (mLoadError) {
                 loadManager.showStateView(ErrorState.class);
             } else {
-                loadManager.showSuccess();
+                mDisposable = Observable.timer(200, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(aLong -> {
+                                    if (SystemClock.elapsedRealtime() - mLastLoadProgress >= 200) {
+                                        loadManager.showSuccess();
+                                    }
+                                }
+                        );
             }
         }
 
@@ -143,6 +161,10 @@ public class TVSWebFragment extends AbstractFragment {
     @Override
     public void onDestroyView() {
         mWebViewController.onDestroy();
+        if (mDisposable != null) {
+            mDisposable.dispose();
+            mDisposable = null;
+        }
         super.onDestroyView();
     }
 
