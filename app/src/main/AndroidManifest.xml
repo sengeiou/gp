@@ -185,36 +185,47 @@
             android:name=".pigmanager.mypig.PairQRScannerActivity"
             android:noHistory="true"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".personal.MemberQRScannerActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".main.SkillActivity" />
+        <activity android:name=".main.SkillActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".about.EggShellActivtiy"
+            android:screenOrientation="portrait"
             android:launchMode="singleTop" />
-        <activity android:name=".main.SmartHomeWebActivity" />
+        <activity android:name=".main.SmartHomeWebActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".pigmanager.PigWifiInfoActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTop" />
         <activity
             android:name=".pigmanager.BleClosePigActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:noHistory="true" />
         <activity
             android:name=".pigmanager.BleConfigReadyActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTop" />
         <activity
             android:name=".personal.PigManageDetailActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTop" />
         <activity
             android:name=".personal.management.EditAddressBookActivity"
+            android:screenOrientation="portrait"
             android:launchMode="singleTop" />
-        <activity android:name=".personal.AboutBleBJActivity" />
-        <activity android:name=".personal.ContinuousVoiceActivity" />
-        <activity android:name=".personal.BeeHiveMobileActivity" />
-        <activity android:name=".personal.NoSimActivity" />
-        <activity android:name=".personal.SwitchWifiActivity" />
-        <activity android:name=".personal.RobotOfflineActivity" />
+        <activity android:name=".personal.AboutBleBJActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".personal.ContinuousVoiceActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".personal.BeeHiveMobileActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".personal.NoSimActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".personal.SwitchWifiActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".personal.RobotOfflineActivity"
+            android:screenOrientation="portrait"/>
 
         <service android:name=".app.StartUpService" />
 
@@ -223,12 +234,14 @@
 
         <activity
             android:name=".personal.management.contact.ContactListActivity"
-            android:launchMode="singleTop"></activity>
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
         <activity android:name=".children.ChildrenActivity"
             android:launchMode="singleTop"
-            ></activity>
+            android:screenOrientation="portrait" />
 
-        <activity android:name=".main.CommonWebActivity" />
+        <activity android:name=".main.CommonWebActivity"
+            android:screenOrientation="portrait"/>
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -243,18 +256,20 @@
 
         <activity
             android:name=".personal.ShutdownAlarmActivity"
-            android:launchMode="singleTop"></activity>
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"/>
 
         <activity
             android:name=".personal.NoDelayWakeupActivity"
-            android:launchMode="singleTop"></activity>
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
 
         <activity android:name=".base.TVSWebActivity"
             android:launchMode="singleTask"
             android:exported="true"
+            android:screenOrientation="portrait"
             android:label="@string/main_smarthome"
             android:windowSoftInputMode="adjustPan"/>
-
 
     </application>
 

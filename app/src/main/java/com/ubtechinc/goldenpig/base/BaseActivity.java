@@ -1,7 +1,6 @@
 package com.ubtechinc.goldenpig.base;
 
 
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.hardware.Camera;
@@ -55,7 +54,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         StatusBarUtil.setStatusBarColor(this, ContextCompat.getColor(this, R.color.white));
         StatusBarUtil.setStatusBarTextColor(this, false);
         //设置窗口背景减少过度绘制

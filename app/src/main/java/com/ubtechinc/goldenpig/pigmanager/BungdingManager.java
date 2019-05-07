@@ -348,12 +348,14 @@ public class BungdingManager {
         TVSWrapBridge.tvsBindDevice(TVSWrapType.TVS, TVSWrapConstant.PRODUCT_ID, mSerialId, new TVSWrapBridge.TVSWrapCallback() {
             @Override
             public void onError(int errCode) {
-                com.ubtech.utilcode.utils.ToastUtils.showShortToast("注册音乐会员失败，错误码：" + errCode);
+//                com.ubtech.utilcode.utils.ToastUtils.showShortToast("注册音乐会员失败，错误码：" + errCode);
+                Log.i(TAG, "注册音乐会员失败，错误码:" + errCode);
             }
 
             @Override
             public void onSuccess(Object result) {
-                com.ubtech.utilcode.utils.ToastUtils.showShortToast("注册音乐会员成功");
+//                com.ubtech.utilcode.utils.ToastUtils.showShortToast("注册音乐会员成功");
+                Log.i(TAG, "注册音乐会员成功");
             }
         });
     }
