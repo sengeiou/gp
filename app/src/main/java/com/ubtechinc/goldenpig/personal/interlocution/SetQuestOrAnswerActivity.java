@@ -3,7 +3,6 @@ package com.ubtechinc.goldenpig.personal.interlocution;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
-import android.text.Selection;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -11,14 +10,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
-import com.ubtechinc.goldenpig.model.JsonCallback;
-import com.ubtechinc.goldenpig.utils.CommendUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -26,7 +22,6 @@ import java.util.regex.Pattern;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.DELETE_RECORD_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SET_ANSWER_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SET_QUESTTION_SUCCESS;
 
@@ -228,10 +223,10 @@ public class SetQuestOrAnswerActivity extends BaseNewActivity {
                                 break;
                             }
                         }
-                        try {
-                            etSet.setSelection(str.length());
-                        } catch (Exception e) {
-                        }
+//                        try {
+//                            etSet.setSelection(str.length());
+//                        } catch (Exception e) {
+//                        }
                         if (type == 0) {
                             tv_count.setText((mMsgMaxLength / 2) + "/20");
                         } else {
