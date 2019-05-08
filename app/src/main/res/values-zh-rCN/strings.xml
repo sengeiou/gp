@@ -302,4 +302,6 @@
     <!--message-->
     <string name="system_message">系统消息</string>
 
+    <string name="click_again_exit">再按一次退出程序</string>
+
 </resources>

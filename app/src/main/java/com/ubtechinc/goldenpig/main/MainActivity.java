@@ -4,9 +4,11 @@ package com.ubtechinc.goldenpig.main;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.bottomnavigation.BottomNavigationBar;
@@ -15,6 +17,7 @@ import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtech.utilcode.utils.SPUtils;
 import com.ubtechinc.bluetooth.UbtBluetoothManager;
 import com.ubtechinc.commlib.utils.StatusBarUtil;
+import com.ubtechinc.commlib.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.Constant;
 import com.ubtechinc.goldenpig.base.BaseActivity;
@@ -38,6 +41,7 @@ import com.ubtechinc.goldenpig.utils.StatusBarWrapUtil;
  * @changTime :2018/8/17 18:00
  */
 public class MainActivity extends BaseActivity {
+
     Handler mHander = new Handler();
 
     public static boolean isNoSim;
@@ -55,6 +59,8 @@ public class MainActivity extends BaseActivity {
     private PersonalNewFragment mMineFragment;
 
     private FragmentManager mFragmentManager;
+
+    private long mExitTime;
 
     public static final String HOME_TAG = "home";
     public static final String SMARTHOOME_TAG = "smarthome";
@@ -234,6 +240,21 @@ public class MainActivity extends BaseActivity {
 //        }
 //        return super.onKeyDown(keyCode, event);
 //    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if ((SystemClock.elapsedRealtime() - mExitTime) > 2000) {
+                ToastUtils.showShortToast(this, getString(R.string.click_again_exit));
+                mExitTime = SystemClock.elapsedRealtime();
+            } else {
+//                System.exit(0);
+                return super.onKeyDown(keyCode, event);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     public void checkInitInterlocution() {
         if (!SPUtils.get().getBoolean(Constant.SP_ADDED_INIT_INTERLOCUTION, false)) {
