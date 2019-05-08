@@ -63,4 +63,20 @@
     <color name="item_un_select">#f1f1f1</color>
 
     <color name="txt_child_close">#FF474D5A</color>
+
+    <!---creative space-->
+    <color name="pic_remoind_main_color">#184065</color>
+    <color name="T33">#B4C0C7</color>
+    <color name="pic_69gray_color">#B4C0C7</color>
+    <color name="pic_239fed_color">#239FED</color>
+    <color name="create_color">#B1BBC0</color>
+    <color name="add_create_color">#F9F9F9</color>
+
+    <!--message-->
+    <color name="base_color_prey">#E2E2E2</color>
+    <color name="pic_ff69gray_color">#FF697D88</color>
+
+    <color name="half_white_color">#7FFFFFFF</color>
+
+
 </resources>

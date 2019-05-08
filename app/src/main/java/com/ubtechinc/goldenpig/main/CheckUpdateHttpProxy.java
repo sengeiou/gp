@@ -27,6 +27,8 @@ import okhttp3.Response;
 public class CheckUpdateHttpProxy extends BaseHttpProxy {
 
     private static final String URL = "https://prerelease.ubtrobot.com/cloud-ppi/pig/sys/update";
+    private static final String TEST_URL = "http://10.10.1.14:8090/cloud-ppi/pig/sys/update";
+
 
     public void checkUpdate( final GetFunctionCallback callback) {
 
@@ -38,7 +40,7 @@ public class CheckUpdateHttpProxy extends BaseHttpProxy {
         String content = JsonUtils.map2Json(map);
         RequestBody body = RequestBody.create(JSON, content);
         final Request okrequest = new Request.Builder()
-                .url(BuildConfig.HOME_HOST + "/v1/cloud-ppi/pig/sys/update")
+                .url(/*BuildConfig.HOME_HOST + "/v1/cloud-ppi/pig/sys/update"*/TEST_URL)
                 .post(body)
                 .build();
         Call call = okHttpClient.newCall(okrequest);

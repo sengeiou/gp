@@ -21,6 +21,7 @@ import com.ubtech.utilcode.utils.SPUtils;
 import com.ubtech.utilcode.utils.ScreenUtils;
 import com.ubtech.utilcode.utils.StringUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
+import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.commlib.utils.ContextUtils;
 import com.ubtechinc.commlib.view.UbtSubTxtButton;
 import com.ubtechinc.goldenpig.R;
@@ -32,14 +33,17 @@ import com.ubtechinc.goldenpig.base.BaseFragment;
 import com.ubtechinc.goldenpig.comm.entity.UserInfo;
 import com.ubtechinc.goldenpig.comm.img.GlideCircleTransform;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
+import com.ubtechinc.goldenpig.creative.CreateActivity;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.LoginActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
+import com.ubtechinc.goldenpig.main.CheckMessageHttpProxy;
 import com.ubtechinc.goldenpig.main.CommonWebActivity;
 import com.ubtechinc.goldenpig.main.MainActivity;
 import com.ubtechinc.goldenpig.main.UbtWebHelper;
 import com.ubtechinc.goldenpig.me.UserInfoActivity;
+import com.ubtechinc.goldenpig.message.MessageActivity;
 import com.ubtechinc.goldenpig.personal.BeeHiveMobileActivity;
 import com.ubtechinc.goldenpig.personal.ContinuousVoiceActivity;
 import com.ubtechinc.goldenpig.personal.NoSimActivity;
@@ -66,7 +70,6 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static com.ubtechinc.goldenpig.app.UBTPGApplication.TAG;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.*;
 import static com.ubtechinc.goldenpig.personal.AboutBleBJActivity.KEY_PIGINFO_VERSION;
 import static com.ubtechinc.goldenpig.personal.BeeHiveMobileActivity.KEY_BEE_HIVE_OPEN;
@@ -81,6 +84,9 @@ import static com.ubtechinc.goldenpig.personal.NoSimActivity.KEY_TOOL_BAR_TITLE;
  * @changTime :2018/8/17 17:58
  */
 public class PersonalNewFragment extends BaseFragment implements View.OnClickListener {
+
+    private static final String TAG = "PersonalNewFragment";
+
     @BindView(R.id.ubt_img_me_photo)
     ImageView mPohtoImg;
     @BindView(R.id.ubt_tv_me_nikename)
@@ -111,6 +117,12 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
     View mFeedBackBtn; //反馈帮助
     @BindView(R.id.ubt_btn_person_about)
     UbtSubTxtButton mAboutBtn; //关于页按钮
+    @BindView(R.id.rl_cyctem_msg)
+    RelativeLayout rlMsg;
+    @BindView(R.id.iv_red_point)
+    ImageView ivRedPoint;
+    @BindView(R.id.ubt_btn_person_creative)
+    View mCreativeSpaceBtn;
 
     public PersonalNewFragment() {
         super();
@@ -172,7 +184,52 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
             savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_person_new, container, false);
         EventBusUtil.register(this);
+        checkSystemMSG(); //向后台查询是否有未读消息
         return view;
+    }
+
+    public void checkSystemMSG() {
+
+        UbtLogger.d(TAG, "checkSystemMSG");
+        new CheckMessageHttpProxy().getData(new CheckMessageHttpProxy.CheckMessageCallback() {
+            @Override
+            public void onError(String error) {
+                UbtLogger.d(TAG, "onError:" + error);
+            }
+
+            @Override
+            public void onSuccess(boolean show) {
+                UbtLogger.d(TAG, "onSuccess:" + show);
+                Event event = new Event<>(EventBusUtil.NEED_SHOW_POINT);
+                event.setData(show);
+                EventBusUtil.sendEvent(event);
+            }
+        });
+
+
+       /* ViseHttpUtil.getInstance().getPost(HttpEntity.CHECK_SYSTEM_MSG, getActivity())
+                .request(new JsonCallback<String>(String.class) {
+                    @Override
+                    public void onDataSuccess(String response) {
+                        UbtLog.d(TAG, "onResponse:" + response);
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                            if (jsonObject.getString("models").equals("0")) {
+                                ivRedPoint.setVisibility(View.VISIBLE);
+                            } else {
+                                ivRedPoint.setVisibility(View.GONE);
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
+
+                    @Override
+                    public void onFail(int i, String s) {
+                        UbtLog.d(TAG, "onError:" + s);
+                    }
+                });*/
+
     }
 
     @Override
@@ -219,6 +276,7 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
         }
         mFeedBackBtn.setOnClickListener(this);
         mAboutBtn.setOnClickListener(this);
+        mCreativeSpaceBtn.setOnClickListener(this);
         try {
             String versionName = String.format(getString(R.string.ubt_version_format),
                     ContextUtils.getVerName(getContext()));
@@ -260,7 +318,7 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     @OnClick({R.id.rl_login_info, R.id.ubt_btn_person_qq, R.id.rl_pig_state, R.id.ll_bind, R.id.ll_wifi, R.id.ll_4g,
-            R.id.ll_hot_pwd, R.id.ll_duihua})
+            R.id.ll_hot_pwd, R.id.ll_duihua, R.id.rl_cyctem_msg})
     public void onClick(View v) {
         if (!checkPhoneNetState()) {
             return;
@@ -348,6 +406,12 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
             case R.id.ll_duihua:
                 enterFunction(ContinuousVoiceActivity.class, null);
                 break;
+            case R.id.rl_cyctem_msg:
+                ActivityRoute.toAnotherActivity(getActivity(), MessageActivity.class, false);
+                break;
+            case R.id.ubt_btn_person_creative:
+                ActivityRoute.toAnotherActivity(getActivity(),CreateActivity.class, false);
+                break;
             default:
         }
     }
@@ -379,6 +443,18 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
             case RECEIVE_ROBOT_VERSION_STATE:
                 updateRobotUI((VersionInformation.UpgradeInfo) event.getData());
                 break;
+            case READ_SYSTEM_MSG:
+                ivRedPoint.setVisibility(View.GONE);
+                break;
+            case NEED_SHOW_POINT:
+                if((boolean)(event.getData())){
+                    ivRedPoint.setVisibility(View.VISIBLE);
+                }else{
+                    ivRedPoint.setVisibility(View.GONE);
+                }
+                break;
+
+
         }
     }
 

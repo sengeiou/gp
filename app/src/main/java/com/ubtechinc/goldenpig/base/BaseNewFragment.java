@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
+import com.ubtechinc.goldenpig.view.StateView;
 import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -144,5 +145,15 @@ public abstract class BaseNewFragment extends Fragment {
     public void onPause() {
         super.onPause();
         MobclickAgent.onPageEnd(this.getClass().getSimpleName());
+    }
+
+    protected StateView mStateView;
+
+    public void initStateView(Boolean hasActionbar) {
+        mStateView = StateView.inject(getActivity(), hasActionbar);
+    }
+
+    public void initStateView(View view, Boolean hasActionbar) {
+        mStateView = StateView.inject(view, hasActionbar);
     }
 }

@@ -1,0 +1,415 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ubt_main_bg_color"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_15" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/ubt_1px"
+            android:background="@color/ubt_wifi_list_divider" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/ubt_white"
+            android:paddingBottom="@dimen/dp_15"
+            android:paddingLeft="@dimen/dp_15"
+            android:paddingRight="@dimen/dp_13"
+            android:paddingTop="@dimen/dp_20"
+            android:text="欢迎来到众创空间！"
+            android:textColor="@color/pic_remoind_main_color"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold"
+            android:visibility="visible" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/ubt_white"
+            android:paddingBottom="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_15"
+            android:paddingRight="@dimen/dp_13"
+            android:text="在这里，你设计的超赞问答，可以有机会让猪小飞的所有用户听到，这也将让我们的猪小飞更快成长，更加聪明，给你更好的陪伴和体验。"
+            android:textColor="@color/pic_remoind_main_color"
+            android:textSize="@dimen/sp_13"
+            android:visibility="visible" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/ubt_white"
+            android:paddingBottom="@dimen/dp_20"
+            android:paddingLeft="@dimen/dp_15"
+            android:paddingRight="@dimen/dp_13"
+            android:text="目前众创空间仅支持语音问答的创作，点击下方的“添加问答”，即可输入你设计的问题和答案，然后点击“提交”，等待审核通过就可以了。猪小飞众创之旅，期待你的加入！"
+            android:textColor="@color/pic_remoind_main_color"
+            android:textSize="@dimen/sp_13"
+            android:visibility="visible" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/ubt_1px"
+            android:background="@color/ubt_wifi_list_divider" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/dp_15"
+            android:paddingLeft="@dimen/dp_15"
+            android:paddingRight="@dimen/dp_13"
+            android:paddingTop="@dimen/dp_20"
+            android:text="你可以试着这样进行创作"
+            android:textColor="@color/pic_remoind_main_color"
+            android:textSize="@dimen/sp_15"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:layout_marginRight="@dimen/dp_15"
+            android:background="@drawable/round_frame"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/dp_25">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginTop="@dimen/dp_25"
+                android:orientation="horizontal">
+
+                <com.ubtechinc.goldenpig.view.NewCircleImageView
+                    android:id="@+id/iv_mine"
+                    android:layout_width="@dimen/dp_36"
+                    android:layout_height="@dimen/dp_36"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_user_create" />
+
+                <TextView
+                    android:id="@+id/tv_mine_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/dp_15"
+                    android:layout_toRightOf="@+id/iv_mine"
+                    android:singleLine="true"
+                    android:text="我对猪小飞说"
+                    android:textColor="@color/ubt_tips_txt_color"
+                    android:textSize="@dimen/sp_14" />
+
+                <RelativeLayout
+                    android:id="@+id/rl_question"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_mine_status"
+                    android:layout_marginLeft="@dimen/dp_11"
+                    android:layout_marginRight="@dimen/dp_70"
+                    android:layout_marginTop="@dimen/dp_9"
+                    android:layout_toRightOf="@+id/iv_mine"
+                    android:gravity="center_vertical"
+                    android:minHeight="@dimen/dp_41"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/iv_question_bg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/ll_question"
+                        android:layout_alignLeft="@+id/ll_question"
+                        android:layout_alignRight="@+id/ll_question"
+                        android:layout_alignTop="@+id/ll_question"
+                        android:minHeight="@dimen/dp_41"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/question" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_question"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/dp_8">
+
+                        <TextView
+                            android:id="@+id/tv_question"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:lineSpacingExtra="@dimen/dp_1"
+                            android:lineSpacingMultiplier="1.1"
+                            android:minHeight="@dimen/dp_41"
+                            android:paddingBottom="@dimen/dp_2"
+                            android:paddingLeft="@dimen/dp_6"
+                            android:paddingRight="@dimen/dp_10"
+                            android:paddingTop="@dimen/dp_2"
+                            android:text="谁是最可爱的宝宝"
+                            android:textColor="@color/ubt_tips_txt_color"
+                            android:textSize="@dimen/sp_15" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_15"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iv_answer"
+                    android:layout_width="@dimen/dp_36"
+                    android:layout_height="@dimen/dp_36"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/dp_15"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_xiaofei" />
+
+                <TextView
+                    android:id="@+id/tv_answer_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/dp_14"
+                    android:layout_marginRight="@dimen/dp_15"
+                    android:layout_toLeftOf="@+id/iv_answer"
+                    android:singleLine="true"
+                    android:text="猪小飞对我说"
+                    android:textColor="@color/ubt_tips_txt_color"
+                    android:textSize="@dimen/sp_14" />
+
+                <RelativeLayout
+                    android:id="@+id/rl_answer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_answer_status"
+                    android:layout_marginLeft="@dimen/dp_70"
+                    android:layout_marginRight="@dimen/dp_11"
+                    android:layout_marginTop="@dimen/dp_9"
+                    android:layout_toLeftOf="@+id/iv_answer"
+                    android:gravity="center_vertical"
+                    android:minHeight="@dimen/dp_41"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/iv_answer_bg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/ll_answer"
+                        android:layout_alignLeft="@+id/ll_answer"
+                        android:layout_alignRight="@+id/ll_answer"
+                        android:layout_alignTop="@+id/ll_answer"
+                        android:minHeight="@dimen/dp_41"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/answers" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_answer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_answer"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:lineSpacingExtra="@dimen/dp_1"
+                            android:lineSpacingMultiplier="1.1"
+                            android:minHeight="@dimen/dp_41"
+                            android:paddingBottom="@dimen/dp_5"
+                            android:paddingLeft="@dimen/dp_7"
+                            android:paddingRight="@dimen/dp_14"
+                            android:paddingTop="@dimen/dp_5"
+                            android:text="当然是你啦，我的小天使"
+                            android:textColor="@color/ubt_white"
+                            android:textSize="@dimen/sp_15" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/dp_20"
+            android:layout_marginLeft="@dimen/dp_15"
+            android:layout_marginRight="@dimen/dp_15"
+            android:layout_marginTop="@dimen/dp_15"
+            android:background="@drawable/round_frame"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/dp_25">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dp_15"
+                android:layout_marginTop="@dimen/dp_25"
+                android:orientation="horizontal">
+
+                <com.ubtechinc.goldenpig.view.NewCircleImageView
+                    android:id="@+id/iv_mine02"
+                    android:layout_width="@dimen/dp_36"
+                    android:layout_height="@dimen/dp_36"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_user_create" />
+
+                <TextView
+                    android:id="@+id/tv_mine_status02"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/dp_15"
+                    android:layout_toRightOf="@+id/iv_mine02"
+                    android:singleLine="true"
+                    android:text="我对猪小飞说"
+                    android:textColor="@color/ubt_tips_txt_color"
+                    android:textSize="@dimen/sp_14" />
+
+                <RelativeLayout
+                    android:id="@+id/rl_question02"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_mine_status02"
+                    android:layout_marginLeft="@dimen/dp_11"
+                    android:layout_marginRight="@dimen/dp_70"
+                    android:layout_marginTop="@dimen/dp_9"
+                    android:layout_toRightOf="@+id/iv_mine02"
+                    android:gravity="center_vertical"
+                    android:minHeight="@dimen/dp_41"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/iv_question_bg02"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/ll_question02"
+                        android:layout_alignLeft="@+id/ll_question02"
+                        android:layout_alignRight="@+id/ll_question02"
+                        android:layout_alignTop="@+id/ll_question02"
+                        android:minHeight="@dimen/dp_41"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/question" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_question02"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingLeft="@dimen/dp_8">
+
+                        <TextView
+                            android:id="@+id/tv_question02"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:lineSpacingExtra="@dimen/dp_1"
+                            android:lineSpacingMultiplier="1.1"
+                            android:minHeight="@dimen/dp_41"
+                            android:paddingBottom="@dimen/dp_2"
+                            android:paddingLeft="@dimen/dp_6"
+                            android:paddingRight="@dimen/dp_10"
+                            android:paddingTop="@dimen/dp_2"
+                            android:text="学而时习之是什么意思"
+                            android:textColor="@color/ubt_tips_txt_color"
+                            android:textSize="@dimen/sp_15" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_15"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iv_answer02"
+                    android:layout_width="@dimen/dp_36"
+                    android:layout_height="@dimen/dp_36"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="@dimen/dp_15"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_xiaofei" />
+
+                <TextView
+                    android:id="@+id/tv_answer_status02"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="@dimen/dp_14"
+                    android:layout_marginRight="@dimen/dp_15"
+                    android:layout_toLeftOf="@+id/iv_answer02"
+                    android:singleLine="true"
+                    android:text="猪小飞对我说"
+                    android:textColor="@color/ubt_tips_txt_color"
+                    android:textSize="@dimen/sp_14" />
+
+                <RelativeLayout
+                    android:id="@+id/rl_answer02"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_answer_status02"
+                    android:layout_marginLeft="@dimen/dp_70"
+                    android:layout_marginRight="@dimen/dp_11"
+                    android:layout_marginTop="@dimen/dp_9"
+                    android:layout_toLeftOf="@+id/iv_answer02"
+                    android:gravity="center_vertical"
+                    android:minHeight="@dimen/dp_41"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:id="@+id/iv_answer_bg02"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/ll_answer02"
+                        android:layout_alignLeft="@+id/ll_answer02"
+                        android:layout_alignRight="@+id/ll_answer02"
+                        android:layout_alignTop="@+id/ll_answer02"
+                        android:minHeight="@dimen/dp_41"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/answers" />
+
+                    <LinearLayout
+                        android:id="@+id/ll_answer02"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tv_answer02"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:lineSpacingExtra="@dimen/dp_1"
+                            android:lineSpacingMultiplier="1.1"
+                            android:minHeight="@dimen/dp_41"
+                            android:paddingBottom="@dimen/dp_5"
+                            android:paddingLeft="@dimen/dp_7"
+                            android:paddingRight="@dimen/dp_14"
+                            android:paddingTop="@dimen/dp_5"
+                            android:text="这是《论语·学而》中的一句古语，意思是学过的内容要经常实践，它也是孔子重要的学术思想之一"
+                            android:textColor="@color/ubt_white"
+                            android:textSize="@dimen/sp_15" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

@@ -123,6 +123,21 @@ public class UBTPGApplication extends LoginApplication implements Observer {
 
     public static boolean isRobotOnline = false;
 
+    /**
+     * 是否打开过蒙层
+     */
+    public Boolean HASCREATEGUIDE = false;
+
+    /**
+     * 是否打开过众创空间
+     */
+    public Boolean HASCREATE = false;
+    /**
+     * 是否打开过定制问答蒙层
+     */
+    public Boolean HASINTERLOCTIONGUIDE = false;
+    public static Boolean createActivity = false;
+
     @Override
     public void onCreate() {
         super.onCreate();

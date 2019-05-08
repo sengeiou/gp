@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -34,6 +35,9 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -91,7 +95,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
         rl_titlebar.setRightOnclickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActivityRoute.toAnotherActivity(InterlocutionActivity.this, AddInterlocutionActivity
+                ActivityRoute.toAnotherActivity(InterlocutionActivity.this, AddInterloctionNewActivity
                         .class, false);
             }
         });
@@ -120,10 +124,10 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
             public void onItemClick(View v, int position) {
                 LogUtils.d("hdf", "position:" + position);
                 if (mList.get(position).type == 1) {
-                    Intent it = new Intent(InterlocutionActivity.this, AddInterlocutionActivity.class);
+                    Intent it = new Intent(InterlocutionActivity.this, AddInterloctionNewActivity.class);
                     startActivity(it);
                 } else {
-                    Intent it = new Intent(InterlocutionActivity.this, AddInterlocutionActivity.class);
+                    Intent it = new Intent(InterlocutionActivity.this, AddInterloctionNewActivity.class);
                     it.putExtra("item", mList.get(position));
                     startActivity(it);
                 }
@@ -310,10 +314,10 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
     public void onItemClick(View itemView, int position) {
         LogUtils.d("hdf", "position:" + position);
         if (mList.get(position).type == 1) {
-            Intent it = new Intent(InterlocutionActivity.this, AddInterlocutionActivity.class);
+            Intent it = new Intent(InterlocutionActivity.this, AddInterloctionNewActivity.class);
             startActivity(it);
         } else {
-            Intent it = new Intent(InterlocutionActivity.this, AddInterlocutionActivity.class);
+            Intent it = new Intent(InterlocutionActivity.this, AddInterloctionNewActivity.class);
             it.putExtra("item", mList.get(position));
             startActivity(it);
         }
@@ -363,6 +367,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
 
     private void showPopWindows(View view, int deletePosition) {
         List<String> dataList = new ArrayList<>();
+        dataList.add("同步到众创空间");
         dataList.add("删除该问答");
         PopupWindowList mPopupWindowList = new PopupWindowList(view.getContext());
         mPopupWindowList.setDissListener(new PopupWindowList.DissListener() {
@@ -380,8 +385,83 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
             @Override
             protected void onItemClick(View view, int position) {
                 mPopupWindowList.hide();
-                deleteInterloc(deletePosition);
+                mPopupWindowList.hide();
+                switch (position) {
+                    case 0:
+                        ToastUtils.showShortToast("开发ing");
+//                        addCreate(deletePosition);
+                        break;
+                    case 1:
+                        deleteInterloc(deletePosition);
+                        break;
+                }
+
             }
         });
     }
+
+
+    private void addCreate(int position) {
+        LoadingDialog.getInstance(this).show();
+        String strAnswer = null, strQuest = null;
+        if (mList.get(position).vQueries != null && mList.get(position).vQueries.size() > 0) {
+            strQuest = mList.get(position).vQueries.get(0).strQuery;
+        }
+        if (mList.get(position).vAnswers != null && mList.get(position).vAnswers.size() > 0) {
+            for (int i = 0; i < mList.size(); i++) {
+                if (mList.get(position).vAnswers.get(i).iType == 0) {
+                    strAnswer = mList.get(position).vAnswers.get(i).strText;
+                    break;
+                }
+            }
+        }
+        if (TextUtils.isEmpty(strQuest)) {
+            ToastUtils.showShortToast("请先设置问句");
+            return;
+        }
+        if (TextUtils.isEmpty(strAnswer)) {
+            ToastUtils.showShortToast("请先设置回复");
+            return;
+        }
+        JSONObject json = new JSONObject();
+        try {
+            json.put("question", strQuest);
+            json.put("answer", strAnswer);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+//        ViseHttpUtil.getInstance().getPost(HttpEntity.ADD_CREATE_MSG, this)
+//                .setJson(json)
+//                .request(new JsonCallback<String>(String.class) {
+//                    @Override
+//                    public void onDataSuccess(String response) {
+//                        SCADAHelper.recordEvent(EVENET_APP_ZCQA_SUBMIT_SUCCESS);
+//                        LogUtils.d("AddCreateActivity", "onResponse:" + response);
+//                        LoadingDialog.dismiss(InterlocutionActivity.this);
+//                        JSONObject jsonObject = null;
+//                        try {
+//                            jsonObject = new JSONObject(response);
+//                            if (jsonObject.getBoolean("status")) {
+//                                ToastUtils.showShortToast("添加成功");
+//                                Event<Integer> event = new Event<>(ADD_CREATE);
+//                                event.setData(-1);
+//                                EventBusUtil.sendEvent(event);
+//                            }
+//                        } catch (Exception e) {
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFail(int i, String s) {
+//                        super.onFail(i, s);
+//                        SCADAHelper.recordEvent(EVENET_APP_ZCQA_SUBMIT_FAILURE);
+//                        LogUtils.d("AddCreateActivity", "onError:" + s);
+//                        LoadingDialog.getInstance(InterlocutionActivity.this).dismiss();
+//                    }
+//                });
+    }
+
+
+
 }

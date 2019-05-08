@@ -89,16 +89,16 @@ android {
         debug {
             def props = getProps(rootProject.ext.app.serverEnviroment)
             if (props != null) {
-//                buildConfigField 'String', 'HOST', "\"https://testjimu.ubtrobot.com:8443\""
-//                buildConfigField 'String', 'PUSH_HOST', "\"https://test79.ubtrobot.com\""
-//                buildConfigField 'String', 'IM_HOST', "\"http://210.75.21.106:9080\""
-//                buildConfigField 'String', 'HOME_HOST', "\"http://10.10.1.14:8090\"" //后台测试环境地址和之前不一致
+                buildConfigField 'String', 'HOST', "\"http://10.10.20.71:8010\""
+                buildConfigField 'String', 'PUSH_HOST', "\"https://test79.ubtrobot.com\""
+                buildConfigField 'String', 'IM_HOST', "\"http://210.75.21.106:9080\""
+                buildConfigField 'String', 'HOME_HOST', "\"http://10.10.1.14:8090\"" //后台测试环境地址和之前不一致
 
 
-                buildConfigField 'String', 'HOST', "\"https://internal.ubtrobot.com\""
+            /*    buildConfigField 'String', 'HOST', "\"https://internal.ubtrobot.com\""
                 buildConfigField 'String', 'PUSH_HOST', "\"https://internal.ubtrobot.com\""
                 buildConfigField 'String', 'IM_HOST', "\"https://internal.ubtrobot.com\""
-                buildConfigField 'String', 'HOME_HOST', "\"https://internal.ubtrobot.com\""
+                buildConfigField 'String', 'HOME_HOST', "\"https://internal.ubtrobot.com\""*/
 
 
 //                buildConfigField 'String', 'HOST', "\"https://internal.ubtrobot.com\""

@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/ubt_main_bg_color"
+    android:orientation="vertical">
+
+ <!--   <com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewTv
+        android:id="@+id/rl_titlebar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_50"
+        android:background="@color/ubt_white" />-->
+
+    <RelativeLayout
+        android:id="@+id/rl_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"
+        android:background="@color/ubt_white">
+
+        <ImageView
+            android:id="@+id/iv_left"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:contentDescription="@null"
+            android:paddingBottom="@dimen/dp_11"
+            android:paddingLeft="@dimen/dp_16"
+            android:paddingTop="@dimen/dp_11"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_return" />
+
+        <TextView
+            android:id="@+id/tv_center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxWidth="250dp"
+            android:singleLine="true"
+            android:text="定制问答"
+            android:textColor="@color/ubt_tips_txt_color"
+            style="@style/UBTToolBarTitleTheme"
+            android:textStyle="normal" />
+
+        <TextView
+            android:id="@+id/tv_right"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:paddingLeft="@dimen/dp_15"
+            android:paddingRight="@dimen/dp_15"
+            android:text="保存"
+            android:textColor="@color/ubt_tab_btn_txt_checked_color"
+            android:textSize="@dimen/sp_15"
+            android:visibility="visible" />
+
+    </RelativeLayout>
+
+    <!--<ScrollView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:scrollbars="none">-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:orientation="vertical">-->
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_20"
+        android:text="我对八戒说"
+        android:textColor="@color/pic_remoind_main_color"
+        android:textSize="@dimen/sp_15"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ubt_1px"
+        android:layout_marginTop="@dimen/dp_5"
+        android:background="@color/ubt_wifi_list_divider" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_90"
+        android:background="@color/ubt_white">
+
+        <EditText
+            android:id="@+id/et_setquest"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/dp_120"
+            android:background="@null"
+            android:gravity="start"
+            android:hint="输入问句"
+            android:maxLength="200"
+            android:paddingBottom="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_15"
+            android:paddingRight="@dimen/dp_15"
+            android:paddingTop="@dimen/dp_10"
+            android:textColor="@color/ubt_tips_txt_color"
+            android:textColorHint="@color/T33"
+            android:textCursorDrawable="@drawable/color_cursor"
+            android:textSize="@dimen/sp_17" />
+
+        <TextView
+            android:id="@+id/tv_questcount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_15"
+            android:text="0/20"
+            android:textColor="@color/pic_69gray_color"
+            android:textSize="@dimen/sp_14" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ubt_1px"
+        android:background="@color/ubt_wifi_list_divider" />
+
+    <TextView
+        android:id="@+id/tv_hint0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_8"
+        android:text="*仅支持汉字"
+        android:textColor="@color/T33"
+        android:textSize="@dimen/sp_13" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_30"
+        android:text="八戒对我说"
+        android:textColor="@color/pic_remoind_main_color"
+        android:textSize="@dimen/sp_15"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ubt_1px"
+        android:layout_marginTop="@dimen/dp_5"
+        android:background="@color/ubt_wifi_list_divider" />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/dp_165"
+        android:background="@color/ubt_white">
+
+        <EditText
+            android:id="@+id/et_answerset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/tv_answercount"
+            android:layout_alignParentTop="true"
+            android:background="@null"
+            android:gravity="start"
+            android:hint="添加回复"
+            android:maxLength="100"
+            android:paddingBottom="@dimen/dp_10"
+            android:paddingLeft="@dimen/dp_15"
+            android:paddingRight="@dimen/dp_15"
+            android:paddingTop="@dimen/dp_10"
+            android:textColor="@color/ubt_tips_txt_color"
+            android:textColorHint="@color/T33"
+            android:textCursorDrawable="@drawable/color_cursor"
+            android:textSize="@dimen/sp_17" />
+
+        <TextView
+            android:id="@+id/tv_answercount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="@dimen/dp_10"
+            android:layout_marginRight="@dimen/dp_15"
+            android:text="0/100"
+            android:textColor="@color/pic_69gray_color"
+            android:textSize="@dimen/sp_14" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/ubt_1px"
+        android:background="@color/ubt_wifi_list_divider" />
+
+    <TextView
+        android:id="@+id/tv_hint1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_8"
+        android:text="*仅支持汉字、英文、标点、阿拉伯数字等"
+        android:textColor="@color/T33"
+        android:textSize="@dimen/sp_13" />
+
+    <TextView
+        android:id="@+id/tv_hint2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/dp_15"
+        android:layout_marginTop="@dimen/dp_8"
+        android:text="*建议加上标点符号，回复语听起来更自然"
+        android:textColor="@color/T33"
+        android:textSize="@dimen/sp_13" />
+
+</LinearLayout>

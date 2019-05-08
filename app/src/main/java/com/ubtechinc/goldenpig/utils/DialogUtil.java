@@ -53,4 +53,23 @@ public class DialogUtil {
         window.setWindowAnimations(R.style.MenuDialogAnimation); // 添加动画
         return dialog;
     }
+
+
+    /**
+     * 底部弹出式
+     */
+    public static Dialog getMenuDialogFromBottom(Activity context, View view) {
+        final Dialog dialog = new Dialog(context, R.style.MenuDialogStyle);
+        dialog.setContentView(view);
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams lp = window.getAttributes();
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
+        int screenW = ScreenUtils.getScreenWidth();
+        // int screenH = getScreenHeight(context);
+        lp.width = screenW;
+        window.setGravity(Gravity.BOTTOM); // 此处可以设置dialog显示的位置
+        //window.setWindowAnimations(R.style.MenuDialogAnimation); // 添加动画
+        return dialog;
+    }
 }

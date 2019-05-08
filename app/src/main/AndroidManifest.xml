@@ -165,6 +165,7 @@
         <activity
             android:name=".personal.interlocution.AddInterlocutionActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".personal.interlocution.AddInterloctionNewActivity"/>
         <activity
             android:name=".personal.interlocution.SetQuestOrAnswerActivity"
             android:screenOrientation="portrait" />
@@ -246,7 +247,20 @@
 
         <activity
             android:name=".personal.NoDelayWakeupActivity"
-            android:launchMode="singleTop"></activity>
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"></activity>
+
+        <activity android:name=".creative.CreateActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".creative.AddCreateActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".creative.SeeCreateActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".creative.CreateIntroduceActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".message.MessageActivity"
+            android:screenOrientation="portrait"/>
 
 
 

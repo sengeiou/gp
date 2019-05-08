@@ -12,6 +12,18 @@ public class SharedPreferencesUtils {
     private final static String SP_NAME = "tvs_info";
     private final static String WX_OPENID = "wx_openid";
     private final static String QQ_OPENID = "qq_openid";
+    /**
+     * 是否首次打开众创空间
+     */
+    public final static String CREATE = "inter_create";
+    /**
+     * 是否打开过蒙层
+     */
+    public final static String CREATEGUIDE = "create_guide";
+    /**
+     * 是否打开过定制问答蒙层
+     */
+    public final static String INTERLOCTIONGUIDE = "interloction_guide";
 
     public static String getString(Context context, String name, String defaultValue) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(SP_NAME, Context.MODE_PRIVATE);

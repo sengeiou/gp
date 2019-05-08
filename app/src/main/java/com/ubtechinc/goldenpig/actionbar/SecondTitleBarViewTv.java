@@ -97,6 +97,10 @@ public class SecondTitleBarViewTv extends LinearLayout {
         tv_right.setText(str);
     }
 
+    public void setTvRightColor(int color){
+        tv_right.setTextColor(color);
+    }
+
     /**
      * @Description: 设置标题文字
      */

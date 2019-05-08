@@ -80,4 +80,15 @@ public class EventBusUtil {
     public static final int CHECK_UPDATE_ERROR = 20027;
     public static final int NO_NEED_CHECK = 20028;
 
+    //creative space
+    public static final int SAVE_CREATE_CACHE = 20040;
+    public static final int ADD_CREATE = 20041;
+    public static final int SHOWCREATELIST = 20042;
+    public static final int SHOWCREATECACHE = 20043;
+    public static final int CREATEINTRODUCE = 20044;
+
+    // message
+    public static final int READ_SYSTEM_MSG = 20045;
+    public static final int NEED_SHOW_POINT = 20046;
+
 }

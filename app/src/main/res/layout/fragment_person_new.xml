@@ -340,6 +340,60 @@
         android:drawableStart="@drawable/ic_member"
         android:text="@string/ubt_qq_music" />
 
+
+    <RelativeLayout
+        android:id="@+id/rl_cyctem_msg"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_45"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/iv_cyctem_msg"
+            android:layout_width="@dimen/dp_24"
+            android:layout_height="@dimen/dp_24"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/dp_25"
+            android:layout_marginRight="@dimen/dp_15"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_news" />
+
+        <TextView
+            android:id="@+id/tv_cyctem_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/iv_cyctem_msg"
+            android:text="@string/system_message"
+            android:textColor="@color/pic_remoind_main_color"
+            android:textSize="@dimen/sp_15" />
+
+        <ImageView
+            android:id="@+id/iv_red_point"
+            android:layout_width="@dimen/dp_9"
+            android:layout_height="@dimen/dp_9"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_10"
+            android:layout_toLeftOf="@+id/iv_cyctem_msg_goto"
+            android:src="@drawable/red_circle"
+            android:visibility="visible" />
+
+        <ImageView
+            android:id="@+id/iv_cyctem_msg_goto"
+            android:layout_width="@dimen/dp_20"
+            android:layout_height="@dimen/dp_20"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="@dimen/dp_25"
+            android:src="@drawable/ic_goto" />
+    </RelativeLayout>
+
+    <com.ubtechinc.commlib.view.UbtSubTxtButton
+        android:id="@+id/ubt_btn_person_creative"
+        style="@style/UBTMeBtnTheme"
+        android:drawableStart="@drawable/ic_help"
+        android:text="众创空间" />
+
+
     <com.ubtechinc.commlib.view.UbtSubTxtButton
         android:id="@+id/ubt_btn_person_feedback"
         style="@style/UBTMeBtnTheme"

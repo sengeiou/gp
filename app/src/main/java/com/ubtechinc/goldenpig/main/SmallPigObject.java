@@ -18,6 +18,7 @@ import com.tencent.ai.tvs.ui.ProxyDataListener;
 import com.tencent.ai.tvs.ui.UserCenterStateListener;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
+import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseActivity;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
@@ -69,6 +70,7 @@ public class SmallPigObject {
 
     @JavascriptInterface
     public void goBack() {
+        UbtLogger.d("smallPig", "goBack");
         if (mContext != null && mContext instanceof Activity) {
             ((Activity) mContext).finish();
         }
