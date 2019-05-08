@@ -130,7 +130,7 @@
             android:layout_width="@dimen/dp_33"
             android:layout_height="@dimen/dp_33"
             android:layout_marginRight="@dimen/dp_14"
-            android:src="@drawable/ic_add" />
+            android:src="@drawable/ic_add_create" />
 
         <TextView
             android:id="@+id/tv_add"

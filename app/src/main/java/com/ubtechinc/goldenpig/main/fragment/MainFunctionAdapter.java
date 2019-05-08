@@ -161,7 +161,7 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
                     ActivityRoute.toAnotherActivity((Activity) context, CommonWebActivity.class, UbtWebHelper.getBleWebviewData(context), false);
                     break;
                 case CHILD:
-                    ActivityRoute.toAnotherActivity(((MainActivity)context),ChildrenActivity.class, false);
+                    enterFunction(ChildrenActivity.class, null);
                     break;
                     default:
             }

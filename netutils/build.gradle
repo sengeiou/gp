@@ -69,9 +69,9 @@ android {
 
                 /****预发布****/
 
-//                buildConfigField 'String', 'HOST', "\"https://testwx.ubtrobot.com\""
-//                buildConfigField 'String', 'PUSH_HOST', "\"https://internal.ubtrobot.com\""
-//                buildConfigField 'String', 'IM_HOST', "\"https://internal.ubtrobot.com\""
+//                buildConfigField 'String', 'HOST', "\"https://prerelease.ubtrobot.com\""
+//                buildConfigField 'String', 'PUSH_HOST', "\"https://prerelease.ubtrobot.com\""
+//                buildConfigField 'String', 'IM_HOST', "\"https://prerelease.ubtrobot.com\""
 //                buildConfigField 'String', 'HOME_HOST', "\"https://prerelease.ubtrobot.com\""
 
 
@@ -90,17 +90,24 @@ android {
             }
         }
         debug {
-            buildConfigField 'String', 'SERVER_ENV', "\"FORMAL\""
+//            buildConfigField 'String', 'SERVER_ENV', "\"FORMAL\""
 //            buildConfigField 'String', 'SERVER_ENV', "\"TEST\""
-//            buildConfigField 'String', 'SERVER_ENV', "\"EX\""
+            buildConfigField 'String', 'SERVER_ENV', "\"EX\""
             def props = getProps(rootProject.ext.app.serverEnviroment)
             if (props != null) {
-                buildConfigField 'String', 'HOST', "\"http://10.10.20.71:8010\""
+              /*  buildConfigField 'String', 'HOST', "\"http://10.10.20.71:8010\""
                 buildConfigField 'String', 'PUSH_HOST', "\"https://test79.ubtrobot.com\""
                 buildConfigField 'String', 'IM_HOST', "\"http://210.75.21.106:9080\""
-                buildConfigField 'String', 'HOME_HOST', "\"http://10.10.1.14:8090\"" //后台测试环境地址和之前不一致
+                buildConfigField 'String', 'HOME_HOST', "\"http://10.10.1.14:8090\"" //后台测试环境地址和之前不一致*/
+
+                //预发布
+                buildConfigField 'String', 'HOST', "\" https://prerelease.ubtrobot.com\""
+                buildConfigField 'String', 'PUSH_HOST', "\"https://prerelease.ubtrobot.com\""
+                buildConfigField 'String', 'IM_HOST', "\" https://prerelease.ubtrobot.com\""
+                buildConfigField 'String', 'HOME_HOST', "\"https://prerelease.ubtrobot.com\""
 
 
+                //正式环境
             /*    buildConfigField 'String', 'HOST', "\"https://internal.ubtrobot.com\""
                 buildConfigField 'String', 'PUSH_HOST', "\"https://internal.ubtrobot.com\""
                 buildConfigField 'String', 'IM_HOST', "\"https://internal.ubtrobot.com\""

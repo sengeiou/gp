@@ -42,7 +42,7 @@
             android:paddingBottom="@dimen/dp_10"
             android:paddingLeft="@dimen/dp_15"
             android:paddingRight="@dimen/dp_13"
-            android:text="在这里，你设计的超赞问答，可以有机会让猪小飞的所有用户听到，这也将让我们的猪小飞更快成长，更加聪明，给你更好的陪伴和体验。"
+            android:text="在这里，你设计的超赞问答，可以有机会让八戒的所有用户听到，这也将让我们的八戒更快成长，更加聪明，给你更好的陪伴和体验。"
             android:textColor="@color/pic_remoind_main_color"
             android:textSize="@dimen/sp_13"
             android:visibility="visible" />
@@ -54,7 +54,7 @@
             android:paddingBottom="@dimen/dp_20"
             android:paddingLeft="@dimen/dp_15"
             android:paddingRight="@dimen/dp_13"
-            android:text="目前众创空间仅支持语音问答的创作，点击下方的“添加问答”，即可输入你设计的问题和答案，然后点击“提交”，等待审核通过就可以了。猪小飞众创之旅，期待你的加入！"
+            android:text="目前众创空间仅支持语音问答的创作，点击下方的“添加问答”，即可输入你设计的问题和答案，然后点击“提交”，等待审核通过就可以了。八戒众创之旅，期待你的加入！"
             android:textColor="@color/pic_remoind_main_color"
             android:textSize="@dimen/sp_13"
             android:visibility="visible" />
@@ -81,11 +81,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/dp_15"
             android:layout_marginRight="@dimen/dp_15"
-            android:background="@drawable/round_frame"
+            android:background="@drawable/ic_created_1"
             android:orientation="vertical"
             android:paddingBottom="@dimen/dp_25">
 
-            <RelativeLayout
+       <!--     <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_15"
@@ -161,9 +161,9 @@
                             android:textSize="@dimen/sp_15" />
                     </LinearLayout>
                 </RelativeLayout>
-            </RelativeLayout>
+            </RelativeLayout>-->
 
-            <RelativeLayout
+            <!--<RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dp_15"
@@ -240,7 +240,7 @@
                             android:textSize="@dimen/sp_15" />
                     </LinearLayout>
                 </RelativeLayout>
-            </RelativeLayout>
+            </RelativeLayout>-->
         </LinearLayout>
 
         <LinearLayout
@@ -250,11 +250,11 @@
             android:layout_marginLeft="@dimen/dp_15"
             android:layout_marginRight="@dimen/dp_15"
             android:layout_marginTop="@dimen/dp_15"
-            android:background="@drawable/round_frame"
+            android:background="@drawable/ic_created_2"
             android:orientation="vertical"
             android:paddingBottom="@dimen/dp_25">
 
-            <RelativeLayout
+           <!-- <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/dp_15"
@@ -409,7 +409,7 @@
                             android:textSize="@dimen/sp_15" />
                     </LinearLayout>
                 </RelativeLayout>
-            </RelativeLayout>
+            </RelativeLayout>-->
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

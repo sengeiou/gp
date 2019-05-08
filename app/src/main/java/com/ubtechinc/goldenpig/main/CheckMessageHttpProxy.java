@@ -30,9 +30,15 @@ public class CheckMessageHttpProxy extends BaseHttpProxy {
         OkHttpClient okHttpClient = getHttpClient();
 
         RequestBody body = RequestBody.create(JSON, "");
-        String url = BuildConfig.HOST + "/cloud-ppi/pig/sysInfo/getSysInfoStatus";
+        String url = BuildConfig.HOST + "/v1/cloud-ppi/pig/sysInfo/getSysInfoStatus";
+
+        if(!BuildConfig.SERVER_ENV.equals("FORMAL")){
+            url =BuildConfig.HOST + "/cloud-ppi/pig/sysInfo/getSysInfoStatus";
+        }
+
+
         final Request okrequest = new Request.Builder()
-                .url(URL)
+                .url(url)
                 .post(body)
                 .build();
         Call call = okHttpClient.newCall(okrequest);

@@ -107,7 +107,7 @@ public class CreateActivity extends BaseNewActivity {
             }
         });
         if (isAdmin()) {
-            iv_add.setImageResource(R.drawable.ic_add);
+            iv_add.setImageResource(R.drawable.ic_add_create);
             tv_add.setTextColor(getResources().getColor(R.color.pic_remoind_main_color));
             ll_add.setBackgroundColor(getResources().getColor(R.color.ubt_white));
         } else {

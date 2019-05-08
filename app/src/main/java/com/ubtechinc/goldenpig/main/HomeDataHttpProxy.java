@@ -47,6 +47,9 @@ public class HomeDataHttpProxy extends BaseHttpProxy {
         String content = JsonUtils.map2Json(map);
         RequestBody body = RequestBody.create(JSON, content);
         String url = BuildConfig.HOST + "/v1/cloud-ppi/pig/index";
+        if(!BuildConfig.SERVER_ENV.equals("FORMAL")){
+            url = BuildConfig.HOST + "/cloud-ppi/pig/index";
+        }
         final Request okrequest = new Request.Builder()
                 .url(url)
                 .post(body)

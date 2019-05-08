@@ -35,9 +35,14 @@ public class MessageHttpProxy extends BaseHttpProxy {
         OkHttpClient okHttpClient = getHttpClient();
 
         RequestBody body = RequestBody.create(JSON, "");
-        String url = BuildConfig.HOST + "/cloud-ppi/pig/sysInfo/getSysInfo";
+
+        String  url = BuildConfig.HOST + "/v1/cloud-ppi/pig/sysInfo/getSysInfo";
+        if(!BuildConfig.SERVER_ENV.equals("FORMAL")){
+            url = BuildConfig.HOST + "/cloud-ppi/pig/sysInfo/getSysInfo";
+        }
+
         final Request okrequest = new Request.Builder()
-                .url(GET_MEESSAGE_URL)
+                .url(url)
                 .post(body)
                 .build();
         Call call = okHttpClient.newCall(okrequest);
@@ -65,6 +70,10 @@ public class MessageHttpProxy extends BaseHttpProxy {
 
                             if (callback != null) {
                                 callback.onSuccess(data);
+                            }
+                        }else{
+                            if (callback != null) {
+                                callback.onError("response failed");
                             }
                         }
                     } else {
@@ -112,10 +121,13 @@ public class MessageHttpProxy extends BaseHttpProxy {
         map.put("id", id);
         String content = JsonUtils.map2Json(map);
         RequestBody body = RequestBody.create(JSON, content);
-        String url = BuildConfig.HOST + "/cloud-ppi/pig/sysInfo/delSysInfo";
+        String url = BuildConfig.HOST + "/v1/cloud-ppi/pig/sysInfo/delSysInfo";
+        if(!BuildConfig.SERVER_ENV.equals("FORMAL")){
+            url = BuildConfig.HOST + "/cloud-ppi/pig/sysInfo/delSysInfo";
+        }
 
         final Request request = new Request.Builder()
-                .url(DEL_MESSAGE_URL)
+                .url(url)
                 .post(body)
                 .build();
 
@@ -162,10 +174,13 @@ public class MessageHttpProxy extends BaseHttpProxy {
         map.put("id", id);
         String content = JsonUtils.map2Json(map);
         RequestBody body = RequestBody.create(JSON, content);
-        String url = BuildConfig.HOST + "/cloud-ppi/pig/sysInfo/reportStatus";
+        String url = BuildConfig.HOST + "/v1/cloud-ppi/pig/sysInfo/reportStatus";
+        if(!BuildConfig.SERVER_ENV.equals("FORMAL")){
+            url =BuildConfig.HOST + "/cloud-ppi/pig/sysInfo/reportStatus";
+        }
 
         final Request request = new Request.Builder()
-                .url(REPORT_MESSAGE_URL)
+                .url(url)
                 .post(body)
                 .build();
 
