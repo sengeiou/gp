@@ -182,7 +182,7 @@ android {
         }
 
         ubt_360 {
-            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "360"]
+            manifestPlaceholders = [UMENG_CHANNEL_VALUE: "\"360\""]
         }
 
         ubt_ali {
