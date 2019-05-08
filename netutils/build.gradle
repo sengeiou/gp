@@ -50,6 +50,9 @@ android {
     buildTypes {
         release {
             minifyEnabled false
+            buildConfigField 'String', 'SERVER_ENV', "\"FORMAL\""
+//            buildConfigField 'String', 'SERVER_ENV', "\"TEST\""
+//            buildConfigField 'String', 'SERVER_ENV', "\"EX\""
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             def props = getProps(rootProject.ext.app.serverEnviroment)
             if (props != null) {
@@ -87,6 +90,9 @@ android {
             }
         }
         debug {
+            buildConfigField 'String', 'SERVER_ENV', "\"FORMAL\""
+//            buildConfigField 'String', 'SERVER_ENV', "\"TEST\""
+//            buildConfigField 'String', 'SERVER_ENV', "\"EX\""
             def props = getProps(rootProject.ext.app.serverEnviroment)
             if (props != null) {
                 buildConfigField 'String', 'HOST', "\"http://10.10.20.71:8010\""
