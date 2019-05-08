@@ -160,6 +160,7 @@ public class UBTSubTitleDialog extends BaseDialog implements View.OnClickListene
                     onUbtDialogContentClickLinsenter.onNotipClick(v);
                 }
                 break;
+                default:
         }
     }
 

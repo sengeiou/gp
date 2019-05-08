@@ -2,14 +2,16 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android"
     android:opacity="opaque">
     <item android:drawable="@color/white" />
+
     <item android:top="@dimen/dp_150">
         <bitmap
             android:gravity="top|center_vertical"
             android:src="@drawable/img_start" />
     </item>
-    <item android:bottom="@dimen/dp_15">
+    <item android:bottom="@dimen/dp_80">
         <bitmap
             android:gravity="bottom|center_horizontal"
             android:src="@drawable/ic_ubt_logo" />
     </item>
+
 </layer-list>

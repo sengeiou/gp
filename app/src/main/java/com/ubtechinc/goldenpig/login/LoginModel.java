@@ -1,11 +1,10 @@
 package com.ubtechinc.goldenpig.login;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.util.Log;
 
-import com.tencent.ai.tvs.info.UserInfoManager;
 import com.ubt.imlibv2.bean.UbtTIMManager;
+import com.ubt.robot.dmsdk.TVSWrapBridge;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.comm.entity.UserInfo;
@@ -17,7 +16,6 @@ import com.ubtechinc.goldenpig.pigmanager.register.GetPigListHttpProxy;
 import com.ubtechinc.goldenpig.repository.TVSAuthRepository;
 import com.ubtechinc.goldenpig.utils.PigUtils;
 import com.ubtechinc.nets.http.ThrowableWrapper;
-import com.ubtechinc.tvlloginlib.entity.LoginInfo;
 
 /**
  * @auther :hqt
@@ -86,12 +84,11 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
                                 .getCurrentPigList());
                         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
 
+                        UbtTIMManager.avatarURL = TVSWrapBridge.getTVSWrapUserInfo().getAvatar();
                         if (pigInfo != null && pigInfo.isAdmin) {
-                            UbtTIMManager.avatarURL = UserInfoManager.getInstance().headImgUrl;
                             timManager.loginTIM(AuthLive.getInstance().getUserId(), pigInfo.getRobotName(), com.ubt.imlibv2.BuildConfig.IM_Channel);
 //                            UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
                         } else {
-                            UbtTIMManager.avatarURL = UserInfoManager.getInstance().headImgUrl;
                             timManager.setUserId(AuthLive.getInstance().getUserId());
                             timManager.setPigAccount(pigInfo != null ? pigInfo.getRobotName() : "");
                             timManager.setChannel(com.ubt.imlibv2.BuildConfig.IM_Channel);
@@ -133,7 +130,9 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
         return tvsAuthRepository.isWXSupport();
     }
 
-    /*检测是否已登录*/
+    /**
+     * 检测是否已登录
+     */
     public boolean checkToken(Activity activity) {
         if (isTokenExist(activity)) {
             tvsAuthRepository.refreshLogin(activity, this);
@@ -158,14 +157,6 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
 
     public void logoutTVS() {
         tvsAuthRepository.logout();
-    }
-
-    public void onResume() {
-        tvsAuthRepository.onResume();
-    }
-
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        tvsAuthRepository.onActivityResult(requestCode, resultCode, data);
     }
 
 }

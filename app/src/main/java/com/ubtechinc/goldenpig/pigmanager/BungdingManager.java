@@ -7,8 +7,11 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.tencent.ai.tvs.ConstantValues;
 import com.ubt.imlibv2.bean.UbtTIMManager;
+import com.ubt.robot.dmsdk.TVSWrapBridge;
+import com.ubt.robot.dmsdk.TVSWrapConstant;
+import com.ubt.robot.dmsdk.TVSWrapType;
+import com.ubt.robot.dmsdk.model.TVSWrapAccountInfo;
 import com.ubtech.utilcode.utils.JsonUtils;
 import com.ubtechinc.bluetooth.BleConnectAbstract;
 import com.ubtechinc.bluetooth.Constants;
@@ -28,7 +31,7 @@ import com.ubtechinc.goldenpig.pigmanager.model.RobotAllAccountViewModel;
 import com.ubtechinc.goldenpig.pigmanager.observeable.RobotBindStateLive;
 import com.ubtechinc.goldenpig.pigmanager.register.RegisterPigRepository;
 import com.ubtechinc.goldenpig.utils.SCADAHelper;
-import com.ubtechinc.tvlloginlib.TVSManager;
+import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -292,78 +295,43 @@ public class BungdingManager {
     private void getClientId(final String productId, final String dsn) {
         final String userId = AuthLive.getInstance().getUserId();
         final String token = CookieInterceptor.get().getToken();
-        String clientId = TVSManager.getInstance(mContext, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ).getClientId(productId, dsn);
-        if (!ConstantValues.INVALID_CLIENTID.equals(clientId)) {
-            Log.i(TAG, "BungdingManager|getClientId:" + clientId);
-            clientIdRecord = clientId;
-            // 先绑定机器人绑定成功再发送clientId
-            //TODO 校验和当前绑定的是否是同一个
-            PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
-            if (pigInfo != null && !TextUtils.isEmpty(pigInfo.getRobotName())) {
-                String robotDsn = pigInfo.getRobotName();
+
+        TVSWrapBridge.tvsTokenVerify(new TVSWrapBridge.TVSWrapCallback() {
+            @Override
+            public void onError(int errCode) {
+                UbtToastUtils.showCustomToast(mContext, "刷票失败");
                 if (mBanddingListener != null) {
-                    if (robotDsn.equals(dsn)) {
-                        //同一个猪
-                        mBanddingListener.onStopBind(true);
-                        if (pigInfo.isAdmin) {
-                            sendClientIdToRobot(clientIdRecord);
-                        }
-                    } else {
-                        //不同猪
-                        mBanddingListener.onStopBind(false);
-                    }
+                    mBanddingListener.onFaild(Constants.GET_CLIENT_ID_ERROR_CODE, "");
                 }
-            } else {
-                mRobotRepository.registerRobot(token, userId, dsn, BuildConfig.APP_ID, BuildConfig.product,
-                        mResponseListener);
             }
-        } else {
-            if (mBanddingListener != null) {
-                mBanddingListener.onFaild(Constants.GET_CLIENT_ID_ERROR_CODE, "");
+
+            @Override
+            public void onSuccess(Object result) {
+                TVSWrapAccountInfo tvsWrapAccountInfo = TVSWrapBridge.getTVSAccountInfo(productId, dsn);
+                String clientId = tvsWrapAccountInfo.getClientID();
+                clientIdRecord = clientId;
+                //TODO 校验和当前绑定的是否是同一个
+                PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+                if (pigInfo != null && !TextUtils.isEmpty(pigInfo.getRobotName())) {
+                    String robotDsn = pigInfo.getRobotName();
+                    if (mBanddingListener != null) {
+                        if (robotDsn.equals(dsn)) {
+                            //同一个猪
+                            mBanddingListener.onStopBind(true);
+                            if (pigInfo.isAdmin) {
+                                sendClientIdToRobot(clientIdRecord);
+                            }
+                        } else {
+                            //不同猪
+                            mBanddingListener.onStopBind(false);
+                        }
+                    }
+                } else {
+                    mRobotRepository.registerRobot(token, userId, dsn, BuildConfig.APP_ID, BuildConfig.product,
+                            mResponseListener);
+                }
             }
-        }
-
-//        TVSManager.getInstance(mContext, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ).tvsAuth(BuildConfig
-// .PRODUCT_ID, dsn, new TVSManager.TVSAuthListener() {
-//            @Override
-//            public void onSuccess(String clientId) {
-//                Log.i(TAG, "onSuccess=======" + clientId);
-//                clientIdRecord = clientId;
-//                // 先绑定机器人绑定成功再发送clientId
-//                //TODO 校验和当前绑定的是否是同一个
-//                PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
-//                if (pigInfo != null && !TextUtils.isEmpty(pigInfo.getRobotName())) {
-//                    String robotDsn = pigInfo.getRobotName();
-//                    if (mBanddingListener != null) {
-//                        if (robotDsn.equals(dsn)) {
-//                            //同一个猪
-//                            mBanddingListener.onStopBind(true);
-//                            if (pigInfo.isAdmin) {
-//                                sendClientIdToRobot(clientIdRecord);
-//                            }
-//                        } else {
-//                            //不同猪
-//                            mBanddingListener.onStopBind(false);
-//                        }
-//                    }
-//
-//
-//                } else {
-//                    mRobotRepository.registerRobot(token, userId, dsn, BuildConfig.APP_ID, BuildConfig.product,
-// mResponseListener);
-//                }
-//            }
-//
-//            @Override
-//            public void onError(int code) {
-//                Log.i(TAG, "onError=========" + code);
-//                //UbtBluetoothManager.getInstance().closeConnectBle();
-//                if (mBanddingListener != null) {
-//                    mBanddingListener.onFaild(Constants.GET_CLIENT_ID_ERROR_CODE);
-//                }
-//            }
-//        });
-
+        });
     }
 
     /**
@@ -371,16 +339,25 @@ public class BungdingManager {
      */
     private void sendClientIdToRobot(String clientId) {
         Log.i(TAG, " sendClientIdToRobot clientId : " + clientId);
-//        String clientTrans = Utils.pactkClientIdCommandToRobot(clientId);
         final String userId = AuthLive.getInstance().getUserId();
         String clientTrans = commandProduce.getClientId(clientId, userId);
         if (!TextUtils.isEmpty(clientTrans)) {
             UbtBluetoothManager.getInstance().sendMessageToBle(clientTrans);
         }
+        //TODO TVS绑定dsn注册音乐会员
+        TVSWrapBridge.tvsBindDevice(TVSWrapType.TVS, TVSWrapConstant.PRODUCT_ID, mSerialId, new TVSWrapBridge.TVSWrapCallback() {
+            @Override
+            public void onError(int errCode) {
+//                com.ubtech.utilcode.utils.ToastUtils.showShortToast("注册音乐会员失败，错误码：" + errCode);
+                Log.i(TAG, "注册音乐会员失败，错误码:" + errCode);
+            }
 
-        //TODO dsn注册音乐会员
-        TVSManager tvsManager = TVSManager.getInstance(mContext, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ);
-        tvsManager.bindRobot(mSerialId);
+            @Override
+            public void onSuccess(Object result) {
+//                com.ubtech.utilcode.utils.ToastUtils.showShortToast("注册音乐会员成功");
+                Log.i(TAG, "注册音乐会员成功");
+            }
+        });
     }
 
 
@@ -450,6 +427,7 @@ public class BungdingManager {
                                     mBanddingListener.onFaild(Constants.REGISTER_ROBOT_ERROR_CODE, "");
                                 }
                                 break;
+                                default:
                         }
                     }
                 });

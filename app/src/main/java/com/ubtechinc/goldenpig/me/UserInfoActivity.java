@@ -2,13 +2,13 @@ package com.ubtechinc.goldenpig.me;
 
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.ubtech.utilcode.utils.StringUtils;
+import com.ubt.robot.dmsdk.TVSWrapBridge;
+import com.ubt.robot.dmsdk.model.TVSWrapUserInfo;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.ActivityManager;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
@@ -20,8 +20,6 @@ import com.ubtechinc.goldenpig.login.LoginModel;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.login.repository.UBTAuthRepository;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
-import com.ubtechinc.goldenpig.utils.TvsUtil;
-import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
 
 /**
  * @auther :hqt
@@ -71,25 +69,17 @@ public class UserInfoActivity extends BaseToolBarActivity implements View.OnClic
     private void fillAccountView() {
         UserInfo currentUser = AuthLive.getInstance().getCurrentUser();
         if (currentUser != null) {
-            mUserAccountTv.setText(TvsUtil.currentPlatformValue());
-            String nickName = SharedPreferencesUtils.getString(this, "tvs_nickName", "");
-            String headImgUrl = SharedPreferencesUtils.getString(this, "tvs_headImgUrl", "");
-            if (TextUtils.isEmpty(nickName)) {
-                nickName = currentUser.getNickName();
-            }
-            if (TextUtils.isEmpty(headImgUrl)) {
-                headImgUrl = currentUser.getUserImage();
-            }
-
+            TVSWrapUserInfo tvsWrapUserInfo = TVSWrapBridge.getTVSWrapUserInfo();
+            mUserAccountTv.setText(TVSWrapBridge.getTVSAccountInfo().currentPlatformValue());
             Glide.with(this)
-                    .load(headImgUrl)
+                    .load(tvsWrapUserInfo.getAvatar())
                     .asBitmap()
                     .centerCrop()
                     .transform(new GlideCircleTransform(this))
                     .placeholder(R.drawable.ic_sign_in)
                     .into(mPhotoImg);
 
-            mUserNameTv.setText(StringUtils.utf8ToString(nickName));
+            mUserNameTv.setText(tvsWrapUserInfo.getNickname());
         } else {
             ActivityManager.getInstance().popAllActivityExcept(LoginActivity.class.getName());
             ActivityRoute.toAnotherActivity(this, LoginActivity.class, true);

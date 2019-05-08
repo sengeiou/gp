@@ -278,6 +278,7 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
         tv_no_delay_wakeup.setEnabled(isAdmin);
     }
 
+    @Override
     public void onClick(View v) {
         if (!CheckUtil.checkPhoneNetState(this)) {
             return;
@@ -345,6 +346,7 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
             case R.id.tv_unbind:
                 unBindCheck();
                 break;
+                default:
         }
     }
 
@@ -357,6 +359,7 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
                     doUnbind();
                 }
                 break;
+                default:
         }
     }
 
@@ -712,6 +715,9 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
     }
 
     private void imSyncRelationShip() {
+
+        //TODO 同步TVS解绑
+
         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
         if (pigInfo != null && pigInfo.isAdmin) {
             //TODO 给自己的猪发
@@ -738,7 +744,9 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Event event) {
-        if (event == null) return;
+        if (event == null) {
+            return;
+        }
         int code = event.getCode();
         switch (code) {
             case EventBusUtil.USER_PIG_UPDATE:
@@ -784,7 +792,9 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
                 if (imOutDisposable != null) {
                     imOutDisposable.dispose();
                 }
-                if (!needUnBindByClear) return;
+                if (!needUnBindByClear) {
+                    return;
+                }
                 if ((boolean) event.getData()) {
                     com.ubtech.utilcode.utils.ToastUtils.showShortToast("机器人数据清除成功");
                     if (isUnbindAll) {
@@ -802,6 +812,7 @@ public class PigManageDetailActivity extends BaseToolBarActivity implements View
             case EventBusUtil.NETWORK_STATE_CHANGED:
                 updateTopTip();
                 break;
+                default:
         }
     }
 

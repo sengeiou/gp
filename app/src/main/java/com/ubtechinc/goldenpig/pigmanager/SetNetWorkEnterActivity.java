@@ -9,7 +9,7 @@ import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.main.MainActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
-import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
+import com.ubtechinc.goldenpig.utils.SharedPreferencesUtils;
 
 import pl.droidsonroids.gif.GifImageView;
 

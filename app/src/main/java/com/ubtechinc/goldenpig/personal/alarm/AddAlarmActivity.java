@@ -7,21 +7,18 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.TextView;
 
-import com.tencent.ai.tvs.comm.CommOpInfo;
-import com.tencent.ai.tvs.env.ELoginPlatform;
+import com.ubt.robot.dmsdk.TVSWrapBridge;
+import com.ubt.robot.dmsdk.TVSWrapConstant;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.TimeUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
-import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
-import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
+import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.model.AlarmModel;
-import com.ubtechinc.goldenpig.utils.PigUtils;
-import com.ubtechinc.tvlloginlib.TVSManager;
 import com.weigan.loopview.LoopView;
 
 import java.lang.ref.WeakReference;
@@ -236,12 +233,6 @@ public class AddAlarmActivity extends BaseNewActivity {
 
     public void addAlarm(int eCloud_type, long lAlarmId) {
         LoadingDialog.getInstance(this).show();
-        ELoginPlatform platform;
-        if (CookieInterceptor.get().getThridLogin().getLoginType().toLowerCase().equals("wx")) {
-            platform = ELoginPlatform.WX;
-        } else {
-            platform = ELoginPlatform.QQOpen;
-        }
 
         long timnow = System.currentTimeMillis();
         String date = TimeUtils.getTime(timnow, TimeUtils.DATE_FORMAT_DATE);
@@ -316,13 +307,16 @@ public class AddAlarmActivity extends BaseNewActivity {
 //                break;
         }
 
-        TVSManager tvsManager = TVSManager.getInstance(this, BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ);
-        tvsManager.init(this);
-        tvsManager.requestTskmUniAccess(platform, PigUtils.getAlarmDeviceMManager(), PigUtils
-                        .getAlarmUniAccessinfo(eCloud_type, eRepeatType, lAlarmId, timeMill), new TVSManager
-                        .TVSAlarmListener() {
+        TVSWrapBridge.tvsAlarmManage(TVSWrapBridge.getAlarmBlobInfo(eCloud_type, eRepeatType, lAlarmId, timeMill), TVSWrapConstant.PRODUCT_ID,
+                AuthLive.getInstance().getCurrentPig().getRobotName(), new TVSWrapBridge.TVSWrapCallback() {
                     @Override
-                    public void onSuccess(CommOpInfo msg) {
+                    public void onError(int errCode) {
+                        LoadingDialog.getInstance(AddAlarmActivity.this).dismiss();
+                        LogUtils.d("code:" + errCode);
+                    }
+
+                    @Override
+                    public void onSuccess(Object result) {
                         LoadingDialog.getInstance(AddAlarmActivity.this).dismiss();
                         if (model == null) {
                             ToastUtils.showShortToast("新建闹钟成功");
@@ -332,13 +326,6 @@ public class AddAlarmActivity extends BaseNewActivity {
                         Event<String> event = new Event<>(SET_ALARM_SUCCESS);
                         EventBusUtil.sendEvent(event);
                         finish();
-                    }
-
-                    @Override
-                    public void onError(String code) {
-                        LoadingDialog.getInstance(AddAlarmActivity.this).dismiss();
-                        ToastUtils.showShortToast(code);
-                        LogUtils.d("code:" + code);
                     }
                 });
     }

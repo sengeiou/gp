@@ -27,8 +27,8 @@ class MiniBleProtoEncode : ICommandEncode {
         val data =ProtoAgent.getData(requestId,content)
         var divideData =  MiniBleProto.devide(data)
         var encodeData = emptyArray<ByteArray>()
-        for (data in divideData) {
-            encodeData+= data
+        for (data1 in divideData) {
+            encodeData+= data1
         }
         return encodeData
     }
@@ -58,10 +58,6 @@ class MiniBleProtoEncode : ICommandEncode {
 
     private fun parseMessage(dataPairs: Array<MiniMessage>) : Boolean {
         for (msgRequest in dataPairs) {
-            if (msgRequest == null) {
-                return false
-            }
-
             val message = ProtoBufferDisposer.parseMessage(msgRequest.dataContent)
             val miniMessage = MiniMessage()
             miniMessage.responseSerial = message.header.responseSerial

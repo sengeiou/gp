@@ -46,7 +46,6 @@ public abstract class BaseToolBarActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         //1、设置支出，并不显示项目的title文字
         toolbar = (Toolbar) findViewById(R.id.ubt_toolbar);
 //        toolbar.setNavigationIcon(R.drawable.ic_back);

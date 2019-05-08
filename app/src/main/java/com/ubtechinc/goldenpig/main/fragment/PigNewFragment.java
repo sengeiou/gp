@@ -44,7 +44,7 @@ import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.AnimUtil;
 import com.ubtechinc.goldenpig.utils.SCADAHelper;
-import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
+import com.ubtechinc.goldenpig.utils.SharedPreferencesUtils;
 import com.ubtrobot.info.NativeInfoContainer;
 
 import org.greenrobot.eventbus.Subscribe;

@@ -1,14 +1,10 @@
 package com.ubtechinc.goldenpig.main;
 
-import android.content.Context;
-
 import com.google.gson.reflect.TypeToken;
 import com.ubtech.utilcode.utils.JsonUtils;
 import com.ubtech.utilcode.utils.LogUtils;
-import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.net.BaseHttpProxy;
 import com.ubtechinc.nets.BuildConfig;
-import com.ubtechinc.tvlloginlib.utils.SharedPreferencesUtils;
 
 import org.json.JSONObject;
 
