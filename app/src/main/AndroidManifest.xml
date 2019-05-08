@@ -111,9 +111,7 @@
         <activity
             android:name=".me.UserInfoActivity"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".personal.DeviceManageActivity"
-            android:screenOrientation="portrait" />
+
         <activity
             android:name=".personal.management.AddressBookActivity"
             android:screenOrientation="portrait" />

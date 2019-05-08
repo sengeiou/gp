@@ -213,28 +213,6 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
         });
 
 
-       /* ViseHttpUtil.getInstance().getPost(HttpEntity.CHECK_SYSTEM_MSG, getActivity())
-                .request(new JsonCallback<String>(String.class) {
-                    @Override
-                    public void onDataSuccess(String response) {
-                        UbtLog.d(TAG, "onResponse:" + response);
-                        JSONObject jsonObject = null;
-                        try {
-                            jsonObject = new JSONObject(response);
-                            if (jsonObject.getString("models").equals("0")) {
-                                ivRedPoint.setVisibility(View.VISIBLE);
-                            } else {
-                                ivRedPoint.setVisibility(View.GONE);
-                            }
-                        } catch (Exception e) {
-                        }
-                    }
-
-                    @Override
-                    public void onFail(int i, String s) {
-                        UbtLog.d(TAG, "onError:" + s);
-                    }
-                });*/
 
     }
 
