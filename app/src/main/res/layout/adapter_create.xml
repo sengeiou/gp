@@ -8,11 +8,11 @@
     android:layout_centerInParent="true"
     android:layout_marginLeft="@dimen/dp_15"
     android:layout_marginRight="@dimen/dp_15"
-    android:background="@drawable/selector_interloc_item"
+    android:background="@drawable/selector_alarm_item"
     android:orientation="horizontal"
     android:paddingLeft="@dimen/dp_12">
 
-    <com.ubt.baselib.customView.NewCircleImageView
+    <com.ubtechinc.goldenpig.view.NewCircleImageView
         android:id="@+id/iv_ask"
         android:layout_width="@dimen/dp_38"
         android:layout_height="@dimen/dp_38"
@@ -59,14 +59,14 @@
 
     <ImageView
         android:id="@+id/iv_answer"
-        android:layout_width="@dimen/dp_38"
-        android:layout_height="@dimen/dp_38"
+        android:layout_width="@dimen/dp_36"
+        android:layout_height="@dimen/dp_36"
         android:layout_below="@+id/view_curline"
         android:layout_marginBottom="@dimen/dp_11"
         android:layout_marginRight="@dimen/dp_8"
         android:layout_marginTop="@dimen/dp_10"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_xiaofei" />
+        android:src="@drawable/ic_headportrait" />
 
     <TextView
         android:id="@+id/tv_answer"

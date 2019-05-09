@@ -92,6 +92,8 @@ public class EventBusUtil {
     public static final int SHOWCREATELIST = 20042;
     public static final int SHOWCREATECACHE = 20043;
     public static final int CREATEINTRODUCE = 20044;
+    public static final int GET_CREATE_LIST_FAIL = 20047;
+    public static final int GET_CREATE_LIST_SUCCESS = 20048;
 
     // message
     public static final int READ_SYSTEM_MSG = 20045;

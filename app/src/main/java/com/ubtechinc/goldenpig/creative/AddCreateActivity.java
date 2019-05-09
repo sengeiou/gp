@@ -1,6 +1,7 @@
 package com.ubtechinc.goldenpig.creative;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -12,13 +13,16 @@ import android.widget.TextView;
 
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
+import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewTv;
+import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.model.CreateModel;
+import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.EditTextUtil;
 
 import org.json.JSONException;
@@ -27,10 +31,15 @@ import org.json.JSONObject;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_CREATE;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.CREATEINTRODUCE;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SHOWCREATELIST;
 
 
 public class AddCreateActivity extends BaseNewActivity {
+
+    private static final String TAG = "AddCreateActivity";
+
     @BindView(R.id.et_setquest)
     EditText et_setquest;
     @BindView(R.id.tv_questcount)
@@ -51,6 +60,8 @@ public class AddCreateActivity extends BaseNewActivity {
      * 重新编辑时去掉红字判断
      */
     private boolean hasCheckNoise = false;
+
+    private Handler mHandler = new Handler();
 
     @Override
     protected int getContentViewId() {
@@ -211,9 +222,58 @@ public class AddCreateActivity extends BaseNewActivity {
 
     private void addCreate() {
 
+
+        LoadingDialog.getInstance(this).show();
+        JSONObject json = new JSONObject();
+        try {
+            json.put("question", strQuest);
+            json.put("answer", strAnswer);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        new CreativeSpaceHttpProxy().addCreativeContent(json, new CreativeSpaceHttpProxy.AddCreativeCallback() {
+            @Override
+            public void onError(String error) {
+                UbtLogger.d(TAG, "onError:" +error);
+                if(mHandler != null){
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            LoadingDialog.getInstance(AddCreateActivity.this).dismiss();
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void onSuccess() {
+                LoadingDialog.getInstance(AddCreateActivity.this).dismiss();
+                ToastUtils.showShortToast("添加成功");
+                Event<Integer> event = new Event<>(ADD_CREATE);
+                if (editPosition >= 0) {
+                    event.setData(editPosition);
+                } else {
+                    event.setData(-1);
+                }
+                EventBusUtil.sendEvent(event);
+                if (!UBTPGApplication.createActivity) {
+                    ActivityRoute.toAnotherActivity(AddCreateActivity.this, CreateActivity.class,
+                            false);
+                    Event<String> event2 = new Event<>(CREATEINTRODUCE);
+                    EventBusUtil.sendEvent(event2);
+                }
+                Event<String> event3 = new Event<>(SHOWCREATELIST);
+                EventBusUtil.sendEvent(event3);
+                finish();
+            }
+        });
+
+
         //需要同步后台数据
 
-  /*      LoadingDialog.show(AddCreateActivity.this);
+      /*  LoadingDialog.show(AddCreateActivity.this);
         JSONObject json = new JSONObject();
         try {
             json.put("question", strQuest);
@@ -289,8 +349,6 @@ public class AddCreateActivity extends BaseNewActivity {
                 event.setData(model);
                 EventBusUtil.sendEvent(event);
 
-//                Event<String> event2 = new Event<>(EventBusUtil.SHOWCREATECACHE);
-//                sendEvent(event2);
             }
         } catch (Exception e) {
         }

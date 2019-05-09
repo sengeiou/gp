@@ -337,7 +337,7 @@
         android:id="@+id/ubt_btn_person_qq"
         style="@style/UBTMeBtnTheme"
         android:layout_marginTop="@dimen/dp_20"
-        android:drawableStart="@drawable/ic_member"
+        android:drawableStart="@drawable/ic_music"
         android:text="@string/ubt_qq_music" />
 
 
@@ -390,8 +390,10 @@
     <com.ubtechinc.commlib.view.UbtSubTxtButton
         android:id="@+id/ubt_btn_person_creative"
         style="@style/UBTMeBtnTheme"
-        android:drawableStart="@drawable/ic_help"
-        android:text="众创空间" />
+        android:drawableStart="@drawable/ic_zhongchuang_small"
+        android:text="众创空间"
+        android:visibility="gone"
+        />
 
 
     <com.ubtechinc.commlib.view.UbtSubTxtButton

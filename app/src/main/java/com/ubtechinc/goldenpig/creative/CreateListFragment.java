@@ -3,6 +3,7 @@ package com.ubtechinc.goldenpig.creative;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -19,8 +20,11 @@ import com.google.gson.Gson;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.SPUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
+import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseNewFragment;
+import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.model.CreateModel;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionModel;
@@ -42,6 +46,8 @@ import java.util.List;
 import butterknife.BindView;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_CREATE;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.GET_CREATE_LIST_FAIL;
+import static com.ubtechinc.goldenpig.utils.SharedPreferencesUtils.CREATEGUIDE;
 
 
 public class CreateListFragment extends BaseNewFragment {
@@ -57,6 +63,7 @@ public class CreateListFragment extends BaseNewFragment {
     private HeaderAndFooterRecyclerViewAdapter mHeaderAndFooterRecyclerViewAdapter;
     public Boolean hasAddFooterView = false;
     InterlocutionModel requestModel;
+    private Handler mHandler = new Handler();
 
     @Override
     protected boolean isRegisterEventBus() {
@@ -146,7 +153,79 @@ public class CreateListFragment extends BaseNewFragment {
     }
 
     private void onRefresh() {
-        /*ViseHttpUtil.getInstance().get(HttpEntity.GET_CREATE_MSG, getActivity())
+
+
+        new CreativeSpaceHttpProxy().getData(page, new CreativeSpaceHttpProxy.GetCreativeCallback() {
+            @Override
+            public void onError(String error) {
+                UbtLogger.d(TAG, "onError:" + error);
+                if(mHandler != null){
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (mList != null && mList.size() > 0) {
+                                mStateView.showContent();
+                            } else {
+                                mStateView.showRetry();
+                            }
+                            setState(FootState.Normal);
+                        }
+                    });
+                }
+
+
+            }
+
+            @Override
+            public void onSuccess(List<CreateModel> data) {
+
+                if(mHandler != null){
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (page == 1) {
+                                mList.clear();
+                                if (data != null && data.size() > 0) {
+                                    CreateModel model = new CreateModel();
+                                    model.type = 1;
+                                    model.sid = data.size();
+                                    mList.add(model);
+                                    mList.addAll(data);
+                                    page++;
+                                }
+                                checkGuide();
+                            } else {
+                                if (data != null && data.size() > 0) {
+                                    mList.addAll(data);
+                                    page++;
+                                    if (mList != null && mList.size() > 0 && mList.get(0).type == 1) {
+                                        mList.get(0).sid = mList.size() - 1;
+                                    }
+                                }
+                            }
+                            if (data != null && data.size() < 10) {
+                                setState(FootState.NoMore);
+                            } else {
+                                setState(FootState.Normal);
+                            }
+                            adapter.notifyDataSetChanged();
+
+                            if (mList.size() > 0) {
+                                mStateView.showContent();
+
+                            } else {
+                                mStateView.showEmpty();
+                            }
+                        }
+                    });
+                }
+
+
+            }
+        });
+
+
+       /* ViseHttpUtil.getInstance().get(HttpEntity.GET_CREATE_MSG, getActivity())
                 .addParam("index", page + "")
                 .request(new JsonCallback<String>(String.class) {
                     @Override
@@ -438,16 +517,16 @@ public class CreateListFragment extends BaseNewFragment {
     }
 
     public void checkGuide() {
-  /*      if (BaseApplication.getInstance().HASCREATEGUIDE) {
+        if (UBTPGApplication.getInstance().HASCREATEGUIDE) {
             return;
         }
         try {
             if (((CreateActivity) getActivity()).getSelPosition() == 0 && mList.size() > 0) {
-                BaseApplication.getInstance().HASCREATEGUIDE = true;
-                SPUtils.getInstance().put(CREATEGUIDE, true);
+                UBTPGApplication.getInstance().HASCREATEGUIDE = true;
+                SPUtils.get().put(CREATEGUIDE, true);
                 showFirstGuide();
             }
         } catch (Exception e) {
-        }*/
+        }
     }
 }

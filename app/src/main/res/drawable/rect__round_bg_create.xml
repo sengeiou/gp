@@ -6,5 +6,5 @@
     <corners android:radius="@dimen/dp_4" />
     <stroke
         android:width="@dimen/ubt_1px"
-        android:color="@color/ubt_white" />
+        android:color="@color/ubt_tab_btn_txt_checked_color" />
 </shape>

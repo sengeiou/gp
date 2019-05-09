@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <solid android:color="@color/ubt_white" />
+    <solid android:color="@color/ubt_tab_btn_txt_checked_color" />
 
     <corners
         android:bottomLeftRadius="@dimen/dp_4"

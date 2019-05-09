@@ -82,10 +82,10 @@ public class CreateActivity extends BaseNewActivity {
 
             @Override
             public void onPageSelected(int position) {
-                viewList.get(selPosition).setTextColor(getResources().getColor(R.color.ubt_white));
+                viewList.get(selPosition).setTextColor(getResources().getColor(R.color.pic_239fed_color));
                 viewList.get(selPosition).setBackground(null);
                 viewList.get(position).setTextColor(getResources().getColor(R.color
-                        .pic_239fed_color));
+                        .ubt_white));
                 viewList.get(position).setBackgroundResource(intRecoure.get(position));
                 selPosition = position;
                 try {
@@ -124,6 +124,7 @@ public class CreateActivity extends BaseNewActivity {
             } catch (Exception e) {
             }
         }
+
     }
 
     private boolean isAdmin(){
@@ -159,9 +160,6 @@ public class CreateActivity extends BaseNewActivity {
                 break;
             case R.id.tv_introduc:
                 viewPager.setCurrentItem(2);
-//                Intent it1 = new Intent(CreateActivity.this, CreateIntroduceActivity.class);
-//                it1.putExtra("type", 1);
-//                startActivity(it1);
                 break;
         }
     }

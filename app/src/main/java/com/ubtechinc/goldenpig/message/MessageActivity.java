@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -21,10 +22,7 @@ import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.main.CommonWebActivity;
-import com.ubtechinc.goldenpig.main.SplashActivity;
-import com.ubtechinc.goldenpig.main.UbtWebHelper;
 import com.ubtechinc.goldenpig.pigmanager.popup.PopupWindowList;
-import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.view.RecyclerItemClickListener;
 import com.ubtechinc.goldenpig.view.RecyclerOnItemLongListener;
 import com.ubtechinc.goldenpig.view.StateView;
@@ -94,9 +92,17 @@ public class MessageActivity extends BaseNewActivity {
                 if (mList.get(position).status.equals("0")) {
                     report(position);
                 }
-                Intent it = new Intent(MessageActivity.this, CommonWebActivity.class);
-                it.putExtra(KEY_URL, mList.get(position).url);
-                startActivity(it);
+
+                if(!TextUtils.isEmpty(mList.get(position).url)){
+                    Intent it = new Intent(MessageActivity.this, CommonWebActivity.class);
+                    it.putExtra(KEY_URL, mList.get(position).url);
+                    startActivity(it);
+                }else{
+                    ToastUtils.showShortToast("详情页链接为空");
+                }
+
+
+
 
 
 
@@ -139,6 +145,10 @@ public class MessageActivity extends BaseNewActivity {
                         @Override
                         public void run() {
                             mList.clear();
+                            if(data == null){
+                                mStateView.showEmpty();
+                                return;
+                            }
 
                             mList.addAll(data);
                             adapter.notifyDataSetChanged();

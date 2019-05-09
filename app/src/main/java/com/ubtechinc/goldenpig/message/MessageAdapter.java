@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.view.NewCircleImageView;
 import com.ubtechinc.goldenpig.view.RecyclerOnItemLongListener;
@@ -77,6 +78,7 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     }
                 }
             });
+            UbtLogger.d("msgAdapter", "model.imgUrl:" + model.imgUrl);
             Glide.with(mContext).load(model.imgUrl).asBitmap().placeholder(R.drawable.ic_notice)
                     .error(R.drawable.ic_notice).diskCacheStrategy(DiskCacheStrategy.ALL).into
                     (holder.iv);
@@ -89,11 +91,11 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     return false;
                 }
             });
-            if (position == mList.size() - 1) {
-                holder.view_curline_last2.setVisibility(View.VISIBLE);
-            } else {
-                holder.view_curline_last2.setVisibility(View.GONE);
-            }
+//            if (position == mList.size() - 1) {
+//                holder.view_curline_last2.setVisibility(View.VISIBLE);
+//            } else {
+//                holder.view_curline_last2.setVisibility(View.GONE);
+//            }
         }
     }
 
@@ -114,12 +116,12 @@ public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             iv = (NewCircleImageView) itemView.findViewById(R.id.iv);
             tv_title = (TextView) itemView.findViewById(R.id.tv_title);
             view_curline = itemView.findViewById(R.id.view_curline);
-            view_curline_last = itemView.findViewById(R.id.view_curline_last);
+//            view_curline_last = itemView.findViewById(R.id.view_curline_last);
             iv_red_point = itemView.findViewById(R.id.iv_red_point);
             tv_date = itemView.findViewById(R.id.tv_date);
             rl_item = itemView.findViewById(R.id.rl_item);
             tv_content = itemView.findViewById(R.id.tv_content);
-            view_curline_last2 = itemView.findViewById(R.id.view_curline_last2);
+//            view_curline_last2 = itemView.findViewById(R.id.view_curline_last2);
         }
     }
 

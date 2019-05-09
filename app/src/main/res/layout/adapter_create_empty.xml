@@ -14,15 +14,15 @@
     <View
         android:layout_width="1dp"
         android:layout_height="0dp"
-        android:layout_weight="207" />
+        android:layout_weight="190" />
 
     <ImageView
         android:id="@+id/iv"
-        android:layout_width="@dimen/dp_67"
-        android:layout_height="@dimen/dp_67"
+        android:layout_width="@dimen/dp_139"
+        android:layout_height="@dimen/dp_134"
         android:layout_centerHorizontal="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_zanwuneirong" />
+        android:src="@drawable/img_no_message" />
 
 
     <TextView
@@ -34,8 +34,8 @@
         android:layout_marginTop="@dimen/dp_18"
         android:gravity="center"
         android:text="暂无内容"
-        android:textColor="@color/pic_remoind_main_color"
-        android:textSize="@dimen/sp_16" />
+        android:textColor="@color/background_gray3"
+        android:textSize="@dimen/sp_14" />
 
     <View
         android:layout_width="1dp"
