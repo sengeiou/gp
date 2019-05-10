@@ -35,7 +35,7 @@ public class TransferAdminHttpProxy extends BaseHttpProxy {
                 .build();
 
         final Request okrequest = new Request.Builder()
-                .url(BuildConfig.HOST + "/user-service-rest/v2/robot/common/transferAdmin")
+                .url(BuildConfig.HOME_HOST + "robot/common/transferAdmin")
                 .post(formBody)
                 .addHeader("authorization", token)
                 .addHeader("product", BuildConfig.product)

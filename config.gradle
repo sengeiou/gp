@@ -22,7 +22,7 @@ ext {
     //okhttp库版本
     OKHTTP_VERSION = '3.11.0'
 
-   app=[ serverEnviroment:"debug"]
+//   app=[ serverEnviroment:"debug"]
 
     signingConfig = [
             storeFile : "rk-debug.keystore",

@@ -38,7 +38,7 @@ public class InterlocutionModel extends BaseHttpProxy {
 //                .build();
 //
 //        final Request okrequest = new Request.Builder()
-//                .url(BuildConfig.HOST + "/user-service-rest/v2/robot/common/unbinding")
+//                .url(BuildConfig.HOME_HOST + "v2/robot/common/unbinding")
 //                .post(formBody)
 //                .addHeader("authorization", token)
 //                .addHeader("product",BuildConfig.product)

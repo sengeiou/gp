@@ -50,90 +50,38 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            buildConfigField 'String', 'SERVER_ENV', "\"FORMAL\""
-//            buildConfigField 'String', 'SERVER_ENV', "\"TEST\""
-//            buildConfigField 'String', 'SERVER_ENV', "\"EX\""
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             def props = getProps(rootProject.ext.app.serverEnviroment)
             if (props != null) {
-//                buildConfigField 'String', 'HOST', "\"http://120.25.57.42\""
-//                buildConfigField 'String', 'HOST', "\"https://internal.ubtrobot.com\""
-//                buildConfigField 'String', 'PUSH_HOST', "\"https://internal.ubtrobot.com\""
-//                buildConfigField 'String', 'IM_HOST', "\"http://210.75.21.106:9080\""
-//                buildConfigField 'String', 'IM_HOST', "\"https://internal.ubtrobot.com\""
+                buildConfigField 'String', 'HOME_HOST', props['user_host']
+                buildConfigField 'String', 'HOST', props['host']
+                buildConfigField 'String', 'PUSH_HOST', props['xinge_host']
+                buildConfigField 'String', 'IM_HOST', props['im_host']
 
-                buildConfigField 'String', 'HOST', "\"https://internal.ubtrobot.com\""
-                buildConfigField 'String', 'PUSH_HOST', "\"https://internal.ubtrobot.com\""
-                buildConfigField 'String', 'IM_HOST', "\"https://internal.ubtrobot.com\""
-                buildConfigField 'String', 'HOME_HOST', "\"https://internal.ubtrobot.com\""  //后台测试环境地址和之前不一致
-
-                /****预发布****/
-
-//                buildConfigField 'String', 'HOST', "\"https://prerelease.ubtrobot.com\""
-//                buildConfigField 'String', 'PUSH_HOST', "\"https://prerelease.ubtrobot.com\""
-//                buildConfigField 'String', 'IM_HOST', "\"https://prerelease.ubtrobot.com\""
-//                buildConfigField 'String', 'HOME_HOST', "\"https://prerelease.ubtrobot.com\""
-
-
-                buildConfigField 'String', 'USER_HOST', props['user_host']
-                buildConfigField 'String', 'XINGE_HOST', props['xinge_host']
-                buildConfigField 'String', 'UPDATE', props['update']
                 //product   60101 区分产品
                 buildConfigField "String", "product", "\"60101\""
                 buildConfigField "String", "APP_ID","\"100080014\""
                 buildConfigField "String", "APP_KEY","\"85650f0ffe314beda3b85a9ab626662d\""
-                buildConfigField 'String', 'EQUIPMENTID_HOST', props['change_equipmentid_host']
                 buildConfigField 'String', 'IM_CHANNEL', props['im_channel']
-                printf('host=%s,im_host=%s ,user_host=%s,xinge_host=%s，im_channel=%s\n', props['host'], props['im_host'], props['user_host'], props['xinge_host'],props['im_channel'])
-                buildConfigField 'String', 'CREATION_HOST', props['creation_host']
-                printf('host=%s,im_host=%s ,user_host=%s,xinge_host=%s，im_channel=%s\n', props['host'], props['im_host'], props['user_host'], props['xinge_host'],props['im_channel'],props['creation_host'])
+//                printf('host=%s,im_host=%s ,user_host=%s,xinge_host=%s，im_channel=%s\n', props['host'], props['im_host'], props['user_host'], props['xinge_host'],props['im_channel'])
+//                printf('host=%s,im_host=%s ,user_host=%s,xinge_host=%s，im_channel=%s\n', props['host'], props['im_host'], props['user_host'], props['xinge_host'],props['im_channel'],props['creation_host'])
             }
         }
         debug {
-//            buildConfigField 'String', 'SERVER_ENV', "\"FORMAL\""
-//            buildConfigField 'String', 'SERVER_ENV', "\"TEST\""
-            buildConfigField 'String', 'SERVER_ENV', "\"EX\""
             def props = getProps(rootProject.ext.app.serverEnviroment)
             if (props != null) {
-              /*  buildConfigField 'String', 'HOST', "\"http://10.10.20.71:8010\""
-                buildConfigField 'String', 'PUSH_HOST', "\"https://test79.ubtrobot.com\""
-                buildConfigField 'String', 'IM_HOST', "\"http://210.75.21.106:9080\""
-                buildConfigField 'String', 'HOME_HOST', "\"http://10.10.1.14:8090\"" //后台测试环境地址和之前不一致*/
+                buildConfigField 'String', 'HOME_HOST', props['user_host']
+                buildConfigField 'String', 'HOST', props['host']
+                buildConfigField 'String', 'PUSH_HOST', props['xinge_host']
+                buildConfigField 'String', 'IM_HOST', props['im_host']
 
-                //预发布
-                buildConfigField 'String', 'HOST', "\" https://prerelease.ubtrobot.com\""
-                buildConfigField 'String', 'PUSH_HOST', "\"https://prerelease.ubtrobot.com\""
-                buildConfigField 'String', 'IM_HOST', "\" https://prerelease.ubtrobot.com\""
-                buildConfigField 'String', 'HOME_HOST', "\"https://prerelease.ubtrobot.com\""
-
-
-                //正式环境
-            /*    buildConfigField 'String', 'HOST', "\"https://internal.ubtrobot.com\""
-                buildConfigField 'String', 'PUSH_HOST', "\"https://internal.ubtrobot.com\""
-                buildConfigField 'String', 'IM_HOST', "\"https://internal.ubtrobot.com\""
-                buildConfigField 'String', 'HOME_HOST', "\"https://internal.ubtrobot.com\""*/
-
-
-//                buildConfigField 'String', 'HOST', "\"https://internal.ubtrobot.com\""
-//                buildConfigField 'String', 'PUSH_HOST', "\"https://internal.ubtrobot.com\""
-//                buildConfigField 'String', 'IM_HOST', "\"https://internal.ubtrobot.com\""
-//
-//                buildConfigField 'String', 'HOST', "\"https://testwx.ubtrobot.com\""
-//                buildConfigField 'String', 'PUSH_HOST', "\"https://internal.ubtrobot.com\""
-//                buildConfigField 'String', 'IM_HOST', "\"https://internal.ubtrobot.com\""
-
-                buildConfigField 'String', 'USER_HOST', props['user_host']
-                buildConfigField 'String', 'XINGE_HOST', props['xinge_host']
-                buildConfigField 'String', 'UPDATE', props['update']
                 //product   60101 区分产品
                 buildConfigField "String", "product", "\"60101\""
                 buildConfigField "String", "APP_ID","\"100080014\""
                 buildConfigField "String", "APP_KEY","\"85650f0ffe314beda3b85a9ab626662d\""
-                buildConfigField 'String', 'EQUIPMENTID_HOST', props['change_equipmentid_host']
                 buildConfigField 'String', 'IM_CHANNEL', props['im_channel']
-                printf('host=%s,im_host=%s ,user_host=%s,xinge_host=%s，im_channel=%s, update=%s\n', props['host'], props['im_host'], props['user_host'], props['xinge_host'],props['im_channel'],props['update'])
-                buildConfigField 'String', 'CREATION_HOST', props['creation_host']
-                printf('host=%s,im_host=%s ,user_host=%s,xinge_host=%s，im_channel=%s\n', props['host'], props['im_host'], props['user_host'], props['xinge_host'],props['im_channel'],props['creation_host'])
+//                printf('host=%s,im_host=%s ,user_host=%s,xinge_host=%s，im_channel=%s, update=%s\n', props['host'], props['im_host'], props['user_host'], props['xinge_host'],props['im_channel'],props['update'])
+//                printf('host=%s,im_host=%s ,user_host=%s,xinge_host=%s，im_channel=%s\n', props['host'], props['im_host'], props['user_host'], props['xinge_host'],props['im_channel'],props['creation_host'])
             }
         }
     }

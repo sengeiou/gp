@@ -1,12 +1,7 @@
 package com.ubtechinc.goldenpig.creative;
 
-import android.content.Context;
-
-import com.google.gson.JsonObject;
 import com.ubtech.utilcode.utils.JsonUtils;
 import com.ubtech.utilcode.utils.LogUtils;
-import com.ubtechinc.goldenpig.message.MessageHttpProxy;
-import com.ubtechinc.goldenpig.message.MessageModel;
 import com.ubtechinc.goldenpig.model.CreateModel;
 import com.ubtechinc.goldenpig.net.BaseHttpProxy;
 import com.ubtechinc.nets.BuildConfig;
@@ -33,10 +28,7 @@ public class CreativeSpaceHttpProxy extends BaseHttpProxy {
         OkHttpClient okHttpClient = getHttpClient();
 
 
-        String  url = BuildConfig.HOST + "/v1/cloud-ppi/pig/statement/list?page="+page;
-        if(!BuildConfig.SERVER_ENV.equals("FORMAL")){
-            url = BuildConfig.HOST + "/cloud-ppi/pig/statement/list?page"+page;
-        }
+        String  url = BuildConfig.HOST + "pig/statement/list?page="+page;
 
         final Request okrequest = new Request.Builder()
                 .url(url)
@@ -103,10 +95,7 @@ public class CreativeSpaceHttpProxy extends BaseHttpProxy {
 
         RequestBody body = RequestBody.create(JSON, parmJson.toString());
 
-        String  url = BuildConfig.HOST + "/v1/cloud-ppi/pig/statement/add";
-        if(!BuildConfig.SERVER_ENV.equals("FORMAL")){
-            url = BuildConfig.HOST + "/cloud-ppi/pig/statement/add";
-        }
+        String  url = BuildConfig.HOST + "pig/statement/add";
 
         final Request okrequest = new Request.Builder()
                 .url(url)

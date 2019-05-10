@@ -22,7 +22,7 @@ public class AddMemberHttpProxy extends BaseHttpProxy {
                 .add("sign", sign)
                 .build();
         final Request okrequest = new Request.Builder()
-                .url(BuildConfig.HOST+"/user-service-rest/v2/goldenPig/addRobotMember ")
+                .url(BuildConfig.HOME_HOST+"goldenPig/addRobotMember ")
                 .post(formBody)
                 .addHeader("authorization",token)
                 .addHeader("X-UBT-AppId",appId)

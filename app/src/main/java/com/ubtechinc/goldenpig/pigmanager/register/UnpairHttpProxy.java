@@ -21,7 +21,7 @@ public class UnpairHttpProxy extends BaseHttpProxy {
                 .build();
 
         final Request okrequest = new Request.Builder()
-                .url(BuildConfig.HOST + "/user-service-rest/v2/goldenPig/unpairRobot")
+                .url(BuildConfig.HOME_HOST + "goldenPig/unpairRobot")
                 .post(formBody)
                 .addHeader("authorization", token)
                 .addHeader("X-UBT-AppId", appId)

@@ -33,16 +33,8 @@ import okhttp3.Interceptor;
 
 public final class HttpManager {
     //这个值在HeaderInterceptor内被替换掉
-    public static String BASE_URL = BuildConfig.HOST;
+    public static String BASE_URL = BuildConfig.HOME_HOST;
     public static final String IM_TAG = BASE_URL + "/im";
-    public static final String SER_TAG = BASE_URL + "alpha2-web";
-    public static final String USER_TAG = BASE_URL + "user-service-rest";
-    public static final String XINGE_TAG = BASE_URL + "xinge-push-rest";
-    public static final String EQUIPMENTID_TAG = BASE_URL + "equipment";
-    public static final String UPDATE  = BASE_URL + "v1/upgrade-rest";
-    public static final String CREATION_TAG = BASE_URL + "creation";
-
-    public static final String BUNDING_PIG=BASE_URL+"user-service-rest/v2";
     private static final String CACHE_DIR = "cache/http";
 
     private static HttpManager instance;

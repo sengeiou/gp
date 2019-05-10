@@ -18,7 +18,7 @@ import java.util.List;
 @Keep
 public class CheckBindRobotModule {
 
-    @Url("/user-service-rest/v2/robot/common/queryMemberList")
+    @Url("robot/common/queryMemberList")
     @Keep
     public static class Request {
         private String serialNumber;

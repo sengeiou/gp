@@ -15,7 +15,7 @@ import com.ubtechinc.nets.http.Url;
 @Keep
 public class RegisterRobotModule {
 
-    @Url("/user-service-rest/v2/robot/common/binding")
+    @Url("robot/common/binding")
     @Keep
     public class Request {
 

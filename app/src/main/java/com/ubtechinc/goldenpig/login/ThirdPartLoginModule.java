@@ -11,7 +11,7 @@ import com.ubtechinc.nets.http.Url;
 public class ThirdPartLoginModule {
 
 
-    @Url("/user-service-rest/v2/user/login/third")
+    @Url("user/login/third")
     @Keep
     public class LoginRequest {
 

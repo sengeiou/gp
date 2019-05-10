@@ -2,7 +2,6 @@ package com.ubtechinc.nets.http;
 
 
 import com.ubtechinc.nets.BuildConfig;
-import com.ubtechinc.nets.HttpManager;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -26,11 +25,7 @@ import okhttp3.Response;
 public class HeaderInterceptor implements Interceptor {
     private final Map<String, String> headers;
 
-    public static String USER_URL_HOST = BuildConfig.USER_HOST;
-    public static String XINGE_URL_HOST = BuildConfig.XINGE_HOST;
     public static String IM_URL_HOST = BuildConfig.IM_HOST;
-    public static String URL_HOST = BuildConfig.HOST;
-    public static String UPDATE = BuildConfig.UPDATE;
 
     public HeaderInterceptor(Map<String, String> headers) {
         this.headers = headers;
@@ -40,9 +35,9 @@ public class HeaderInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         final Request request = chain.request();
         String newUrl = request.url().toString();
-        if (newUrl.startsWith(HttpManager.IM_TAG)) {
-            newUrl = newUrl.replace(HttpManager.BASE_URL, IM_URL_HOST);
-        }
+//        if (newUrl.startsWith(HttpManager.IM_TAG)) {
+//            newUrl = newUrl.replace(HttpManager.BASE_URL, IM_URL_HOST);
+//        }
         /*if (newUrl.startsWith(HttpManager.IM_TAG)) {
             newUrl = newUrl.replace(HttpManager.BASE_URL, IM_URL_HOST);
         } else if (newUrl.startsWith(HttpManager.SER_TAG)) {

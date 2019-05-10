@@ -27,7 +27,7 @@ public class GetPairPigQRHttpProxy extends BaseHttpProxy {
         OkHttpClient okHttpClient = getHttpClient();
 
         final Request okrequest = new Request.Builder()
-                .url(BuildConfig.HOST + "/user-service-rest/v2/goldenPig/getPairInfo")
+                .url(BuildConfig.HOME_HOST + "goldenPig/getPairInfo")
                 .get()
                 .addHeader("authorization", token)
                 .addHeader("X-UBT-AppId", appId)

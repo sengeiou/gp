@@ -25,7 +25,7 @@ public class UnbindPigProxy extends BaseHttpProxy {
                 .build();
 
         final Request okrequest = new Request.Builder()
-                .url(BuildConfig.HOST + "/user-service-rest/v2/robot/common/unbinding")
+                .url(BuildConfig.HOME_HOST + "robot/common/unbinding")
                 .post(formBody)
                 .addHeader("authorization", token)
                 .addHeader("X-UBT-AppId", appid)

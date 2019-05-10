@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Keep
 public class GetRobotListModule {
-    @Url("/user-service-rest/v2/robot/common/queryRobotList")
+    @Url("robot/common/queryRobotList")
     @Keep
     public static class Request {
         private String serialNumber;

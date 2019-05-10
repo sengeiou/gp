@@ -33,8 +33,6 @@ import okhttp3.Response;
  */
 public class HomeDataHttpProxy extends BaseHttpProxy {
 
-    private static String URL = "http://10.10.1.14:8090/cloud-ppi/pig/index";
-
     public void getData(final Context context, String category, String statement, final GetFunctionCallback callback) {
 
         OkHttpClient okHttpClient = getHttpClient();
@@ -46,10 +44,7 @@ public class HomeDataHttpProxy extends BaseHttpProxy {
         map.put("clientType", 1);
         String content = JsonUtils.map2Json(map);
         RequestBody body = RequestBody.create(JSON, content);
-        String url = BuildConfig.HOST + "/v1/cloud-ppi/pig/index";
-        if(!BuildConfig.SERVER_ENV.equals("FORMAL")){
-            url = BuildConfig.HOST + "/cloud-ppi/pig/index";
-        }
+        String url = BuildConfig.HOST + "pig/index";
         final Request okrequest = new Request.Builder()
                 .url(url)
                 .post(body)
