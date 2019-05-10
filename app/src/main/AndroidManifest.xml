@@ -226,8 +226,6 @@
         <activity android:name=".personal.RobotOfflineActivity"
             android:screenOrientation="portrait"/>
 
-        <service android:name=".app.StartUpService" />
-
         <service android:name=".app.StartUpJobIntentService"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
 

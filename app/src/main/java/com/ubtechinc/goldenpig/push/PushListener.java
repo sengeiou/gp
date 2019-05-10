@@ -13,6 +13,14 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.push.IUbtPushListener;
 import com.ubtechinc.push.UbtPushModel;
 
+/**
+ *@auther        :zzj
+ *@email         :zhijun.zhou@ubtrobot.com
+ *@Description:  :推送监听
+ *@time          :2019/5/10 17:38
+ *@change        :
+ *@changetime    :2019/5/10 17:38
+*/
 public class PushListener implements IUbtPushListener {
 
     @Override
@@ -25,11 +33,10 @@ public class PushListener implements IUbtPushListener {
             String userId = AuthLive.getInstance().getUserId();
             if (!TextUtils.isEmpty(userId)) {
                 int appId = pushAppInfo.getAppId();
-                String authorization = pushAppInfo.getToken();
                 AuthLive.getInstance().getUserId();
                 String appVersion = ContextUtils.getVerName(context);
                 PushHttpProxy pushHttpProxy = new PushHttpProxy();
-                pushHttpProxy.bindToken(appId, pushToken, userId, appVersion, BuildConfig.product, authorization, null);
+                pushHttpProxy.bindToken(appId, pushToken, userId, appVersion, BuildConfig.product, null);
             }
         } else {
             LogUtils.d(UBTPGApplication.TAG, "xg push token is null");

@@ -22,51 +22,12 @@ import okhttp3.Response;
 
 public class PushHttpProxy extends BaseHttpProxy {
 
-    public void getToken(String name, String password, final GetTokenCallback callBack) {
+    public void getAppInfo(String appName, final GetAppInfoCallback callBack) {
 
         OkHttpClient okHttpClient = getHttpClient();
         final Request okrequest = new Request.Builder()
-                .url(BuildConfig.PUSH_HOST + "/xinge-push-rest/openapi/token?" + "name=" + name + "&password=" + password)
+                .url(BuildConfig.PUSH_HOST + "/appInfo?" + "appName=" + appName)
                 .get()
-                .build();
-        Call call = okHttpClient.newCall(okrequest);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                if (callBack != null) {
-                    callBack.onError(e.getMessage());
-                }
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (callBack != null) {
-                    try {
-                        String result = response.body().source().readUtf8();
-                        LogUtils.d("PushHttpProxy", result);
-                        if (response.isSuccessful()) {
-                            callBack.onSuccess(new JSONObject(result).optString("token"));
-                        } else {
-                            JSONObject jsonObject = new JSONObject(result);
-                            String message = jsonObject.optString("message");
-                            callBack.onError(message);
-                        }
-                    } catch (Exception e) {
-                        callBack.onError(e.getMessage());
-                    }
-                }
-
-            }
-        });
-    }
-
-    public void getAppInfo(String appName, String authorization, final GetAppInfoCallback callBack) {
-
-        OkHttpClient okHttpClient = getHttpClient();
-        final Request okrequest = new Request.Builder()
-                .url(BuildConfig.PUSH_HOST + "/xinge-push-rest/push/appInfo?" + "appName=" + appName)
-                .get()
-                .header("authorization", authorization)
                 .build();
         Call call = okHttpClient.newCall(okrequest);
         call.enqueue(new Callback() {
@@ -88,7 +49,6 @@ public class PushHttpProxy extends BaseHttpProxy {
                             if (list != null && !list.isEmpty()) {
                                 for (PushAppInfo pushAppInfo : list) {
                                     if ("a".equalsIgnoreCase(pushAppInfo.getDevice())) {
-                                        pushAppInfo.setToken(authorization);
                                         callBack.onSuccess(pushAppInfo);
                                         break;
                                     }
@@ -109,7 +69,7 @@ public class PushHttpProxy extends BaseHttpProxy {
     }
 
     public void bindToken(int appId, String pushToken, String userId, String appVersion, String productNo,
-                          String authorization, final GetAppInfoCallback callBack) {
+                          final GetAppInfoCallback callBack) {
 
         OkHttpClient okHttpClient = getHttpClient();
 
@@ -122,9 +82,8 @@ public class PushHttpProxy extends BaseHttpProxy {
         String content = JsonUtils.map2Json(map);
         RequestBody body = RequestBody.create(JSON, content);
         final Request okrequest = new Request.Builder()
-                .url(BuildConfig.PUSH_HOST + "/xinge-push-rest/push/userToken")
+                .url(BuildConfig.PUSH_HOST + "userToken")
                 .post(body)
-                .header("authorization", authorization)
                 .build();
         Call call = okHttpClient.newCall(okrequest);
         call.enqueue(new Callback() {
@@ -173,9 +132,8 @@ public class PushHttpProxy extends BaseHttpProxy {
         map.put("openURL", "");
         RequestBody body = RequestBody.create(JSON, JsonUtils.map2Json(map));
         final Request okrequest = new Request.Builder()
-                .url(BuildConfig.PUSH_HOST + "/xinge-push-rest/push/token")
+                .url(BuildConfig.PUSH_HOST + "token")
                 .post(body)
-                .header("authorization", pushAppInfo.getToken())
                 .build();
         Call call = okHttpClient.newCall(okrequest);
         call.enqueue(new Callback() {
@@ -189,7 +147,6 @@ public class PushHttpProxy extends BaseHttpProxy {
                     String result = response.body().source().readUtf8();
                     LogUtils.d("PushHttpProxy", "pushToken|result:" + result);
                     if (response.isSuccessful()) {
-                        JSONObject jsonObject = new JSONObject(result);
                         LogUtils.e("PushHttpProxy", "pushToken|success:" + result);
                     } else {
                         LogUtils.d("PushHttpProxy", "pushToken|fail" + result);

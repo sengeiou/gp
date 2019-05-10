@@ -233,11 +233,6 @@ public class UBTPGApplication extends Application implements Observer {
 
     private void initService() {
         StartUpJobIntentService.enqueueWork(this, new Intent());
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            startForegroundService(new Intent(this, StartUpService.class));
-//        } else {
-//            startService(new Intent(this, StartUpService.class));
-//        }
     }
 
     /**
@@ -451,10 +446,9 @@ public class UBTPGApplication extends Application implements Observer {
                 String pushToken = pushAppInfo.getPushToken();
                 if (!TextUtils.isEmpty(userId) && !TextUtils.isEmpty(pushToken)) {
                     int appId = pushAppInfo.getAppId();
-                    String authorization = pushAppInfo.getToken();
                     String appVersion = ContextUtils.getVerName(this);
                     PushHttpProxy pushHttpProxy = new PushHttpProxy();
-                    pushHttpProxy.bindToken(appId, pushToken, userId, appVersion, BuildConfig.product, authorization,
+                    pushHttpProxy.bindToken(appId, pushToken, userId, appVersion, BuildConfig.product,
                             null);
                 }
                 updatePigPair(true);
@@ -472,7 +466,7 @@ public class UBTPGApplication extends Application implements Observer {
             case DO_UPDATE_PAIR_PIG:
                 updatePigPair(true);
                 break;
-                default:
+            default:
         }
     }
 
@@ -813,7 +807,7 @@ public class UBTPGApplication extends Application implements Observer {
                 //配对关系变化
                 updatePigPair(false);
                 break;
-                default:
+            default:
         }
     }
 

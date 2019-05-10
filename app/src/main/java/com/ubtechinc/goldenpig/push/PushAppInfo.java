@@ -24,8 +24,6 @@ public class PushAppInfo {
 
     private String remark;
 
-    private String token;
-
     private String pushToken;
 
     private boolean bindStatus;
@@ -116,14 +114,6 @@ public class PushAppInfo {
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 
     public String getPushToken() {
