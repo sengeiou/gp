@@ -439,6 +439,9 @@ public class UBTPGApplication extends Application implements Observer {
                 showForceOfflineDialog("账号授权已过期，请重新登录");
                 break;
             case TVS_LOGIN_SUCCESS:
+                if (!BuildConfig.DEBUG) {
+                    CrashReport.putUserData(getApplicationContext(), "buglyInfo", TVSWrapBridge.getTVSAccountInfo().toString());
+                }
                 String userId = AuthLive.getInstance().getUserId();
                 AnalyticsKit.setUserId(userId);
                 AnalyticsKit.setDeviceInfo(userId, AppUtil.getMetaDataFromApp(this, AppUtil.KEY_CHANNEL_META));
@@ -469,7 +472,6 @@ public class UBTPGApplication extends Application implements Observer {
             default:
         }
     }
-
 
     private void showIKnowDialog(String content) {
         if (mTopActivity == null || TextUtils.isEmpty(content)) {
