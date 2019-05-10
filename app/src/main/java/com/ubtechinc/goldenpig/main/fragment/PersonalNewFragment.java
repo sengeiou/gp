@@ -50,11 +50,7 @@ import com.ubtechinc.goldenpig.personal.NoSimActivity;
 import com.ubtechinc.goldenpig.personal.PigManageDetailActivity;
 import com.ubtechinc.goldenpig.personal.RobotOfflineActivity;
 import com.ubtechinc.goldenpig.personal.SwitchWifiActivity;
-import com.ubtechinc.goldenpig.personal.alarm.AlarmListActivity;
-import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionActivity;
-import com.ubtechinc.goldenpig.personal.remind.RemindActivity;
 import com.ubtechinc.goldenpig.pigmanager.BleConfigReadyActivity;
-import com.ubtechinc.goldenpig.pigmanager.SetNetWorkEnterActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.hotspot.SetHotSpotActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
@@ -71,9 +67,9 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.*;
-import static com.ubtechinc.goldenpig.app.UBTPGApplication.TAG;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NEED_SHOW_POINT;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.NETWORK_STATE_CHANGED;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.READ_SYSTEM_MSG;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_ONLINE_STATE;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_VERSION_STATE;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
@@ -313,34 +309,11 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
             case R.id.rl_login_info:
                 ActivityRoute.toAnotherActivity(getActivity(), UserInfoActivity.class, false);
                 break;
-            case R.id.ubt_btn_person_set_wifi:
-                HashMap<String, Boolean> params = new HashMap<>();
-                params.put("back", false);
-                params.put("skip", true);
-                ActivityRoute.toAnotherActivity(getActivity(), SetNetWorkEnterActivity.class,
-                        params,
-                        false);
-                break;
-            case R.id.ubt_btn_person_hotspot:
-                if (AuthLive.getInstance().getCurrentPig() != null) {
-                    ActivityRoute.toAnotherActivity(getActivity(), SetHotSpotActivity.class,
-                            false);
-                }
-                break;
             case R.id.ubt_btn_person_feedback:
                 ActivityRoute.toAnotherActivity(getActivity(), CommonWebActivity.class, UbtWebHelper.getFeedBackWebviewData(getActivity()), false);
                 break;
             case R.id.ubt_btn_person_about:
                 ActivityRoute.toAnotherActivity(getActivity(), UbtAboutActivtiy.class, false);
-                break;
-            case R.id.ubt_btn_person_clock:
-                ActivityRoute.toAnotherActivity(getActivity(), AlarmListActivity.class, false);
-                break;
-            case R.id.ubt_btn_person_answer:
-                ActivityRoute.toAnotherActivity(getActivity(), InterlocutionActivity.class, false);
-                break;
-            case R.id.ubt_btn_person_remind:
-                ActivityRoute.toAnotherActivity(getActivity(), RemindActivity.class, false);
                 break;
             case R.id.ubt_btn_person_qq:
                 ActivityRoute.toAnotherActivity(getActivity(), CommonWebActivity.class, UbtWebHelper.getQQMusicWebviewData(getActivity()), false);

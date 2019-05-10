@@ -20,7 +20,6 @@
         app:defaultIcon="@drawable/ic_close" />
 
     <View
-        android:id="@+id/view_clear_line"
         android:layout_width="@dimen/dp_1"
         android:layout_height="@dimen/dp_19"
         android:layout_gravity="center_vertical"

@@ -299,6 +299,7 @@ public class BungdingManager {
         TVSWrapBridge.tvsTokenVerify(new TVSWrapBridge.TVSWrapCallback() {
             @Override
             public void onError(int errCode) {
+                Log.i(TAG, " getClientId|tvsTokenVerify|errCode : " + errCode);
                 UbtToastUtils.showCustomToast(mContext, "刷票失败");
                 if (mBanddingListener != null) {
                     mBanddingListener.onFaild(Constants.GET_CLIENT_ID_ERROR_CODE, "");

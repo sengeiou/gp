@@ -44,7 +44,6 @@
             android:src="@drawable/ic_sign_in" />
 
         <View
-            android:id="@+id/top_curline_user"
             android:layout_width="match_parent"
             android:layout_height="@dimen/ubt_1px"
             android:layout_alignParentBottom="true"
@@ -89,7 +88,6 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/ubt_layout_useraccount"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_64"
         android:layout_below="@id/ubt_layout_username"

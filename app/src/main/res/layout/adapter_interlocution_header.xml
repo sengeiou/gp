@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/swipe_menu"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_centerInParent="true"
@@ -129,7 +128,6 @@
             android:src="@drawable/ic_xiaozhu" />
 
         <TextView
-            android:id="@+id/tv_answer2"
             android:layout_width="match_parent"
             android:layout_height="@dimen/dp_47"
             android:layout_below="@+id/view_curline2"

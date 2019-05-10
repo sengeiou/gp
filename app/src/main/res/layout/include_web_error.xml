@@ -18,7 +18,6 @@
 
 
     <TextView
-        android:id="@+id/tv_web_fail_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/reload_error"

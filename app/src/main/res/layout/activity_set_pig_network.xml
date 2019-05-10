@@ -19,7 +19,6 @@
             android:src="@drawable/img_wifi" />
 
         <com.ubtechinc.goldenpig.comm.view.UbtWifiListEditText
-            android:id="@+id/ubt_edt_wifi_name"
             style="@style/UBTSetWifiEditTheme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

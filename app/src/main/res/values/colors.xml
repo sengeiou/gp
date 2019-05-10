@@ -13,7 +13,6 @@
     <!--透明-->
     <color name="ubt_transparent">#0000</color>
     <color name="ubt_tips_txt_color">#454B59</color>
-    <color name="ubt_tips_txt_color_cc">#CC454B59</color>
     <color name="ubt_mian_tab_decore_color">#1A000000</color>
     <color name="ubt_dilog_decore_color">#CDCED2</color>
     <color name="ubt_dialog_btn_txt_color">#FE4C4C</color>
@@ -21,15 +20,10 @@
     <color name="ubt_voicerecord_cancel">#B13535</color>
 
     <!--自定义提示背景色-->
-    <color name="ubt_notify_tv_bg_color">#55FE4C4C </color>
     <color name="ubt_global_bg_color">#FFF5F8FB</color>
     <!--等待弹框背景色-->
-    <color name="ubt_loading_dialog_bg">#FFE2E2E2</color>
-    <color name="ubt_layout_bg_color">#365779</color>
     <color name="ubt_version_color">#B4C0C7</color>
     <!--卡片阴影颜色-->
-    <color name="ubt_card_bg_color">#C6DEF0</color>
-    <color name="empty_ic_bg">#F3C1A9</color>
     <color name="ubt_toast_bg">#B3010101</color>
     <!--voice -->
     <color name="background_gray1">#EBEBEB</color>
@@ -39,16 +33,10 @@
     <color name="text_gray1">#777777</color>
     <color name="text_gray2">#767676</color>
     <color name="text_blue1">#1173CB</color>
-    <color name="panel_black">#25272A</color>
-    <color name="btn_red">#D63F41</color>
-    <color name="btn_red_hover">#E8484B</color>
-    <color name="btn_blue">#0F73CB</color>
-    <color name="btn_blue_hover">#1E86E4</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
 
     <!-- common rule -->
-    <color name="ubt_color_c1">#FFEAF2F6</color>
 
     <!-- 2018-11-30-->
     <color name="ubt_main_item_tab_color">#FF454B59</color>
@@ -60,7 +48,6 @@
 
     <color name="cardview_line">#1ff2f2f2</color>
     <color name="alarm_press_item">#fbfbfb</color>
-    <color name="item_un_select">#f1f1f1</color>
 
     <color name="txt_child_close">#FF474D5A</color>
 
@@ -75,8 +62,6 @@
     <!--message-->
     <color name="base_color_prey">#E2E2E2</color>
     <color name="pic_ff69gray_color">#B4C0C7</color>
-
-    <color name="half_white_color">#7FFFFFFF</color>
 
 
 </resources>

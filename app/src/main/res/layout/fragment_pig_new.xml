@@ -6,7 +6,6 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/textView"
         style="@style/UBTTabTitleTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -37,7 +36,6 @@
                 app:cardCornerRadius="@dimen/ubt_main_item_corner_radius">
 
                 <RelativeLayout
-                    android:id="@+id/ll_voicechat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/img_bg_binding"

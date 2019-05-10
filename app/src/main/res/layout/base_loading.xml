@@ -21,7 +21,6 @@
             android:indeterminateOnly="true" />-->
 
         <pl.droidsonroids.gif.GifImageView
-            android:id="@+id/iv_loading"
             android:layout_width="@dimen/dp_84"
             android:layout_height="@dimen/dp_88"
             android:src="@drawable/pig_load" />

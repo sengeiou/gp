@@ -139,7 +139,6 @@
 
 
         <ImageView
-            android:id="@+id/iv_msg"
             android:layout_width="@dimen/dp_204"
             android:layout_height="@dimen/dp_25"
             android:layout_below="@+id/iv_hand"
@@ -150,7 +149,6 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/ll_know"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/ll_msg"

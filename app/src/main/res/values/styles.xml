@@ -40,27 +40,7 @@
         <item name="android:background">@drawable/shape_ubt_btn_purple_gb</item>
     </style>
     <!--主页Tab RadioButton 样式-->
-    <style name="UBTTabButtonTheme" parent="Widget.AppCompat.CompoundButton.RadioButton">
-        <item name="android:layout_width">@dimen/ubt_0dp</item>
-        <item name="android:layout_height">@dimen/ubt_tab_btn_height</item>
-        <item name="android:textSize">@dimen/ubt_tab_btn_txt_size</item>
-        <item name="android:gravity">center_horizontal|bottom</item>
-        <item name="android:layout_weight">1.0</item>
-        <item name="android:background">@null</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:button">@null</item>
-        <item name="android:textColor">@drawable/selector_ubt_tab_btn_txt</item>
-        <item name="android:paddingTop">@dimen/ubt_tab_btn_padding_top</item>
-    </style>
     <!--加载等待对话框-->
-    <style name="UBTLoaddialogTheme" parent="android:style/Theme.Dialog">
-        <item name="android:windowFrame">@null</item><!--边框-->
-        <item name="android:windowIsFloating">true</item><!--是否浮现在activity之上-->
-        <item name="android:windowIsTranslucent">true</item><!--半透明-->
-        <item name="android:windowNoTitle">true</item><!--无标题-->
-        <item name="android:windowBackground">@color/ubt_transparent</item><!--背景透明-->
-        <item name="android:backgroundDimEnabled">false</item><!--模糊-->
-    </style>
     <!--页面居中提示文本样式-->
     <style name="UBTTipsTxtTheme">
         <item name="android:textSize">@dimen/ubt_btn_txt_size</item>
@@ -146,19 +126,6 @@
     </style>
 
     <!--主页item tab-->
-    <style name="UBTMainItemTabTxtTheme" parent="UBTMainItemTxtTheme">
-
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/ubt_main_item_tab_color</item>
-        <item name="android:layout_marginTop">@dimen/dp_10</item>
-        <item name="android:layout_width">match_parent</item>
-    </style>
-
-    <style name="UBTMainItemTabImageViewThemeTheme">
-        <item name="android:layout_width">@dimen/dp_55</item>
-        <item name="android:layout_height">@dimen/dp_55</item>
-        <item name="android:scaleType">fitXY</item>
-    </style>
 
     <!--me页按钮样式-->
     <style name="UBTMeBtnTheme">
@@ -171,17 +138,6 @@
         <item name="android:paddingStart">@dimen/dp_26</item>
         <item name="android:paddingEnd">@dimen/dp_26</item>
         <item name="android:textSize">@dimen/sp_15</item>
-        <item name="android:textColor">@color/ubt_tips_txt_color</item>
-    </style>
-
-    <style name="UBTUserInfoItemThem" parent="Widget.AppCompat.Button.Borderless">
-        <item name="android:background">@drawable/selector_ubt_me_item_bg</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">@dimen/ubt_me_userinfo_height</item>
-        <item name="android:layout_marginEnd">@dimen/ubt_16dp</item>
-        <item name="android:layout_marginStart">@dimen/ubt_16dp</item>
-        <item name="android:layout_marginTop">5dp</item>
-        <item name="android:textSize">16sp</item>
         <item name="android:textColor">@color/ubt_tips_txt_color</item>
     </style>
 
@@ -206,12 +162,6 @@
     </style>
 
     <!-- 标题1样式 -->
-    <style name="txt_titleStyle1">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">20sp</item>
-        <item name="android:textColor">@color/white</item>
-    </style>
 
     <style name="pop_view">
         <item name="android:windowEnterAnimation">@anim/pop_view_show</item>

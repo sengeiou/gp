@@ -70,7 +70,6 @@
         android:text="tvs数据"/>
 
     <TextView
-        android:id="@+id/tv_tvs_env"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="left"
@@ -78,7 +77,6 @@
         android:text="tvs环境："/>
 
     <RadioGroup
-        android:id="@+id/envRadioGroup"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

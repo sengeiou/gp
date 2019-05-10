@@ -6,7 +6,6 @@
     android:background="@color/ubt_main_bg_color">
 
     <ImageView
-        android:id="@+id/iv_xiaozhu_rd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_xiaozhuredian"

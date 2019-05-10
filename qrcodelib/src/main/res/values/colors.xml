@@ -4,6 +4,4 @@
     <color name="result_view">#b0000000</color>
     <color name="viewfinder_mask">#454B59</color>
     <color name="possible_result_points">#c0ffff00</color>
-    <color name="scan_corn1_color">#0081FF</color>
-    <color name="scan_corn2_color">#48F1FF</color>
 </resources>

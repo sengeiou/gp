@@ -29,7 +29,6 @@
         app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
-        android:id="@+id/tv_box_startup_tip1"
         style="@style/UBTTipsTxtTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

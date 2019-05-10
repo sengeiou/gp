@@ -13,11 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
 
 import com.ubtechinc.bluetooth.UbtBluetoothManager;
 import com.ubtechinc.bluetooth.command.JsonCommandProduce;
-import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.BleConfigReadyActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
@@ -42,12 +40,9 @@ import static com.ubtech.utilcode.utils.BarUtils.getStatusBarHeight;
  */
 @Deprecated
 public abstract class BaseFragment extends Fragment {
-    private ViewGroup mView;
     protected View mStatusBarView;
     private Unbinder unbinder;
     protected View mTipsView;
-    protected TextView mTipsClickView;
-    protected TextView mTipsTv;
 
     public BaseFragment() {
         super();
@@ -76,10 +71,6 @@ public abstract class BaseFragment extends Fragment {
             window.setStatusBarColor(Color.TRANSPARENT);
         }*/
         unbinder = ButterKnife.bind(this, view);
-        mTipsView = view.findViewById(R.id.ubt_layout_tips);
-        mTipsClickView = view.findViewById(R.id.ubt_bind_tv);
-        mTipsTv = view.findViewById(R.id.ubt_tv_main_tips);
-
     }
 
     protected void showTips() {
@@ -137,9 +128,6 @@ public abstract class BaseFragment extends Fragment {
             ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(screenWidth, statusBarHeight);
             mStatusBarView.setLayoutParams(params);
             mStatusBarView.requestLayout();
-            if (mView != null) {
-                mView.addView(mStatusBarView, 0);
-            }
         }
     }
 

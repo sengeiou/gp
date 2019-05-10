@@ -6,7 +6,6 @@
     android:background="@color/ubt_main_bg_color">
 
     <ImageView
-        android:id="@+id/ubt_img_logo"
         android:layout_width="@dimen/ubt_logo_width"
         android:layout_height="@dimen/ubt_logo_width"
         android:layout_alignParentTop="true"

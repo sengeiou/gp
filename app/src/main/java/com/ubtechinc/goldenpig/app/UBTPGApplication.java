@@ -347,6 +347,7 @@ public class UBTPGApplication extends Application implements Observer {
             TVSWrapBridge.tvsTokenVerify(new TVSWrapBridge.TVSWrapCallback() {
                 @Override
                 public void onError(int errCode) {
+                    Log.i(TAG, "sendClientIdToPig|onError : " + errCode);
                     com.ubtech.utilcode.utils.ToastUtils.showShortToast("刷票失败，错误码：" + errCode);
                 }
 
@@ -797,9 +798,8 @@ public class UBTPGApplication extends Application implements Observer {
 //                    mTopActivity.finish();
 //                }
                 break;
-//            default:
-//                tip = "OTA升级完成";
-//                break;
+            default:
+                break;
         }
         showIKnowDialog(tip);
     }
@@ -813,6 +813,7 @@ public class UBTPGApplication extends Application implements Observer {
                 //配对关系变化
                 updatePigPair(false);
                 break;
+                default:
         }
     }
 
