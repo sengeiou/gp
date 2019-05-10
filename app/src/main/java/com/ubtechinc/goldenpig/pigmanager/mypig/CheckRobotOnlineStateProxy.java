@@ -84,7 +84,7 @@ public class CheckRobotOnlineStateProxy extends BaseHttpProxy {
     private String getUrl(HashMap<String, String> params) {
         Iterator<String> keys = params.keySet().iterator();
         Iterator<String> values = params.values().iterator();
-        StringBuilder stringBuilder = new StringBuilder(BuildConfig.IM_HOST + "/im/isOnline");
+        StringBuilder stringBuilder = new StringBuilder(BuildConfig.IM_HOST + "isOnline");
         stringBuilder.append("?");
 
         for (int i = 0; i < params.size(); i++) {

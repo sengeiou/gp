@@ -37,7 +37,7 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
     private UbtTIMManager timManager;
 
     public LoginModel() {
-        tvsAuthRepository = new TVSAuthRepository(BuildConfig.APP_ID_WX, BuildConfig.APP_ID_QQ);
+        tvsAuthRepository = new TVSAuthRepository();
         ubtAuthRepository = new UBTAuthRepository();
         getPigListRepository = new GetPigListHttpProxy();
         authLive = AuthLive.getInstance();

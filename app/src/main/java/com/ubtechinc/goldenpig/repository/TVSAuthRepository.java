@@ -9,10 +9,7 @@ import com.ubtechinc.goldenpig.login.LoginInfo;
 
 public class TVSAuthRepository {
 
-//    private TVSManager tvsManager;
-
-    public TVSAuthRepository(String wxAppId, String qqOpenId) {
-//        tvsManager = TVSManager.getInstance(UBTPGApplication.getInstance(), wxAppId, qqOpenId);
+    public TVSAuthRepository() {
     }
 
     public void loginWX(Activity activity, final AuthCallBack authCallBack) {

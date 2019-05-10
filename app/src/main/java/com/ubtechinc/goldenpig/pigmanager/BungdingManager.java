@@ -169,7 +169,7 @@ public class BungdingManager {
                         int code = rePlyJson.getInt(Constants.CODE);
                         /* final String productId = rePlyJson.getString(Constants.PRODUCTID);*/
 
-                        getClientId(BuildConfig.PRODUCT_ID, mSerialId);
+                        getClientId(mSerialId);
                         //String serailId = mCurrentDevices.getName().replace(Constants.ROBOT_TAG,"");
                         // checkRobotBindState(serailId,mToken,"wx0238743de057a634");
                         /*if(code == Constants.CODE_0){
@@ -292,7 +292,7 @@ public class BungdingManager {
     /**
      * 获取clientId
      */
-    private void getClientId(final String productId, final String dsn) {
+    private void getClientId(final String dsn) {
         final String userId = AuthLive.getInstance().getUserId();
         final String token = CookieInterceptor.get().getToken();
 
@@ -307,7 +307,7 @@ public class BungdingManager {
 
             @Override
             public void onSuccess(Object result) {
-                TVSWrapAccountInfo tvsWrapAccountInfo = TVSWrapBridge.getTVSAccountInfo(productId, dsn);
+                TVSWrapAccountInfo tvsWrapAccountInfo = TVSWrapBridge.getTVSAccountInfo(TVSWrapConstant.PRODUCT_ID, dsn);
                 String clientId = tvsWrapAccountInfo.getClientID();
                 clientIdRecord = clientId;
                 //TODO 校验和当前绑定的是否是同一个
