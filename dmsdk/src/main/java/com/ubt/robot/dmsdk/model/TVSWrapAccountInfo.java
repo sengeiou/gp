@@ -23,6 +23,10 @@ public class TVSWrapAccountInfo {
 
     private String clientID;
 
+    public TVSWrapAccountInfo() {
+
+    }
+
     public TVSWrapAccountInfo(String loginType, String appID, String openID, String tvsID, String accessToken,
                               String refreshToken, String userID, String clientID) {
         this.loginType = loginType;

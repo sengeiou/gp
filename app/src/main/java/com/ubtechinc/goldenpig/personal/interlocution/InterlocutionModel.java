@@ -7,6 +7,7 @@ import com.ubt.robot.dmsdk.TVSWrapBridge;
 import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
+import com.ubtechinc.goldenpig.login.LoginInfo;
 import com.ubtechinc.goldenpig.model.InterlocutionItemModel;
 import com.ubtechinc.goldenpig.model.JsonCallback;
 import com.ubtechinc.goldenpig.net.BaseHttpProxy;
@@ -87,17 +88,21 @@ public class InterlocutionModel extends BaseHttpProxy {
 
     public void getInterlocutionRequest(JsonCallback callback) {
         StringBuilder sb = new StringBuilder();
-        if (CookieInterceptor.get().getThridLogin().getLoginType().toLowerCase().equals("wx")) {
+        LoginInfo loginInfo = CookieInterceptor.get().getThridLogin();
+        if (loginInfo == null) {
+            return;
+        }
+        if (loginInfo.getLoginType().toLowerCase().equals("wx")) {
             sb.append(0);
             sb.append("|");
         } else {
             sb.append(1);
             sb.append("|");
         }
-        sb.append(CookieInterceptor.get().getThridLogin().getAppId() + "|");
-        sb.append(CookieInterceptor.get().getThridLogin().getOpenId() + "|");
-        sb.append(CookieInterceptor.get().getThridLogin().getAccessToken() + "|");
-        sb.append(TVSWrapBridge.getTVSAccountInfo().getTvsID());
+        sb.append(loginInfo.getAppId() + "|");
+        sb.append(loginInfo.getOpenId() + "|");
+        sb.append(loginInfo.getAccessToken() + "|");
+        sb.append(loginInfo.getTvsId());
         LogUtils.d("sb.toString():" + sb.toString());
         OkHttpClient okHttpClient = getHttpClient();
         final Request okrequest = new Request.Builder()

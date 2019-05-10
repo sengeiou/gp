@@ -196,10 +196,14 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
                             InterlocutionItemModel model = new InterlocutionItemModel();
                             model.type = 1;
                             mList.add(model);
-                            rl_titlebar.hideIvRight();
+                            if (rl_titlebar != null) {
+                                rl_titlebar.hideIvRight();
+                            }
                         } else {
                             //Collections.reverse(reponse);
-                            rl_titlebar.showIvRight();
+                            if (rl_titlebar != null) {
+                                rl_titlebar.showIvRight();
+                            }
                         }
                         mList.addAll(reponse);
                         adapter.notifyDataSetChanged();

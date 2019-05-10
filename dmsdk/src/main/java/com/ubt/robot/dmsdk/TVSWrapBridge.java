@@ -487,8 +487,11 @@ public class TVSWrapBridge {
      */
     public static TVSWrapAccountInfo getTVSAccountInfo() {
         AccountInfoManager m = AccountInfoManager.getInstance();
-        return new TVSWrapAccountInfo(m.getPlatformType().name(), m.getAppID(), m.getOpenID(), m.getTvsID(), m.getAccessToken(), m.getRefreshToken(),
-                m.getUserId());
+        if (m != null && m.getPlatformType() != null) {
+            return new TVSWrapAccountInfo(m.getPlatformType().name(), m.getAppID(), m.getOpenID(), m.getTvsID(), m.getAccessToken(), m.getRefreshToken(),
+                    m.getUserId());
+        }
+        return new TVSWrapAccountInfo();
     }
 
     /**
@@ -500,8 +503,11 @@ public class TVSWrapBridge {
      */
     public static TVSWrapAccountInfo getTVSAccountInfo(String productID, String dsn) {
         AccountInfoManager m = AccountInfoManager.getInstance();
-        return new TVSWrapAccountInfo(m.getPlatformType().name(), m.getAppID(), m.getOpenID(), m.getTvsID(), m.getAccessToken(), m.getRefreshToken(),
-                m.getUserId(), m.getClientId(productID, dsn));
+        if (m != null && m.getPlatformType() != null) {
+            return new TVSWrapAccountInfo(m.getPlatformType().name(), m.getAppID(), m.getOpenID(), m.getTvsID(), m.getAccessToken(), m.getRefreshToken(),
+                    m.getUserId(), m.getClientId(productID, dsn));
+        }
+        return new TVSWrapAccountInfo();
     }
 
     public static TVSWrapUserInfo getTVSWrapUserInfo() {

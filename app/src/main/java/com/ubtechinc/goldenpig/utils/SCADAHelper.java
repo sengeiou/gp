@@ -119,7 +119,7 @@ public class SCADAHelper {
                 String eventId = (String) entry.getValue();
                 if (simpleName.equals("CommonWebActivity")) {
                     String url = ((Activity)context).getIntent().getStringExtra(KEY_URL);
-                    if (url.contains(key)) {
+                    if (!TextUtils.isEmpty(url) && url.contains(key)) {
                         recordEvent(eventId);
                         return;
                     }
