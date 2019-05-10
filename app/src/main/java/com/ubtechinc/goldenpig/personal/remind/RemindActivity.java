@@ -188,6 +188,7 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
 
     /**
      * 处理tvs数据
+     *
      * @param result
      */
     private void handleResult(String result) {
@@ -223,7 +224,7 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
                     case 6:
                         model.repeatName = "节假日";
                         break;
-                        default:
+                    default:
                 }
                 model.lReminderId = ob.getLong("lReminderId");
                 model.sNote = ob.getString("sNote");
@@ -280,6 +281,9 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
     public void onRefreshSuccess(List<RemindModel> list) {
         mList.clear();
         mList.addAll(list);
+        if (rl_titlebar == null) {
+            return;
+        }
         if (mList.size() == 0) {
             mStateView.showEmpty();
             rl_titlebar.getIvRight().setVisibility(View.GONE);
@@ -432,7 +436,7 @@ public class RemindActivity extends BaseNewActivity implements SwipeItemClickLis
             case 6:
                 sb.append("节假日");
                 break;
-                default:
+            default:
         }
         return sb.toString();
     }
