@@ -267,4 +267,5 @@ dependencies {
     implementation 'com.github.SelfZhangTQ:loadState:1.1.0'
 
     api project(':dmsdk')
+    implementation project(':cardviewlibrary')
 }

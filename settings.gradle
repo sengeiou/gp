@@ -2,4 +2,4 @@ include ':app', ':commlib', ':protollib', ':utilcode', ':qrcodelib',
         ':servicemodel', ':netutils', ':protocollibrary', ':improtolib',
         ':imlibv2', ':bluetoothlibrary', ':recyclerview-swipe', ':loopview',
         ":xingemodule", ':scardview', ':basiccomponent:bottomnavigationbar',
-        ':basiccomponent:commonlib', ':dmsdk'
+        ':basiccomponent:commonlib', ':dmsdk', ':cardviewlibrary'

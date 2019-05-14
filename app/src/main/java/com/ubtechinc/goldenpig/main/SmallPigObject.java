@@ -10,6 +10,7 @@ import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 
+import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.ubt.robot.dmsdk.TVSWrapBridge;
 import com.ubt.robot.dmsdk.TVSWrapConstant;
 import com.ubt.robot.dmsdk.TVSWrapLoginEnv;
@@ -24,7 +25,13 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.net.URestSigner;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
+import com.ubtechinc.goldenpig.utils.share.OnClickShareListener;
+import com.ubtechinc.goldenpig.utils.share.ShareDialog;
+import com.ubtechinc.goldenpig.utils.share.ShareUtility;
 import com.ubtechinc.nets.utils.DeviceUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -133,6 +140,59 @@ public class SmallPigObject {
             }
         });
         dialog.show();
+    }
+
+
+    @JavascriptInterface
+    public void shareToThirdApp(String params) {
+        LogUtils.d("TAG", "shareToThirdApp:" + params);
+//        SCADAHelper.recordEvent(EVENET_APP_TUTORIAL_SHARE);
+        try {
+            JSONObject jsonObject = new JSONObject(params);
+            String title = jsonObject.getString("title");
+            String url = jsonObject.getString("url");
+            String description = jsonObject.getString("description");
+            ShareDialog shareDialog = new ShareDialog((Activity) mContext);
+            shareDialog.setOnClickShareListener(new OnClickShareListener() {
+                @Override
+                public void onShareWXMiniProgram(ShareUtility shareUtility) {
+
+                }
+
+                @Override
+                public void onShareWx(ShareUtility shareUtility) {
+//                    SCADAHelper.recordEvent(EVENET_APP_TUTORIAL_SHARE_WECHAT);
+                    shareUtility.doShareToWeiXin((Activity) mContext, title, url, description, SendMessageToWX.Req
+                            .WXSceneSession);
+                }
+
+                @Override
+                public void onShareWxTimeline(ShareUtility shareUtility) {
+//                    SCADAHelper.recordEvent(EVENET_APP_TUTORIAL_SHARE_MOMENT);
+                    shareUtility.doShareToWeiXin((Activity) mContext, title, url, description, SendMessageToWX.Req
+                            .WXSceneTimeline);
+                }
+
+                @Override
+                public void onShareSMS(ShareUtility shareUtility) {
+
+                }
+
+                @Override
+                public void onShareMMS(ShareUtility shareUtility) {
+
+                }
+
+                @Override
+                public void onShareQQ(ShareUtility shareUtility) {
+//                    SCADAHelper.recordEvent(EVENET_APP_TUTORIAL_SHARE_QQ);
+                    shareUtility.doShareToQQ((Activity) mContext, title, url, description);
+                }
+            });
+            shareDialog.show();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
 }

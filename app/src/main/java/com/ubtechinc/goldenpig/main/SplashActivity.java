@@ -26,6 +26,7 @@ import com.ubtechinc.goldenpig.login.LoginModel;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.SharedPreferencesUtils;
+import com.ubtechinc.push.UbtPushManager;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 import com.yanzhenjie.permission.PermissionListener;
@@ -86,9 +87,23 @@ public class SplashActivity extends BaseActivity {
         EventBusUtil.register(this);
         downloadUtils = new DownloadUtils();
 
+        handleEnter();
+
 
 //        checkLogin();
         checkUpdate();
+    }
+
+    private void handleEnter() {
+//        XG message = UbtPushManager.getInstance().;
+//        if (message != null) {
+//            if (isTaskRoot()) {
+//                return;
+//            }
+//            switchToFuckActivity(message);
+//        } else {
+//            startTimer();
+//        }
     }
 
     @Override

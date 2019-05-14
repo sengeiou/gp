@@ -99,6 +99,9 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.PUSH_NOTIFICATION_RE
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.SERVER_RESPONSE_UNAUTHORIZED;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.TVS_LOGIN_SUCCESS;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.TVS_LOGOUT_SUCCESS;
+import static com.ubtechinc.goldenpig.utils.SharedPreferencesUtils.CREATE;
+import static com.ubtechinc.goldenpig.utils.SharedPreferencesUtils.CREATEGUIDE;
+import static com.ubtechinc.goldenpig.utils.SharedPreferencesUtils.INTERLOCTIONGUIDE;
 
 /**
  * @author hqt
@@ -201,6 +204,10 @@ public class UBTPGApplication extends Application implements Observer {
         HttpManager.interceptors.add(new ResponseInterceptor());
         initService();
         initNetListener();
+
+        HASCREATEGUIDE = SPUtils.get().getBoolean(CREATEGUIDE, false);
+        HASCREATE = SPUtils.get().getBoolean(CREATE, false);
+        HASINTERLOCTIONGUIDE = SPUtils.get().getBoolean(INTERLOCTIONGUIDE, false);
     }
 
     private void initLoadState() {

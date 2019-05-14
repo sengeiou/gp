@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 
+import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
@@ -28,6 +29,9 @@ import butterknife.BindViews;
 import butterknife.OnClick;
 
 public class CreateActivity extends BaseNewActivity {
+
+    private static final String TAG = "CreateActivity";
+
     @BindView(R.id.viewPager)
     ViewPagerSlide viewPager;
     @BindView(R.id.iv_add)
@@ -82,6 +86,7 @@ public class CreateActivity extends BaseNewActivity {
 
             @Override
             public void onPageSelected(int position) {
+                UbtLogger.d(TAG, "onPageSelected:" + position);
                 viewList.get(selPosition).setTextColor(getResources().getColor(R.color.pic_239fed_color));
                 viewList.get(selPosition).setBackground(null);
                 viewList.get(position).setTextColor(getResources().getColor(R.color
@@ -123,6 +128,13 @@ public class CreateActivity extends BaseNewActivity {
                 viewPager.setCurrentItem(2);
             } catch (Exception e) {
             }
+        }
+
+        UbtLogger.d(TAG, "select pos:" + getSelPosition());
+        if(getSelPosition()==0){
+            viewList.get(0).setTextColor(getResources().getColor(R.color
+                    .ubt_white));
+            viewList.get(0).setBackgroundResource(intRecoure.get(0));
         }
 
     }
@@ -176,6 +188,7 @@ public class CreateActivity extends BaseNewActivity {
     @Override
     protected void onReceiveEvent(Event event) {
         super.onReceiveEvent(event);
+        UbtLogger.d(TAG, "onReceiveEvent:" + event.getCode());
         if (event.getCode() == EventBusUtil.SHOWCREATELIST) {
             if (viewPager != null) {
                 try {

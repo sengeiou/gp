@@ -155,6 +155,68 @@ public class CreativeSpaceHttpProxy extends BaseHttpProxy {
     }
 
 
+    public interface  DeleteCreativeCallback{
+        void onError(String error);
+
+        void onSuccess( );
+    }
+
+    public void deleteCreativeContent(JSONObject parmJson, final DeleteCreativeCallback callback){
+        OkHttpClient okHttpClient = getHttpClient();
+
+        RequestBody body = RequestBody.create(JSON, parmJson.toString());
+
+        String  url = BuildConfig.HOST + "pig/statement/delete";
+
+        final Request okrequest = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+        Call call = okHttpClient.newCall(okrequest);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                LogUtils.d(TAG, "deleteCreativeContent onFailure:" + e.getMessage());
+                if (callback != null) {
+                    callback.onError(e.getMessage());
+                }
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) {
+                try {
+                    String result = response.body().source().readUtf8();
+                    LogUtils.d(TAG, "deleteCreativeContent:" + result);
+                    if (response.isSuccessful()) {
+                        JSONObject jsonObject = new JSONObject(result);
+                        boolean status = jsonObject.optBoolean("status");
+                        if (status) {
+
+                            if (callback != null) {
+                                callback.onSuccess();
+                            }
+                        }else{
+                            if (callback != null) {
+                                callback.onError("response failed");
+                            }
+                        }
+                    } else {
+                        LogUtils.d(TAG, "getData|fail" + result);
+                        if (callback != null) {
+                            callback.onError("response failed");
+                        }
+                    }
+                } catch (Exception e) {
+                    LogUtils.e(TAG, e.getMessage());
+                    if (callback != null) {
+                        callback.onError(e.getMessage());
+                    }
+                }
+            }
+        });
+    }
+
+
 
 
 }

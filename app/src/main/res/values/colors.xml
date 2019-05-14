@@ -63,5 +63,7 @@
     <color name="base_color_prey">#E2E2E2</color>
     <color name="pic_ff69gray_color">#B4C0C7</color>
 
+    <color name="guide_item_color">#F2F2F2</color>
+
 
 </resources>

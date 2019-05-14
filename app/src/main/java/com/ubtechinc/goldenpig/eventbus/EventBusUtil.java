@@ -99,4 +99,5 @@ public class EventBusUtil {
     public static final int READ_SYSTEM_MSG = 20045;
     public static final int NEED_SHOW_POINT = 20046;
 
+
 }

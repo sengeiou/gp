@@ -14,11 +14,11 @@
         android:layout_marginLeft="@dimen/dp_15"
         android:layout_marginRight="@dimen/dp_15"
         android:layout_marginTop="@dimen/dp_88"
-        android:background="@drawable/selector_interloc_item"
+        android:background="@drawable/guide_item"
         android:orientation="horizontal"
         android:paddingLeft="@dimen/dp_12">
 
-        <com.ubt.baselib.customView.NewCircleImageView
+        <com.ubtechinc.goldenpig.view.NewCircleImageView
             android:id="@+id/iv_ask"
             android:layout_width="@dimen/dp_38"
             android:layout_height="@dimen/dp_38"
@@ -40,7 +40,7 @@
             android:gravity="center_vertical"
             android:singleLine="true"
             android:text="谁是最聪明的机器人啊"
-            android:textColor="@color/pic_remoind_main_color"
+            android:textColor="@color/ubt_tips_txt_color"
             android:textSize="@dimen/sp_15" />
 
         <TextView
@@ -73,7 +73,7 @@
             android:layout_marginRight="@dimen/dp_8"
             android:layout_marginTop="@dimen/dp_10"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_xiaofei" />
+            android:src="@drawable/ic_logo" />
 
         <TextView
             android:id="@+id/tv_answer"
@@ -85,8 +85,8 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:singleLine="true"
-            android:text="最聪明的机器人是猪小飞啊"
-            android:textColor="@color/pic_remoind_main_color"
+            android:text="最聪明的机器人是八戒啊"
+            android:textColor="@color/ubt_tips_txt_color"
             android:textSize="@dimen/sp_15" />
     </RelativeLayout>
 
@@ -97,7 +97,7 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/rl_item"
         android:layout_marginRight="@dimen/dp_26"
-        android:layout_marginTop="@dimen/dp_14"
+        android:layout_marginTop="-10dp"
         android:background="@drawable/img_002"
         android:orientation="vertical">
 
@@ -122,31 +122,33 @@
 
     <LinearLayout
         android:id="@+id/ll_msg"
-        android:layout_width="@dimen/dp_204"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/rl_item"
-        android:layout_marginRight="@dimen/dp_37"
         android:layout_toLeftOf="@+id/cardview"
         android:gravity="center"
-        android:orientation="vertical">
+        android:orientation="vertical"
+
+        >
 
         <ImageView
             android:id="@+id/iv_hand"
             android:layout_width="@dimen/dp_66"
             android:layout_height="@dimen/dp_109"
             android:layout_marginTop="@dimen/dp_15"
+            android:layout_marginLeft="@dimen/dp_20"
             android:src="@drawable/ic_click" />
 
-
-        <ImageView
-            android:layout_width="@dimen/dp_204"
-            android:layout_height="@dimen/dp_25"
-            android:layout_below="@+id/iv_hand"
-            android:layout_marginTop="@dimen/dp_15"
-            android:layout_toLeftOf="@+id/cardview"
-            android:scaleType="centerCrop"
-            android:src="@drawable/img_003" />
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dp_15"
+        android:layout_below="@+id/ll_msg"
+        android:layout_marginLeft="@dimen/dp_44"
+        android:src="@drawable/img_tip" />
 
     <LinearLayout
         android:layout_width="match_parent"

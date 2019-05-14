@@ -249,24 +249,33 @@ public class AddCreateActivity extends BaseNewActivity {
 
             @Override
             public void onSuccess() {
-                LoadingDialog.getInstance(AddCreateActivity.this).dismiss();
-                ToastUtils.showShortToast("添加成功");
-                Event<Integer> event = new Event<>(ADD_CREATE);
-                if (editPosition >= 0) {
-                    event.setData(editPosition);
-                } else {
-                    event.setData(-1);
+                if(mHandler != null){
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            LoadingDialog.getInstance(AddCreateActivity.this).dismiss();
+                            ToastUtils.showShortToast("添加成功");
+                            Event<Integer> event = new Event<>(ADD_CREATE);
+                            if (editPosition >= 0) {
+                                event.setData(editPosition);
+                            } else {
+                                event.setData(-1);
+                            }
+                            EventBusUtil.sendEvent(event);
+                            if (!UBTPGApplication.createActivity) {
+                                ActivityRoute.toAnotherActivity(AddCreateActivity.this, CreateActivity.class,
+                                        false);
+                                Event<String> event2 = new Event<>(CREATEINTRODUCE);
+                                EventBusUtil.sendEvent(event2);
+                            }
+                            Event<String> event3 = new Event<>(SHOWCREATELIST);
+                            EventBusUtil.sendEvent(event3);
+                            finish();
+                        }
+                    });
                 }
-                EventBusUtil.sendEvent(event);
-                if (!UBTPGApplication.createActivity) {
-                    ActivityRoute.toAnotherActivity(AddCreateActivity.this, CreateActivity.class,
-                            false);
-                    Event<String> event2 = new Event<>(CREATEINTRODUCE);
-                    EventBusUtil.sendEvent(event2);
-                }
-                Event<String> event3 = new Event<>(SHOWCREATELIST);
-                EventBusUtil.sendEvent(event3);
-                finish();
+
+
             }
         });
 

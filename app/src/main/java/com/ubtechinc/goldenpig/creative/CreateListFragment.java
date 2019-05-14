@@ -24,12 +24,18 @@ import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseNewFragment;
+import com.ubtechinc.goldenpig.comm.entity.UserInfo;
+import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
+import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.model.CreateModel;
+import com.ubtechinc.goldenpig.model.JsonCallback;
 import com.ubtechinc.goldenpig.personal.interlocution.InterlocutionModel;
+import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.popup.PopupWindowList;
 import com.ubtechinc.goldenpig.utils.DialogUtil;
+import com.ubtechinc.goldenpig.utils.SCADAHelper;
 import com.ubtechinc.goldenpig.view.NewCircleImageView;
 import com.ubtechinc.goldenpig.view.RecyclerItemClickListener;
 import com.ubtechinc.goldenpig.view.RecyclerOnItemLongListener;
@@ -46,7 +52,7 @@ import java.util.List;
 import butterknife.BindView;
 
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_CREATE;
-import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.GET_CREATE_LIST_FAIL;
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_INTERLO_SUCCESS;
 import static com.ubtechinc.goldenpig.utils.SharedPreferencesUtils.CREATEGUIDE;
 
 
@@ -225,68 +231,7 @@ public class CreateListFragment extends BaseNewFragment {
         });
 
 
-       /* ViseHttpUtil.getInstance().get(HttpEntity.GET_CREATE_MSG, getActivity())
-                .addParam("index", page + "")
-                .request(new JsonCallback<String>(String.class) {
-                    @Override
-                    public void onDataSuccess(String response) {
-                        UbtLog.d(TAG, "onResponse:" + response);
-                        JSONObject jsonObject = null;
-                        try {
-                            jsonObject = new JSONObject(response);
-                            List<CreateModel> data = gson.fromJson(jsonObject.getJSONObject("models").getString
-                                    ("records"), new
-                                    TypeToken<List<CreateModel>>() {
-                                    }.getType());
-                            if (page == 1) {
-                                mList.clear();
-                                if (data != null && data.size() > 0) {
-                                    CreateModel model = new CreateModel();
-                                    model.type = 1;
-                                    model.sid = data.size();
-                                    mList.add(model);
-                                    mList.addAll(data);
-                                    page++;
-                                }
-                                checkGuide();
-                            } else {
-                                if (data != null && data.size() > 0) {
-                                    mList.addAll(data);
-                                    page++;
-                                    if (mList != null && mList.size() > 0 && mList.get(0).type == 1) {
-                                        mList.get(0).sid = mList.size() - 1;
-                                    }
-                                }
-                            }
-                            if (data != null && data.size() < 10) {
-                                setState(FootState.NoMore);
-                            } else {
-                                setState(FootState.Normal);
-                            }
-                            adapter.notifyDataSetChanged();
-                        } catch (Exception e) {
-                        }
-                        LogUtils.d("aaaaa", "mList:" + mList.toString().getBytes().length);
-                        if (mList.size() > 0) {
-                            mStateView.showContent();
 
-                        } else {
-                            mStateView.showEmpty();
-                        }
-                    }
-
-                    @Override
-                    public void onFail(int i, String s) {
-                        super.onFail(i, s);
-                        LogUtils.d(TAG, "onError:" + s);
-                        if (mList != null && mList.size() > 0) {
-                            mStateView.showContent();
-                        } else {
-                            mStateView.showRetry();
-                        }
-                        setState(FootState.Normal);
-                    }
-                });*/
     }
 
     private void showPopWindows(View view, int deletePosition) {
@@ -322,8 +267,18 @@ public class CreateListFragment extends BaseNewFragment {
         });
     }
 
+    private boolean isAdmin(){
+
+        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+        if(pigInfo != null && pigInfo.isAdmin){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     private void addInterloction(int deletePosition) {
-    /*    if (BaseApplication.mBindPigs != null && BaseApplication.mBindPigs.size() > 0) {
+        if (isAdmin()) {
             if (TextUtils.isEmpty(mList.get(deletePosition).question)) {
                 ToastUtils.showShortToast("请先设置问句");
                 return;
@@ -332,34 +287,50 @@ public class CreateListFragment extends BaseNewFragment {
                 ToastUtils.showShortToast("请先设置回答");
                 return;
             }
-            LoadingDialog.show(getActivity());
-            SCADAHelper.recordEvent(EVENET_APP_QA_SAVE);
+            LoadingDialog.getInstance(getActivity()).show();
+//            SCADAHelper.recordEvent(EVENET_APP_QA_SAVE);
             requestModel.addInterlocutionRequest(mList.get(deletePosition).question, mList.get(deletePosition)
-                    .answer, new JsonNewCallback<String>(String.class) {
+                    .answer, new JsonCallback<String>(String.class) {
 
                 @Override
                 public void onSuccess(String reponse) {
-                    SCADAHelper.recordEvent(EVENET_APP_QA_SAVE_SUCCESS);
-                    LoadingDialog.dismiss(getActivity());
-                    ToastUtils.showShortToast("添加问答成功");
+//                    SCADAHelper.recordEvent(EVENET_APP_QA_SAVE_SUCCESS);
+                    if(mHandler != null){
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                LoadingDialog.getInstance(getActivity()).dismiss();
+                                ToastUtils.showShortToast("添加问答成功");
+                            }
+                        });
+                    }
+
                     Event<String> event = new Event(ADD_INTERLO_SUCCESS);
                     EventBusUtil.sendEvent(event);
                 }
 
                 @Override
                 public void onError(String str) {
-                    SCADAHelper.recordEvent(EVENET_APP_QA_SAVE_FAILURE);
-                    LoadingDialog.dismiss(getActivity());
-                    if (!TextUtils.isEmpty(str) && str.equals("保存失败，已存在相同问句")) {
-                        ToastUtils.showShortToast("同步失败，已存在相同问句");
-                    } else {
-                        ToastUtils.showShortToast(str);
+//                    SCADAHelper.recordEvent(EVENET_APP_QA_SAVE_FAILURE);
+                    if(mHandler != null){
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                LoadingDialog.getInstance(getActivity()).dismiss();
+                                if (!TextUtils.isEmpty(str) && str.equals("保存失败，已存在相同问句")) {
+                                    ToastUtils.showShortToast("同步失败，已存在相同问句");
+                                } else {
+                                    ToastUtils.showShortToast(str);
+                                }
+                            }
+                        });
                     }
+
                 }
             });
         } else {
-            ToastUtils.showShortToast("请先绑定小飞");
-        }*/
+            ToastUtils.showShortToast("只有管理员才可以有此操作");
+        }
     }
 
     private void deleteAlarm(int adapterPosition) {
@@ -371,6 +342,48 @@ public class CreateListFragment extends BaseNewFragment {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        LoadingDialog.getInstance(getActivity()).show();
+
+        new CreativeSpaceHttpProxy().deleteCreativeContent(obj, new CreativeSpaceHttpProxy.DeleteCreativeCallback() {
+            @Override
+            public void onError(String error) {
+                UbtLogger.e(TAG, "onError:" + error);
+                if(mHandler != null){
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            LoadingDialog.getInstance(getActivity()).dismiss();
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void onSuccess() {
+                if(mHandler != null){
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            LoadingDialog.getInstance(getActivity()).dismiss();
+                            mList.remove(adapterPosition);
+                            adapter.notifyDataSetChanged();
+                            mList.get(0).sid = mList.size() - 1;
+                            if (mList.size() > 1) {
+                                mStateView.showContent();
+                            } else {
+                                mList.clear();
+                                mStateView.showEmpty();
+                            }
+                        }
+                    });
+                }
+
+            }
+        });
+
+
         /*ViseHttpUtil.getInstance().getPost(HttpEntity.DELETE_CREATE_MSG, getActivity())
                 .setJson(obj)
                 .request(new JsonCallback<String>(String.class) {
@@ -492,6 +505,7 @@ public class CreateListFragment extends BaseNewFragment {
     Dialog picDialog;
 
     public void showFirstGuide() {
+        UbtLogger.d(TAG, "showFirstGuide");
         if (picDialog == null) {
             View picView = LayoutInflater.from(getActivity()).inflate(
                     R.layout.dialog_create_guide, null);
@@ -503,25 +517,29 @@ public class CreateListFragment extends BaseNewFragment {
                 }
             });
             NewCircleImageView iv_ask = picView.findViewById(R.id.iv_ask);
-//            UserModel mUserModel = (UserModel) SPUtils.getInstance().readObject(Constant.SP_USER_INFO);
+            UserInfo currentUser = AuthLive.getInstance().getCurrentUser();
+
             String userIc = "";
-//            if (mUserModel != null) {
-//                userIc = mUserModel.getUserImage();
-//            }
+            if (currentUser != null) {
+                userIc = currentUser.getUserImage();
+            }
             Glide.with(getActivity()).load(userIc).asBitmap().placeholder(R.drawable.ic_user_inter)
                     .error(R.drawable.ic_user_inter).diskCacheStrategy(DiskCacheStrategy.ALL).into(iv_ask);
         }
         if (!picDialog.isShowing()) {
+            UbtLogger.d(TAG, "showFirstGuide show");
             picDialog.show();
         }
     }
 
     public void checkGuide() {
+        UbtLogger.d(TAG, "checkGuide:" + UBTPGApplication.getInstance().HASCREATEGUIDE);
         if (UBTPGApplication.getInstance().HASCREATEGUIDE) {
             return;
         }
         try {
             if (((CreateActivity) getActivity()).getSelPosition() == 0 && mList.size() > 0) {
+                UbtLogger.d(TAG, "checkGuide showFirstGuide");
                 UBTPGApplication.getInstance().HASCREATEGUIDE = true;
                 SPUtils.get().put(CREATEGUIDE, true);
                 showFirstGuide();

@@ -19,6 +19,8 @@ import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.actionbar.SecondTitleBarViewImg;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
+import com.ubtechinc.goldenpig.creative.CreativeSpaceHttpProxy;
+import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.model.InterlocutionItemModel;
 import com.ubtechinc.goldenpig.model.JsonCallback;
@@ -45,6 +47,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
+import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_CREATE;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.ADD_INTERLO_SUCCESS;
 
 public class InterlocutionActivity extends BaseNewActivity implements SwipeItemClickListener {
@@ -392,8 +395,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
                 mPopupWindowList.hide();
                 switch (position) {
                     case 0:
-                        ToastUtils.showShortToast("开发ing");
-//                        addCreate(deletePosition);
+                        addCreate(deletePosition);
                         break;
                     case 1:
                         deleteInterloc(deletePosition);
@@ -435,35 +437,65 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
             e.printStackTrace();
         }
 
-//        ViseHttpUtil.getInstance().getPost(HttpEntity.ADD_CREATE_MSG, this)
-//                .setJson(json)
-//                .request(new JsonCallback<String>(String.class) {
-//                    @Override
-//                    public void onDataSuccess(String response) {
-//                        SCADAHelper.recordEvent(EVENET_APP_ZCQA_SUBMIT_SUCCESS);
-//                        LogUtils.d("AddCreateActivity", "onResponse:" + response);
-//                        LoadingDialog.dismiss(InterlocutionActivity.this);
-//                        JSONObject jsonObject = null;
-//                        try {
-//                            jsonObject = new JSONObject(response);
-//                            if (jsonObject.getBoolean("status")) {
-//                                ToastUtils.showShortToast("添加成功");
-//                                Event<Integer> event = new Event<>(ADD_CREATE);
-//                                event.setData(-1);
-//                                EventBusUtil.sendEvent(event);
-//                            }
-//                        } catch (Exception e) {
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFail(int i, String s) {
-//                        super.onFail(i, s);
-//                        SCADAHelper.recordEvent(EVENET_APP_ZCQA_SUBMIT_FAILURE);
-//                        LogUtils.d("AddCreateActivity", "onError:" + s);
-//                        LoadingDialog.getInstance(InterlocutionActivity.this).dismiss();
-//                    }
-//                });
+        new CreativeSpaceHttpProxy().addCreativeContent(json, new CreativeSpaceHttpProxy.AddCreativeCallback() {
+            @Override
+            public void onError(String error) {
+                if(mHander !=null){
+                    mHander.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            LoadingDialog.getInstance(InterlocutionActivity.this).dismiss();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onSuccess() {
+                if(mHander !=null){
+                    mHander.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            LoadingDialog.getInstance(InterlocutionActivity.this).dismiss();
+                            ToastUtils.showShortToast("添加成功");
+                            Event<Integer> event = new Event<>(ADD_CREATE);
+                            event.setData(-1);
+                            EventBusUtil.sendEvent(event);
+                        }
+                    });
+                }
+            }
+        });
+
+       /* ViseHttpUtil.getInstance().getPost(HttpEntity.ADD_CREATE_MSG, this)
+                .setJson(json)
+                .request(new JsonCallback<String>(String.class) {
+                    @Override
+                    public void onDataSuccess(String response) {
+                        SCADAHelper.recordEvent(EVENET_APP_ZCQA_SUBMIT_SUCCESS);
+                        LogUtils.d("AddCreateActivity", "onResponse:" + response);
+                        LoadingDialog.dismiss(InterlocutionActivity.this);
+                        JSONObject jsonObject = null;
+                        try {
+                            jsonObject = new JSONObject(response);
+                            if (jsonObject.getBoolean("status")) {
+                                ToastUtils.showShortToast("添加成功");
+                                Event<Integer> event = new Event<>(ADD_CREATE);
+                                event.setData(-1);
+                                EventBusUtil.sendEvent(event);
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
+
+                    @Override
+                    public void onFail(int i, String s) {
+                        super.onFail(i, s);
+                        SCADAHelper.recordEvent(EVENET_APP_ZCQA_SUBMIT_FAILURE);
+                        LogUtils.d("AddCreateActivity", "onError:" + s);
+                        LoadingDialog.getInstance(InterlocutionActivity.this).dismiss();
+                    }
+                });*/
     }
 
 

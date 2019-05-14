@@ -13,6 +13,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ubtech.utilcode.utils.SPUtils;
 import com.ubtech.utilcode.utils.TimeUtils;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.comm.entity.UserInfo;
+import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.model.CreateModel;
 import com.ubtechinc.goldenpig.view.NewCircleImageView;
 import com.ubtechinc.goldenpig.view.RecyclerOnItemLongListener;
@@ -35,10 +37,11 @@ public class CreateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         this.mContext = mContext;
         this.mList = mList;
         this.listener = listener;
-    /*    UserModel mUserModel = (UserModel) SPUtils.getInstance().readObject(Constant.SP_USER_INFO);
-        if (mUserModel != null) {
-            userIc = mUserModel.getUserImage();
-        }*/
+        UserInfo currentUser = AuthLive.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            userIc = currentUser.getUserImage();
+        }
+
     }
 
     @Override

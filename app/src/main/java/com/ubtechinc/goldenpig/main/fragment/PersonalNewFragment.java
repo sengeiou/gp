@@ -1,5 +1,6 @@
 package com.ubtechinc.goldenpig.main.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -24,6 +25,7 @@ import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.commlib.utils.ContextUtils;
 import com.ubtechinc.commlib.view.UbtSubTxtButton;
+import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.about.UbtAboutActivtiy;
 import com.ubtechinc.goldenpig.app.ActivityManager;
@@ -73,6 +75,7 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.READ_SYSTEM_MSG;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_ONLINE_STATE;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_VERSION_STATE;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
+import static com.ubtechinc.goldenpig.main.CommonWebActivity.KEY_URL;
 import static com.ubtechinc.goldenpig.personal.AboutBleBJActivity.KEY_PIGINFO_VERSION;
 import static com.ubtechinc.goldenpig.personal.BeeHiveMobileActivity.KEY_BEE_HIVE_OPEN;
 import static com.ubtechinc.goldenpig.personal.NoSimActivity.KEY_TOOL_BAR_TITLE;
@@ -125,6 +128,8 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
     ImageView ivRedPoint;
     @BindView(R.id.ubt_btn_person_creative)
     View mCreativeSpaceBtn;
+    @BindView(R.id.ubt_btn_manual)
+    View mManualBtn;
 
     public PersonalNewFragment() {
         super();
@@ -229,6 +234,8 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
         if (pigInfo != null) {
             mQQMusicBtn.setAlpha(1.0f);
             mQQMusicBtn.setEnabled(true);
+            mCreativeSpaceBtn.setAlpha(1.0f);
+            mCreativeSpaceBtn.setEnabled(true);
             tv_manager.setVisibility(View.VISIBLE);
             if (pigInfo.isAdmin) {
                 tv_manager.setText("管理员");
@@ -248,6 +255,8 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
         } else {
             mQQMusicBtn.setAlpha(0.5f);
             mQQMusicBtn.setEnabled(false);
+            mCreativeSpaceBtn.setAlpha(0.5f);
+            mCreativeSpaceBtn.setEnabled(false);
             ubt_tv_pig_name.setVisibility(View.GONE);
             ll_bind.setVisibility(View.VISIBLE);
             ll_function.setVisibility(View.GONE);
@@ -298,7 +307,7 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     @OnClick({R.id.rl_login_info, R.id.ubt_btn_person_qq, R.id.rl_pig_state, R.id.ll_bind, R.id.ll_wifi, R.id.ll_4g,
-            R.id.ll_hot_pwd, R.id.ll_duihua, R.id.rl_cyctem_msg})
+            R.id.ll_hot_pwd, R.id.ll_duihua, R.id.rl_cyctem_msg, R.id.ubt_btn_manual})
     public void onClick(View v) {
         if (!CheckUtil.checkPhoneNetState(getActivity())) {
             return;
@@ -368,6 +377,12 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
                 break;
             case R.id.ubt_btn_person_creative:
                 ActivityRoute.toAnotherActivity(getActivity(),CreateActivity.class, false);
+                break;
+            case R.id.ubt_btn_manual:
+                String url = BuildConfig.H5_URL + "/small/smallPigStrategy.html";
+                Intent it = new Intent(getActivity(), CommonWebActivity.class);
+                it.putExtra(KEY_URL, url);
+                startActivity(it);
                 break;
             default:
         }
