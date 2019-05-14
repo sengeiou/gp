@@ -1,7 +1,9 @@
 package com.ubtechinc.push;
 
+import android.app.Activity;
 import android.content.Context;
 
+import com.tencent.android.tpush.XGPushClickedResult;
 import com.tencent.android.tpush.XGPushConfig;
 import com.tencent.android.tpush.XGPushManager;
 
@@ -52,6 +54,12 @@ public class UbtPushManager {
                 break;
             default:
         }
+    }
+
+    public String getPushClickResultForXG(Activity activity) {
+        XGPushClickedResult message = XGPushManager.onActivityStarted(activity);
+        String customContent = message.getCustomContent();
+        return customContent;
     }
 
     public IUbtPushListener getListener() {

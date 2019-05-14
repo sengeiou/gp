@@ -240,11 +240,6 @@ public class UBTPGApplication extends Application implements Observer {
 
     private void initService() {
         StartUpJobIntentService.enqueueWork(this, new Intent());
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            startForegroundService(new Intent(this, StartUpService.class));
-//        } else {
-//            startService(new Intent(this, StartUpService.class));
-//        }
     }
 
     /**
@@ -451,6 +446,9 @@ public class UBTPGApplication extends Application implements Observer {
                 showForceOfflineDialog("账号授权已过期，请重新登录");
                 break;
             case TVS_LOGIN_SUCCESS:
+                if (!BuildConfig.DEBUG) {
+                    CrashReport.putUserData(getApplicationContext(), "buglyInfo", TVSWrapBridge.getTVSAccountInfo().toString());
+                }
                 String userId = AuthLive.getInstance().getUserId();
                 AnalyticsKit.setUserId(userId);
                 AnalyticsKit.setDeviceInfo(userId, AppUtil.getMetaDataFromApp(this, AppUtil.KEY_CHANNEL_META));
@@ -458,10 +456,9 @@ public class UBTPGApplication extends Application implements Observer {
                 String pushToken = pushAppInfo.getPushToken();
                 if (!TextUtils.isEmpty(userId) && !TextUtils.isEmpty(pushToken)) {
                     int appId = pushAppInfo.getAppId();
-                    String authorization = pushAppInfo.getToken();
                     String appVersion = ContextUtils.getVerName(this);
                     PushHttpProxy pushHttpProxy = new PushHttpProxy();
-                    pushHttpProxy.bindToken(appId, pushToken, userId, appVersion, BuildConfig.product, authorization,
+                    pushHttpProxy.bindToken(appId, pushToken, userId, appVersion, BuildConfig.product,
                             null);
                 }
                 updatePigPair(true);
@@ -479,10 +476,9 @@ public class UBTPGApplication extends Application implements Observer {
             case DO_UPDATE_PAIR_PIG:
                 updatePigPair(true);
                 break;
-                default:
+            default:
         }
     }
-
 
     private void showIKnowDialog(String content) {
         if (mTopActivity == null || TextUtils.isEmpty(content)) {
@@ -820,7 +816,7 @@ public class UBTPGApplication extends Application implements Observer {
                 //配对关系变化
                 updatePigPair(false);
                 break;
-                default:
+            default:
         }
     }
 

@@ -134,5 +134,17 @@ public class TVSWrapAccountInfo {
         }
     }
 
-
+    @Override
+    public String toString() {
+        return "TVSWrapAccountInfo{" +
+                "loginType='" + loginType + '\'' +
+                ", appID='" + appID + '\'' +
+                ", openID='" + openID + '\'' +
+                ", tvsID='" + tvsID + '\'' +
+                ", accessToken='" + accessToken + '\'' +
+                ", refreshToken='" + refreshToken + '\'' +
+                ", userID='" + userID + '\'' +
+                ", clientID='" + clientID + '\'' +
+                '}';
+    }
 }

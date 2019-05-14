@@ -27,33 +27,13 @@ public class StartUpJobIntentService extends JobIntentService {
 
     @Override
     protected void onHandleWork(@NonNull Intent intent) {
-        getPushToken();
+        getPushAppInfo();
     }
 
-    private void getPushToken() {
-        String name = "GoldenPig_A";
-        String password = "123456";
-        PushHttpProxy pushHttpProxy = new PushHttpProxy();
-        pushHttpProxy.getToken(name, password, new PushHttpProxy.GetTokenCallback() {
-            @Override
-            public void onError(String error) {
-
-            }
-
-            @Override
-            public void onSuccess(String token) {
-                PushAppInfo pushAppInfo = new PushAppInfo();
-                pushAppInfo.setToken(token);
-                AuthLive.getInstance().setPushAppInfo(pushAppInfo);
-                getPushAppInfo(token);
-            }
-        });
-    }
-
-    private void getPushAppInfo(String token) {
+    private void getPushAppInfo() {
         String name = "GoldenPig";
         PushHttpProxy pushHttpProxy = new PushHttpProxy();
-        pushHttpProxy.getAppInfo(name, token, new PushHttpProxy.GetAppInfoCallback() {
+        pushHttpProxy.getAppInfo(name, new PushHttpProxy.GetAppInfoCallback() {
             @Override
             public void onError(String error) {
 
