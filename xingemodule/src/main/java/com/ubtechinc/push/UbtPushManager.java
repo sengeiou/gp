@@ -57,8 +57,11 @@ public class UbtPushManager {
     }
 
     public String getPushClickResultForXG(Activity activity) {
-        XGPushClickedResult message = XGPushManager.onActivityStarted(activity);
-        String customContent = message.getCustomContent();
+        String customContent = "";
+        XGPushClickedResult result = XGPushManager.onActivityStarted(activity);
+        if (result != null) {
+            customContent = result.getCustomContent();
+        }
         return customContent;
     }
 
