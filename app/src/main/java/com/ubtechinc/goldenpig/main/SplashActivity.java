@@ -33,7 +33,9 @@ import com.yanzhenjie.permission.PermissionListener;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -89,21 +91,42 @@ public class SplashActivity extends BaseActivity {
 
         handleEnter();
 
-
-//        checkLogin();
-        checkUpdate();
+//        checkUpdate();
     }
 
     private void handleEnter() {
-//        XG message = UbtPushManager.getInstance().;
-//        if (message != null) {
-//            if (isTaskRoot()) {
-//                return;
-//            }
-//            switchToFuckActivity(message);
-//        } else {
-//            startTimer();
-//        }
+        String message = UbtPushManager.getInstance().getPushClickResultForXG(this);
+        if (message != null) {
+            if (isTaskRoot()) {
+                return;
+            }
+            switchToFuckActivity(message);
+        } else {
+            startTimer();
+        }
+    }
+
+    private void startTimer() {
+        disposable = Observable.timer(500, TimeUnit.MILLISECONDS).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(aLong -> checkUpdate());
+    }
+
+
+
+    private void switchToFuckActivity(String message) {
+
+        try {
+            JSONObject jsonObject = new JSONObject(message);
+            String type = jsonObject.optString("t");
+            if ("1".equals(type)) {
+                String url = jsonObject.optString("v");
+                HashMap<String, String> map = new HashMap<>();
+                map.put("push_url", url);
+                ActivityRoute.toAnotherActivity(this, PushSwitchActivity.class, map, true);
+            }
+        } catch (Exception e) {
+        }
+
     }
 
     @Override
