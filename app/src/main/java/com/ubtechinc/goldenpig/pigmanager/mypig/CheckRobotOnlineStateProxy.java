@@ -38,7 +38,7 @@ public class CheckRobotOnlineStateProxy extends BaseHttpProxy {
         params.put("signature", signature);
         params.put("time", String.valueOf(time));
         params.put("accounts", serialNumber);
-        params.put("channel", com.ubt.imlibv2.BuildConfig.IM_Channel);
+        params.put("channel", BuildConfig.IM_CHANNEL);
 
         final Request okrequest = new Request.Builder()
                 .url(getUrl(params))

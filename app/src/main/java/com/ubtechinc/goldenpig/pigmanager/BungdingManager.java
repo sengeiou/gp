@@ -438,7 +438,7 @@ public class BungdingManager {
         if (timManager == null) {
             timManager = UbtTIMManager.getInstance();
         }
-        timManager.loginTIM(AuthLive.getInstance().getUserId(), mSerialId, com.ubt.imlibv2.BuildConfig.IM_Channel);
+        timManager.loginTIM(AuthLive.getInstance().getUserId(), mSerialId, com.ubtechinc.nets.BuildConfig.IM_CHANNEL);
     }
 
     public interface BanddingListener {

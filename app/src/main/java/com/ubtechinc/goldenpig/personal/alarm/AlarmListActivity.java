@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -159,26 +160,29 @@ public class AlarmListActivity extends BaseNewActivity implements SwipeItemClick
     }
 
     public void onRefresh() {
-        TVSWrapBridge.tvsAlarmManage(TVSWrapBridge.getAlarmBlobInfo(0, 1, 0, 0),
-                TVSWrapConstant.PRODUCT_ID, AuthLive.getInstance().getCurrentPig().getRobotName(), new TVSWrapBridge.TVSWrapCallback<String>() {
-                    @Override
-                    public void onError(int errCode) {
-                        LogUtils.d("code:" + errCode);
-                        LoadingDialog.getInstance(AlarmListActivity.this).dismiss();
-                        if (errCode == TVSWrapConstant.EC_NO_DATA) {
-                            mStateView.showEmpty();
-                        } else if (mList.size() == 0) {
-                            mStateView.showRetry();
-                        } else {
-                            mStateView.showContent();
+        String robotUserId = AuthLive.getInstance().getRobotUserId();
+        if (!TextUtils.isEmpty(robotUserId)) {
+            TVSWrapBridge.tvsAlarmManage(TVSWrapBridge.getAlarmBlobInfo(0, 1, 0, 0),
+                    TVSWrapConstant.PRODUCT_ID, robotUserId, new TVSWrapBridge.TVSWrapCallback<String>() {
+                        @Override
+                        public void onError(int errCode) {
+                            LogUtils.d("code:" + errCode);
+                            LoadingDialog.getInstance(AlarmListActivity.this).dismiss();
+                            if (errCode == TVSWrapConstant.EC_NO_DATA) {
+                                mStateView.showEmpty();
+                            } else if (mList.size() == 0) {
+                                mStateView.showRetry();
+                            } else {
+                                mStateView.showContent();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onSuccess(String result) {
-                        handleResult(result);
-                    }
-                });
+                        @Override
+                        public void onSuccess(String result) {
+                            handleResult(result);
+                        }
+                    });
+        }
     }
 
     /**

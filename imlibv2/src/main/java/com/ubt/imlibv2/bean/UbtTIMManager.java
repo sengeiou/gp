@@ -14,7 +14,6 @@ import com.tencent.TIMTextElem;
 import com.tencent.TIMUser;
 import com.tencent.TIMUserStatusListener;
 import com.tencent.TIMValueCallBack;
-import com.ubt.imlibv2.BuildConfig;
 import com.ubt.imlibv2.bean.event.MessageEvent;
 import com.ubt.imlibv2.bean.listener.OnPigOnlineStateListener;
 import com.ubt.imlibv2.bean.listener.OnTIMLoginListener;
@@ -262,7 +261,7 @@ public class UbtTIMManager {
 
             long time = System.currentTimeMillis();
             String singa = Utils.getSingal(time);
-            onLineRepository.getPligOnLineState(singa, String.valueOf(time), account, BuildConfig.IM_Channel, msg);
+            onLineRepository.getPligOnLineState(singa, String.valueOf(time), account, channel, msg);
         }
     }
 

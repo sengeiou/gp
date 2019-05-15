@@ -79,19 +79,19 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
                     @Override
                     public void onSuccess(String response) {
                         Log.e("getPigList", response);
-                        authLive.logined(userInfo);
-                        PigUtils.getPigList(response, AuthLive.getInstance().getUserId(), AuthLive.getInstance()
+                        PigUtils.getPigList(response, userInfo.getUserId(), AuthLive.getInstance()
                                 .getCurrentPigList());
+                        authLive.logined(userInfo);
                         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
 
                         UbtTIMManager.avatarURL = TVSWrapBridge.getTVSWrapUserInfo().getAvatar();
                         if (pigInfo != null && pigInfo.isAdmin) {
-                            timManager.loginTIM(AuthLive.getInstance().getUserId(), pigInfo.getRobotName(), com.ubt.imlibv2.BuildConfig.IM_Channel);
+                            timManager.loginTIM(AuthLive.getInstance().getUserId(), pigInfo.getRobotName(), com.ubtechinc.nets.BuildConfig.IM_CHANNEL);
 //                            UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());
                         } else {
                             timManager.setUserId(AuthLive.getInstance().getUserId());
                             timManager.setPigAccount(pigInfo != null ? pigInfo.getRobotName() : "");
-                            timManager.setChannel(com.ubt.imlibv2.BuildConfig.IM_Channel);
+                            timManager.setChannel(com.ubtechinc.nets.BuildConfig.IM_CHANNEL);
                         }
                     }
                 });

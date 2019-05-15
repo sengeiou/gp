@@ -56,6 +56,9 @@ public class EggShellActivtiy extends BaseToolBarActivity {
 
         initTvs();
 
+        TextView tvUId = findViewById(R.id.tv_uId);
+        tvUId.setText("uid：" + AuthLive.getInstance().getUserId());
+
         TextView tvDevId = findViewById(R.id.tv_devId);
         tvDevId.setText(getResources().getString(R.string.ubt_devid, DeviceUtils.getDeviceId(this)));
 
