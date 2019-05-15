@@ -112,10 +112,7 @@ public class SplashActivity extends BaseActivity {
                 .subscribe(aLong -> checkUpdate());
     }
 
-
-
     private void switchToFuckActivity(String message) {
-
         try {
             JSONObject jsonObject = new JSONObject(message);
             String type = jsonObject.optString("t");
@@ -124,10 +121,12 @@ public class SplashActivity extends BaseActivity {
                 HashMap<String, String> map = new HashMap<>();
                 map.put("push_url", url);
                 ActivityRoute.toAnotherActivity(this, PushSwitchActivity.class, map, true);
+                return;
             }
         } catch (Exception e) {
+            //TODO
         }
-
+        checkLogin();
     }
 
     @Override
@@ -196,7 +195,6 @@ public class SplashActivity extends BaseActivity {
 
             @Override
             public void onRightButtonClick(View view) {
-
 //                new DownloadUtils().downloadApk((BaseActivity) context, updateInfoModel.getUrl());
 //                dialog.dismiss();
                 ActivityRoute.toAnotherActivity((Activity) context, CommonWebActivity.class,

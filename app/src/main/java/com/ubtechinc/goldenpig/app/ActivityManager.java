@@ -97,7 +97,10 @@ public class ActivityManager {
 
     }
 
-    //退出栈中所有Activity
+    /**
+     * 退出栈中所有Activity除却指定activity
+     * @param className
+     */
     public void popAllActivityExcept(String className) {
         if (mActivityStack != null && className != null) {
             Iterator iterator = mActivityStack.iterator();
@@ -105,8 +108,7 @@ public class ActivityManager {
                 Activity activity = (Activity) iterator.next();
                 if (activity != null && !activity.getClass().getName().equals(className)) {
                     activity.finish();
-                    popActivity(activity);
-                    break;
+                    iterator.remove();
                 }
             }
         }
@@ -119,6 +121,10 @@ public class ActivityManager {
         }
     }
 
+    /**
+     * 退出栈中指定activity
+     * @param className
+     */
     public void popActivity(String className) {
         if (mActivityStack != null) {
             Iterator iterator = mActivityStack.iterator();
@@ -126,7 +132,7 @@ public class ActivityManager {
                 Activity activity = (Activity) iterator.next();
                 if (activity != null && activity.getClass().getName().equals(className)) {
                     activity.finish();
-                    popActivity(activity);
+                    iterator.remove();
                     break;
                 }
             }

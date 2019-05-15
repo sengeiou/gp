@@ -31,7 +31,6 @@ import com.ubtechinc.goldenpig.pigmanager.model.RobotAllAccountViewModel;
 import com.ubtechinc.goldenpig.pigmanager.observeable.RobotBindStateLive;
 import com.ubtechinc.goldenpig.pigmanager.register.RegisterPigRepository;
 import com.ubtechinc.goldenpig.utils.SCADAHelper;
-import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -300,9 +299,14 @@ public class BungdingManager {
             @Override
             public void onError(int errCode) {
                 Log.i(TAG, " getClientId|tvsTokenVerify|errCode : " + errCode);
-                UbtToastUtils.showCustomToast(mContext, "刷票失败");
                 if (mBanddingListener != null) {
-                    mBanddingListener.onFaild(Constants.GET_CLIENT_ID_ERROR_CODE, "");
+                    if (errCode == -5) {
+                        //TODO 网络异常
+                        mBanddingListener.onFaild(Constants.TVS_TOKEN_VERIFY_NET_ERROR, "");
+                    } else {
+                        //TODO 强制用户登录
+                        mBanddingListener.onFaild(Constants.TVS_TOKEN_VERIFY_OTHER, "");
+                    }
                 }
             }
 

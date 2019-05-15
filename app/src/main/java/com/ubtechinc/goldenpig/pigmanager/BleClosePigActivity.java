@@ -27,10 +27,14 @@ import com.ubtechinc.bluetooth.command.JsonCommandProduce;
 import com.ubtechinc.bluetooth.event.BleScanResultEvent;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.app.ActivityManager;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
 import com.ubtechinc.goldenpig.comm.widget.LoadingDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTBaseDialog;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
+import com.ubtechinc.goldenpig.login.LoginActivity;
+import com.ubtechinc.goldenpig.login.LoginModel;
+import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.net.CheckBindRobotModule;
 import com.ubtechinc.goldenpig.net.RegisterRobotModule;
 import com.ubtechinc.goldenpig.pigmanager.bean.BundingListenerAbster;
@@ -104,6 +108,8 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
     private boolean isAutoScan;
 
     private boolean isManualScan;
+
+    private UBTBaseDialog mForceOfflineDialog;
 
     private Handler mHandler = new Handler() {
         @Override
@@ -294,8 +300,6 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
     BundingListenerAbster mBandingListenerAbster = new BundingListenerAbster() {
         @Override
         public void onFaild(int errorCode, String message) {
-            super.onFaild(errorCode, message);
-
             switch (errorCode) {
                 case 2041:
                     if (pigListDialog != null && pigListDialog.isShowing()) {
@@ -315,7 +319,16 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
                 pigListDialog.dismiss();
             }
             dismissLoadDialog();
-            showErrorDialog(message);
+            if (errorCode == Constants.TVS_TOKEN_VERIFY_OTHER) {
+                //TODO 强制登录
+                showForceOfflineDialog(message);
+            } else {
+                showErrorDialog(message);
+            }
+            if (connDisposable != null) {
+                connDisposable.dispose();
+                connDisposable = null;
+            }
         }
 
         @Override
@@ -405,6 +418,44 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
             toSetWifi();
         }
     };
+
+    private void showForceOfflineDialog(String tip) {
+        if (isFinishing() || isDestroyed()) {
+            return;
+        }
+        if (mForceOfflineDialog == null) {
+            mForceOfflineDialog = new UBTBaseDialog(this);
+            mForceOfflineDialog.setCancelable(false);
+            mForceOfflineDialog.setCanceledOnTouchOutside(false);
+            mForceOfflineDialog.setTips(tip);
+            mForceOfflineDialog.setLeftBtnShow(false);
+            mForceOfflineDialog.setRightButtonTxt("重新登录");
+            mForceOfflineDialog.setRightBtnColor(ContextCompat.getColor(this, R.color.ubt_tab_btn_txt_checked_color));
+            mForceOfflineDialog.setOnUbtDialogClickLinsenter(new UBTBaseDialog.OnUbtDialogClickLinsenter() {
+
+                @Override
+                public void onLeftButtonClick(View view) {
+
+                }
+
+                @Override
+                public void onRightButtonClick(View view) {
+                    doLogout();
+                }
+
+            });
+        }
+        if (!mForceOfflineDialog.isShowing() && !isFinishing() && !isDestroyed()) {
+            mForceOfflineDialog.show();
+        }
+    }
+
+    private void doLogout() {
+        new LoginModel().logoutTVS();
+        AuthLive.getInstance().logout();
+        ActivityManager.getInstance().popAllActivityExcept(LoginActivity.class.getName());
+        ActivityRoute.toAnotherActivity(this, LoginActivity.class, true);
+    }
 
     /**
      * 错误弹框
@@ -553,12 +604,12 @@ public class BleClosePigActivity extends BaseToolBarActivity implements View.OnC
             connDisposable = Observable.timer(15, TimeUnit.SECONDS).observeOn(AndroidSchedulers.mainThread())
                     .subscribe(aLong -> {
                         //TODO 手动连接15秒超时处理
-                        if (isManualScan) {
+//                        if (isManualScan) {
                             if (pigListDialog != null) {
                                 pigListDialog.dismiss();
                                 showErrorDialog("连接失败");
                             }
-                        }
+//                        }
                     });
         }
     }

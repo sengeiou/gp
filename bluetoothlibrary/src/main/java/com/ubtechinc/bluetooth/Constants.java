@@ -98,6 +98,15 @@ public class Constants {
      */
     public static final int GET_CLIENT_ID_ERROR_CODE = -2;
 
+    /**
+     * tvs刷票网络异常
+     */
+    public static final int TVS_TOKEN_VERIFY_NET_ERROR = -5;
+
+    /**
+     * tvs刷票票据过期
+     */
+    public static final int TVS_TOKEN_VERIFY_OTHER = -200;
 
     /**
      * 发送蓝牙信息失败
@@ -164,11 +173,16 @@ public class Constants {
             case ALREADY_BADING:
                 reuslt = "ALREADY_BADING";
                 break;
+            case TVS_TOKEN_VERIFY_NET_ERROR:
+                reuslt = "当前网络不稳定，请稍后重试";
+                break;
+            case TVS_TOKEN_VERIFY_OTHER:
+                reuslt = "连接失败，请重新登录";
+                break;
             default:
                 reuslt = "未知错误" + errorCode;
                 break;
         }
-
         return reuslt;
     }
 }
