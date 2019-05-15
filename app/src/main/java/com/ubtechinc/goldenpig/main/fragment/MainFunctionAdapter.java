@@ -26,6 +26,7 @@ import com.ubtechinc.goldenpig.children.ChildrenActivity;
 import com.ubtechinc.goldenpig.comm.entity.PairPig;
 import com.ubtechinc.goldenpig.comm.img.GlideCircleTransform;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
+import com.ubtechinc.goldenpig.creative.CreateActivity;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.main.CommonWebActivity;
 import com.ubtechinc.goldenpig.main.FunctionModel;
@@ -50,6 +51,7 @@ import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.Function
 import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.BLE;
 import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.CALL_RECORD;
 import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.CHILD;
+import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.CREATIVE;
 import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.CUSTOM_QA;
 import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.MAIL_LIST;
 import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.PAIR;
@@ -163,6 +165,9 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
                 case CHILD:
                     enterFunction(ChildrenActivity.class, null);
                     break;
+                case CREATIVE:
+                    enterFunction(CreateActivity.class, null);
+                    break;
                     default:
             }
         }
@@ -258,6 +263,8 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
             case 9:
                 functionEnum = CHILD;
                 break;
+            case 10:
+                functionEnum = CREATIVE;
             default:
         }
         if (functionEnum != null) {
@@ -294,6 +301,7 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
         MAIL_LIST("通讯录", R.drawable.ic_mail_list),
         BLE("蓝牙音箱", R.drawable.ic_bt_speaker),
         CHILD("儿童模式", R.drawable.ic_home_children),
+        CREATIVE("众创空间", R.drawable.ic_zhongchuang)
         ;
 
         String label;

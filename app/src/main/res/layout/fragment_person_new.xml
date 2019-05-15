@@ -420,8 +420,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="@dimen/dp_15"
         android:background="@color/ubt_main_bg_color" />
 </LinearLayout>
 </android.support.v4.widget.NestedScrollView>
