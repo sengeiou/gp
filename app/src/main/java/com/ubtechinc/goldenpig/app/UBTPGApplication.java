@@ -350,7 +350,7 @@ public class UBTPGApplication extends Application implements Observer {
                 @Override
                 public void onError(int errCode) {
                     Log.i(TAG, "sendClientIdToPig|onError : " + errCode);
-                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("刷票失败，错误码：" + errCode);
+//                    com.ubtech.utilcode.utils.ToastUtils.showShortToast("刷票失败，错误码：" + errCode);
                 }
 
                 @Override

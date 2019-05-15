@@ -73,11 +73,6 @@ android {
             //IM操作URL域名https://10.10.1.43:9080
             buildConfigField "String", "IM_URL", "\"https://210.75.21.106:9080\""
 
-            //H5 URL域名
-//            buildConfigField "String", "H5_URL","\"http://10.10.32.22:8080\""
-//            buildConfigField "String", "H5_URL","\"http://10.10.1.14:8090/cloud-ppi/help\""
-            buildConfigField "String", "H5_URL", "\"https://internal.ubtrobot.com/v1/cloud-ppi/help\""
-
             minifyEnabled false
             shrinkResources false
             signingConfig signingConfigs.release
@@ -103,9 +98,6 @@ android {
 
             //TVS模式开关
             buildConfigField "Boolean", "TVS_MODE", "true"
-
-            //H5 URL域名
-            buildConfigField "String", "H5_URL", "\"https://internal.ubtrobot.com/v1/cloud-ppi/help\""
 
             //是否优化zip
             zipAlignEnabled false

@@ -2,10 +2,10 @@ package com.ubtechinc.goldenpig.main;
 
 import android.content.Context;
 
-import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.comm.net.CookieInterceptor;
 import com.ubtechinc.goldenpig.login.LoginInfo;
 import com.ubtechinc.goldenpig.net.URestSigner;
+import com.ubtechinc.nets.BuildConfig;
 import com.ubtechinc.nets.utils.DeviceUtils;
 
 import java.util.HashMap;
@@ -29,7 +29,7 @@ public class UbtWebHelper {
      */
     public static HashMap<String, Object> getFeedBackWebviewData(Context context) {
         HashMap<String, Object> map = new HashMap<>();
-        String baseUrl = BuildConfig.H5_URL + "/small/smallPigHelpBack.html?";
+        String baseUrl = BuildConfig.HOST + "help/small/smallPigHelpBack.html?";
         String deviceId = DeviceUtils.getDeviceId(context);
         String url = baseUrl + "appId=" + BuildConfig.APP_ID + "&sign=" + URestSigner.sign(context, deviceId).replace(" ", "%20")
                 + "&product=" + BuildConfig.product + "&deviceId=" + deviceId + "&authorization=" + CookieInterceptor.get().getToken();
@@ -47,7 +47,7 @@ public class UbtWebHelper {
      */
     public static HashMap<String, Object> getQQMusicWebviewData(Context context) {
         HashMap<String, Object> map = new HashMap<>();
-        String baseUrl = BuildConfig.H5_URL + "/small/smallqqMusic.html?";
+        String baseUrl = BuildConfig.HOST + "help/small/smallqqMusic.html?";
         String deviceId = DeviceUtils.getDeviceId(context);
         String url = baseUrl + "appId=" + BuildConfig.APP_ID + "&sign=" + URestSigner.sign(context, deviceId).replace(" ", "%20")
                 + "&product=" + BuildConfig.product + "&deviceId=" + deviceId + "&authorization=" + CookieInterceptor.get().getToken();
@@ -65,7 +65,7 @@ public class UbtWebHelper {
      */
     public static HashMap<String, Object> getBleWebviewData(Context context) {
         HashMap<String, Object> map = new HashMap<>();
-        String baseUrl = BuildConfig.H5_URL + "/small/smallBlue.html";
+        String baseUrl = BuildConfig.HOST + "help/small/smallBlue.html";
         map.put(KEY_URL, baseUrl);
         map.put(KEY_IMMERSE_STATUSBAR, false);
         map.put(KEY_NEED_ACTIONBAR, true);
@@ -80,7 +80,7 @@ public class UbtWebHelper {
      */
     public static HashMap<String, Object> getServicePolicyWebviewData(Context context) {
         HashMap<String, Object> map = new HashMap<>();
-        String baseUrl = BuildConfig.H5_URL + "/small/smallService.html";
+        String baseUrl = BuildConfig.HOST + "help/small/smallService.html";
         map.put(KEY_URL, baseUrl);
         map.put(KEY_IMMERSE_STATUSBAR, false);
         map.put(KEY_NEED_ACTIONBAR, true);
@@ -95,7 +95,7 @@ public class UbtWebHelper {
      */
     public static HashMap<String, Object> getPrivacyPolicyWebviewData(Context context) {
         HashMap<String, Object> map = new HashMap<>();
-        String baseUrl = BuildConfig.H5_URL + "/small/smallProcy.html";
+        String baseUrl = BuildConfig.HOST + "help/small/smallProcy.html";
         map.put(KEY_URL, baseUrl);
         map.put(KEY_IMMERSE_STATUSBAR, false);
         map.put(KEY_NEED_ACTIONBAR, true);

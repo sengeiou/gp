@@ -25,7 +25,6 @@ import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.commlib.utils.ContextUtils;
 import com.ubtechinc.commlib.view.UbtSubTxtButton;
-import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.about.UbtAboutActivtiy;
 import com.ubtechinc.goldenpig.app.ActivityManager;
@@ -59,6 +58,7 @@ import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.CheckUtil;
 import com.ubtechinc.goldenpig.utils.SharedPreferencesUtils;
 import com.ubtechinc.goldenpig.utils.UbtToastUtils;
+import com.ubtechinc.nets.BuildConfig;
 import com.ubtrobot.upgrade.VersionInformation;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -379,7 +379,7 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
                 ActivityRoute.toAnotherActivity(getActivity(),CreateActivity.class, false);
                 break;
             case R.id.ubt_btn_manual:
-                String url = BuildConfig.H5_URL + "/small/smallPigStrategy.html";
+                String url = BuildConfig.HOST + "help/small/smallPigStrategy.html";
                 Intent it = new Intent(getActivity(), CommonWebActivity.class);
                 it.putExtra(KEY_URL, url);
                 startActivity(it);
