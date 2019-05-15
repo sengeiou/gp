@@ -568,7 +568,7 @@ public class UBTPGApplication extends Application implements Observer {
                         if (pigInfo != null && pigInfo.isAdmin) {
                             UbtTIMManager.avatarURL = TVSWrapBridge.getTVSWrapUserInfo().getAvatar();
                             UbtTIMManager.getInstance().loginTIM(AuthLive.getInstance().getUserId(), pigInfo.getRobotName(),
-                                    com.ubt.imlibv2.BuildConfig.IM_Channel);
+                                    com.ubtechinc.nets.BuildConfig.IM_CHANNEL);
                         }
                     }
                 });
@@ -821,6 +821,10 @@ public class UBTPGApplication extends Application implements Observer {
     }
 
     private void updatePigPair(boolean initiative) {
+        PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
+        if (pigInfo == null || !pigInfo.isAdmin) {
+            return;
+        }
         new GetPairPigQRHttpProxy().getPairPigQR(this, CookieInterceptor.get().getToken(), BuildConfig
                 .APP_ID, new GetPairPigQRHttpProxy.GetPairPigQRCallBack() {
             @Override

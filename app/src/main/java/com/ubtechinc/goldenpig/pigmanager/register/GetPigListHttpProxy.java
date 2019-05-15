@@ -33,9 +33,6 @@ public class GetPigListHttpProxy extends BaseHttpProxy {
         final Request okrequest = new Request.Builder()
                 .url(BuildConfig.HOME_HOST + "robot/common/queryRobotList")
                 .get()
-                .addHeader("authorization", token)
-                .addHeader("X-UBT-AppId", appid)
-                .addHeader("product", BuildConfig.product)
                 .build();
         Call call = okHttpClient.newCall(okrequest);
         call.enqueue(new Callback() {

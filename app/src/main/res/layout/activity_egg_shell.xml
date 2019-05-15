@@ -38,6 +38,14 @@
         android:textSize="@dimen/sp_15" />
 
     <TextView
+        android:id="@+id/tv_uId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:layout_margin="@dimen/dp_14"
+        android:text="uid"/>
+
+    <TextView
         android:id="@+id/tv_devId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -79,10 +87,8 @@
     <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:layout_marginLeft="@dimen/dp_8"
+        android:orientation="horizontal">
 
         <RadioButton
             android:id="@+id/testingRadioButton"

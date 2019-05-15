@@ -7,6 +7,7 @@ import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
+import com.ubtechinc.nets.BuildConfig;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,7 +41,6 @@ public class PigUtils {
                             } else {
                                 pigInfos.add(pigInfo);
                             }
-
                         }
                     }
 
@@ -51,8 +51,7 @@ public class PigUtils {
                         UbtTIMManager ubtTIMManager = UbtTIMManager.getInstance();
                         ubtTIMManager.setPigAccount(pigInfo.getRobotName());
                         if (pigInfo.isAdmin && !ubtTIMManager.isLoginedTIM()) {
-                            ubtTIMManager.loginTIM(userId, pigInfo.getRobotName(), com.ubt.imlibv2.BuildConfig
-                                    .IM_Channel);
+                            ubtTIMManager.loginTIM(userId, pigInfo.getRobotName(), BuildConfig.IM_CHANNEL);
                         }
                     }
                 }
