@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -96,7 +97,7 @@ public class SplashActivity extends BaseActivity {
 
     private void handleEnter() {
         String message = UbtPushManager.getInstance().getPushClickResultForXG(this);
-        if (message != null) {
+        if (!TextUtils.isEmpty(message)) {
             if (isTaskRoot()) {
                 return;
             }

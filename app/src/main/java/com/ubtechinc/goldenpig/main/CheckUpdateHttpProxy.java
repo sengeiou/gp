@@ -71,9 +71,15 @@ public class CheckUpdateHttpProxy extends BaseHttpProxy {
 
                         }
                     } else {
+                       if (callback != null) {
+                           callback.onError("后台数据错误");
+                       }
                         LogUtils.d("CheckUpdateHttpProxy", "getData|fail" + result);
                     }
                 } catch (Exception e) {
+                    if (callback != null) {
+                        callback.onError(e.getMessage());
+                    }
                     LogUtils.e("CheckUpdateHttpProxy", e.getMessage());
                 }
             }
