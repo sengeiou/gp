@@ -83,12 +83,14 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/ubt_1px"
-        android:layout_marginTop="@dimen/dp_5"
-        android:background="@color/ubt_wifi_list_divider" />
+        android:background="@color/ubt_wifi_list_divider"
+        android:visibility="gone"
+        />
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp_90"
+        android:layout_marginTop="@dimen/dp_5"
         android:background="@color/ubt_white">
 
         <EditText
@@ -146,11 +148,13 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/ubt_1px"
         android:layout_marginTop="@dimen/dp_5"
-        android:background="@color/ubt_wifi_list_divider" />
+        android:background="@color/ubt_wifi_list_divider"
+        android:visibility="gone"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="@dimen/dp_165"
+        android:layout_marginTop="@dimen/dp_5"
         android:background="@color/ubt_white">
 
         <EditText

@@ -19,7 +19,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="@dimen/ubt_1px"
-            android:background="@color/ubt_wifi_list_divider" />
+            android:background="@color/ubt_wifi_list_divider"
+            android:visibility="gone"
+            />
 
         <TextView
             android:layout_width="match_parent"
@@ -62,7 +64,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="@dimen/ubt_1px"
-            android:background="@color/ubt_wifi_list_divider" />
+            android:background="@color/ubt_wifi_list_divider"
+            android:visibility="gone"
+            />
 
         <TextView
             android:layout_width="match_parent"
@@ -76,14 +80,14 @@
             android:textSize="@dimen/sp_15"
             android:textStyle="bold" />
 
-        <LinearLayout
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="197dp"
+            android:src="@drawable/ic_created_1"
+            android:scaleType="fitXY"
             android:layout_marginLeft="@dimen/dp_15"
             android:layout_marginRight="@dimen/dp_15"
-            android:background="@drawable/ic_created_1"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/dp_25">
+           >
 
        <!--     <RelativeLayout
                 android:layout_width="match_parent"
@@ -241,18 +245,19 @@
                     </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>-->
-        </LinearLayout>
+        </ImageView>
 
-        <LinearLayout
+        <ImageView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="260dp"
             android:layout_marginBottom="@dimen/dp_20"
+            android:layout_marginTop="@dimen/dp_10"
+            android:src="@drawable/ic_created_2"
+            android:scaleType="fitXY"
+            android:orientation="vertical"
             android:layout_marginLeft="@dimen/dp_15"
             android:layout_marginRight="@dimen/dp_15"
-            android:layout_marginTop="@dimen/dp_15"
-            android:background="@drawable/ic_created_2"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/dp_25">
+            >
 
            <!-- <RelativeLayout
                 android:layout_width="match_parent"
@@ -410,6 +415,6 @@
                     </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>-->
-        </LinearLayout>
+        </ImageView>
     </LinearLayout>
 </ScrollView>

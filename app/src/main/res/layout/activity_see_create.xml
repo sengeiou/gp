@@ -27,10 +27,12 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/ubt_1px"
         android:layout_marginTop="@dimen/dp_5"
-        android:background="@color/ubt_wifi_list_divider" />
+        android:background="@color/ubt_wifi_list_divider"
+        android:visibility="gone"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
+        android:layout_marginTop="@dimen/dp_5"
         android:layout_height="@dimen/dp_90"
         android:background="@color/ubt_white">
 
@@ -67,7 +69,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/ubt_1px"
-        android:background="@color/ubt_wifi_list_divider" />
+        android:background="@color/ubt_wifi_list_divider"
+        android:visibility="gone"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -92,10 +95,12 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/ubt_1px"
         android:layout_marginTop="@dimen/dp_5"
-        android:background="@color/ubt_wifi_list_divider" />
+        android:background="@color/ubt_wifi_list_divider"
+        android:visibility="gone"/>
 
     <RelativeLayout
         android:layout_width="wrap_content"
+        android:layout_marginTop="@dimen/dp_5"
         android:layout_height="@dimen/dp_150"
         android:background="@color/ubt_white">
 
@@ -132,7 +137,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="@dimen/ubt_1px"
-        android:background="@color/ubt_wifi_list_divider" />
+        android:background="@color/ubt_wifi_list_divider"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/tv_hint1"

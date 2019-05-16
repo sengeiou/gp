@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.commlib.network.NetworkHelper;
 import com.ubtechinc.goldenpig.R;
+import com.ubtechinc.goldenpig.app.UBTPGApplication;
 
 import java.util.Arrays;
 import java.util.List;
@@ -135,7 +136,7 @@ public class ShareDialog extends Dialog {
                     .getImageID());
             holder.txtDes.setText(mShareItemEnum.getValue());
             convertView.setOnClickListener(v -> {
-                if (NetworkHelper.sharedHelper().isNetworkAvailable()) {
+                if (UBTPGApplication.isNetAvailable) {
                     if (onClickShareListener != null) {
                         switch (mShareItemEnum) {
                             case WECHAT:
