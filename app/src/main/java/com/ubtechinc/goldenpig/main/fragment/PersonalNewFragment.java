@@ -379,7 +379,7 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
                 ActivityRoute.toAnotherActivity(getActivity(),CreateActivity.class, false);
                 break;
             case R.id.ubt_btn_manual:
-                String url = BuildConfig.HOST + "help/small/smallPigStrategy.html";
+                String url = BuildConfig.HOST + "help/small/smallPigStrategy.html?appId="+ com.ubtechinc.goldenpig.BuildConfig.APP_ID + "&product=" + com.ubtechinc.goldenpig.BuildConfig.product;
                 Intent it = new Intent(getActivity(), CommonWebActivity.class);
                 it.putExtra(KEY_URL, url);
                 startActivity(it);

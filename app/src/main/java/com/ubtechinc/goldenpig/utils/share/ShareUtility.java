@@ -40,9 +40,9 @@ import java.util.List;
  */
 public class ShareUtility {
 
-    private static final String QQOPEN_APP_ID = "1107759147";
+    private static final String QQOPEN_APP_ID = "1107514711";
 
-    public static final String WEIXIN_APP_ID = "wx5cdd64cb10ab45dc";
+    public static final String WEIXIN_APP_ID = "wx0238743de057a634";
 
     private Tencent mTencent;
 
@@ -267,6 +267,10 @@ public class ShareUtility {
     public void doShareToQQ(Activity activity, String title, String url, String des) {
         if (mTencent == null) {
             mTencent = Tencent.createInstance(QQOPEN_APP_ID, activity);
+        }
+        if(!mTencent.isQQInstalled(activity)){
+            ToastUtils.showShortToast("您还没有QQ，请先安装QQ客户端");
+            return;
         }
         final Bundle params = new Bundle();
         params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_DEFAULT);
