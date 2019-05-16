@@ -24,6 +24,7 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
+import com.ubt.robot.dmsdk.TVSWrapConstant;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 
@@ -39,10 +40,6 @@ import java.util.List;
  * @changetime :2019/1/21 20:54
  */
 public class ShareUtility {
-
-    private static final String QQOPEN_APP_ID = "1107514711";
-
-    public static final String WEIXIN_APP_ID = "wx0238743de057a634";
 
     private Tencent mTencent;
 
@@ -68,7 +65,7 @@ public class ShareUtility {
 
     private void initTencent(Context context) {
         if (mTencent == null) {
-            mTencent = Tencent.createInstance(QQOPEN_APP_ID, context);
+            mTencent = Tencent.createInstance(TVSWrapConstant.APP_ID_QQ_OPEN, context);
         }
         if (mContext == null) {
             mContext = context;
@@ -77,8 +74,8 @@ public class ShareUtility {
 
     private void initWX(Context context) {
         if (mIWXAPI == null) {
-            mIWXAPI = WXAPIFactory.createWXAPI(context, WEIXIN_APP_ID);
-            mIWXAPI.registerApp(WEIXIN_APP_ID);
+            mIWXAPI = WXAPIFactory.createWXAPI(context, TVSWrapConstant.APP_ID_WX);
+            mIWXAPI.registerApp(TVSWrapConstant.APP_ID_WX);
         }
         if (mContext == null) {
             mContext = context;
@@ -265,9 +262,7 @@ public class ShareUtility {
      * @param des      分享描述
      */
     public void doShareToQQ(Activity activity, String title, String url, String des) {
-        if (mTencent == null) {
-            mTencent = Tencent.createInstance(QQOPEN_APP_ID, activity);
-        }
+        initTencent(activity);
         if(!mTencent.isQQInstalled(activity)){
             ToastUtils.showShortToast("您还没有QQ，请先安装QQ客户端");
             return;
