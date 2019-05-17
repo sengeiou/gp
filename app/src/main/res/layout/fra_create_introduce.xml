@@ -80,11 +80,11 @@
             android:textSize="@dimen/sp_15"
             android:textStyle="bold" />
 
-        <ImageView
+        <com.ubtechinc.commlib.view.HResizableImageView
             android:layout_width="match_parent"
-            android:layout_height="197dp"
+            android:layout_height="wrap_content"
             android:src="@drawable/ic_created_1"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             android:layout_marginLeft="@dimen/dp_15"
             android:layout_marginRight="@dimen/dp_15"
            >
@@ -245,15 +245,15 @@
                     </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>-->
-        </ImageView>
+        </com.ubtechinc.commlib.view.HResizableImageView>
 
-        <ImageView
+        <com.ubtechinc.commlib.view.HResizableImageView
             android:layout_width="match_parent"
-            android:layout_height="260dp"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/dp_20"
             android:layout_marginTop="@dimen/dp_10"
             android:src="@drawable/ic_created_2"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             android:orientation="vertical"
             android:layout_marginLeft="@dimen/dp_15"
             android:layout_marginRight="@dimen/dp_15"
@@ -415,6 +415,6 @@
                     </LinearLayout>
                 </RelativeLayout>
             </RelativeLayout>-->
-        </ImageView>
+        </com.ubtechinc.commlib.view.HResizableImageView>
     </LinearLayout>
 </ScrollView>

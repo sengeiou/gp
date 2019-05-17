@@ -359,7 +359,7 @@
         android:id="@+id/rl_cyctem_msg"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_45"
-        android:background="@color/white">
+        android:background="@drawable/selector_ubt_me_item">
 
         <ImageView
             android:id="@+id/iv_cyctem_msg"
