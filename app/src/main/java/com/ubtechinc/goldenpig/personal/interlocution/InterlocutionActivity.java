@@ -445,6 +445,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
                         @Override
                         public void run() {
                             LoadingDialog.getInstance(InterlocutionActivity.this).dismiss();
+                            ToastUtils.showShortToast(error);
                         }
                     });
                 }
@@ -457,7 +458,7 @@ public class InterlocutionActivity extends BaseNewActivity implements SwipeItemC
                         @Override
                         public void run() {
                             LoadingDialog.getInstance(InterlocutionActivity.this).dismiss();
-                            ToastUtils.showShortToast("添加成功");
+                            ToastUtils.showShortToast("同步成功");
                             Event<Integer> event = new Event<>(ADD_CREATE);
                             event.setData(-1);
                             EventBusUtil.sendEvent(event);

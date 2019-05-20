@@ -179,6 +179,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".pigmanager.mypig.PairPigActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".pigmanager.mypig.PairQRScannerActivity"

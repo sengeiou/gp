@@ -2,6 +2,7 @@ package com.ubtechinc.goldenpig.creative;
 
 import com.ubtech.utilcode.utils.JsonUtils;
 import com.ubtech.utilcode.utils.LogUtils;
+import com.ubtech.utilcode.utils.network.NetworkHelper;
 import com.ubtechinc.goldenpig.model.CreateModel;
 import com.ubtechinc.goldenpig.net.BaseHttpProxy;
 import com.ubtechinc.nets.BuildConfig;
@@ -28,7 +29,7 @@ public class CreativeSpaceHttpProxy extends BaseHttpProxy {
         OkHttpClient okHttpClient = getHttpClient();
 
 
-        String  url = BuildConfig.HOST + "pig/statement/list?page="+page;
+        String  url = BuildConfig.HOST + "pig/statement/list?index="+page;
 
         final Request okrequest = new Request.Builder()
                 .url(url)
@@ -55,10 +56,11 @@ public class CreativeSpaceHttpProxy extends BaseHttpProxy {
                         if (status) {
                             JSONObject modelJson = jsonObject.getJSONObject("models");
                             List<CreateModel> data   = JsonUtils.stringToObjectList(modelJson.optString("records"), CreateModel.class);
+                            int total = modelJson.optInt("total");
                             LogUtils.d("CreativeSpaceHttpProxy", "getData|success:" + data);
 
                             if (callback != null) {
-                                callback.onSuccess(data);
+                                callback.onSuccess(data, total);
                             }
                         }else{
                             if (callback != null) {
@@ -85,7 +87,7 @@ public class CreativeSpaceHttpProxy extends BaseHttpProxy {
 
         void onError(String error);
 
-        void onSuccess(List<CreateModel> data );
+        void onSuccess(List<CreateModel> data , int total);
     }
 
 
@@ -107,7 +109,13 @@ public class CreativeSpaceHttpProxy extends BaseHttpProxy {
             public void onFailure(Call call, IOException e) {
                 LogUtils.d(TAG, "addCreativeContent onFailure:" + e.getMessage());
                 if (callback != null) {
-                    callback.onError(e.getMessage());
+                    if (NetworkHelper.sharedHelper() == null) {
+                        callback.onError("当前网络异常，请检查网络设置");
+                    } else if (NetworkHelper.sharedHelper().isNetworkAvailable()) {
+                        callback.onError("当前数据异常，请稍后重试");
+                    } else {
+                        callback.onError("当前网络异常，请检查网络设置");
+                    }
                 }
             }
 
@@ -178,7 +186,15 @@ public class CreativeSpaceHttpProxy extends BaseHttpProxy {
             public void onFailure(Call call, IOException e) {
                 LogUtils.d(TAG, "deleteCreativeContent onFailure:" + e.getMessage());
                 if (callback != null) {
-                    callback.onError(e.getMessage());
+                    if (NetworkHelper.sharedHelper() == null) {
+                        callback.onError("当前网络异常，请检查网络设置");
+                    } else if (NetworkHelper.sharedHelper().isNetworkAvailable()) {
+                        callback.onError("当前数据异常，请稍后重试");
+                    } else {
+                        callback.onError("当前网络异常，请检查网络设置");
+                    }
+
+
                 }
             }
 

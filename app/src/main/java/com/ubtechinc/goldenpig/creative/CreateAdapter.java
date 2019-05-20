@@ -92,7 +92,7 @@ public class CreateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             });
         } else {
             CreateHolder2 holder = (CreateHolder2) aHolder;
-            holder.tv_count.setText("共" + model.sid + "条");
+            holder.tv_count.setText("共" +  SPUtils.get().getInt("create_count") + "条");
         }
     }
 

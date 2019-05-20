@@ -289,10 +289,15 @@ public class RecordActivity extends BaseNewActivity implements Observer {
                         }
                     }
                     UbtLogger.d("RecordActivity", "delete the list");
-                    UbtTIMManager.getInstance().deleteRecord(list);
-                    deletePosition = adapterPosition;
-                    LoadingDialog.getInstance(RecordActivity.this).setTimeout(TIMEOUT)
-                            .setShowToast(true).show();
+                    if(NetworkHelper.sharedHelper().isNetworkAvailable()){
+                        UbtTIMManager.getInstance().deleteRecord(list);
+                        deletePosition = adapterPosition;
+                        LoadingDialog.getInstance(RecordActivity.this).setTimeout(TIMEOUT)
+                                .setShowToast(true).show();
+                    }else{
+                        ToastUtils.showShortToast("当前网络异常，请检查手机网络");
+                    }
+
                 }
             }
         }

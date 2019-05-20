@@ -46,10 +46,10 @@ public abstract class JsonCallback<T> implements Callback {
             jsonObject = new JSONObject(result);
             int code = jsonObject.getInt("code");
             if (code == -505) {
-                onError("问句重复，请重新输入");
+                onError("保存失败，已存在相同问句");
                 return;
             } else if (code == -504) {
-                onError("问答中包容敏感词，请重新输入");
+                onError("保存失败，内容中包含敏感词");
                 return;
             } else if (code != 0) {
                 if (NetworkHelper.sharedHelper() == null) {

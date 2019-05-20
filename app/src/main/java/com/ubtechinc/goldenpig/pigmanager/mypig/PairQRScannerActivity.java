@@ -12,6 +12,7 @@ import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubt.qrcodelib.QRScannerActivity;
 import com.ubtech.utilcode.utils.ActivityTool;
 import com.ubtech.utilcode.utils.ToastUtils;
+import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.comm.entity.PairPig;
@@ -66,9 +67,12 @@ public class PairQRScannerActivity extends QRScannerActivity {
 
                     @Override
                     public void onSuccess() {
+                        UbtLogger.d("PairQR", "doSendSign onSuccess");
                         runOnUiThread(() -> {
                             ToastUtils.showShortToast(R.string.ubt_pair_pig_success);
 
+                            ActivityRoute.toAnotherActivity(PairQRScannerActivity.this, PairPigActivity.class, true);
+                            ActivityTool.finishActivity(QRCodeActivity.class);
                             //TODO 触发更新配对信息
                             EventBusUtil.sendEvent(new Event(EventBusUtil.DO_UPDATE_PAIR_PIG));
                         });
@@ -97,14 +101,15 @@ public class PairQRScannerActivity extends QRScannerActivity {
      * 配对八戒或解除配对后需要通过IM通知八戒本体功能
      */
     private void imSyncRelationShip() {
+        UbtLogger.d("imSyncRelationShip", "imSyncRelationShip");
         PairPig pairPig = AuthLive.getInstance().getPairPig();
         if (pairPig != null) {
             String serialNumber = pairPig.getSerialNumber();
             int pairUserId = pairPig.getPairUserId();
             String pairSerialNumber = pairPig.getPairSerialNumber();
 
-            ActivityRoute.toAnotherActivity(PairQRScannerActivity.this, PairPigActivity.class, true);
-            ActivityTool.finishActivity(QRCodeActivity.class);
+//            ActivityRoute.toAnotherActivity(PairQRScannerActivity.this, PairPigActivity.class, true);
+//            ActivityTool.finishActivity(QRCodeActivity.class);
 
             //TODO 给自己的猪发
             TIMConversation selfConversation = TIMManager.getInstance().getConversation(

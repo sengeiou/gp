@@ -160,7 +160,7 @@ public class CreateListFragment extends BaseNewFragment {
 
     private void onRefresh() {
 
-
+        UbtLogger.d(TAG, "page:" + page);
         new CreativeSpaceHttpProxy().getData(page, new CreativeSpaceHttpProxy.GetCreativeCallback() {
             @Override
             public void onError(String error) {
@@ -183,12 +183,14 @@ public class CreateListFragment extends BaseNewFragment {
             }
 
             @Override
-            public void onSuccess(List<CreateModel> data) {
+            public void onSuccess(List<CreateModel> data, int total) {
 
                 if(mHandler != null){
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
+                            SPUtils.get().put("create_count", total);
+
                             if (page == 1) {
                                 mList.clear();
                                 if (data != null && data.size() > 0) {
@@ -354,6 +356,7 @@ public class CreateListFragment extends BaseNewFragment {
                         @Override
                         public void run() {
                             LoadingDialog.getInstance(getActivity()).dismiss();
+                            ToastUtils.showShortToast(error);
                         }
                     });
                 }
@@ -384,39 +387,6 @@ public class CreateListFragment extends BaseNewFragment {
         });
 
 
-        /*ViseHttpUtil.getInstance().getPost(HttpEntity.DELETE_CREATE_MSG, getActivity())
-                .setJson(obj)
-                .request(new JsonCallback<String>(String.class) {
-                    @Override
-                    public void onDataSuccess(String response) {
-                        UbtLog.d(TAG, "onResponse:" + response);
-                        JSONObject jsonObject = null;
-                        LoadingDialog.dismiss(getActivity());
-                        try {
-                            jsonObject = new JSONObject(response);
-                            if (jsonObject.getBoolean("status")) {
-                                mList.remove(adapterPosition);
-                                adapter.notifyDataSetChanged();
-                                mList.get(0).sid = mList.size() - 1;
-                                if (mList.size() > 1) {
-                                    mStateView.showContent();
-                                } else {
-                                    mList.clear();
-                                    mStateView.showEmpty();
-                                }
-                            }
-                        } catch (Exception e) {
-                        }
-                    }
-
-                    @Override
-                    public void onFail(int i, String s) {
-                        super.onFail(i, s);
-                        UbtLog.d(TAG, "onError:" + s);
-                        LoadingDialog.dismiss(getActivity());
-                    }
-                });
-        LoadingDialog.show(getActivity());*/
     }
 
     @Override

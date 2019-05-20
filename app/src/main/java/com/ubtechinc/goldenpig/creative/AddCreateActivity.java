@@ -132,6 +132,7 @@ public class AddCreateActivity extends BaseNewActivity {
                     hasCheckNoise = true;
                     return;
                 }
+
                 addCreate();
                 break;
         }
@@ -241,6 +242,7 @@ public class AddCreateActivity extends BaseNewActivity {
                         @Override
                         public void run() {
                             LoadingDialog.getInstance(AddCreateActivity.this).dismiss();
+                            ToastUtils.showShortToast(error);
                         }
                     });
                 }
