@@ -16,7 +16,7 @@ public class EventBusUtil {
 
     public static void unregister(Object subscriber) {
         EventBus eventBus = EventBus.getDefault();
-        if (!eventBus.isRegistered(subscriber)) {
+        if (eventBus.isRegistered(subscriber)) {
             eventBus.unregister(subscriber);
         }
     }
