@@ -234,14 +234,16 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
         if (pigInfo != null) {
             mQQMusicBtn.setAlpha(1.0f);
             mQQMusicBtn.setEnabled(true);
-            mCreativeSpaceBtn.setAlpha(1.0f);
-            mCreativeSpaceBtn.setEnabled(true);
             tv_manager.setVisibility(View.VISIBLE);
             if (pigInfo.isAdmin) {
                 tv_manager.setText("管理员");
+                mCreativeSpaceBtn.setAlpha(1.0f);
+                mCreativeSpaceBtn.setEnabled(true);
             } else {
                 tv_manager.setText("普通成员");
                 ll_version.setVisibility(View.GONE);
+                mCreativeSpaceBtn.setAlpha(0.5f);
+                mCreativeSpaceBtn.setEnabled(false);
             }
             String name = pigInfo.getRobotName();
             if (!TextUtils.isEmpty(name) && name.length() >= 4) {

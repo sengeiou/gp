@@ -299,7 +299,7 @@ public class EditAddressBookActivity extends BaseNewActivity implements Observer
         picDialog.show();
         final TextView tv_delete = (TextView) picView.findViewById(R.id.tv_delete);
         if (mList.get(0).selectAll) {
-            tv_delete.setText("清空所选联系人");
+            tv_delete.setText("清空所有联系人");
         } else {
             tv_delete.setText("删除所选联系人");
         }

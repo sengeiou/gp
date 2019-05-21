@@ -222,7 +222,7 @@ public class PigNewFragment extends BaseFragment {
 
 
     private boolean hiden = true;
-    private int baseHeight = 100; //后续看兼容性通过计算itemView高度或者在布局设置控件高度
+    private int baseHeight = 105; //后续看兼容性通过计算itemView高度或者在布局设置控件高度
 
     private void changeFunctionCardListHeight() {
         int count = mFunctionModel.catetory.categorys.size();

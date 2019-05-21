@@ -50,7 +50,6 @@ import java.util.List;
 import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.ALARM;
 import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.BLE;
 import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.CALL_RECORD;
-import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.CHILD;
 import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.CREATIVE;
 import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.CUSTOM_QA;
 import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.MAIL_LIST;
@@ -162,9 +161,9 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
                 case BLE:
                     ActivityRoute.toAnotherActivity((Activity) context, CommonWebActivity.class, UbtWebHelper.getBleWebviewData(context), false);
                     break;
-                case CHILD:
-                    enterFunction(ChildrenActivity.class, null);
-                    break;
+//                case CHILD:
+//                    enterFunction(ChildrenActivity.class, null);
+//                    break;
                 case CREATIVE:
                     enterFunction(CreateActivity.class, null);
                     break;
@@ -261,10 +260,10 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
                 functionEnum = BLE;
                 break;
             case 9:
-                functionEnum = CHILD;
-                break;
-            case 10:
                 functionEnum = CREATIVE;
+                break;
+//            case 10:
+//                functionEnum = CREATIVE;
             default:
         }
         if (functionEnum != null) {
@@ -300,7 +299,7 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
         CALL_RECORD("最近通话", R.drawable.ic_call_record),
         MAIL_LIST("通讯录", R.drawable.ic_mail_list),
         BLE("蓝牙音箱", R.drawable.ic_bt_speaker),
-        CHILD("儿童模式", R.drawable.ic_home_children),
+//        CHILD("儿童模式", R.drawable.ic_home_children),
         CREATIVE("众创空间", R.drawable.ic_zhongchuang)
         ;
 
