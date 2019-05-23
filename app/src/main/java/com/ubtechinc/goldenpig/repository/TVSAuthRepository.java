@@ -86,17 +86,17 @@ public class TVSAuthRepository {
     }
 
     public interface AuthCallBack {
-        public void onTVSLoginSuccess(LoginInfo userInfo);
+        void onTVSLoginSuccess(LoginInfo userInfo);
 
-        public void onError();
+        void onError();
 
-        public void onCancel();
+        void onCancel();
     }
 
     public interface BindingCallBack {
-        public void onBindingSuccess();
+        void onBindingSuccess();
 
-        public void onError();
+        void onError();
     }
 
 

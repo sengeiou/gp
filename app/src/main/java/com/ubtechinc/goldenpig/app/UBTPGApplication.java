@@ -185,6 +185,7 @@ public class UBTPGApplication extends Application implements Observer {
         UBTLog.d(TAG, "BuildConfig.DEBUG:" + BuildConfig.DEBUG);
         if (!BuildConfig.DEBUG) {
             CrashReport.initCrashReport(getApplicationContext(), "a6f55be79e", false);
+            CrashReport.setAppVersion(getApplicationContext(), ContextUtils.getVerName(this) + "."+ ContextUtils.getVerCode(this));
             CrashReport.setAppChannel(getApplicationContext(), AppUtil.getMetaDataFromApp(this, AppUtil
                     .KEY_CHANNEL_META));
         } else {
