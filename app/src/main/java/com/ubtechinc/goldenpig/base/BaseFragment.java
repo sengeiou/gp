@@ -21,7 +21,6 @@ import com.ubtechinc.goldenpig.pigmanager.BleConfigReadyActivity;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.SCADAHelper;
-import com.umeng.analytics.MobclickAgent;
 
 import java.util.HashMap;
 
@@ -134,14 +133,12 @@ public abstract class BaseFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        MobclickAgent.onPageEnd(this.getClass().getSimpleName());
     }
 
     @Override
     public void onResume() {
         super.onResume();
         //checkPigWifi();
-        MobclickAgent.onPageStart(this.getClass().getSimpleName()); //统计页面("MainScreen"为页面名称，可自定义)
         showTips();
     }
 

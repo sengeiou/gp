@@ -20,7 +20,6 @@ import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.utils.PermissionPageUtils;
 import com.ubtechinc.goldenpig.view.StateView;
-import com.umeng.analytics.MobclickAgent;
 import com.yanzhenjie.permission.Permission;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -55,18 +54,6 @@ public abstract class BaseNewActivity extends AppCompatActivity {
         if (isRegisterEventBus()) {
             EventBusUtil.register(this);
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this);
     }
 
     @Override

@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import com.ubtechinc.goldenpig.eventbus.EventBusUtil;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.view.StateView;
-import com.umeng.analytics.MobclickAgent;
 
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -21,7 +20,7 @@ import butterknife.Unbinder;
 /**
  * Created by hht on 2018/2/24 0024.
  */
-
+@Deprecated
 public abstract class BaseNewFragment extends Fragment {
     protected boolean isVisible = false;//当前Fragment是否可见
     protected boolean isInitView = false;//是否与View建立起映射关系
@@ -133,18 +132,6 @@ public abstract class BaseNewFragment extends Fragment {
      */
     protected void onReceiveStickyEvent(Event event) {
 
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        MobclickAgent.onPageStart(this.getClass().getSimpleName()); //统计页面("MainScreen"为页面名称，可自定义)
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        MobclickAgent.onPageEnd(this.getClass().getSimpleName());
     }
 
     protected StateView mStateView;

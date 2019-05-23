@@ -22,7 +22,6 @@ import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseActivity;
-import com.ubtechinc.goldenpig.children.ChildrenActivity;
 import com.ubtechinc.goldenpig.comm.entity.PairPig;
 import com.ubtechinc.goldenpig.comm.img.GlideCircleTransform;
 import com.ubtechinc.goldenpig.comm.widget.UBTSubTitleDialog;
@@ -47,15 +46,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.ALARM;
-import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.BLE;
-import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.CALL_RECORD;
-import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.CREATIVE;
-import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.CUSTOM_QA;
-import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.MAIL_LIST;
-import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.PAIR;
-import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.REMIND;
-import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.VOICE_MAIL;
+import static com.ubtechinc.goldenpig.main.fragment.MainFunctionAdapter.FunctionEnum.*;
 
 /**
  *@auther        :zzj

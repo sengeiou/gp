@@ -167,7 +167,7 @@ public class UBTPGApplication extends Application implements Observer {
 
     private void initAppForMainProcess() {
 
-//        new ScreenAdaptation(this, 720, 1280).register();
+        UBTLog.init(this);
 
         //add crash
         CrashHandlerUtil.getInstance().init(this, null, "BaJie_crash/");
@@ -182,7 +182,7 @@ public class UBTPGApplication extends Application implements Observer {
         TVSWrapBridge.init(this);
 
         //bugly
-        Log.d(TAG, "BuildConfig.DEBUG:" + BuildConfig.DEBUG);
+        UBTLog.d(TAG, "BuildConfig.DEBUG:" + BuildConfig.DEBUG);
         if (!BuildConfig.DEBUG) {
             CrashReport.initCrashReport(getApplicationContext(), "a6f55be79e", false);
             CrashReport.setAppChannel(getApplicationContext(), AppUtil.getMetaDataFromApp(this, AppUtil

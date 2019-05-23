@@ -25,7 +25,6 @@ import com.ubtechinc.goldenpig.eventbus.modle.Event;
 import com.ubtechinc.goldenpig.pigmanager.BleConfigReadyActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.PermissionPageUtils;
-import com.umeng.analytics.MobclickAgent;
 import com.yanzhenjie.permission.Permission;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -102,18 +101,6 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected boolean needPreLoad() {
         return false;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        MobclickAgent.onPause(this);
     }
 
     protected boolean isForbiddenSnapShot() {

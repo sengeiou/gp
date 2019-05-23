@@ -1,7 +1,7 @@
 package com.ubtechinc.commlib.log;
 
 
-import android.os.Environment;
+import android.content.Context;
 import android.util.Log;
 
 import java.io.File;
@@ -24,8 +24,7 @@ import java.util.Date;
 public class UBTLog  {
 
 
-    private static String UBT_LOG_PATH = Environment
-            .getExternalStorageDirectory().getAbsolutePath() + "/ubtech/log/";  //log文件保存路径
+    private static String UBT_LOG_PATH;  //log文件保存路径
     private static String UBT_LOG_NAME = "log";
 
     private static OutputStreamWriter writer; //文件输出流
@@ -41,7 +40,8 @@ public class UBTLog  {
     private static boolean isWriteToFile = true; //是否将日志保存到文件
 
 
-    public static void Init() {
+    public static void init(Context context) {
+        UBT_LOG_PATH = context.getFilesDir().getPath() + "/ubtech/log/";
         deleteSDcardExpiredLog();
     }
 
@@ -99,8 +99,7 @@ public class UBTLog  {
         File file = new File(UBT_LOG_PATH);
         OutputStreamWriter writer = null;
         if (!file.exists()) {
-            file.mkdir();
-            file.exists();
+            file.mkdirs();
         }
         file = getLogFile();
         try {
