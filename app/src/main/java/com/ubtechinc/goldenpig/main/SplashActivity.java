@@ -366,11 +366,7 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EventBusUtil.unregister(this);
         unRegisterEventObserve();
-        if (mLoginModel != null) {
-            mLoginModel.onCancel();
-        }
         if (handler != null) {
             handler.removeCallbacksAndMessages(null);
             handler = null;

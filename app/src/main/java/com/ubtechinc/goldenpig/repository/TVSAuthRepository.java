@@ -2,6 +2,8 @@ package com.ubtechinc.goldenpig.repository;
 
 import android.app.Activity;
 
+import com.tencent.ai.tvs.core.common.ErrCode;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.ubt.robot.dmsdk.TVSWrapBridge;
 import com.ubt.robot.dmsdk.TVSWrapPlatform;
 import com.ubt.robot.dmsdk.model.TVSWrapAccountInfo;
@@ -16,7 +18,7 @@ public class TVSAuthRepository {
         TVSWrapBridge.tvsLogin(TVSWrapPlatform.WX, activity, new TVSWrapBridge.TVSWrapCallback() {
             @Override
             public void onError(int errCode) {
-                callBackError(authCallBack);
+                callBackError(authCallBack, errCode);
             }
 
             @Override
@@ -30,7 +32,7 @@ public class TVSAuthRepository {
         TVSWrapBridge.tvsLogin(TVSWrapPlatform.QQOpen, activity, new TVSWrapBridge.TVSWrapCallback() {
             @Override
             public void onError(int errCode) {
-                callBackError(authCallBack);
+                callBackError(authCallBack, errCode);
             }
 
             @Override
@@ -65,7 +67,7 @@ public class TVSAuthRepository {
         TVSWrapBridge.tvsTokenVerify(new TVSWrapBridge.TVSWrapCallback() {
             @Override
             public void onError(int errCode) {
-                callBackError(authCallBack);
+                callBackError(authCallBack, errCode);
             }
 
             @Override
@@ -116,10 +118,15 @@ public class TVSAuthRepository {
         }
     }
 
-    private void callBackError(AuthCallBack authCallBack) {
+    private void callBackError(AuthCallBack authCallBack, int errCode) {
         if (authCallBack != null) {
-            authCallBack.onError();
+            if (errCode == ErrCode.ERR_USER_CANCEL) {
+                authCallBack.onCancel();
+            } else {
+                authCallBack.onError();
+            }
         }
+        CrashReport.postCatchedException(new Throwable(String.valueOf(errCode)));
     }
 
     private void callBackCancel(AuthCallBack authCallBack) {
