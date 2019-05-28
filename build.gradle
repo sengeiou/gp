@@ -6,7 +6,7 @@ buildscript {
     ext.kotlin_version =  '1.2.50'
     repositories {
         google()
-        jcenter {url 'https://maven.aliyun.com/repository/jcenter'}
+        maven {url 'https://maven.aliyun.com/repository/jcenter'}
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
         mavenLocal()
         mavenCentral()
@@ -33,7 +33,7 @@ allprojects {
         mavenCentral()
         mavenLocal()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-        jcenter {url 'https://maven.aliyun.com/repository/jcenter'}
+        maven {url 'https://maven.aliyun.com/repository/jcenter'}
         /*maven { url 'https://maven.oschina.net/content/groups/public/' }
         maven {url 'https://mvnrepository.com/artifact/'}*/
        /* maven { url 'http://uk.maven.org/maven2/' }

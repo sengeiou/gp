@@ -59,21 +59,23 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
     private ChatAdapter adapter;
     private ListView listView;
     private View mEmptyView;
+    private View mFullView;
     private ChatPresenter presenter;
     private ChatInput input;
     private static final int IMAGE_STORE = 200;
     private static final int FILE_CODE = 300;
     private static final int IMAGE_PREVIEW = 400;
     private VoiceSendingView voiceSendingView;
-    private VoiceCancelView  voiceCancelView;
+    private VoiceCancelView voiceCancelView;
     private String identify;
     private RecorderUtil recorder = new RecorderUtil();
     private TIMConversationType type;
     private ChannelInfo info = null;
-    private String TAG="ChatActivity";
-    long mVoiceRecordingTimeout=60*1000;
-    private int HIDDEN_CANCEL=1000;
-    public static void navToChat(Context context, String identify, TIMConversationType type, ChannelInfo info){
+    private String TAG = "ChatActivity";
+    long mVoiceRecordingTimeout = 60 * 1000;
+    private int HIDDEN_CANCEL = 1000;
+
+    public static void navToChat(Context context, String identify, TIMConversationType type, ChannelInfo info) {
         Intent intent = new Intent(context, ChatActivity.class);
         intent.putExtra("identify", identify);
         intent.putExtra("type", type);
@@ -93,14 +95,14 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
 
         identify = getIntent().getStringExtra("identify");
         if (pigInfo != null) {
-            identify=pigInfo.getRobotName();
-            UbtLogger.d("ChatActivity", "Pig identity  "+identify +"me identity "+UbtTIMManager.userId);
+            identify = pigInfo.getRobotName();
+            UbtLogger.d("ChatActivity", "Pig identity  " + identify + "me identity " + UbtTIMManager.userId);
         } else {
-            identify="776322";
-           Log.d("ChatActivity", "test identity  "+identify);
+            identify = "776322";
+            Log.d("ChatActivity", "test identity  " + identify);
         }
-       // type = (TIMConversationType) getIntent().getSerializableExtra("type");
-        type=TIMConversationType.C2C;
+        // type = (TIMConversationType) getIntent().getSerializableExtra("type");
+        type = TIMConversationType.C2C;
         info = getIntent().getParcelableExtra("info");
         presenter = new ChatPresenter(this, identify, type);
         input = (ChatInput) findViewById(R.id.input_panel);
@@ -109,8 +111,10 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
         adapter = new ChatAdapter(this, messageList, R.layout.item_message);
         listView = (ListView) findViewById(R.id.list);
         mEmptyView = findViewById(R.id.tv_voice_empty);
+        mFullView = View.inflate(this, R.layout.chat_full_header, null);
+        listView.addHeaderView(mFullView, null, false);
         listView.setAdapter(adapter);
-       // showEmptyView();
+        // showEmptyView();
         listView.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
         listView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -125,6 +129,7 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
         });
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             private int firstItem;
+
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_IDLE && firstItem == 0) {
@@ -132,6 +137,7 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
                     presenter.getMessage(messageList.size() > 0 ? messageList.get(0).getMessage() : null);
                 }
             }
+
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
                 firstItem = firstVisibleItem;
@@ -159,14 +165,28 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
     }
 
     private void showEmptyView() {
-        if (mEmptyView == null || listView == null) return;
+        if (mEmptyView == null || mFullView == null || listView == null) {
+            return;
+        }
         if (messageList == null || messageList.isEmpty()) {
             mEmptyView.setVisibility(View.VISIBLE);
+            listView.removeHeaderView(mFullView);
+//            mFullView.setVisibility(View.GONE);
             listView.setVisibility(View.GONE);
+        } else if (messageList.size() >= ChatPresenter.SHOW_MESSAGE_MAX) {
+            mEmptyView.setVisibility(View.GONE);
+            if (listView.getHeaderViewsCount() == 0) {
+                listView.addHeaderView(mFullView, null, false);
+            }
+//            mFullView.setVisibility(View.VISIBLE);
+            listView.setVisibility(View.VISIBLE);
         } else {
             mEmptyView.setVisibility(View.GONE);
+            listView.removeHeaderView(mFullView);
+//            mFullView.setVisibility(View.GONE);
             listView.setVisibility(View.VISIBLE);
         }
+
     }
 
     @Override
@@ -180,13 +200,13 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
     }
 
     @Override
-    protected void onPause(){
+    protected void onPause() {
         super.onPause();
         //退出聊天界面时输入框有内容，保存草稿
-        if (input.getText().length() > 0){
+        if (input.getText().length() > 0) {
             TextMessage message = new TextMessage(input.getText());
             presenter.saveDraft(message.getMessage());
-        }else{
+        } else {
             presenter.saveDraft(null);
         }
         presenter.readMessages();
@@ -202,6 +222,7 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
 
     /**
      * 处理系统消息
+     *
      * @param message
      */
     @Override
@@ -210,12 +231,12 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
             return;
         }
         TIMGroupSystemElem e = (TIMGroupSystemElem) message.getElement(0);
-        switch (e.getSubtype()){
+        switch (e.getSubtype()) {
             case TIM_GROUP_SYSTEM_GRANT_ADMIN_TYPE:
                 //LiveHelper.toast("您被设置为管理员");
                 break;
             case TIM_GROUP_SYSTEM_CANCEL_ADMIN_TYPE:
-               // LiveHelper.toast("您被取消管理员身份");
+                // LiveHelper.toast("您被取消管理员身份");
                 break;
             case TIM_GROUP_SYSTEM_KICK_OFF_FROM_GROUP_TYPE:
                 finish();
@@ -226,6 +247,7 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
 
     /**
      * 显示消息
+     *
      * @param message
      */
     @Override
@@ -235,18 +257,18 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
         } else {
             Message mMessage = MessageFactory.getMessage(message);
             if (mMessage != null) {
-                if (mMessage instanceof CustomMessage){
-                    Log.d(TAG,"receive the customeMessae");
-                }else{
-                    if (messageList.size()==0){
+                if (mMessage instanceof CustomMessage) {
+                    Log.d(TAG, "receive the customeMessae");
+                } else {
+                    if (messageList.size() == 0) {
                         mMessage.setHasTime(null);
-                    }else{
-                        Log.d(TAG,"set has time ");
-                        mMessage.setHasTime(messageList.get(messageList.size()-1).getMessage());
+                    } else {
+                        Log.d(TAG, "set has time ");
+                        mMessage.setHasTime(messageList.get(messageList.size() - 1).getMessage());
                     }
                     messageList.add(mMessage);
                     adapter.update(messageList);
-                    listView.setSelection(adapter.getCount()-1);
+                    listView.setSelection(adapter.getCount() - 1);
 
                 }
             }
@@ -256,27 +278,29 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
 
     /**
      * 显示消息
+     *
      * @param messages
      */
     @Override
     public void showMessage(List<TIMMessage> messages) {
         int newMsgNum = 0;
-        for (int i = 0; i < messages.size(); ++i){
+        for (int i = 0; i < messages.size(); ++i) {
             Message mMessage = MessageFactory.getMessage(messages.get(i));
-            if (mMessage == null || messages.get(i).status() == TIMMessageStatus.HasDeleted) continue;
-            Log.d(TAG,"receive the customeMessae List<TIMMessage>"+mMessage.getMessage().getElement(0).getType());
+            if (mMessage == null || messages.get(i).status() == TIMMessageStatus.HasDeleted)
+                continue;
+            Log.d(TAG, "receive the customeMessae List<TIMMessage>" + mMessage.getMessage().getElement(0).getType());
             if (mMessage instanceof CustomMessage && (((CustomMessage) mMessage).getType() == CustomMessage.Type.TYPING ||
                     ((CustomMessage) mMessage).getType() == CustomMessage.Type.INVALID)) continue;
 
-            if (mMessage instanceof CustomMessage ) {
-                Log.d(TAG,"(CustomMessage) mMessage).getType()  "+((CustomMessage) mMessage).getType());
+            if (mMessage instanceof CustomMessage) {
+                Log.d(TAG, "(CustomMessage) mMessage).getType()  " + ((CustomMessage) mMessage).getType());
             }
             ++newMsgNum;
-            Log.d(TAG,"receive the customeMessae List<TIMMessage> number " +newMsgNum );
-            if (i != messages.size() - 1){
-                mMessage.setHasTime(messages.get(i+1));
+            Log.d(TAG, "receive the customeMessae List<TIMMessage> number " + newMsgNum);
+            if (i != messages.size() - 1) {
+                mMessage.setHasTime(messages.get(i + 1));
                 messageList.add(0, mMessage);
-            }else{
+            } else {
                 mMessage.setHasTime(null);
                 messageList.add(0, mMessage);
             }
@@ -285,7 +309,7 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
         adapter.update(messageList);
         listView.setSelection(newMsgNum);
         showEmptyView();
-        UbtLogger.d(TAG,"showMessage number   "+newMsgNum);
+        UbtLogger.d(TAG, "showMessage number   " + newMsgNum);
     }
 
     /**
@@ -298,6 +322,7 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
 
     /**
      * 发送消息成功
+     *
      * @param message 返回的消息
      */
     @Override
@@ -314,20 +339,20 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
     @Override
     public void onSendMessageFail(int code, String desc, TIMMessage message) {
         long id = message.getMsgUniqueId();
-        for (Message msg : messageList){
-            if (msg.getMessage().getMsgUniqueId() == id){
-                switch (code){
+        for (Message msg : messageList) {
+            if (msg.getMessage().getMsgUniqueId() == id) {
+                switch (code) {
                     case 80001:
                         //发送内容包含敏感词
                         msg.setDesc(getString(R.string.chat_content_bad));
                         adapter.update(messageList);
-                        if(UBTPGApplication.voiceMail_debug) {
+                        if (UBTPGApplication.voiceMail_debug) {
                             Toast.makeText(this, "内容含有敏感词", Toast.LENGTH_SHORT).show();
                         }
                         break;
                     case 6011:
                         adapter.update(messageList);
-                        if(UBTPGApplication.voiceMail_debug) {
+                        if (UBTPGApplication.voiceMail_debug) {
                             Toast.makeText(this, "接收方不存在(desc: to user invalid)", Toast.LENGTH_SHORT).show();
                         }
                         break;
@@ -379,19 +404,19 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
      */
     @Override
     public void sendText() {
-           boolean isValidCharacter= isLetterDigitOrChinese(input.getText().toString());
-           if(!isValidCharacter){
-               Toast.makeText(UBTPGApplication.getContext(), "留言内容未包含有效字符", Toast.LENGTH_LONG).show();
-                return ;
-           }
-           Message message = new TextMessage(input.getText());
-           presenter.sendMessage(message.getMessage(), ChatPresenter.MESSAGE_TEXT);
-           input.setText("");
+        boolean isValidCharacter = isLetterDigitOrChinese(input.getText().toString());
+        if (!isValidCharacter) {
+            Toast.makeText(UBTPGApplication.getContext(), "留言内容未包含有效字符", Toast.LENGTH_LONG).show();
+            return;
+        }
+        Message message = new TextMessage(input.getText());
+        presenter.sendMessage(message.getMessage(), ChatPresenter.MESSAGE_TEXT);
+        input.setText("");
     }
 
     public static boolean isLetterDigitOrChinese(String str) {
-        for(int i=0;i<str.length();i++) {
-            if(isChinese(str.charAt(i))||isNumber(str.charAt(i))||isAlphabetic(str.charAt(i))){
+        for (int i = 0; i < str.length(); i++) {
+            if (isChinese(str.charAt(i)) || isNumber(str.charAt(i)) || isAlphabetic(str.charAt(i))) {
                 return true;
             }
         }
@@ -408,7 +433,7 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
                 || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
                 || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS
                 || ub == Character.UnicodeBlock.GENERAL_PUNCTUATION) {
-            if(isChinesePunctuation(c)){
+            if (isChinesePunctuation(c)) {
                 return false;
             }
             return true;
@@ -429,22 +454,22 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
         }
     }
 
-     public static boolean isNumber(char n){
-            if(Character.isDigit(n)){
-                return true;
-            }else {
-                return false;
-            }
+    public static boolean isNumber(char n) {
+        if (Character.isDigit(n)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean isAlphabetic(char m) {
+        if (Character.isAlphabetic(m)) {
+            return true;
+        } else {
+            return false;
         }
 
-     public static boolean isAlphabetic(char m) {
-            if(Character.isAlphabetic(m)){
-                return true;
-            }else {
-                return false;
-            }
-
-     }
+    }
 
 
     /**
@@ -464,20 +489,20 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
     public void startSendVoice() {
         try {
             if (!recorder.isRecording()) {
-                boolean status=recorder.startRecording();
-                if(status){
+                boolean status = recorder.startRecording();
+                if (status) {
                     voiceSendingView.setVisibility(View.VISIBLE);
                     voiceCancelView.setVisibility(View.GONE);
                     voiceSendingView.showRecording();
-                }else {
+                } else {
                     Toast.makeText(this, getResources().getString(R.string.chat_audio_permission), Toast.LENGTH_SHORT).show();
                 }
-            }else {
+            } else {
                 voiceSendingView.setVisibility(View.VISIBLE);
                 voiceCancelView.setVisibility(View.GONE);
                 voiceSendingView.showRecording();
             }
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -490,8 +515,8 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
         voiceSendingView.release();
         voiceCancelView.setVisibility(View.GONE);
         voiceSendingView.setVisibility(View.GONE);
-        boolean status=recorder.stopRecording();
-        if(!status){
+        boolean status = recorder.stopRecording();
+        if (!status) {
             return;
         }
         if (recorder.getTimeInterval() < 1) {
@@ -517,8 +542,10 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
         voiceCancelView.setVisibility(View.GONE);
         recorder.stopRecording();
     }
+
     /**
      * 发送小视频消息
+     *
      * @param fileName 文件名
      */
     @Override
@@ -539,7 +566,7 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
      */
     @Override
     public void sending() {
-        if (type == TIMConversationType.C2C){
+        if (type == TIMConversationType.C2C) {
             Message message = new CustomMessage(CustomMessage.Type.TYPING);
             presenter.sendOnlineMessage(message.getMessage());
         }
@@ -556,12 +583,12 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-        Message message = messageList.get(info.position);
+        Message message = messageList.get(info.position - listView.getHeaderViewsCount());
         menu.add(0, 1, Menu.NONE, getString(R.string.chat_del));
-        if (message.isSendFail()){
+        if (message.isSendFail()) {
             menu.add(0, 2, Menu.NONE, getString(R.string.chat_resend));
         }
-        if (message instanceof ImageMessage || message instanceof FileMessage){
+        if (message instanceof ImageMessage || message instanceof FileMessage) {
             menu.add(0, 3, Menu.NONE, getString(R.string.chat_save));
         }
     }
@@ -569,18 +596,18 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
     @Override
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo mi = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        Message message = messageList.get(mi.position);
+        Message message = messageList.get(mi.position - listView.getHeaderViewsCount());
         switch (item.getItemId()) {
             case 1:
                 message.remove();
-                messageList.remove(mi.position);
-                handle(messageList);
+                messageList.remove(mi.position - listView.getHeaderViewsCount());
+                handleItemDate(messageList);
                 adapter.update(messageList);
                 showEmptyView();
                 break;
             case 2:
                 messageList.remove(message);
-                presenter.sendMessage(message.getMessage(),ChatPresenter.MESSAGE_TEXT);
+                presenter.sendMessage(message.getMessage(), ChatPresenter.MESSAGE_TEXT);
                 break;
             case 3:
                 message.save();
@@ -591,12 +618,16 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
         return super.onContextItemSelected(item);
     }
 
-    private void handle(List<Message> messageList) {
+    private void handleItemDate(List<Message> messageList) {
         int size = messageList.size();
+        if (size >= 1) {
+            Message message = messageList.get(0);
+            message.setHasTime(null);
+        }
         for (int i = 1; i < size; i++) {
             Message message = messageList.get(i);
-            Message PreMessage = messageList.get(i - 1);
-            message.setHasTime(PreMessage.getMessage());
+            Message preMessage = messageList.get(i - 1);
+            message.setHasTime(preMessage.getMessage());
         }
     }
 
@@ -604,7 +635,7 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
     @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-      if (requestCode == IMAGE_STORE) {
+        if (requestCode == IMAGE_STORE) {
             if (resultCode == RESULT_OK && data != null) {
                 showImagePreview(FileUtil.getFilePath(this, data.getData()));
             }
@@ -613,51 +644,52 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
             if (resultCode == RESULT_OK) {
                 sendFile(FileUtil.getFilePath(this, data.getData()));
             }
-        } else if (requestCode == IMAGE_PREVIEW){
+        } else if (requestCode == IMAGE_PREVIEW) {
             if (resultCode == RESULT_OK) {
-                boolean isOri = data.getBooleanExtra("isOri",false);
+                boolean isOri = data.getBooleanExtra("isOri", false);
                 String path = data.getStringExtra("path");
                 File file = new File(path);
-                if (file.exists() && file.length() > 0){
-                    if (file.length() > 1024 * 1024 * 10){
+                if (file.exists() && file.length() > 0) {
+                    if (file.length() > 1024 * 1024 * 10) {
                         Toast.makeText(this, getString(R.string.chat_file_too_large), Toast.LENGTH_SHORT).show();
-                    }else{
-                        Message message = new ImageMessage(path,isOri);
-                        presenter.sendMessage(message.getMessage(),ChatPresenter.MESSAGE_IMAGE);
+                    } else {
+                        Message message = new ImageMessage(path, isOri);
+                        presenter.sendMessage(message.getMessage(), ChatPresenter.MESSAGE_IMAGE);
                     }
-                }else{
+                } else {
                     Toast.makeText(this, getString(R.string.chat_file_not_exist), Toast.LENGTH_SHORT).show();
                 }
             }
         }
     }
 
-    private void showImagePreview(String path){
+    private void showImagePreview(String path) {
         if (path == null) return;
         Intent intent = new Intent(this, ChatActivity.class);
         intent.putExtra("path", path);
         startActivityForResult(intent, IMAGE_PREVIEW);
     }
 
-    private void sendFile(String path){
+    private void sendFile(String path) {
         if (path == null) return;
         File file = new File(path);
-        if (file.exists()){
-            if (file.length() > 1024 * 1024 * 10){
+        if (file.exists()) {
+            if (file.length() > 1024 * 1024 * 10) {
                 Toast.makeText(this, getString(R.string.chat_file_too_large), Toast.LENGTH_SHORT).show();
-            }else{
+            } else {
                 Message message = new FileMessage(path);
-                presenter.sendMessage(message.getMessage(),ChatPresenter.MESSAGE_FILE);
+                presenter.sendMessage(message.getMessage(), ChatPresenter.MESSAGE_FILE);
             }
-        }else{
+        } else {
             Toast.makeText(this, getString(R.string.chat_file_not_exist), Toast.LENGTH_SHORT).show();
         }
     }
+
     Handler mHandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(android.os.Message message) {
-            if(message.what==HIDDEN_CANCEL) {
-             //   voiceCancelView.setVisibility(View.GONE);
+            if (message.what == HIDDEN_CANCEL) {
+                //   voiceCancelView.setVisibility(View.GONE);
 
             }
         }
@@ -668,9 +700,9 @@ public class ChatActivity extends BaseToolBarActivity implements ChatView {
                                            String permissions[], int[] grantResults) {
         if (requestCode == 100 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             // This method is called when the  permissions are given
-            Log.d(TAG,"onRequestPermissionsResult granted");
-        }else {
-            Log.d(TAG,"onRequestPermissionsResult not granted");
+            Log.d(TAG, "onRequestPermissionsResult granted");
+        } else {
+            Log.d(TAG, "onRequestPermissionsResult not granted");
 
         }
     }

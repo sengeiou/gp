@@ -3,14 +3,10 @@ package com.ubtechinc.goldenpig.voiceChat.adapter;
 import android.content.Context;
 import android.util.Log;
 
-import com.tencent.TIMCustomElem;
 import com.ubtechinc.goldenpig.common.adapter.CommonAdaper;
 import com.ubtechinc.goldenpig.voiceChat.model.Message;
 import com.ubtechinc.goldenpig.voiceChat.presenter.ChatPresenter;
-import com.ubtechinc.goldenpig.voiceChat.ui.ChatActivity;
-import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**

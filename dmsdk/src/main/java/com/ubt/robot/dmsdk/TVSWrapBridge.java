@@ -24,6 +24,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 /**
  * @Description: dmsdk封装组件，对外调用
  * @Author: zhijunzhou
@@ -434,6 +436,41 @@ public class TVSWrapBridge {
                 }
             }
         });
+    }
+
+    /**
+     * 通过账号查询设备列表,LoginProxy-getDeviceInfoListByAccount
+     * @param tvsWrapType 金猪：TVS ; 飞猪：SDK
+     * @param tvsWrapCallback
+     */
+    public static void getBindDeviceInfoList(TVSWrapType tvsWrapType, final TVSWrapCallback tvsWrapCallback) {
+        TVSDeviceBindType tvsDeviceBindType = null;
+        switch (tvsWrapType) {
+            case SDK:
+                tvsDeviceBindType = TVSDeviceBindType.SDK_SPEAKER;
+                break;
+            case TVS:
+                tvsDeviceBindType = TVSDeviceBindType.TVS_SPEAKER;
+                break;
+            default:
+        }
+        if (tvsDeviceBindType != null) {
+            LoginProxy.getInstance().getDeviceInfoListByAccount(tvsDeviceBindType, new TVSCallback1<ArrayList<TVSDevice>>() {
+                @Override
+                public void onSuccess(ArrayList<TVSDevice> tvsDevices) {
+                    if (tvsWrapCallback != null) {
+                        tvsWrapCallback.onSuccess(tvsDevices);
+                    }
+                }
+
+                @Override
+                public void onError(int i) {
+                    if (tvsWrapCallback != null) {
+                        tvsWrapCallback.onError(i);
+                    }
+                }
+            });
+        }
     }
 
     /**

@@ -37,6 +37,7 @@
     <string name="ubt_connecting">连接中</string>
     <string name="ubt_pig">八戒</string>
     <string name="ubt_send_voice">给自己的八戒发送语音留言</string>
+    <string name="ubt_voice_msg_full">只保留最近200条记录</string>
     <string name="ubt_skills_manual">技能手册</string>
     <string name="ubt_recent_calls">最近通话</string>
     <string name="ubt_visitor_login">游客登录</string>
