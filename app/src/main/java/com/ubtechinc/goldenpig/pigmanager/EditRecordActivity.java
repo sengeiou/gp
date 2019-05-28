@@ -30,6 +30,7 @@ import com.ubt.improtolib.UserContacts;
 import com.ubt.improtolib.UserRecords;
 import com.ubtech.utilcode.utils.TimeUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
+import com.ubtech.utilcode.utils.network.NetworkHelper;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseNewActivity;
@@ -419,9 +420,14 @@ public class EditRecordActivity extends BaseNewActivity implements Observer {
                     return;
                 }
                 UbtLogger.d("EditRecordActivity", "delete the list");
-                UbtTIMManager.getInstance().deleteRecord(list);
-                LoadingDialog.getInstance(EditRecordActivity.this).setTimeout(TIMEOUT)
-                        .setShowToast(true).show();
+                if(NetworkHelper.sharedHelper().isNetworkAvailable()){
+                    UbtTIMManager.getInstance().deleteRecord(list);
+                    LoadingDialog.getInstance(EditRecordActivity.this).setTimeout(TIMEOUT)
+                            .setShowToast(true).show();
+                }else{
+                    ToastUtils.showShortToast("当前网络异常，请检查手机网络");
+                }
+
             }
         });
         TextView tv_cancel = (TextView) picView.findViewById(R.id.tv_cancel);

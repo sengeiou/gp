@@ -371,6 +371,7 @@ public class CreateListFragment extends BaseNewFragment {
                         public void run() {
                             LoadingDialog.getInstance(getActivity()).dismiss();
                             mList.remove(adapterPosition);
+                            SPUtils.get().put("create_count", SPUtils.get().getInt("create_count")-1);
                             adapter.notifyDataSetChanged();
                             mList.get(0).sid = mList.size() - 1;
                             if (mList.size() > 1) {
