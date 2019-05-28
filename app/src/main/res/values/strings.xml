@@ -9,6 +9,7 @@
     <string name="ubt_wx_uninstalled">微信未安装</string>
     <string name="ubt_wx_unspported">微信不支持</string>
     <string name="ubt_login_failure">登录失败</string>
+    <string name="ubt_login_cancel">登录取消</string>
     <string name="ubt_network_unconnect">网络不可用，请检测试手机网络</string>
     <string name="ubt_skip">跳过</string>
     <string name="ubt_long_press_pig">请确保八戒已开机</string>

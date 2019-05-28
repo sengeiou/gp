@@ -78,6 +78,9 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHodler holder, int position) {
         FunctionEnum functionEnum = list.get(position);
+        if (functionEnum == null) {
+            return;
+        }
         if (isDynamicData) {
             holder.tvItem.setText(functionEnum.name);
             Glide.with(context)
@@ -299,7 +302,7 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
         boolean hasRedPoint;
 
         /**
-         * start fro server
+         * start for server
          */
         public String name;
 
@@ -310,7 +313,7 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
         public String url;
 
         /**
-         * end fro server
+         * end for server
          */
 
         FunctionEnum(String label, int resIcon) {

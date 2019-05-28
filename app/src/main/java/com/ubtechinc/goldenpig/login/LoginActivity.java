@@ -139,11 +139,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         if (AuthLive.getInstance().getState() != AuthLive.AuthState.TVSLOGINED) {
             AuthLive.getInstance().reset();
         }
-        super.onDestroy();
         handler.removeMessages(1);
         handler.removeCallbacks(null);
         handler = null;
         NetworkHelper.sharedHelper().removeNetworkInductor(mInductor);
+        super.onDestroy();
     }
 
     @Override
@@ -259,28 +259,40 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 handler.removeMessages(1);
                 switch (mState) {
                     case LOGINING:
+                        handleLoginEnable(false);
                         showLoadingDialog();
                         break;
                     case TVSLOGINED:
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                dismissLoadDialog();
-                                ActivityRoute.toAnotherActivity(LoginActivity.this, MainActivity.class, true);
-                            }
-                        }, 1000);
+                        dismissLoadDialog();
+                        ActivityRoute.toAnotherActivity(LoginActivity.this, MainActivity.class, true);
                         break;
                     case ERROR:
+                        handleLoginEnable(true);
+                        dismissLoadDialog();
                         ToastUtils.showShortToast(LoginActivity.this, getString(R.string.ubt_login_failure));
+                        break;
                     case NORMAL:
+                        break;
                     case CANCEL:
-                        ///向下传递处理
+                        handleLoginEnable(true);
+                        dismissLoadDialog();
+                        ToastUtils.showShortToast(LoginActivity.this, getString(R.string.ubt_login_cancel));
+                        break;
                     default:
                         dismissLoadDialog();
                         break;
                 }
             }
         });
+    }
+
+    private void handleLoginEnable(boolean isEnable) {
+        if (mQQLoginBtn != null) {
+            mQQLoginBtn.setEnabled(isEnable);
+        }
+        if (mWechatLoginBtn != null) {
+            mWechatLoginBtn.setEnabled(isEnable);
+        }
     }
 
     private static class LoginHandler extends Handler {

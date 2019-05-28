@@ -43,7 +43,7 @@ public class AuthLive extends LiveData<AuthLive> {
 
 
     private UserInfo currentUser;
-    private ArrayList<PigInfo> currentPigList;
+    private volatile ArrayList<PigInfo> currentPigList;
     private AuthState state;
     private String loginToken;
 
@@ -111,7 +111,7 @@ public class AuthLive extends LiveData<AuthLive> {
 
 
     public PigInfo getCurrentPig() {
-        if (currentPigList != null && currentPigList.size() > 0) {
+        if (currentPigList != null && !currentPigList.isEmpty()) {
             return currentPigList.get(0);
         }
         return null;
