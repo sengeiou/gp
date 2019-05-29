@@ -11,3 +11,11 @@
 .externalNativeBuild
 /.idea
 /.idea/*
+
+# Intellij
+*.iml
+.idea/workspace.xml
+
+# Keystore files
+*.jks
+.idea/
