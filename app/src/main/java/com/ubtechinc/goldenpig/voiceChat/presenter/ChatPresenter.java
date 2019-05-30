@@ -3,10 +3,8 @@ package com.ubtechinc.goldenpig.voiceChat.presenter;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.tencent.TIMCallBack;
 import com.tencent.TIMConversation;
 import com.tencent.TIMConversationType;
-import com.tencent.TIMCustomElem;
 import com.tencent.TIMElemType;
 import com.tencent.TIMManager;
 import com.tencent.TIMMessage;
@@ -18,9 +16,7 @@ import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.voiceChat.event.RefreshEvent;
 import com.ubtechinc.goldenpig.voiceChat.viewfeatures.ChatView;
-import com.ubtrobot.channelservice.proto.ChannelMessageContainer;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
@@ -166,18 +162,18 @@ public class ChatPresenter implements Observer {
     public void getMessage(@Nullable TIMMessage message){
         if (!isGetingMessage){
             isGetingMessage = true;
+//            conversation.getLocalMessage(LAST_MESSAGE_NUM, message, new TIMValueCallBack<List<TIMMessage>>() {
+//                @Override
+//                public void onError(int i, String s) {
+//
+//                }
+//
+//                @Override
+//                public void onSuccess(List<TIMMessage> timMessages) {
+//                    isGetingMessage = false;
+//                }
+//            });
             conversation.getLocalMessage(LAST_MESSAGE_NUM, message, new TIMValueCallBack<List<TIMMessage>>() {
-                @Override
-                public void onError(int i, String s) {
-
-                }
-
-                @Override
-                public void onSuccess(List<TIMMessage> timMessages) {
-                    isGetingMessage = false;
-                }
-            });
-            conversation.getMessage(LAST_MESSAGE_NUM, message, new TIMValueCallBack<List<TIMMessage>>() {
                 @Override
                 public void onError(int i, String s) {
                     isGetingMessage = false;

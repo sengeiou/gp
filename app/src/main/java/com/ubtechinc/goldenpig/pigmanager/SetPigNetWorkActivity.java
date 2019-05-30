@@ -558,7 +558,7 @@ public class SetPigNetWorkActivity extends BaseToolBarActivity implements View.O
         try {
 
             String defaultSsid = WifiControl.get(SetPigNetWorkActivity.this).getConnectInfo().getSSID();
-            if (!TextUtils.isEmpty(defaultSsid) && !defaultSsid.contains("unknown")) {
+            if (!TextUtils.isEmpty(defaultSsid) && !defaultSsid.contains("unknown ssid")) {
                 mWetWifiName.setWifi(defaultSsid);
             } else {
                 mWetWifiName.setWifi("");

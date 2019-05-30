@@ -86,7 +86,7 @@ public class WifiListEditText extends RelativeLayout implements View.OnClickList
 
     public void setWifi(String wifiSsid) {
         if (mWifiNameEdt != null) {
-            if (!TextUtils.isEmpty(wifiSsid) && !wifiSsid.contains("<unkonw ssid>")) {
+            if (!TextUtils.isEmpty(wifiSsid) && !wifiSsid.contains("unknown ssid")) {
                 wifiSsid = wifiSsid.replace("\"", "");
                 mWifiNameEdt.setText(wifiSsid);
                 mCurrSsid = wifiSsid;
