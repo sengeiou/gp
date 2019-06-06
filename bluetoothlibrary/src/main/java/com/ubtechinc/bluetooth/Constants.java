@@ -10,6 +10,8 @@ public class Constants {
 
     public static final String ROBOT_TAG = "BaJie_";//机器人显示的TAG
 
+    public static final String UNDERLINE = "_";
+
     public static final String DATA_COMMAND = "co";//蓝牙传输指令
 
     public static final String WIIF_LIST_COMMAND = "p";// 机器人响应的WiFi列表

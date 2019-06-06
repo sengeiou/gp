@@ -59,6 +59,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private LoginHandler handler;
     private boolean isLogined;
 
+    /**
+     * 兼容微信双开取消不回调
+     */
+    private boolean isWXClick;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,6 +106,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         if (mLoginModel != null) {
                             mLoginModel.loginWX(this);
                             isLogined = true;
+                            isWXClick = true;
                         }
                     } else {
                         ToastUtils.showShortToast(this, getString(R.string.ubt_wx_unspported));
@@ -115,7 +121,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     isLogined = true;
                 }
                 break;
-                default:
+            default:
         }
     }
 
@@ -126,6 +132,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             isLogined = false;
             registerProxy();
         }
+        if (isWXClick) {
+            isWXClick = false;
+            handler.postDelayed(() -> {
+                handleLoginEnable(true);
+                dismissLoadDialog();
+                ToastUtils.showShortToast(LoginActivity.this, getString(R.string.ubt_login_cancel));
+            }, 1500);
+        }
+
     }
 
     @Override
@@ -255,6 +270,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         AuthLive.getInstance().observe(this, new Observer<AuthLive>() {
             @Override
             public void onChanged(@Nullable AuthLive authLive) {
+                if (isWXClick) {
+                    isWXClick = false;
+                }
                 mState = authLive.getState();
                 handler.removeMessages(1);
                 switch (mState) {
@@ -318,7 +336,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     case 1:
 //                        ToastUtils.showShortToast(loginActivity, loginActivity.getString(R.string.ubt_net_error_tips));
                         break;
-                        default:
+                    default:
                 }
 
             }

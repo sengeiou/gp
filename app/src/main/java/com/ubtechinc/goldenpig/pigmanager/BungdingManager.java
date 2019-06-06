@@ -36,6 +36,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static com.ubtechinc.bluetooth.Constants.CODE_1;
@@ -220,7 +221,16 @@ public class BungdingManager {
         @Override
         public void connectSuccess(BluetoothDevice device) {
             mCurrentDevices = device;
-            mSerialId = device.getName().replace(Constants.ROBOT_TAG, "");
+//            mSerialId = device.getName().replace(Constants.ROBOT_TAG, "");
+            String deviceName = device.getName();
+            UbtLogger.d(TAG, "connectSuccess|deviceName:" + deviceName);
+            if (!TextUtils.isEmpty(deviceName)) {
+                String[] robotName = deviceName.split(Constants.UNDERLINE);
+                UbtLogger.d(TAG, "connectSuccess|robotName:" + Arrays.asList(robotName));
+                if (robotName.length >= 2) {
+                    mSerialId = robotName[1];
+                }
+            }
             sendBleConnectSuccessMsgToRobot();
             if (mBanddingListener != null) {
                 mBanddingListener.connectSuccess();
@@ -235,7 +245,6 @@ public class BungdingManager {
             }
         }
     };
-
 
     RegisterPigRepository.RegisterRobotListener mResponseListener = new RegisterPigRepository.RegisterRobotListener() {
         @Override
