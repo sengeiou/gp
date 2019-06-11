@@ -34,8 +34,6 @@ public class UbtWebHelper {
         String url = baseUrl + "appId=" + BuildConfig.APP_ID + "&sign=" + URestSigner.sign(context, deviceId).replace(" ", "%20")
                 + "&product=" + BuildConfig.product + "&deviceId=" + deviceId + "&authorization=" + CookieInterceptor.get().getToken();
         map.put(KEY_URL, url);
-        map.put(KEY_IMMERSE_STATUSBAR, true);
-        map.put(KEY_NEED_ACTIONBAR, false);
         return map;
     }
 
@@ -104,6 +102,7 @@ public class UbtWebHelper {
 
     /**
      * 更新
+     *
      * @param context
      * @return
      */
@@ -117,6 +116,7 @@ public class UbtWebHelper {
 
     /**
      * 获取tvs智能家居相关参数
+     *
      * @return
      */
     public static String getTvsSmartHomeParam() {
@@ -134,6 +134,20 @@ public class UbtWebHelper {
         String param = "accessToken=" + accessToken + "&appId=" + appId
                 + "&loginType=" + loginType + "&openId=" + openId;
         return param;
+    }
+
+    /**
+     * 获取八戒攻略相关参数
+     *
+     * @param context
+     * @return
+     */
+    public static HashMap<String, Object> getPigStrategyWebviewData(Context context) {
+        HashMap<String, Object> map = new HashMap<>();
+        String targetUrl = BuildConfig.HOST + "help/small/smallPigStrategy.html?appId=" + com.ubtechinc.goldenpig.BuildConfig.APP_ID
+                + "&product=" + com.ubtechinc.goldenpig.BuildConfig.product;
+        map.put(KEY_URL, targetUrl);
+        return map;
     }
 
 }
