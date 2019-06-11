@@ -31,12 +31,14 @@ public class CreateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private List<CreateModel> mList;
     private RecyclerOnItemLongListener listener;
     private String userIc = "";
+    private int type = 0; //默认create list
 
     public CreateAdapter(Context mContext, List<CreateModel> mList, RecyclerOnItemLongListener
-            listener) {
+            listener, int type) {
         this.mContext = mContext;
         this.mList = mList;
         this.listener = listener;
+        this.type = type;
         UserInfo currentUser = AuthLive.getInstance().getCurrentUser();
         if (currentUser != null) {
             userIc = currentUser.getUserImage();
@@ -92,7 +94,12 @@ public class CreateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             });
         } else {
             CreateHolder2 holder = (CreateHolder2) aHolder;
-            holder.tv_count.setText("共" +  SPUtils.get().getInt("create_count") + "条");
+            if(type == 0){
+                holder.tv_count.setText("共" +  SPUtils.get().getInt("create_count") + "条");
+            }else{
+                holder.tv_count.setText("共" + model.sid + "条");
+            }
+
         }
     }
 

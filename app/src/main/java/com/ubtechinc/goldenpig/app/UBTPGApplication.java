@@ -664,6 +664,7 @@ public class UBTPGApplication extends Application implements Observer {
             event.setData(state);
             EventBusUtil.sendEvent(event);
         } else if (action.equals(ContactsProtoBuilder.IM_DIALOG_SWITCH)) {
+            UbtLogger.d(TAG, "RECEIVE_CONTINUOUS_VOICE_RESPONSE");
             final boolean result = msg.getPayload().unpack(GPResponse.Response.class).getResult();
             Event<Boolean> event = new Event<>(EventBusUtil.RECEIVE_CONTINUOUS_VOICE_RESPONSE);
             event.setData(result);
@@ -721,6 +722,7 @@ public class UBTPGApplication extends Application implements Observer {
             event.setData(state);
             EventBusUtil.sendEvent(event);
         } else if (action.equals(ContactsProtoBuilder.IM_SET_NO_DELAY_WAKEUP_REQUEST)) {
+            UbtLogger.d(TAG, "RECEIVE_NO_DELAY_WAKEUP_SWITCH_STATE");
             final boolean result = msg.getPayload().unpack(GPResponse.Response.class).getResult();
             Event<Boolean> event = new Event<>(EventBusUtil.RECEIVE_NO_DELAY_WAKEUP_SWITCH_STATE);
             event.setData(result);

@@ -7,6 +7,7 @@ import com.suke.widget.SwitchButton;
 import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtech.utilcode.utils.ToastUtils;
+import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
@@ -82,6 +83,7 @@ public class NoDelayWakeupActivity extends BaseToolBarActivity implements Switch
             }
             break;
             case EventBusUtil.RECEIVE_NO_DELAY_WAKEUP_SWITCH_STATE: {
+                UbtLogger.d(TAG, "onReceiveEvent RECEIVE_NO_DELAY_WAKEUP_SWITCH_STATE");
                 boolean result = (boolean) event.getData();
                 if (result) {
                     ToastUtils.showShortToast("设置成功");

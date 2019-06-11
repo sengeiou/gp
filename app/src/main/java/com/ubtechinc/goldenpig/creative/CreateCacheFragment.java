@@ -11,6 +11,7 @@ import android.widget.RelativeLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ubtech.utilcode.utils.SPUtils;
+import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseNewFragment;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
@@ -92,7 +93,7 @@ public class CreateCacheFragment extends BaseNewFragment {
                     startActivity(it);
                 }
             }
-        });
+        }, 1);
         recycler.setAdapter(adapter);
         onRefresh();
     }
@@ -110,6 +111,15 @@ public class CreateCacheFragment extends BaseNewFragment {
     @Override
     protected void lazyLoadData() {
 
+    }
+
+    private int getCacheSize() {
+        String data = SPUtils.get().getString("createCache", "");
+        Gson gson = new Gson();
+        Type listType = new TypeToken<List<CreateModel>>() {
+        }.getType();
+        List<CreateModel> list = gson.fromJson(data, listType);
+        return list.size();
     }
 
     private void onRefresh() {
@@ -168,9 +178,15 @@ public class CreateCacheFragment extends BaseNewFragment {
                     cache.add(mList.get(i));
                 }
             }
-            Gson gson = new Gson();
-            String data1 = gson.toJson(cache);
-            SPUtils.get().put("createCache", data1);
+            if(getCacheSize() <100){
+                Gson gson = new Gson();
+                String data1 = gson.toJson(cache);
+                SPUtils.get().put("createCache", data1);
+            }else{
+                ToastUtils.showShortToast("草稿数量已达到上限");
+            }
+
+
         } else if (event.getCode() == SAVE_CREATE_CACHE) {
             try {
                 CreateModel model = (CreateModel) event.getData();
@@ -208,9 +224,16 @@ public class CreateCacheFragment extends BaseNewFragment {
                     cache.add(mList.get(i));
                 }
             }
-            Gson gson = new Gson();
-            String data1 = gson.toJson(cache);
-            SPUtils.get().put("createCache", data1);
+
+            if(getCacheSize()<100){
+                Gson gson = new Gson();
+                String data1 = gson.toJson(cache);
+                SPUtils.get().put("createCache", data1);
+            }else{
+                ToastUtils.showShortToast("草稿数量已达到上限");
+            }
+
+
             //onRefresh();
         }
     }
@@ -246,8 +269,16 @@ public class CreateCacheFragment extends BaseNewFragment {
                         } else {
                             list.remove(deletePosition);
                         }
-                        String data1 = gson.toJson(list);
-                        SPUtils.get().put("createCache", data1);
+
+                        if(getCacheSize() <100){
+                            String data1 = gson.toJson(list);
+                            SPUtils.get().put("createCache", data1);
+                        }else{
+                            ToastUtils.showShortToast("草稿数量已达到上限");
+                        }
+
+
+
                     }
                     mList.remove(deletePosition);
                     if (mList.size() > 0 && mList.get(0).type == 1) {

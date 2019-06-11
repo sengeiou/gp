@@ -124,7 +124,7 @@ public class CreateListFragment extends BaseNewFragment {
                 it.putExtra("strAnswer", mList.get(position).answer);
                 startActivity(it);
             }
-        });
+        }, 0);
         mHeaderAndFooterRecyclerViewAdapter = new HeaderAndFooterRecyclerViewAdapter(adapter);
         recycler.setAdapter(mHeaderAndFooterRecyclerViewAdapter);
         recycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -370,7 +370,7 @@ public class CreateListFragment extends BaseNewFragment {
                         @Override
                         public void run() {
                             LoadingDialog.getInstance(getActivity()).dismiss();
-                            mList.remove(adapterPosition);
+                           /* mList.remove(adapterPosition);
                             SPUtils.get().put("create_count", SPUtils.get().getInt("create_count")-1);
                             adapter.notifyDataSetChanged();
                             mList.get(0).sid = mList.size() - 1;
@@ -379,7 +379,10 @@ public class CreateListFragment extends BaseNewFragment {
                             } else {
                                 mList.clear();
                                 mStateView.showEmpty();
-                            }
+                            }*/
+
+                            page = 1;
+                            onRefresh();
                         }
                     });
                 }
