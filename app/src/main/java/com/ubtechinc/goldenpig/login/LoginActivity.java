@@ -133,11 +133,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             registerProxy();
         }
         if (isWXClick) {
-            isWXClick = false;
             handler.postDelayed(() -> {
-                handleLoginEnable(true);
-                dismissLoadDialog();
-                ToastUtils.showShortToast(LoginActivity.this, getString(R.string.ubt_login_cancel));
+                if (isWXClick) {
+                    isWXClick = false;
+                    handleLoginEnable(true);
+                    dismissLoadDialog();
+                    ToastUtils.showShortToast(LoginActivity.this, getString(R.string.ubt_login_cancel));
+                }
             }, 1500);
         }
 
@@ -270,9 +272,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         AuthLive.getInstance().observe(this, new Observer<AuthLive>() {
             @Override
             public void onChanged(@Nullable AuthLive authLive) {
-                if (isWXClick) {
-                    isWXClick = false;
-                }
+                isWXClick = false;
                 mState = authLive.getState();
                 handler.removeMessages(1);
                 switch (mState) {

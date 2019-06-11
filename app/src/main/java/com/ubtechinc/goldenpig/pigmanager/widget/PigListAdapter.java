@@ -56,7 +56,7 @@ public class PigListAdapter extends RecyclerView.Adapter<PigListAdapter.PigHolde
                 }
             }
 
-            holder.pigNameTv.setOnClickListener(v -> {
+            holder.tvBind.setOnClickListener(v -> {
                 if (mPigClose != null) {
                     mPigClose.setEnabled(false);
                 }

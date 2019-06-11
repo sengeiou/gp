@@ -1,6 +1,5 @@
 package com.ubtechinc.goldenpig.main.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -58,7 +57,6 @@ import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.CheckUtil;
 import com.ubtechinc.goldenpig.utils.SharedPreferencesUtils;
 import com.ubtechinc.goldenpig.utils.UbtToastUtils;
-import com.ubtechinc.nets.BuildConfig;
 import com.ubtrobot.upgrade.VersionInformation;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -75,7 +73,6 @@ import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.READ_SYSTEM_MSG;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_ONLINE_STATE;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.RECEIVE_ROBOT_VERSION_STATE;
 import static com.ubtechinc.goldenpig.eventbus.EventBusUtil.USER_PIG_UPDATE;
-import static com.ubtechinc.goldenpig.main.CommonWebActivity.KEY_URL;
 import static com.ubtechinc.goldenpig.personal.AboutBleBJActivity.KEY_PIGINFO_VERSION;
 import static com.ubtechinc.goldenpig.personal.BeeHiveMobileActivity.KEY_BEE_HIVE_OPEN;
 import static com.ubtechinc.goldenpig.personal.NoSimActivity.KEY_TOOL_BAR_TITLE;
@@ -381,10 +378,11 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
                 ActivityRoute.toAnotherActivity(getActivity(),CreateActivity.class, false);
                 break;
             case R.id.ubt_btn_manual:
-                String url = BuildConfig.HOST + "help/small/smallPigStrategy.html?appId="+ com.ubtechinc.goldenpig.BuildConfig.APP_ID + "&product=" + com.ubtechinc.goldenpig.BuildConfig.product;
-                Intent it = new Intent(getActivity(), CommonWebActivity.class);
-                it.putExtra(KEY_URL, url);
-                startActivity(it);
+//                String url = BuildConfig.HOST + "help/small/smallPigStrategy.html?appId="+ com.ubtechinc.goldenpig.BuildConfig.APP_ID + "&product=" + com.ubtechinc.goldenpig.BuildConfig.product;
+//                Intent it = new Intent(getActivity(), CommonWebActivity.class);
+//                it.putExtra(KEY_URL, url);
+//                startActivity(it);
+                ActivityRoute.toAnotherActivity(getActivity(), CommonWebActivity.class, UbtWebHelper.getPigStrategyWebviewData(getActivity()), false);
                 break;
             default:
         }

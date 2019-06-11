@@ -168,7 +168,7 @@
     <!-- 2018.11.30-->
     <string name="main_smarthome">智能家居</string>
 
-    <string name="ubt_bajie">BaJie_%1$s</string>
+    <string name="ubt_bajie">CMBLINK_%1$s</string>
     <string name="ubt_devid">设备ID：%1$s</string>
     <string name="ubt_im_status">IM状态：%1$s</string>
     <string name="ubt_push_channel">Push通道：%1$s</string>
