@@ -71,8 +71,8 @@ public class PairQRScannerActivity extends QRScannerActivity {
                         runOnUiThread(() -> {
                             ToastUtils.showShortToast(R.string.ubt_pair_pig_success);
 
-                            ActivityRoute.toAnotherActivity(PairQRScannerActivity.this, PairPigActivity.class, true);
-                            ActivityTool.finishActivity(QRCodeActivity.class);
+//                            ActivityRoute.toAnotherActivity(PairQRScannerActivity.this, PairPigActivity.class, true);
+//                            ActivityTool.finishActivity(QRCodeActivity.class);
                             //TODO 触发更新配对信息
                             EventBusUtil.sendEvent(new Event(EventBusUtil.DO_UPDATE_PAIR_PIG));
                         });
@@ -93,6 +93,8 @@ public class PairQRScannerActivity extends QRScannerActivity {
         switch (code) {
             case PAIR_PIG_UPDATE:
                 imSyncRelationShip();
+                ActivityRoute.toAnotherActivity(PairQRScannerActivity.this, PairPigActivity.class, true);
+                ActivityTool.finishActivity(QRCodeActivity.class);
                 break;
         }
     }
