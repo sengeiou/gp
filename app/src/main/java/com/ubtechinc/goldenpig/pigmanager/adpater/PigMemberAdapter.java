@@ -11,6 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.ubt.robot.dmsdk.TVSWrapBridge;
+import com.ubt.robot.dmsdk.model.TVSWrapUserInfo;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.comm.img.GlideCircleTransform;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
@@ -45,11 +48,26 @@ public class PigMemberAdapter extends RecyclerView.Adapter<PigMemberAdapter.Memb
         if (mUserList != null && mUserList.size() > position && position >= 0) {
             CheckBindRobotModule.User user = mUserList.get(position);
             if (user != null) {
-                holder.userNameTv.setText(user.getNickName());
+                String nickName = user.getNickName();
+                String headImgUrl = user.getUserImage();
+                if (isSelf(user.getUserId())) {
+                    TVSWrapUserInfo tvsWrapUserInfo = TVSWrapBridge.getTVSWrapUserInfo();
+                    String tvsName = tvsWrapUserInfo.getNickname();
+                    if (!TextUtils.isEmpty(tvsName)) {
+                        nickName = tvsName;
+                    }
+                    String tvsAvatar = tvsWrapUserInfo.getAvatar();
+                    if (!TextUtils.isEmpty(tvsAvatar)) {
+                        headImgUrl = tvsAvatar;
+                    }
+                }
+                holder.userNameTv.setText(nickName);
                 if (activityRefer != null && activityRefer.get() != null) {
                     Glide.with(activityRefer.get())
-                            .load(user.getUserImage())
+                            .load(headImgUrl)
                             .asBitmap()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
                             .centerCrop()
                             .transform(new GlideCircleTransform(activityRefer.get()))
                             .placeholder(R.drawable.ic_sign_in)

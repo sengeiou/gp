@@ -15,8 +15,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
+import com.ubt.robot.dmsdk.TVSWrapBridge;
+import com.ubt.robot.dmsdk.model.TVSWrapUserInfo;
 import com.ubtech.utilcode.utils.SPUtils;
 import com.ubtech.utilcode.utils.ScreenUtils;
 import com.ubtech.utilcode.utils.StringUtils;
@@ -55,7 +58,6 @@ import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.hotspot.SetHotSpotActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.CheckUtil;
-import com.ubtechinc.goldenpig.utils.SharedPreferencesUtils;
 import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.ubtrobot.upgrade.VersionInformation;
 
@@ -279,9 +281,11 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
     private void fillAccountView() {
         UserInfo currentUser = AuthLive.getInstance().getCurrentUser();
         if (currentUser != null) {
-            String nickName = SharedPreferencesUtils.getString(getActivity(), "tvs_nickName", "");
-            String headImgUrl = SharedPreferencesUtils.getString(getActivity(), "tvs_headImgUrl", "");
+            TVSWrapUserInfo tvsWrapUserInfo = TVSWrapBridge.getTVSWrapUserInfo();
+            String nickName = tvsWrapUserInfo.getNickname();
+            String headImgUrl = tvsWrapUserInfo.getAvatar();
             Log.d(TAG, "PersonalFrag|fillAccountView|tvs_nickName=" + nickName + " ubt_nickName=" + currentUser.getNickName());
+            Log.d(TAG, "PersonalFrag|fillAccountView|tvs_headImgUrl=" + headImgUrl + " ubt_headImgUrl=" + currentUser.getUserImage());
             if (TextUtils.isEmpty(nickName)) {
                 nickName = currentUser.getNickName();
             }
@@ -292,6 +296,8 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
             Glide.with(getActivity())
                     .load(headImgUrl)
                     .asBitmap()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
                     .centerCrop()
                     .transform(new GlideCircleTransform(getActivity()))
                     .placeholder(R.drawable.ic_sign_in)

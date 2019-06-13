@@ -2,11 +2,13 @@ package com.ubtechinc.goldenpig.me;
 
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ubt.robot.dmsdk.TVSWrapBridge;
 import com.ubt.robot.dmsdk.model.TVSWrapUserInfo;
 import com.ubtechinc.goldenpig.R;
@@ -70,16 +72,26 @@ public class UserInfoActivity extends BaseToolBarActivity implements View.OnClic
         UserInfo currentUser = AuthLive.getInstance().getCurrentUser();
         if (currentUser != null) {
             TVSWrapUserInfo tvsWrapUserInfo = TVSWrapBridge.getTVSWrapUserInfo();
+            String nickName = tvsWrapUserInfo.getNickname();
+            String headImgUrl = tvsWrapUserInfo.getAvatar();
+            if (TextUtils.isEmpty(nickName)) {
+                nickName = currentUser.getNickName();
+            }
+            if (TextUtils.isEmpty(headImgUrl)) {
+                headImgUrl = currentUser.getUserImage();
+            }
             mUserAccountTv.setText(TVSWrapBridge.getTVSAccountInfo().currentPlatformValue());
             Glide.with(this)
-                    .load(tvsWrapUserInfo.getAvatar())
+                    .load(headImgUrl)
                     .asBitmap()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
                     .centerCrop()
                     .transform(new GlideCircleTransform(this))
                     .placeholder(R.drawable.ic_sign_in)
                     .into(mPhotoImg);
 
-            mUserNameTv.setText(tvsWrapUserInfo.getNickname());
+            mUserNameTv.setText(nickName);
         } else {
             ActivityManager.getInstance().popAllActivityExcept(LoginActivity.class.getName());
             ActivityRoute.toAnotherActivity(this, LoginActivity.class, true);
