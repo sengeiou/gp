@@ -2,7 +2,6 @@ package com.ubtechinc.goldenpig.me;
 
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,7 +9,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ubt.robot.dmsdk.TVSWrapBridge;
-import com.ubt.robot.dmsdk.model.TVSWrapUserInfo;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.ActivityManager;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
@@ -71,15 +69,9 @@ public class UserInfoActivity extends BaseToolBarActivity implements View.OnClic
     private void fillAccountView() {
         UserInfo currentUser = AuthLive.getInstance().getCurrentUser();
         if (currentUser != null) {
-            TVSWrapUserInfo tvsWrapUserInfo = TVSWrapBridge.getTVSWrapUserInfo();
-            String nickName = tvsWrapUserInfo.getNickname();
-            String headImgUrl = tvsWrapUserInfo.getAvatar();
-            if (TextUtils.isEmpty(nickName)) {
-                nickName = currentUser.getNickName();
-            }
-            if (TextUtils.isEmpty(headImgUrl)) {
-                headImgUrl = currentUser.getUserImage();
-            }
+            String nickName = currentUser.getNickName();
+            String headImgUrl = currentUser.getUserImage();
+
             mUserAccountTv.setText(TVSWrapBridge.getTVSAccountInfo().currentPlatformValue());
             Glide.with(this)
                     .load(headImgUrl)

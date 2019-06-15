@@ -12,8 +12,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.ubt.robot.dmsdk.TVSWrapBridge;
-import com.ubt.robot.dmsdk.model.TVSWrapUserInfo;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.comm.img.GlideCircleTransform;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
@@ -51,14 +49,13 @@ public class PigMemberAdapter extends RecyclerView.Adapter<PigMemberAdapter.Memb
                 String nickName = user.getNickName();
                 String headImgUrl = user.getUserImage();
                 if (isSelf(user.getUserId())) {
-                    TVSWrapUserInfo tvsWrapUserInfo = TVSWrapBridge.getTVSWrapUserInfo();
-                    String tvsName = tvsWrapUserInfo.getNickname();
-                    if (!TextUtils.isEmpty(tvsName)) {
-                        nickName = tvsName;
+                    String userName = AuthLive.getInstance().getNickName();
+                    if (!TextUtils.isEmpty(userName)) {
+                        nickName = userName;
                     }
-                    String tvsAvatar = tvsWrapUserInfo.getAvatar();
-                    if (!TextUtils.isEmpty(tvsAvatar)) {
-                        headImgUrl = tvsAvatar;
+                    String userImage = AuthLive.getInstance().getUserImage();
+                    if (!TextUtils.isEmpty(userImage)) {
+                        headImgUrl = userImage;
                     }
                 }
                 holder.userNameTv.setText(nickName);

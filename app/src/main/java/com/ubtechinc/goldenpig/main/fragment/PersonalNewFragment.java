@@ -18,8 +18,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
-import com.ubt.robot.dmsdk.TVSWrapBridge;
-import com.ubt.robot.dmsdk.model.TVSWrapUserInfo;
 import com.ubtech.utilcode.utils.SPUtils;
 import com.ubtech.utilcode.utils.ScreenUtils;
 import com.ubtech.utilcode.utils.StringUtils;
@@ -281,17 +279,8 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
     private void fillAccountView() {
         UserInfo currentUser = AuthLive.getInstance().getCurrentUser();
         if (currentUser != null) {
-            TVSWrapUserInfo tvsWrapUserInfo = TVSWrapBridge.getTVSWrapUserInfo();
-            String nickName = tvsWrapUserInfo.getNickname();
-            String headImgUrl = tvsWrapUserInfo.getAvatar();
-            Log.d(TAG, "PersonalFrag|fillAccountView|tvs_nickName=" + nickName + " ubt_nickName=" + currentUser.getNickName());
-            Log.d(TAG, "PersonalFrag|fillAccountView|tvs_headImgUrl=" + headImgUrl + " ubt_headImgUrl=" + currentUser.getUserImage());
-            if (TextUtils.isEmpty(nickName)) {
-                nickName = currentUser.getNickName();
-            }
-            if (TextUtils.isEmpty(headImgUrl)) {
-                headImgUrl = currentUser.getUserImage();
-            }
+            String nickName = currentUser.getNickName();
+            String headImgUrl = currentUser.getUserImage();
 
             Glide.with(getActivity())
                     .load(headImgUrl)

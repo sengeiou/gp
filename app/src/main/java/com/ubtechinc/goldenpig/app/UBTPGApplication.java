@@ -567,7 +567,6 @@ public class UBTPGApplication extends Application implements Observer {
                         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
 
                         if (pigInfo != null && pigInfo.isAdmin) {
-                            UbtTIMManager.avatarURL = TVSWrapBridge.getTVSWrapUserInfo().getAvatar();
                             UbtTIMManager.getInstance().loginTIM(AuthLive.getInstance().getUserId(), pigInfo.getRobotName(),
                                     com.ubtechinc.nets.BuildConfig.IM_CHANNEL);
                         }
