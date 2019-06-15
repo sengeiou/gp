@@ -21,6 +21,14 @@ import static com.ubtechinc.goldenpig.main.CommonWebActivity.KEY_URL;
  */
 public class UbtWebHelper {
 
+    private static String baseHost = BuildConfig.HOST;
+
+    static {
+        if (com.ubtechinc.goldenpig.BuildConfig.h5_local) {
+            baseHost = "http://10.10.32.22:8080/";
+        }
+    }
+
     /**
      * 帮助与反馈
      *
@@ -29,7 +37,7 @@ public class UbtWebHelper {
      */
     public static HashMap<String, Object> getFeedBackWebviewData(Context context) {
         HashMap<String, Object> map = new HashMap<>();
-        String baseUrl = BuildConfig.HOST + "help/small/smallPigHelpBack.html?";
+        String baseUrl = baseHost + "help/small/smallPigHelpBack.html?";
         String deviceId = DeviceUtils.getDeviceId(context);
         String url = baseUrl + "appId=" + BuildConfig.APP_ID + "&sign=" + URestSigner.sign(context, deviceId).replace(" ", "%20")
                 + "&product=" + BuildConfig.product + "&deviceId=" + deviceId + "&authorization=" + CookieInterceptor.get().getToken();
@@ -45,7 +53,7 @@ public class UbtWebHelper {
      */
     public static HashMap<String, Object> getQQMusicWebviewData(Context context) {
         HashMap<String, Object> map = new HashMap<>();
-        String baseUrl = BuildConfig.HOST + "help/small/smallqqMusic.html?";
+        String baseUrl = baseHost + "help/small/smallqqMusic.html?";
         String deviceId = DeviceUtils.getDeviceId(context);
         String url = baseUrl + "appId=" + BuildConfig.APP_ID + "&sign=" + URestSigner.sign(context, deviceId).replace(" ", "%20")
                 + "&product=" + BuildConfig.product + "&deviceId=" + deviceId + "&authorization=" + CookieInterceptor.get().getToken();
@@ -63,7 +71,7 @@ public class UbtWebHelper {
      */
     public static HashMap<String, Object> getBleWebviewData(Context context) {
         HashMap<String, Object> map = new HashMap<>();
-        String baseUrl = BuildConfig.HOST + "help/small/smallBlue.html";
+        String baseUrl = baseHost + "help/small/smallBlue.html";
         map.put(KEY_URL, baseUrl);
         map.put(KEY_IMMERSE_STATUSBAR, false);
         map.put(KEY_NEED_ACTIONBAR, true);
@@ -78,7 +86,7 @@ public class UbtWebHelper {
      */
     public static HashMap<String, Object> getServicePolicyWebviewData(Context context) {
         HashMap<String, Object> map = new HashMap<>();
-        String baseUrl = BuildConfig.HOST + "help/small/smallService.html";
+        String baseUrl = baseHost + "help/small/smallService.html";
         map.put(KEY_URL, baseUrl);
         map.put(KEY_IMMERSE_STATUSBAR, false);
         map.put(KEY_NEED_ACTIONBAR, true);
@@ -93,7 +101,7 @@ public class UbtWebHelper {
      */
     public static HashMap<String, Object> getPrivacyPolicyWebviewData(Context context) {
         HashMap<String, Object> map = new HashMap<>();
-        String baseUrl = BuildConfig.HOST + "help/small/smallProcy.html";
+        String baseUrl = baseHost + "help/small/smallProcy.html";
         map.put(KEY_URL, baseUrl);
         map.put(KEY_IMMERSE_STATUSBAR, false);
         map.put(KEY_NEED_ACTIONBAR, true);
@@ -144,7 +152,7 @@ public class UbtWebHelper {
      */
     public static HashMap<String, Object> getPigStrategyWebviewData(Context context) {
         HashMap<String, Object> map = new HashMap<>();
-        String targetUrl = BuildConfig.HOST + "help/small/smallPigStrategy.html?appId=" + com.ubtechinc.goldenpig.BuildConfig.APP_ID
+        String targetUrl = baseHost + "help/small/smallPigStrategy.html?appId=" + com.ubtechinc.goldenpig.BuildConfig.APP_ID
                 + "&product=" + com.ubtechinc.goldenpig.BuildConfig.product;
         map.put(KEY_URL, targetUrl);
         return map;
