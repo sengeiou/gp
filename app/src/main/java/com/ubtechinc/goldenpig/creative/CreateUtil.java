@@ -21,7 +21,7 @@ public class CreateUtil {
 
     protected static final String KEY_CREATE_DRAFT = "createCache";
 
-    protected static final int MAX_CREATE_DRAFT = 3;
+    protected static final int MAX_CREATE_DRAFT = 100;
 
     /**
      * 获取草稿

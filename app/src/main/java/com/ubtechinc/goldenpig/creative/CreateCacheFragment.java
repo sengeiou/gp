@@ -21,7 +21,6 @@ import com.ubtechinc.goldenpig.view.RecyclerOnItemLongListener;
 import com.ubtechinc.goldenpig.view.TopDivider;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -112,7 +111,7 @@ public class CreateCacheFragment extends BaseNewFragment {
         mList.clear();
         List<CreateModel> list = CreateUtil.getCreateDraft();
         if (list != null && list.size() > 0) {
-            Collections.sort(list);
+//            Collections.sort(list);
             CreateModel model = new CreateModel();
             model.type = 1;
             model.sid = list.size();
