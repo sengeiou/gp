@@ -73,6 +73,24 @@ public class CreateUtil {
     }
 
     /**
+     * 删除草稿
+     * @param position
+     * @return
+     */
+    public static boolean delCreateDraft(int position) {
+        List<CreateModel> originalCache = getCreateDraft();
+        if (originalCache != null && !originalCache.isEmpty() && position != -1) {
+            originalCache.remove(position - 1);
+        } else {
+            return false;
+        }
+        Gson gson = new Gson();
+        SPUtils.get().put(KEY_CREATE_DRAFT, gson.toJson(originalCache));
+        return true;
+    }
+
+
+    /**
      * 更新草稿
      * @param list
      * @return

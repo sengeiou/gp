@@ -266,6 +266,9 @@ public class AddCreateActivity extends BaseNewActivity {
                                 event.setData(-1);
                             }
                             EventBusUtil.sendEvent(event);
+                            if (isEditFlag) {
+                                CreateUtil.delCreateDraft(editPosition);
+                            }
                             if (!UBTPGApplication.createActivity) {
                                 ActivityRoute.toAnotherActivity(AddCreateActivity.this, CreateActivity.class,
                                         false);
