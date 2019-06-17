@@ -10,8 +10,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
-
-import com.ubtech.utilcode.utils.LogUtils;
 import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
@@ -61,6 +59,8 @@ public class AddCreateActivity extends BaseNewActivity {
      */
     private boolean hasCheckNoise = false;
 
+    private boolean isEditFlag;
+
     private Handler mHandler = new Handler();
 
     @Override
@@ -74,9 +74,11 @@ public class AddCreateActivity extends BaseNewActivity {
         strQuest = getIntent().getStringExtra("strQuest");
         strAnswer = getIntent().getStringExtra("strAnswer");
         editPosition = getIntent().getIntExtra("position", -1);
-        if (!TextUtils.isEmpty(strQuest) && !TextUtils.isEmpty(strAnswer)) {
+        if (editPosition != - 1) {
+            isEditFlag = true;
             rl_titlebar.setTitleText("编辑问答");
         } else {
+            isEditFlag = false;
             rl_titlebar.setTitleText("添加问答");
         }
         rl_titlebar.setLeftOnclickListener(new View.OnClickListener() {
@@ -355,13 +357,21 @@ public class AddCreateActivity extends BaseNewActivity {
                 model.question = TextUtils.isEmpty(strQuest) ? "" : strQuest;
                 model.answer = TextUtils.isEmpty(strAnswer) ? "" : strAnswer;
                 model.createTime = System.currentTimeMillis();
-                model.sid = editPosition;
-                Event<CreateModel> event = new Event<>(EventBusUtil.SAVE_CREATE_CACHE);
-                event.setData(model);
-                EventBusUtil.sendEvent(event);
-
+                if (isEditFlag) {
+                    //TODO update draft
+                    model.sid = editPosition;
+                } else {
+                    //TODO new draft
+                    model.sid = -1;
+                }
+                if (CreateUtil.saveCreateDraft(model)) {
+                    Event<CreateModel> event = new Event<>(EventBusUtil.SAVE_CREATE_CACHE);
+                    event.setData(model);
+                    EventBusUtil.sendEvent(event);
+                }
             }
         } catch (Exception e) {
+
         }
     }
 

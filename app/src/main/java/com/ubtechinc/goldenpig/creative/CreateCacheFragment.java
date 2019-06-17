@@ -9,9 +9,6 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.ubtech.utilcode.utils.SPUtils;
-import com.ubtech.utilcode.utils.ToastUtils;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseNewFragment;
 import com.ubtechinc.goldenpig.eventbus.modle.Event;
@@ -23,8 +20,6 @@ import com.ubtechinc.goldenpig.view.RecyclerItemClickListener;
 import com.ubtechinc.goldenpig.view.RecyclerOnItemLongListener;
 import com.ubtechinc.goldenpig.view.TopDivider;
 
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -113,22 +108,9 @@ public class CreateCacheFragment extends BaseNewFragment {
 
     }
 
-    private int getCacheSize() {
-        String data = SPUtils.get().getString("createCache", "");
-        Gson gson = new Gson();
-        Type listType = new TypeToken<List<CreateModel>>() {
-        }.getType();
-        List<CreateModel> list = gson.fromJson(data, listType);
-        return list.size();
-    }
-
     private void onRefresh() {
-        String data = SPUtils.get().getString("createCache", "");
-        Gson gson = new Gson();
-        Type listType = new TypeToken<List<CreateModel>>() {
-        }.getType();
-        List<CreateModel> list = gson.fromJson(data, listType);
         mList.clear();
+        List<CreateModel> list = CreateUtil.getCreateDraft();
         if (list != null && list.size() > 0) {
             Collections.sort(list);
             CreateModel model = new CreateModel();
@@ -169,23 +151,6 @@ public class CreateCacheFragment extends BaseNewFragment {
             if (adapter != null) {
                 adapter.notifyDataSetChanged();
             }
-            List<CreateModel> cache = new ArrayList<>();
-            if (mList == null) {
-                return;
-            }
-            for (int i = 0; i < mList.size(); i++) {
-                if (mList.get(i).type == 0) {
-                    cache.add(mList.get(i));
-                }
-            }
-            if(getCacheSize() <100){
-                Gson gson = new Gson();
-                String data1 = gson.toJson(cache);
-                SPUtils.get().put("createCache", data1);
-            }else{
-                ToastUtils.showShortToast("草稿数量已达到上限");
-            }
-
 
         } else if (event.getCode() == SAVE_CREATE_CACHE) {
             try {
@@ -198,9 +163,11 @@ public class CreateCacheFragment extends BaseNewFragment {
                     mList.add(model);
                 } else {
                     if (model.sid >= 0) {
-                        mList.remove(model.sid);
+//                        mList.remove(model.sid);
+                        mList.set(model.sid, model);
+                    } else {
+                        mList.add(1, model);
                     }
-                    mList.add(1, model);
                     if (mList.get(0).type == 1) {
                         mList.get(0).sid = mList.size() - 1;
                     }
@@ -215,26 +182,6 @@ public class CreateCacheFragment extends BaseNewFragment {
             if (adapter != null) {
                 adapter.notifyDataSetChanged();
             }
-            List<CreateModel> cache = new ArrayList<>();
-            if (mList == null || mList.size() == 0) {
-                return;
-            }
-            for (int i = 0; i < mList.size(); i++) {
-                if (mList.get(i).type == 0) {
-                    cache.add(mList.get(i));
-                }
-            }
-
-            if(getCacheSize()<100){
-                Gson gson = new Gson();
-                String data1 = gson.toJson(cache);
-                SPUtils.get().put("createCache", data1);
-            }else{
-                ToastUtils.showShortToast("草稿数量已达到上限");
-            }
-
-
-            //onRefresh();
         }
     }
 
@@ -258,29 +205,20 @@ public class CreateCacheFragment extends BaseNewFragment {
             protected void onItemClick(View view, int position) {
                 mPopupWindowList.hide();
                 try {
-                    String data = SPUtils.get().getString("createCache", "");
-                    Gson gson = new Gson();
-                    Type listType = new TypeToken<List<CreateModel>>() {
-                    }.getType();
-                    List<CreateModel> list = gson.fromJson(data, listType);
-                    if (list != null && deletePosition >= 0) {
-                        if (mList.get(0).type != 0) {
-                            list.remove(deletePosition - 1);
-                        } else {
-                            list.remove(deletePosition);
-                        }
-
-                        if(getCacheSize() <100){
-                            String data1 = gson.toJson(list);
-                            SPUtils.get().put("createCache", data1);
-                        }else{
-                            ToastUtils.showShortToast("草稿数量已达到上限");
-                        }
-
-
-
-                    }
+//                    String data = SPUtils.get().getString("createCache", "");
+//                    Gson gson = new Gson();
+//                    Type listType = new TypeToken<List<CreateModel>>() {
+//                    }.getType();
+//                    List<CreateModel> list = gson.fromJson(data, listType);
+//                    if (list != null && deletePosition >= 0) {
+//                        if (mList.get(0).type != 0) {
+//                            list.remove(deletePosition - 1);
+//                        } else {
+//                            list.remove(deletePosition);
+//                        }
+//                    }
                     mList.remove(deletePosition);
+                    CreateUtil.updateCreateDraftList(mList);
                     if (mList.size() > 0 && mList.get(0).type == 1) {
                         mList.get(0).sid = mList.size() - 1;
                     }
