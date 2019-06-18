@@ -52,7 +52,7 @@ public class CreateUtil {
             originalCache.add(cache);
         } else if (originalCache.size() < MAX_CREATE_DRAFT) {
             if (sid == -1) {
-                originalCache.add(cache);
+                originalCache.add(0, cache);
             } else {
                 originalCache.set(sid - 1, cache);
             }

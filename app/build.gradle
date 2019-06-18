@@ -66,7 +66,7 @@ android {
             buildConfigField "String", "APP_KEY", "\"85650f0ffe314beda3b85a9ab626662d\""
 
             //h5地址是否本地开关
-            buildConfigField "Boolean", "h5_local", "true"
+            buildConfigField "Boolean", "h5_local", "false"
 
             minifyEnabled false
             shrinkResources false
