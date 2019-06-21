@@ -25,7 +25,7 @@ public class UbtWebHelper {
 
     static {
         if (com.ubtechinc.goldenpig.BuildConfig.h5_local) {
-            baseHost = "http://10.10.32.22:8080/";
+            baseHost = "http://10.10.31.231:8080/";
         }
     }
 
