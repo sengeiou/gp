@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -89,6 +90,8 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
     private TextView tvMemberTip;
 
     private boolean isUnbindAll;
+
+    private String needTransferUserId;
 
     @Override
     protected int getConentView() {
@@ -507,6 +510,7 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
         UBTSubTitleDialog dialog = new UBTSubTitleDialog(this);
         dialog.setRightBtnColor(ResourcesCompat.getColor(getResources(), R.color.ubt_tab_btn_txt_checked_color, null));
         dialog.setTips(getString(R.string.ubt_trandfer_admin_tips));
+        dialog.setRadioText(getString(R.string.unbind_confirm_tip2));
         dialog.setLeftButtonTxt(getString(R.string.ubt_cancel));
         dialog.setRightButtonTxt(getString(R.string.ubt_enter));
         dialog.setSubTips(getString(R.string.ubt_transfer_tips));
@@ -519,7 +523,16 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
             @Override
             public void onRightButtonClick(View view) {
                 //TODO do管理员权限转让
-                doTransferAdmin(userId);
+                if (FastClickUtils.isFastClick()) {
+                    return;
+                }
+                if (dialog.isRadioSelected()) {
+                    needTransferUserId = userId;
+                    doClearInfoByIM();
+                } else {
+                    doTransferAdmin(userId);
+                }
+
             }
         });
         dialog.show();
@@ -611,7 +624,9 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(Event event) {
-        if (event == null) return;
+        if (event == null) {
+            return;
+        }
         int code = event.getCode();
         switch (code) {
             case USER_PIG_UPDATE:
@@ -621,15 +636,20 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
             case RECEIVE_CLEAR_PIG_INFO:
                 if ((boolean) event.getData()) {
                     com.ubtech.utilcode.utils.ToastUtils.showShortToast("机器人数据清除成功");
-                    if (isUnbindAll) {
+                    if (!TextUtils.isEmpty(needTransferUserId)) {
+                        doTransferAdmin(needTransferUserId);
+                        needTransferUserId = null;
+                    } else if (isUnbindAll) {
                         doUnbindAllMember();
                     } else {
                         doUnbind();
                     }
                 } else {
+                    needTransferUserId = null;
                     com.ubtech.utilcode.utils.ToastUtils.showShortToast("机器人数据清除失败，请重试");
                 }
                 break;
+                default:
         }
     }
 
@@ -786,7 +806,9 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
 
             @Override
             public void onRightButtonClick(View view) {
-                if (FastClickUtils.isFastClick()) return;
+                if (FastClickUtils.isFastClick()) {
+                    return;
+                }
                 if (unBindConfirmDialog.isRadioSelected()) {
                     doClearInfoByIM();
                 } else {
@@ -811,7 +833,12 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
 
     private void doClearInfoByIM() {
         if (!UBTPGApplication.isRobotOnline) {
-            UbtToastUtils.showCustomToast(this, getString(R.string.ubt_robot_offline_clear_tip));
+            if (!TextUtils.isEmpty(needTransferUserId)) {
+                needTransferUserId = null;
+                UbtToastUtils.showCustomToast(this, getString(R.string.ubt_robot_offline_clear_tip_for_transfer));
+            } else {
+                UbtToastUtils.showCustomToast(this, getString(R.string.ubt_robot_offline_clear_tip));
+            }
             return;
         }
         List<ClearContainer.Categories.Builder> categorys = new ArrayList<>();
@@ -858,6 +885,7 @@ public class PigMemberActivity extends BaseToolBarActivity implements View.OnCli
                             case 2:
                                 mMenuPopupView.dismiss();
                                 break;
+                                default:
                         }
                     }
                 });

@@ -213,6 +213,7 @@
 
     <string name="ubt_robot_offline">八戒处于离线状态\n操作失败</string>
     <string name="ubt_robot_offline_clear_tip">机器人不在线，无法清除数据，请重试</string>
+    <string name="ubt_robot_offline_clear_tip_for_transfer">机器人数据清除失败，请确保机器人联网正常后重新转让权限</string>
 
     <string name="robot_no_delay_wakeup">关闭后，一语联控时会自动消除唤醒音，但正常唤醒时唤醒音存在延时</string>
     <string name="robot_no_delay_wakeup_des">*一语联控：无需等待八戒回答\"咚\"，直接发出语音指令，也能方便快捷地顺畅沟通</string>

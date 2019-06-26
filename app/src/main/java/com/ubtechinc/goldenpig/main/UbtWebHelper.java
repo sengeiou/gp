@@ -123,6 +123,28 @@ public class UbtWebHelper {
     }
 
     /**
+     * 获取智能家居地址
+     * @return
+     */
+    public static String getSmartHomeUrl() {
+        String baseUrl = baseHost + "help/small/smallSmartHome.html?";
+        return baseUrl + getTvsSmartHomeParam();
+    }
+
+    /**
+     * 获取技能列表地址
+     * @return
+     */
+    public static String getSkillListUrl(Context context) {
+        String baseUrl = baseHost + "help/small/smallPigSkillList.html?";
+        String deviceId = DeviceUtils.getDeviceId(context);
+        String token = CookieInterceptor.get().getToken();
+        String url = baseUrl + "appId=" + BuildConfig.APP_ID + "&sign=" + URestSigner.sign(context, deviceId).replace(" ", "%20")
+                + "&product=" + BuildConfig.product + "&deviceId=" + deviceId + "&authorization=" + token;
+        return url;
+    }
+
+    /**
      * 获取tvs智能家居相关参数
      *
      * @return

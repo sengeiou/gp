@@ -4,7 +4,6 @@ import android.os.Bundle;
 
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.base.BaseWebActivity;
-import com.ubtechinc.nets.BuildConfig;
 
 /**
  * @author ubt
@@ -18,9 +17,7 @@ public class SmartHomeWebActivity extends BaseWebActivity {
 
     @Override
     protected String getURL() {
-        String baseUrl = BuildConfig.HOST + "help/small/smallSmartHome.html?";
-        String url = baseUrl + UbtWebHelper.getTvsSmartHomeParam();
-        return url;
+        return UbtWebHelper.getSmartHomeUrl();
     }
 
     @Override
