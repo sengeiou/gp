@@ -1,7 +1,7 @@
 ext {
     app = [
-        versionCode:55,
-        versionName:"1.3.4",
+        versionCode:56,
+        versionName:"1.3.5",
         serverEnviroment:"formal"
 //        serverEnviroment:"ex"
 //        serverEnviroment:"test"
