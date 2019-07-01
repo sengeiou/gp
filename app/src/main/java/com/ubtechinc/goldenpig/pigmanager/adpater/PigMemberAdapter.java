@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.comm.img.GlideCircleTransform;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
@@ -45,11 +46,25 @@ public class PigMemberAdapter extends RecyclerView.Adapter<PigMemberAdapter.Memb
         if (mUserList != null && mUserList.size() > position && position >= 0) {
             CheckBindRobotModule.User user = mUserList.get(position);
             if (user != null) {
-                holder.userNameTv.setText(user.getNickName());
+                String nickName = user.getNickName();
+                String headImgUrl = user.getUserImage();
+                if (isSelf(user.getUserId())) {
+                    String userName = AuthLive.getInstance().getNickName();
+                    if (!TextUtils.isEmpty(userName)) {
+                        nickName = userName;
+                    }
+                    String userImage = AuthLive.getInstance().getUserImage();
+                    if (!TextUtils.isEmpty(userImage)) {
+                        headImgUrl = userImage;
+                    }
+                }
+                holder.userNameTv.setText(nickName);
                 if (activityRefer != null && activityRefer.get() != null) {
                     Glide.with(activityRefer.get())
-                            .load(user.getUserImage())
+                            .load(headImgUrl)
                             .asBitmap()
+                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true)
                             .centerCrop()
                             .transform(new GlideCircleTransform(activityRefer.get()))
                             .placeholder(R.drawable.ic_sign_in)

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.util.Log;
 
 import com.ubt.imlibv2.bean.UbtTIMManager;
-import com.ubt.robot.dmsdk.TVSWrapBridge;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.BuildConfig;
 import com.ubtechinc.goldenpig.comm.entity.UserInfo;
@@ -84,7 +83,6 @@ public class LoginModel implements TVSAuthRepository.AuthCallBack, UBTAuthReposi
                         authLive.logined(userInfo);
                         PigInfo pigInfo = AuthLive.getInstance().getCurrentPig();
 
-                        UbtTIMManager.avatarURL = TVSWrapBridge.getTVSWrapUserInfo().getAvatar();
                         if (pigInfo != null && pigInfo.isAdmin) {
                             timManager.loginTIM(AuthLive.getInstance().getUserId(), pigInfo.getRobotName(), com.ubtechinc.nets.BuildConfig.IM_CHANNEL);
 //                            UbtTIMManager.getInstance().setPigAccount(pigInfo.getRobotName());

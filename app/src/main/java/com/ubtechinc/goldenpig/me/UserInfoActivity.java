@@ -7,8 +7,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ubt.robot.dmsdk.TVSWrapBridge;
-import com.ubt.robot.dmsdk.model.TVSWrapUserInfo;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.ActivityManager;
 import com.ubtechinc.goldenpig.base.BaseToolBarActivity;
@@ -69,17 +69,21 @@ public class UserInfoActivity extends BaseToolBarActivity implements View.OnClic
     private void fillAccountView() {
         UserInfo currentUser = AuthLive.getInstance().getCurrentUser();
         if (currentUser != null) {
-            TVSWrapUserInfo tvsWrapUserInfo = TVSWrapBridge.getTVSWrapUserInfo();
+            String nickName = currentUser.getNickName();
+            String headImgUrl = currentUser.getUserImage();
+
             mUserAccountTv.setText(TVSWrapBridge.getTVSAccountInfo().currentPlatformValue());
             Glide.with(this)
-                    .load(tvsWrapUserInfo.getAvatar())
+                    .load(headImgUrl)
                     .asBitmap()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
                     .centerCrop()
                     .transform(new GlideCircleTransform(this))
                     .placeholder(R.drawable.ic_sign_in)
                     .into(mPhotoImg);
 
-            mUserNameTv.setText(tvsWrapUserInfo.getNickname());
+            mUserNameTv.setText(nickName);
         } else {
             ActivityManager.getInstance().popAllActivityExcept(LoginActivity.class.getName());
             ActivityRoute.toAnotherActivity(this, LoginActivity.class, true);

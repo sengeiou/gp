@@ -1,6 +1,5 @@
 package com.ubtechinc.goldenpig.login;
 
-import android.arch.lifecycle.Observer;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -269,37 +268,34 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void registerEventObserve() {
-        AuthLive.getInstance().observe(this, new Observer<AuthLive>() {
-            @Override
-            public void onChanged(@Nullable AuthLive authLive) {
-                isWXClick = false;
-                mState = authLive.getState();
-                handler.removeMessages(1);
-                switch (mState) {
-                    case LOGINING:
-                        handleLoginEnable(false);
-                        showLoadingDialog();
-                        break;
-                    case TVSLOGINED:
-                        dismissLoadDialog();
-                        ActivityRoute.toAnotherActivity(LoginActivity.this, MainActivity.class, true);
-                        break;
-                    case ERROR:
-                        handleLoginEnable(true);
-                        dismissLoadDialog();
-                        ToastUtils.showShortToast(LoginActivity.this, getString(R.string.ubt_login_failure));
-                        break;
-                    case NORMAL:
-                        break;
-                    case CANCEL:
-                        handleLoginEnable(true);
-                        dismissLoadDialog();
-                        ToastUtils.showShortToast(LoginActivity.this, getString(R.string.ubt_login_cancel));
-                        break;
-                    default:
-                        dismissLoadDialog();
-                        break;
-                }
+        AuthLive.getInstance().observe(this, authLive -> {
+            isWXClick = false;
+            mState = authLive.getState();
+            handler.removeMessages(1);
+            switch (mState) {
+                case LOGINING:
+                    handleLoginEnable(false);
+                    showLoadingDialog();
+                    break;
+                case TVSLOGINED:
+                    dismissLoadDialog();
+                    ActivityRoute.toAnotherActivity(LoginActivity.this, MainActivity.class, true);
+                    break;
+                case ERROR:
+                    handleLoginEnable(true);
+                    dismissLoadDialog();
+                    ToastUtils.showShortToast(LoginActivity.this, getString(R.string.ubt_login_failure));
+                    break;
+                case NORMAL:
+                    break;
+                case CANCEL:
+                    handleLoginEnable(true);
+                    dismissLoadDialog();
+                    ToastUtils.showShortToast(LoginActivity.this, getString(R.string.ubt_login_cancel));
+                    break;
+                default:
+                    dismissLoadDialog();
+                    break;
             }
         });
     }

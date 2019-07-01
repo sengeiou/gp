@@ -54,7 +54,6 @@ public class UbtTIMManager {
     private String accountType;
     private String userSig;
     private int appidAt3rd;
-    public static String avatarURL;
 
     private OnUbtTIMConverListener onUbtTIMConverListener;
     private ArrayBlockingQueue<UbtTIMMsg> msgQueue = new ArrayBlockingQueue<>(16); //IM信息队列

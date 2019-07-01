@@ -1,8 +1,6 @@
 package com.ubtechinc.goldenpig.voiceChat.model;
 
 import android.content.Context;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -16,12 +14,9 @@ import com.tencent.TIMMessage;
 import com.tencent.TIMMessageStatus;
 import com.tencent.TIMUserProfile;
 import com.tencent.TIMValueCallBack;
-import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtechinc.commlib.log.UbtLogger;
 import com.ubtechinc.goldenpig.R;
 import com.ubtechinc.goldenpig.app.UBTPGApplication;
-import com.ubtechinc.goldenpig.comm.entity.UserInfo;
-import com.ubtechinc.goldenpig.comm.img.GlideCircleTransform;
 import com.ubtechinc.goldenpig.common.adapter.ViewHolder;
 import com.ubtechinc.goldenpig.login.observable.AuthLive;
 import com.ubtechinc.goldenpig.voiceChat.util.TimeUtil;
@@ -78,8 +73,11 @@ public abstract class Message {
         viewHolder.setText(R.id.systemMessage, TimeUtil.getChatTimeStr(message.timestamp()));
         showDesc(viewHolder);
         if (message.isSelf()){
-//                Glide.with(UBTPGApplication.getContext()).load(UbtTIMManager.avatarURL).asBitmap().placeholder(R.drawable.head_me).diskCacheStrategy(DiskCacheStrategy.ALL).into((ImageView) viewHolder.getView(R.id.rightAvatar));
-            Glide.with(UBTPGApplication.getContext()).load(getHeadImageUrl()).asBitmap().placeholder(R.drawable.head_me).diskCacheStrategy(DiskCacheStrategy.ALL).into((ImageView) viewHolder.getView(R.id.rightAvatar));
+            Glide.with(UBTPGApplication.getContext()).
+                    load(getHeadImageUrl())
+                    .asBitmap().placeholder(R.drawable.head_me)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .into((ImageView) viewHolder.getView(R.id.rightAvatar));
             viewHolder.getView(R.id.leftPanel).setVisibility(View.GONE);
             viewHolder.getView(R.id.rightPanel).setVisibility(View.VISIBLE);
             return viewHolder.getView(R.id.rightMessage);
@@ -265,14 +263,7 @@ public abstract class Message {
         }
     }
     private String getHeadImageUrl(){
-        AuthLive authLive = AuthLive.getInstance();
-        UserInfo mUser; mUser = authLive.getCurrentUser();
-        if (mUser != null) {
-            if (!TextUtils.isEmpty(mUser.getUserImage())) {
-                return mUser.getUserImage();
-            }
-        }
-        return "";
+        return AuthLive.getInstance().getUserImage();
     }
 
 }

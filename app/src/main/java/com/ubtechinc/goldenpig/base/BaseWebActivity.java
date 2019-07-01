@@ -474,7 +474,13 @@ public abstract class BaseWebActivity extends BaseToolBarActivity {
                 return;
             }
             Uri mImageUri = intent.getData();
-            compressWithRx(new File(UriTofilePath.getFilePathByUri(getApplication(), mImageUri)));
+            String filePath = UriTofilePath.getFilePathByUri(getApplication(), mImageUri);
+            if (!TextUtils.isEmpty(filePath)) {
+                compressWithRx(new File(filePath));
+            } else {
+                ToastUtils.showShortToast("图片出错，请重试");
+                cancelFilePathCallback();
+            }
         } else if (requestCode == PHOTO_BY_SHOOT && resultCode == RESULT_OK) {
             compressWithRx(cameraFile);
         } else {

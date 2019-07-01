@@ -320,13 +320,5 @@ public class MainFunctionAdapter extends RecyclerView.Adapter<MainFunctionAdapte
             this.label = label;
             this.resIcon = resIcon;
         }
-
-        public boolean isHasRedPoint() {
-            return hasRedPoint;
-        }
-
-        public void setHasRedPoint(boolean hasRedPoint) {
-            this.hasRedPoint = hasRedPoint;
-        }
     }
 }

@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.ubt.imlibv2.bean.ContactsProtoBuilder;
 import com.ubt.imlibv2.bean.UbtTIMManager;
 import com.ubtech.utilcode.utils.SPUtils;
@@ -55,7 +56,6 @@ import com.ubtechinc.goldenpig.pigmanager.bean.PigInfo;
 import com.ubtechinc.goldenpig.pigmanager.hotspot.SetHotSpotActivity;
 import com.ubtechinc.goldenpig.route.ActivityRoute;
 import com.ubtechinc.goldenpig.utils.CheckUtil;
-import com.ubtechinc.goldenpig.utils.SharedPreferencesUtils;
 import com.ubtechinc.goldenpig.utils.UbtToastUtils;
 import com.ubtrobot.upgrade.VersionInformation;
 
@@ -279,19 +279,14 @@ public class PersonalNewFragment extends BaseFragment implements View.OnClickLis
     private void fillAccountView() {
         UserInfo currentUser = AuthLive.getInstance().getCurrentUser();
         if (currentUser != null) {
-            String nickName = SharedPreferencesUtils.getString(getActivity(), "tvs_nickName", "");
-            String headImgUrl = SharedPreferencesUtils.getString(getActivity(), "tvs_headImgUrl", "");
-            Log.d(TAG, "PersonalFrag|fillAccountView|tvs_nickName=" + nickName + " ubt_nickName=" + currentUser.getNickName());
-            if (TextUtils.isEmpty(nickName)) {
-                nickName = currentUser.getNickName();
-            }
-            if (TextUtils.isEmpty(headImgUrl)) {
-                headImgUrl = currentUser.getUserImage();
-            }
+            String nickName = currentUser.getNickName();
+            String headImgUrl = currentUser.getUserImage();
 
             Glide.with(getActivity())
                     .load(headImgUrl)
                     .asBitmap()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
                     .centerCrop()
                     .transform(new GlideCircleTransform(getActivity()))
                     .placeholder(R.drawable.ic_sign_in)

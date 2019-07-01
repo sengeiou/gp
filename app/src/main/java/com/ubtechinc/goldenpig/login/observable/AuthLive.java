@@ -203,6 +203,20 @@ public class AuthLive extends LiveData<AuthLive> {
         return "";
     }
 
+    public String getNickName() {
+        if (currentUser != null) {
+            return currentUser.getNickName();
+        }
+        return "";
+    }
+
+    public String getUserImage() {
+        if (currentUser != null) {
+            return currentUser.getUserImage();
+        }
+        return "";
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(Object event) {
        /* if (event.getState() == IMStateChange.STATE_FORCE_OFFLINE) {

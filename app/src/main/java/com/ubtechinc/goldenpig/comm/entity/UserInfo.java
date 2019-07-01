@@ -2,6 +2,9 @@ package com.ubtechinc.goldenpig.comm.entity;
 
 import android.text.TextUtils;
 
+import com.ubt.robot.dmsdk.TVSWrapBridge;
+import com.ubt.robot.dmsdk.model.TVSWrapUserInfo;
+
 /**
  * @author tanghongyu
  * @ClassName UserInfo
@@ -74,6 +77,11 @@ public class UserInfo {
     }
 
     public String getUserImage() {
+        TVSWrapUserInfo tvsWrapUserInfo = TVSWrapBridge.getTVSWrapUserInfo();
+        String tvsHeadImgUrl = tvsWrapUserInfo.getAvatar();
+        if (!TextUtils.isEmpty(tvsHeadImgUrl)) {
+            userImage = tvsHeadImgUrl;
+        }
         return userImage;
     }
 
@@ -122,6 +130,11 @@ public class UserInfo {
     }
 
     public String getNickName() {
+        TVSWrapUserInfo tvsWrapUserInfo = TVSWrapBridge.getTVSWrapUserInfo();
+        String tvsNickName = tvsWrapUserInfo.getNickname();
+        if (!TextUtils.isEmpty(tvsNickName)) {
+            nickName = tvsNickName;
+        }
         return nickName;
     }
 
