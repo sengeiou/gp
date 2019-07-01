@@ -84,7 +84,7 @@
     <string name="ubt_add_member">添加成员</string>
     <string name="ubt_addmember_desc">·请让需绑定此八戒的用户，打开八戒APP-我的-设备管理-加入成员组：\n·扫描上面的二维码，加入成员组；\n·加入成员组后用户即与此八戒绑定，可正常使用此APP功能；</string>
     <string name="ubt_pair_pig">配对八戒</string>
-    <string name="ubt_pair_pig_desc">·两台八戒扫码配对互联后可以互相发送语音留言；\n·请让另一台八戒的管理员打开八戒机器人APP，并在首页点击进入“配对八戒”页面；\n·点击右上角“扫一扫”，扫描上面的二维码，完成配对互联，两台八戒即可畅享互动发送留言。。</string>
+    <string name="ubt_pair_pig_desc">·两台八戒扫码配对互联后可以互相发送语音留言；\n·请让另一台八戒的管理员打开八戒机器人APP，并在首页点击进入“配对八戒”页面；\n·点击右上角“扫一扫”，扫描上面的二维码，完成配对互联，两台八戒即可畅享互动发送留言。</string>
     <string name="ubt_drop_up_tips">您是八戒的管理员，退出群组会解绑八戒，确认要退出群组吗？</string>
     <string name="ubt_unbind_success">退出群组成功</string>
     <string name="ubt_trans_permission">转让权限</string>
